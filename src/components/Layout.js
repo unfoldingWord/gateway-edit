@@ -1,12 +1,28 @@
+import { useContext } from 'react'
+import PropTypes from 'prop-types'
+import { AuthenticationContext } from 'gitea-react-toolkit'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
-import PropTypes from 'prop-types'
 
 export default function Layout({ children }) {
+  const {
+    state: authentication,
+    component: authenticationComponent,
+  } = useContext(AuthenticationContext)
+
+  console.log('authentication', authentication)
+  const AuthComponent = () => (
+    <div className='flex justify-center items-center w-full h-full'>
+      {authenticationComponent}
+    </div>
+  )
+
   return (
     <div className='h-screen w-screen flex flex-col'>
       <Header appName='translationCore: Create' />
-      <main className='flex flex-1 flex-col w-auto m-0'>{children}</main>
+      <main className='flex flex-1 flex-col w-auto m-0'>
+        {authentication ? children : <AuthComponent />}
+      </main>
       <Footer />
     </div>
   )
