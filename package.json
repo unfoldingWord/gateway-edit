@@ -14,6 +14,7 @@
     "bible-reference-rcl": "^0.1.11-alpha",
     "next": "^10.0.3",
     "postcss": "^8.2.1",
+    "prefs-rcl": "^0.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "resource-workspace-rcl": "^0.2.4",
