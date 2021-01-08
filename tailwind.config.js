@@ -7,7 +7,7 @@ module.exports = {
         grey: {
           450: '#eaeaea',
         },
-        main: '#00B0FF',
+        primary: '#00B0FF',
       },
     },
   },

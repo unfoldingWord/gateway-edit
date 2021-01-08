@@ -3,7 +3,11 @@ import React, { useState, createContext } from 'react'
 export const ReferenceContext = createContext({})
 
 export default function ReferenceContextProvider(props) {
-  const [languageID, setLanguageID] = useState('en')
+  // TODO: To make the app dynamic use the setters below to dynamically set and change the values
+  const [languageId, setLanguageId] = useState('en')
+  const [server, setServer] = useState('https://git.door43.org')
+  const [owner, setOwner] = useState('test_org')
+  const [branch, setBranch] = useState('master')
   const [bibleReference, setBibleReference] = useState({
     bookId: 'mat',
     chapter: '1',
@@ -11,7 +15,6 @@ export default function ReferenceContextProvider(props) {
   })
 
   function onReferenceChange(bookId, chapter, verse) {
-    console.info(`Reference: ${bookId} - ${chapter}:${verse}\n`)
     setBibleReference(prevState => ({
       ...prevState,
       bookId,
@@ -22,12 +25,18 @@ export default function ReferenceContextProvider(props) {
 
   const value = {
     state: {
-      languageID,
       bibleReference,
+      languageId,
+      server,
+      branch,
+      owner,
     },
     actions: {
-      setLanguageID,
       onReferenceChange,
+      setLanguageId,
+      setBranch,
+      setServer,
+      setOwner,
     },
   }
 

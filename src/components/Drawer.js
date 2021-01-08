@@ -25,7 +25,7 @@ function Drawer({ open, onClose, onOpen, user }) {
         paper: 'w-72',
       }}
     >
-      <div className='flex items-center flex-end py-2 px-2 bg-main shadow-xs'>
+      <div className='flex items-center flex-end py-2 px-2 bg-primary shadow-xs'>
         <IconButton onClick={onClose}>
           <ChevronLeftIcon htmlColor='#fff' />
         </IconButton>

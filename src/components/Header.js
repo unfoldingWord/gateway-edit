@@ -18,12 +18,12 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   button: {
-    minWidth: '36px',
+    minWidth: '40px',
     padding: '5px 0px',
     marginRight: theme.spacing(3),
   },
   icon: {
-    width: '36px',
+    width: '40px',
   },
   menuButton: {
     marginRight: theme.spacing(1),
