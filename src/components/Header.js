@@ -58,7 +58,7 @@ export default function Header({ appName }) {
 
   return (
     <header>
-      <AppBar position='static' classes={{ root: 'py-1' }}>
+      <AppBar position='static'>
         <Toolbar>
           <IconButton
             edge='start'
