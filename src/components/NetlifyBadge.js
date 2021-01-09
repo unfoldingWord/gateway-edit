@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function NetlifyBadge() {
   return (
-    <div className='w-full text-center my-2'>
+    <div className='w-full text-center my-2.5'>
       <a
         href='https://www.netlify.com'
         target='_blank'
