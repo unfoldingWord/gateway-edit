@@ -1,4 +1,5 @@
-import React from 'react'
+import { useState, useContext } from 'react'
+import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -12,6 +13,7 @@ import LinkIcon from '@material-ui/icons/Link'
 import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@components/Drawer'
 import BibleReference from '@components/BibleReference'
+import { AuthContext } from '@context/AuthContext'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,16 +39,12 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Header({ appName }) {
+export default function Header({ appName, authentication: { user } }) {
   const classes = useStyles()
   const router = useRouter()
-  const [drawerOpen, setOpen] = React.useState(false)
-  // TODO: Remove test data
-  const user = {
-    name: 'John Doe',
-    // avatar_url:
-    // 'https://pbs.twimg.com/profile_images/885868801232961537/b1F6H4KC_400x400.jpg',
-  }
+  const [drawerOpen, setOpen] = useState(false)
+
+  const { logout } = useContext(AuthContext)
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -98,10 +96,15 @@ export default function Header({ appName }) {
       </AppBar>
       <Drawer
         user={user}
+        logout={logout}
         open={drawerOpen}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
       />
     </header>
   )
+}
+
+Header.propTypes = {
+  authentication: PropTypes.object,
 }
