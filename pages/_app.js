@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import theme from '../src/theme'
-import Head from '@components/Head'
 import ReferenceContextProvider from '@context/ReferenceContext'
+import AuthContextProvider from '@context/AuthContext'
+import { appName } from '@common/constants'
+import Head from '@components/Head'
+import theme from '../src/theme'
 import '@styles/globals.css'
-
-const appName = 'translationCore:Create'
 
 function Application({ Component, pageProps }) {
   useEffect(() => {
@@ -23,9 +23,11 @@ function Application({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <ReferenceContextProvider>
-          <Component {...pageProps} />
-        </ReferenceContextProvider>
+        <AuthContextProvider>
+          <ReferenceContextProvider>
+            <Component {...pageProps} />
+          </ReferenceContextProvider>
+        </AuthContextProvider>
       </ThemeProvider>
     </>
   )
