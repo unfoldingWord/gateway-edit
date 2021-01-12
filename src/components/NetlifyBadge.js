@@ -1,19 +1,8 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles(theme => ({
-  netlifyBadge: {
-    width: '100%',
-    textAlign: 'center',
-    margin: '20px 0px 20px',
-  },
-}))
 
 export default function NetlifyBadge() {
-  const classes = useStyles()
-
   return (
-    <div className={classes.netlifyBadge}>
+    <div className='w-full text-center my-2.5'>
       <a
         href='https://www.netlify.com'
         target='_blank'
