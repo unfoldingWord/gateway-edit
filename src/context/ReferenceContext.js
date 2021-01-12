@@ -8,6 +8,7 @@ export default function ReferenceContextProvider(props) {
   const [server, setServer] = useState('https://git.door43.org')
   const [owner, setOwner] = useState('test_org')
   const [branch, setBranch] = useState('master')
+  const [taArticle, setTaArticle] = useState(null)
   const [bibleReference, setBibleReference] = useState({
     bookId: 'mat',
     chapter: '1',
@@ -23,16 +24,31 @@ export default function ReferenceContextProvider(props) {
     }))
   }
 
+  function updateTaDetails(supportReference) {
+    if (supportReference) {
+      const path = supportReference?.replace('rc://*/ta/man/', '')
+      const split = path.split('/')
+      setTaArticle({
+        projectId: split[0],
+        filePath: `${split[1]}/01.md`,
+      })
+    } else {
+      setTaArticle(null)
+    }
+  }
+
   const value = {
     state: {
       bibleReference,
       languageId,
+      taArticle,
       server,
       branch,
       owner,
     },
     actions: {
       onReferenceChange,
+      updateTaDetails,
       setLanguageId,
       setBranch,
       setServer,
