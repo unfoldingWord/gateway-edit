@@ -36,7 +36,7 @@ function WorkspaceContainer() {
 
   return (
     <Workspace
-      rowHeight={400}
+      rowHeight={410}
       layout={layout}
       gridMargin={[15, 15]}
       classes={classes}
