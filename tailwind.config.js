@@ -1,6 +1,7 @@
 module.exports = {
   purge: ['./pages/**/*.js', './src/components/**/*.js'],
   darkMode: false, // or 'media' or 'class'
+  important: true,
   theme: {
     extend: {
       colors: {
@@ -21,6 +22,13 @@ module.exports = {
         114: '42rem',
         116: '44rem',
         118: '46rem',
+        120: '48rem',
+        122: '50rem',
+        124: '52rem',
+        126: '54rem',
+        128: '56rem',
+        130: '58rem',
+        132: '60rem',
       },
     },
   },
