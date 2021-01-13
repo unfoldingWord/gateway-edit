@@ -11,8 +11,10 @@ export default function Layout({ children }) {
   } = useContext(AuthenticationContext)
 
   const AuthComponent = () => (
-    <div className='flex justify-center items-center w-full h-full'>
-      {authenticationComponent}
+    <div className='flex justify-center items-center h-full w-full'>
+      <div className='flex justify-center items-center h-104 w-104 bg-white p-10 sm:h-116 sm:w-116'>
+        {authenticationComponent}
+      </div>
     </div>
   )
 
@@ -22,7 +24,7 @@ export default function Layout({ children }) {
         appName='translationCore: Create'
         authentication={authentication || {}}
       />
-      <main className='flex flex-1 flex-col w-auto m-0'>
+      <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
         {authentication ? children : <AuthComponent />}
       </main>
       <Footer />

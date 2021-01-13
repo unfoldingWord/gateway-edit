@@ -20,7 +20,7 @@
     "postcss": "^8.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "resource-workspace-rcl": "^0.3.0",
+    "resource-workspace-rcl": "^0.5.0",
     "scripture-resources-rcl": "^2.1.1",
     "tailwindcss": "^2.0.2",
     "translation-helps-rcl": "^1.0.0"

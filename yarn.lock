@@ -5778,10 +5778,10 @@ resolve@^1.18.1, resolve@^1.19.0:
     is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
-resource-workspace-rcl@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-0.3.0.tgz#c7c0306ff9d9db4fed8c284ac70dd07c47e94f6e"
-  integrity sha512-/vcrwu4CbcprfoDNJ0NATkOAeASxCU/dMsQQBFY4hKpF1gjsz5KHD7DO4DwQdbkNQJ5jm6V8gIVXOMGc5R60Dw==
+resource-workspace-rcl@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-0.5.0.tgz#32eebc90c833d4f5b038b41fe96b178172a834a3"
+  integrity sha512-2qEbZO4cPBlBcd2IReF6jl0XM0iZAK7p2VYKXFn0q897f+HECeznRSItZ+ycInvsqcC+CcuruqbRHfMDr5tNnA==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
