@@ -23,9 +23,11 @@ function WorkspaceContainer() {
       owner,
       server,
       branch,
+      taArticle,
       languageId,
       bibleReference: { bookId, chapter, verse },
     },
+    actions: { updateTaDetails },
   } = useContext(ReferenceContext)
 
   const layout = {
@@ -34,7 +36,7 @@ function WorkspaceContainer() {
 
   return (
     <Workspace
-      rowHeight={400}
+      rowHeight={410}
       layout={layout}
       gridMargin={[15, 15]}
       classes={classes}
@@ -51,6 +53,7 @@ function WorkspaceContainer() {
         resourceId={'tn'}
         projectId={bookId}
         filePath={null}
+        updateTaDetails={updateTaDetails}
       />
       <ResourceCard
         title='translationAcademy'
@@ -62,8 +65,8 @@ function WorkspaceContainer() {
         branch={branch}
         languageId={languageId}
         resourceId={'ta'}
-        projectId={'translate'}
-        filePath={'translate-names/01.md'}
+        projectId={taArticle?.projectId}
+        filePath={taArticle?.filePath}
       />
       <ResourceCard
         title='translationWords'
@@ -76,6 +79,19 @@ function WorkspaceContainer() {
         viewMode={'markdown'}
         languageId={languageId}
         resourceId={'twl'}
+        projectId={bookId}
+        filePath={null}
+      />
+      <ResourceCard
+        title='translationQuestions'
+        classes={classes}
+        chapter={chapter}
+        verse={verse}
+        server={server}
+        owner={owner}
+        branch={branch}
+        languageId={languageId}
+        resourceId={'tq'}
         projectId={bookId}
         filePath={null}
       />
