@@ -36,7 +36,7 @@ function WorkspaceContainer() {
   }
 
   const scriptureOwner = 'unfoldingWord'; //TODO blm: for testing use since test_org does not have enough bibles
-  const origLangID = 'el-x-koine';
+  const originalLanguageID = 'el-x-koine';
 
   return (
     <Workspace
@@ -66,7 +66,7 @@ function WorkspaceContainer() {
         server={server}
         owner={scriptureOwner}
         branch={branch}
-        languageId={origLangID}
+        languageId={originalLanguageID}
         resourceId={'ugnt'}
         bookId={bookId}
       />
