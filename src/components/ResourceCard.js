@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
@@ -19,6 +20,7 @@ export default function ResourceCard({
   projectId,
   languageId,
   resourceId,
+  updateTaDetails,
 }) {
   const { items, markdown } = useContent({
     verse,
@@ -38,6 +40,12 @@ export default function ResourceCard({
   } = useCardState({
     items,
   })
+
+  useEffect(() => {
+    if (updateTaDetails) {
+      updateTaDetails(item?.SupportReference || null)
+    }
+  }, [item])
 
   return (
     <Card
@@ -80,5 +88,6 @@ ResourceCard.propTypes = {
   languageId: PropTypes.string.isRequired,
   resourceId: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
+  updateTaDetails: PropTypes.func,
   filePath: PropTypes.string,
 }

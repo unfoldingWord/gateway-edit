@@ -32,61 +32,6 @@
     @apply font-medium;
     @apply my-4;
   }
-  p {
-    @apply font-normal text-base m-4;
-  }
-  blockquote {
-    @apply bg-gray-100 my-6 pt-4 pb-px px-3 border-l-8 border-gray-300;
-  }
-  ol,
-  ul {
-    @apply mb-4 pl-8;
-  }
-  ol {
-    @apply list-decimal;
-  }
-  ul {
-    @apply list-disc;
-  }
-  ol ol,
-  ol ul,
-  ul ol,
-  ul ul {
-    @apply mb-0;
-  }
-  ul ul,
-  ol ul {
-    list-style-type: circle;
-  }
-  pre {
-    @apply mb-4 p-5 overflow-auto;
-    background: #f5f2f0; /* for consistency with Prismjs theme */
-  }
-  code {
-    @apply bg-gray-100 text-sm font-bold p-1 rounded-sm;
-  }
-  code:before,
-  code:after {
-    @apply font-normal text-xs;
-    content: '`';
-  }
-  pre code {
-    @apply bg-transparent font-normal p-0;
-  }
-  pre code::before,
-  pre code:after {
-    content: none;
-  }
-  hr {
-    @apply my-4;
-  }
-  a {
-    @apply text-blue-500;
-  }
-  img {
-    max-width: 100%;
-    vertical-align: middle;
-  }
 }
 
 @tailwind components;
