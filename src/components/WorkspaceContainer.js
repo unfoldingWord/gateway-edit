@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
+import ScriptureCard from "@components/ScriptureCard";
 import { ReferenceContext } from '@context/ReferenceContext'
 
 const useStyles = makeStyles(() => ({
@@ -31,8 +32,11 @@ function WorkspaceContainer() {
   } = useContext(ReferenceContext)
 
   const layout = {
-    widths: [[1, 1], [1, 1], [1]],
+    widths: [[1, 1, 1], [2, 2], [2, 2]],
   }
+
+  const scriptureOwner = 'unfoldingWord'; //TODO blm: for testing use since test_org does not have enough bibles
+  const origLangID = 'el-x-koine';
 
   return (
     <Workspace
@@ -41,6 +45,45 @@ function WorkspaceContainer() {
       gridMargin={[15, 15]}
       classes={classes}
     >
+      <ScriptureCard
+        title=''
+        classes={classes}
+        chapter={chapter}
+        verse={verse}
+        server={server}
+        owner={scriptureOwner}
+        branch={branch}
+        languageId={languageId}
+        resourceId={'ult'}
+        bookId={bookId}
+      />
+
+      <ScriptureCard
+        title=''
+        classes={classes}
+        chapter={chapter}
+        verse={verse}
+        server={server}
+        owner={scriptureOwner}
+        branch={branch}
+        languageId={origLangID}
+        resourceId={'ugnt'}
+        bookId={bookId}
+      />
+
+      <ScriptureCard
+        title=''
+        classes={classes}
+        chapter={chapter}
+        verse={verse}
+        server={server}
+        owner={scriptureOwner}
+        branch={branch}
+        languageId={languageId}
+        resourceId={'ust'}
+        bookId={bookId}
+      />
+
       <ResourceCard
         title='translationNotes'
         classes={classes}
