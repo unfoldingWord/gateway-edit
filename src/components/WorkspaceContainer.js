@@ -46,7 +46,7 @@ function WorkspaceContainer() {
       classes={classes}
     >
       <ScriptureCard
-        title=''
+        title='Scripture'
         classes={classes}
         chapter={chapter}
         verse={verse}
@@ -59,7 +59,7 @@ function WorkspaceContainer() {
       />
 
       <ScriptureCard
-        title=''
+        title='Scripture'
         classes={classes}
         chapter={chapter}
         verse={verse}
@@ -72,7 +72,7 @@ function WorkspaceContainer() {
       />
 
       <ScriptureCard
-        title=''
+        title='Scripture'
         classes={classes}
         chapter={chapter}
         verse={verse}
