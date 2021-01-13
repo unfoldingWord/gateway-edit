@@ -38,31 +38,6 @@ export default function ScriptureCard({
     },
   });
 
-  // const { items, markdown } = useContent({
-  //   verse,
-  //   chapter,
-  //   projectId,
-  //   branch,
-  //   languageId,
-  //   resourceId,
-  //   filePath,
-  //   owner,
-  //   server,
-  // })
-
-  // const {
-  //   state: { item, headers, filters, fontSize, itemIndex, markdownView },
-  //   actions: { setFilters, setFontSize, setItemIndex, setMarkdownView },
-  // } = useCardState({
-  //   items,
-  // })
-
-  // useEffect(() => {
-  //   if (updateTaDetails) {
-  //     updateTaDetails(item?.SupportReference || null)
-  //   }
-  // }, [item])
-
   return (
     <Card classes={classes} title = {title}>
       <ScripturePane {...scriptureConfig}/>
