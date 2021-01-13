@@ -6700,10 +6700,10 @@ tr46@^2.0.2:
   dependencies:
     punycode "^2.1.1"
 
-translation-helps-rcl@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.0.0.tgz#2dec6382c7a7ab38880a6760c72dab851a68d477"
-  integrity sha512-bGwqM8Ur40JiAxJkIwJdjoVxYSuU/yOiuxv16i8kWYlCJYbZdrI3dbGwugCTSFeGVNU/pbG/bRyiuCmERtYgSg==
+translation-helps-rcl@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.1.0.tgz#7c7038678fa1cdc9366741cf6c7e1081fd861f41"
+  integrity sha512-u0IAha9nZTuluGk33GpgB5AEhWYpe99XpUY5fz4yLxf6Vu4iDr+oB/R1ZieX+P7P/a7Fmg5+tF4STNxtaVANuw==
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
