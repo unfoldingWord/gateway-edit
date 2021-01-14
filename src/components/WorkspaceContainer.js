@@ -41,10 +41,11 @@ function WorkspaceContainer() {
     widths: [[1, 1, 1], [2, 2], [2, 2]],
   }
 
-  const scriptureOwner = 'unfoldingWord'; //TODO blm: for testing use since test_org does not have enough bibles
+  // select original language Bible based on which testament the book is
   const isNewTestament = NT_BOOKS.includes(bookId);
   const originalLanguageID = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG;
   const originalBibleID = isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE;
+  const scriptureOwner = 'unfoldingWord'; //TODO blm: for testing use since test_org does not have enough bibles
 
   return (
     <Workspace
