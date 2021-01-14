@@ -8,7 +8,7 @@ module.exports = {
         grey: {
           450: '#eaeaea',
         },
-        primary: '#00B0FF',
+        primary: '#38ADDF',
       },
       spacing: {
         98: '26rem',
