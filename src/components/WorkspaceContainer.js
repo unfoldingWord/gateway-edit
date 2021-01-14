@@ -4,6 +4,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
 import ScriptureCard from "@components/ScriptureCard";
 import { ReferenceContext } from '@context/ReferenceContext'
+import {
+  NT_BOOKS, NT_ORIG_LANG,
+  NT_ORIG_LANG_BIBLE,
+  OT_ORIG_LANG,
+  OT_ORIG_LANG_BIBLE
+} from "@common/BooksOfTheBible";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -36,7 +42,9 @@ function WorkspaceContainer() {
   }
 
   const scriptureOwner = 'unfoldingWord'; //TODO blm: for testing use since test_org does not have enough bibles
-  const originalLanguageID = 'el-x-koine';
+  const isNewTestament = NT_BOOKS.includes(bookId);
+  const originalLanguageID = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG;
+  const originalBibleID = isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE;
 
   return (
     <Workspace
@@ -67,7 +75,7 @@ function WorkspaceContainer() {
         owner={scriptureOwner}
         branch={branch}
         languageId={originalLanguageID}
-        resourceId={'ugnt'}
+        resourceId={originalBibleID}
         bookId={bookId}
       />
 

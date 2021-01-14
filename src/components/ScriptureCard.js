@@ -38,9 +38,40 @@ export default function ScriptureCard({
     },
   });
 
+  const items = null;
+  const {
+    state: { item, headers, filters, fontSize, itemIndex, markdownView },
+    actions: { setFilters, setFontSize, setItemIndex, setMarkdownView },
+  } = useCardState({
+    items,
+  });
+
+  const refStyle = {
+    fontFamily: "Noto Sans",
+    fontSize: `${Math.round(fontSize * 0.9)}%`,
+  }
+
+  const contentStyle = {
+    fontFamily: "Noto Sans",
+    fontSize: `${fontSize}%`,
+  }
+
   return (
-    <Card classes={classes} title = {title}>
-      <ScripturePane {...scriptureConfig}/>
+    <Card
+      items={items}
+      classes={classes}
+      headers={headers}
+      filters={filters}
+      fontSize={fontSize}
+      itemIndex={itemIndex}
+      setFilters={setFilters}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      markdownView={markdownView}
+      setMarkdownView={setMarkdownView}
+      title={title}
+    >
+      <ScripturePane refStyle={refStyle} contentStyle={contentStyle} {...scriptureConfig}/>
     </Card>
   )
 }

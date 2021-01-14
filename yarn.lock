@@ -13532,17 +13532,16 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-0.1.2.tgz#1c29d80816ef30c0e4831a557b37236e9737ac17"
-  integrity sha512-9CCo9fsgjebtgPtVSTo+3F739gTGvyuJYKK8xyXpEI+02+UvAROXE9BD7uW2XFLahAp8PcBNWm7VOK/f7qD5BA==
+single-scripture-rcl@0.1.3-alpha.2:
+  version "0.1.3-alpha.2"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-0.1.3-alpha.2.tgz#0305ba5e56295a45839d1092bb4b329a31bcc676"
+  integrity sha512-1l2fIn3DzRiKjTnH8/jkgDU4vJVR8vBqJSDRTmkZPe60nKUnT8VO/kTV8F0V94ffxZYYeoKcnJ7N/Gq56Ea96w==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
     react-docgen-typescript "^1.20.5"
     source-map-loader "^1.1.3"
     styled-components "^5.2.1"
-    translation-helps-rcl "0.6.5"
     ts-loader "^8.0.12"
     typescript "^4.1.3"
     word-aligner "^1.0.0"
@@ -14628,13 +14627,6 @@ transform-runtime@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
-
-translation-helps-rcl@0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-0.6.5.tgz#0a865c977692d0e007a951b10c8d6f001e30d958"
-  integrity sha512-MqpMD9QsCucwLwrJ0yrG9TkIoYTn2DYwavhHGBFdbLmy/2Qbb/Yy6/RHhcQvkOS+B7zN5GRW5GruvwHItJ9TjA==
-  dependencies:
-    styled-components "^5.2.1"
 
 translation-helps-rcl@^1.0.0:
   version "1.0.0"
