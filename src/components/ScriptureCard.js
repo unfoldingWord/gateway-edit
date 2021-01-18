@@ -7,6 +7,7 @@ import {
   useCardState,
 } from 'translation-helps-rcl'
 import { ScripturePane, useScripture } from "single-scripture-rcl";
+import { getLanguage } from "@common/languages";
 
 export default function ScriptureCard({
   title,
@@ -37,6 +38,9 @@ export default function ScriptureCard({
       cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
     },
   });
+
+  const language = getLanguage({ languageId });
+  const direction = (language?.direction) || 'ltr';
 
   const items = null;
   const {
@@ -71,7 +75,7 @@ export default function ScriptureCard({
       setMarkdownView={setMarkdownView}
       title={title}
     >
-      <ScripturePane refStyle={refStyle} contentStyle={contentStyle} {...scriptureConfig}/>
+      <ScripturePane refStyle={refStyle} contentStyle={contentStyle} {...scriptureConfig} direction={direction}/>
     </Card>
   )
 }
