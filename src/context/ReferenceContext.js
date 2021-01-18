@@ -1,10 +1,11 @@
 import React, { useState, createContext } from 'react'
+import useLocalStorage from '@hooks/useLocalStorage'
 
 export const ReferenceContext = createContext({})
 
 export default function ReferenceContextProvider(props) {
-  const [owner, setOwner] = useState('')
-  const [languageId, setLanguageId] = useState('')
+  const [owner, setOwner] = useLocalStorage('owner', '')
+  const [languageId, setLanguageId] = useLocalStorage('languageId', '')
   const [taArticle, setTaArticle] = useState(null)
   // TODO: To make the app more dynamic use the setters below to dynamically set and change the values
   const [server, setServer] = useState('https://git.door43.org')

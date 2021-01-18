@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
-import Button from '@material-ui/core/Button'
+// import Button from '@material-ui/core/Button'
 import { getGatewayLanguages } from '@common/languages'
 import { ReferenceContext } from '@context/ReferenceContext'
 
@@ -20,12 +20,11 @@ const useStyles = makeStyles(theme => ({
 
 function AccountSetup({ authentication }) {
   const classes = useStyles()
-  const [organization, setOrganization] = useState('')
-  const [languageId, setLanguage] = useState('')
   const [organizations, setOrganizations] = useState([])
   const [languages, setLanguages] = useState([])
   const {
-    actions: { setOwner, setLanguageId },
+    state: { owner: organization, languageId },
+    actions: { setOwner: setOrganization, setLanguageId },
   } = useContext(ReferenceContext)
 
   useEffect(() => {
@@ -57,15 +56,11 @@ function AccountSetup({ authentication }) {
   }
 
   const handleLanguageChange = event => {
-    setLanguage(event.target.value)
+    setLanguageId(event.target.value)
   }
 
-  const handleSubmit = () => {
-    setOwner(organization)
-    setLanguageId(languageId)
-  }
-
-  const disabledButton = !organization || !languageId
+  // const handleSubmit = () => {}
+  // const disabledButton = !organization || !languageId
 
   return (
     <div className='flex flex-col justify-center items-center'>
@@ -117,7 +112,7 @@ function AccountSetup({ authentication }) {
             </FormControl>
           </div>
         </Paper>
-        <div className='flex justify-end h-62 w-full'>
+        {/* <div className='flex justify-end h-62 w-full'>
           <Button
             className='my-2'
             variant='contained'
@@ -128,7 +123,7 @@ function AccountSetup({ authentication }) {
           >
             Save and Continue
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   )
