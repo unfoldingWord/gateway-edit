@@ -2888,10 +2888,10 @@ bfj@6.1.1:
     hoopy "^0.1.2"
     tryer "^1.0.0"
 
-bible-reference-rcl@0.1.12-alpha.2:
-  version "0.1.12-alpha.2"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.1.12-alpha.2.tgz#226c17c76cdb1bad9ad9d145f20dc5a9a77ea7e6"
-  integrity sha512-XmblpA8PuxO3d6SFaKpnZdDyu7RN/iCuMwjs8yo/SwpcYBKrWYcu3pNcOlKe7+vtm3XOFy3xbN9T6zne3/0n2w==
+bible-reference-rcl@0.1.12:
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.1.12.tgz#bc4c677b257472cee93b7da4daaba54136c191b1"
+  integrity sha512-4N/7Dxac+K1yYsgNjhIBwtyN7b9VAv297TB2gjSRCiGA2aMKb9MoHygyyjkCFV+Y9ko04JCztjKioujYFCOZQQ==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"
