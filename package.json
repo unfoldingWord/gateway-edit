@@ -27,7 +27,7 @@
     "scripture-resources-rcl": "3.0.3",
     "single-scripture-rcl": "0.1.4",
     "tailwindcss": "^2.0.2",
-    "translation-helps-rcl": "1.2.1-alpha"
+    "translation-helps-rcl": "1.2.1"
   },
   "devDependencies": {
     "eslint": "^7.16.0",
