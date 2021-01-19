@@ -6,6 +6,10 @@ export const ReferenceContext = createContext({})
 export default function ReferenceContextProvider(props) {
   const [owner, setOwner] = useLocalStorage('owner', '')
   const [languageId, setLanguageId] = useLocalStorage('languageId', '')
+  const [showAccountSetup, setShowAccountSetup] = useLocalStorage(
+    'showAccountSetup',
+    true
+  )
   const [taArticle, setTaArticle] = useState(null)
   // TODO: To make the app more dynamic use the setters below to dynamically set and change the values
   const [server, setServer] = useState('https://git.door43.org')
@@ -40,6 +44,7 @@ export default function ReferenceContextProvider(props) {
 
   const value = {
     state: {
+      showAccountSetup,
       bibleReference,
       languageId,
       taArticle,
@@ -48,6 +53,7 @@ export default function ReferenceContextProvider(props) {
       owner,
     },
     actions: {
+      setShowAccountSetup,
       onReferenceChange,
       updateTaDetails,
       setLanguageId,

@@ -6,24 +6,24 @@ import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { ReferenceContext } from '@context/ReferenceContext'
 
-export default function Layout({ children }) {
+export default function Layout({
+  children,
+  title = 'translationCore: Create',
+}) {
   const {
     state: authentication,
     component: authenticationComponent,
   } = useContext(AuthenticationContext)
 
   const {
-    state: { owner, languageId },
+    state: { showAccountSetup },
   } = useContext(ReferenceContext)
 
   return (
     <div className='h-screen w-screen flex flex-col'>
-      <Header
-        appName='translationCore: Create'
-        authentication={authentication || {}}
-      />
+      <Header title={title} authentication={authentication || {}} />
       <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
-        {authentication && owner && languageId ? (
+        {authentication && !showAccountSetup ? (
           children
         ) : (
           <Onboarding
