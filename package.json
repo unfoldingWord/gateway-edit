@@ -19,7 +19,6 @@
     "markdown-translatable": "^1.2.8",
     "next": "^10.0.3",
     "postcss": "^8.2.1",
-    "prefs-rcl": "^0.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "regenerator-runtime": "^0.13.7",
