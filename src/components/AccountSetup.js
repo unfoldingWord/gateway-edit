@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import { Paper } from 'translation-helps-rcl'
+import SaveIcon from '@material-ui/icons/Save'
 import { ReferenceContext } from '@context/ReferenceContext'
 import TranslationSettings from '@components/TranslationSettings'
 
@@ -29,12 +30,14 @@ function AccountSetup({ authentication }) {
         <TranslationSettings authentication={authentication} />
         <div className='flex justify-end h-62 w-full'>
           <Button
-            className='my-2'
-            variant='contained'
+            size='large'
             color='primary'
+            className='my-2'
             disableElevation
-            disabled={disabledButton}
+            variant='contained'
             onClick={handleSubmit}
+            startIcon={<SaveIcon />}
+            disabled={disabledButton}
           >
             Save and Continue
           </Button>

@@ -2,14 +2,15 @@ import { useContext } from 'react'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
-import ScriptureCard from "@components/ScriptureCard";
+import ScriptureCard from '@components/ScriptureCard'
 import { ReferenceContext } from '@context/ReferenceContext'
 import {
-  NT_BOOKS, NT_ORIG_LANG,
+  NT_BOOKS,
+  NT_ORIG_LANG,
   NT_ORIG_LANG_BIBLE,
   OT_ORIG_LANG,
-  OT_ORIG_LANG_BIBLE
-} from "@common/BooksOfTheBible";
+  OT_ORIG_LANG_BIBLE,
+} from '@common/BooksOfTheBible'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -39,14 +40,20 @@ function WorkspaceContainer() {
   } = useContext(ReferenceContext)
 
   const layout = {
-    widths: [[1, 1, 1], [2, 2], [2, 2]],
+    widths: [
+      [1, 1, 1],
+      [2, 2],
+      [2, 2],
+    ],
   }
 
   // select original language Bible based on which testament the book is
-  const isNewTestament = NT_BOOKS.includes(bookId);
-  const originalLanguageID = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG;
-  const originalBibleID = isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE;
-  const scriptureOwner = 'unfoldingWord'; //TODO blm: for testing use since test_org does not have enough bibles
+  const isNewTestament = NT_BOOKS.includes(bookId)
+  const originalLanguageID = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG
+  const originalBibleID = isNewTestament
+    ? NT_ORIG_LANG_BIBLE
+    : OT_ORIG_LANG_BIBLE
+  const scriptureOwner = 'unfoldingWord' //TODO blm: for testing use since test_org does not have enough bibles
 
   return (
     <Workspace
