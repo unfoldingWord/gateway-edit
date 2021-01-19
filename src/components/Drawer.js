@@ -1,20 +1,40 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import SettingsIcon from '@material-ui/icons/Settings'
 import BugReportIcon from '@material-ui/icons/BugReport'
-import DashboardIcon from '@material-ui/icons/Dashboard'
 import IconButton from '@material-ui/core/IconButton'
-import Crop54Icon from '@material-ui/icons/Crop54'
-import FolderIcon from '@material-ui/icons/Folder'
 import ListItem from '@material-ui/core/ListItem'
-import Divider from '@material-ui/core/Divider'
-import Button from '@material-ui/core/Button'
 import List from '@material-ui/core/List'
+// TODO: Enable buttons once ready to fully implement functionality
+// import DashboardIcon from '@material-ui/icons/Dashboard'
+// import Crop54Icon from '@material-ui/icons/Crop54'
+// import FolderIcon from '@material-ui/icons/Folder'
+// import Divider from '@material-ui/core/Divider'
+// import Button from '@material-ui/core/Button'
 
 function Drawer({ open, onClose, onOpen, user, logout }) {
+  const router = useRouter()
+
+  function onSettingsClick() {
+    router.push('/settings')
+    onClose()
+  }
+
+  function onFeedbackClick() {
+    // router.push('/feedback')
+    // onClose()
+  }
+
+  function onLogout() {
+    logout()
+    onClose()
+  }
+
   return (
     <SwipeableDrawer
       anchor='left'
@@ -47,7 +67,15 @@ function Drawer({ open, onClose, onOpen, user, logout }) {
           </h1>
         </div>
       )}
-      <div className='mx-4 mt-2 m-1'>
+      <List disablePadding>
+        <ListItem button key={'Account Settings'} onClick={onSettingsClick}>
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary={'Account Settings'} />
+        </ListItem>
+      </List>
+      {/* <div className='mx-4 mt-2 m-1'>
         <Button variant='outlined' startIcon={<FolderIcon />}>
           Save Current Layout
         </Button>
@@ -122,20 +150,26 @@ function Drawer({ open, onClose, onOpen, user, logout }) {
           <ListItemText primary={'My Book Package Flow'} />
         </ListItem>
       </List>
-      <Divider />
+      <Divider /> */}
       <List disablePadding>
-        <ListItem button key={'Bug Report or Feedback'}>
+        <ListItem
+          button
+          key={'Bug Report or Feedback'}
+          onClick={onFeedbackClick}
+        >
           <ListItemIcon>
             <BugReportIcon />
           </ListItemIcon>
           <ListItemText primary={'Bug Report or Feedback'} />
         </ListItem>
-        <ListItem button key={'Logout'} onClick={() => logout()}>
-          <ListItemIcon>
-            <ExitToAppIcon />
-          </ListItemIcon>
-          <ListItemText primary={'Logout'} />
-        </ListItem>
+        {user && (
+          <ListItem button key={'Logout'} onClick={onLogout}>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Logout'} />
+          </ListItem>
+        )}
       </List>
     </SwipeableDrawer>
   )
