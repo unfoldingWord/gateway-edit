@@ -20,6 +20,7 @@ export default function ScriptureCard({
   classes,
   bookId,
   resourceId,
+  disableWordPopover,
 }) {
   const scriptureConfig = useScripture({
     reference: {
@@ -37,6 +38,7 @@ export default function ScriptureCard({
       server,
       cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
     },
+    disableWordPopover,
   });
 
   const language = getLanguage({ languageId });
@@ -90,4 +92,5 @@ ScriptureCard.propTypes = {
   languageId: PropTypes.string.isRequired,
   bookId: PropTypes.string.isRequired,
   resourceId: PropTypes.string.isRequired,
+  disableWordPopover: PropTypes.bool,
 }

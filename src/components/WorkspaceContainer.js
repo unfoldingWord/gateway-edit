@@ -66,6 +66,7 @@ function WorkspaceContainer() {
         languageId={languageId}
         resourceId={'ult'}
         bookId={bookId}
+        disableWordPopover={true}
       />
 
       <ScriptureCard
@@ -92,6 +93,7 @@ function WorkspaceContainer() {
         languageId={languageId}
         resourceId={'ust'}
         bookId={bookId}
+        disableWordPopover={true}
       />
 
       <ResourceCard
