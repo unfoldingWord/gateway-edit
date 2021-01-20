@@ -1,5 +1,5 @@
 module.exports = {
-  // Target must be serverless
+  // Target must be serverless.
   target: 'serverless',
   webpack: config => {
     // Fixes npm packages that depend on `fs` module
