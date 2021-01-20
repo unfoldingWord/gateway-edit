@@ -31,6 +31,7 @@
     "translation-helps-rcl": "1.2.1"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^1.0.8",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-react": "^7.21.5",
