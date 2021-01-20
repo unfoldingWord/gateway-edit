@@ -21,7 +21,6 @@
     "localforage": "^1.9.0",
     "markdown-translatable": "^1.2.8",
     "next": "^10.0.3",
-    "next-on-netlify": "^2.8.4",
     "postcss": "^8.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
