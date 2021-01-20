@@ -1,7 +1,7 @@
 import sgMail from '@sendgrid/mail'
 import { APP_VERSION } from '../common/constants'
 
-export default function sendFeedback({ name, email, message, category }) {
+export default async function sendFeedback({ name, email, message, category }) {
   let fullMessage = `${message}\n\nApp Version:\n${APP_VERSION}`
 
   if (name) {
@@ -13,7 +13,7 @@ export default function sendFeedback({ name, email, message, category }) {
   }
 
   const msg = {
-    // to: process.env.NEXT_PUBLIC_HELP_DESK_EMAIL,
+    // to: process.env.HELP_DESK_EMAIL,
     to: 'colonmanuel7@gmail.com',
     from: email,
     subject: `Create App v2: ${category}`,
@@ -21,18 +21,7 @@ export default function sendFeedback({ name, email, message, category }) {
     html: fullMessage.replace(/\n/g, '<br>'),
   }
 
-  console.log(process.env.NEXT_PUBLIC_HELP_DESK_TOKEN)
+  sgMail.setApiKey(process.env.HELP_DESK_TOKEN)
 
-  sgMail.setApiKey(process.env.NEXT_PUBLIC_HELP_DESK_TOKEN)
-
-  sgMail.send(msg).then(
-    () => {},
-    error => {
-      console.error(error)
-
-      if (error.response) {
-        console.error(error.response.body)
-      }
-    }
-  )
+  return sgMail.send(msg)
 }
