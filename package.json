@@ -24,9 +24,9 @@
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "^0.5.0",
     "scripture-resources-rcl": "3.0.3",
-    "single-scripture-rcl": "0.1.5",
+    "single-scripture-rcl": "file:.yalc/single-scripture-rcl",
     "tailwindcss": "^2.0.2",
-    "translation-helps-rcl": "1.2.1"
+    "translation-helps-rcl": "file:.yalc/translation-helps-rcl"
   },
   "devDependencies": {
     "eslint": "^7.16.0",

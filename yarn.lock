@@ -6163,10 +6163,8 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@0.1.5:
+"single-scripture-rcl@file:.yalc/single-scripture-rcl":
   version "0.1.5"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-0.1.5.tgz#b86a4f5f2d30f65d81b50f121f27b37526c3f97f"
-  integrity sha512-rbOW4S5fdW05MpnOA07Too123FkbuakA5n8GGAog7VPwByPlwPUuU7LXo4DvIukuZl54gVEwccYyeyE7ck+q+Q==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -6826,10 +6824,8 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.2.1.tgz#61c28228b9fd8cda8f48db95408f2456ff968f20"
-  integrity sha512-9e1Tgu81L5bkQS5HtbAl0DR/lmvH/EEqvDRfcfh4uqEKLZyKSLCVH2HIb0oi8lvC3qVAim9IAO8oPWcgTTAgfQ==
+"translation-helps-rcl@file:.yalc/translation-helps-rcl":
+  version "1.3.0"
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
