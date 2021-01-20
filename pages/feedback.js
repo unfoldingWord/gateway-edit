@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Paper } from 'translation-helps-rcl'
+import Paper from 'translation-helps-rcl/dist/components/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -8,7 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import Layout from '@components/Layout'
-import sendFeedback from '@common/sendFeedback'
+// import sendFeedback from '@common/sendFeedback'
 
 const useStyles = makeStyles(theme => ({
   textField: {
