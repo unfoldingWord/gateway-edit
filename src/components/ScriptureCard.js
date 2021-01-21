@@ -1,58 +1,64 @@
-import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
   useCardState,
 } from 'translation-helps-rcl'
-import { ScripturePane, useScripture } from "single-scripture-rcl";
+import { ScripturePane } from "single-scripture-rcl";
 import { getLanguage } from "@common/languages";
-import useScriptureVersionSettings from "@hooks/useScriptureVersionSettings";
+import {getItemByTitle, updateTitle} from "@utils/ScriptureVersionHistory";
+import { getScriptureVersionSettings, useScriptureSettings } from "@hooks/useScriptureSettings";
 
 const label = 'Version';
 const style = {marginTop: '16px', width: '500px'};
 
-export default function ScriptureCard({
-  cardNum,
-  title,
-  chapter,
-  verse,
-  server,
-  owner,
-  branch,
-  languageId,
-  classes,
-  bookId,
-  resourceId,
-  disableWordPopover,
-  scriptureVersionHistory,
-}) {
-  const scriptureConfig = useScripture({
-    reference: {
-      projectId: bookId,
-      chapter,
-      verse,
-    },
-    resource: {
-      languageId,
-      projectId: resourceId,
-      owner,
-      branch,
-    },
-    config: {
-      server,
-      cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
-    },
-    disableWordPopover,
-  });
-  const dropDownConfig = useScriptureVersionSettings({
-    label,
-    currentTitle: scriptureConfig.title,
-    currentUrl: scriptureConfig.resourceLink,
-    style,
-    scriptureVersionHistory,
-  });
+export default function ScriptureCard(Props) {
+  const {
+    cardNum,
+    title,
+    chapter,
+    verse,
+    server,
+    owner,
+    branch,
+    languageId,
+    classes,
+    bookId,
+    resourceId,
+    disableWordPopover
+  } = Props;
 
-  const language = getLanguage({ languageId });
+  // `${owner}/${languageId}/${projectId}/${branch}`;
+
+  const { scriptureConfig, setScripture } = useScriptureSettings(Props);
+
+  if (scriptureConfig.title) {
+    updateTitle(scriptureConfig.resourceLink, scriptureConfig.title);
+  }
+
+  function getDropDownConfig() {
+    const dropDownConfig = getScriptureVersionSettings({
+      label,
+      currentTitle: scriptureConfig.title,
+      currentLink: scriptureConfig.resourceLink,
+      style
+    });
+
+    const onChangeOrig = dropDownConfig.onChange;
+    dropDownConfig.onChangeOrig = onChangeOrig;
+    dropDownConfig.onChange = (title, index) => {
+      if (onChangeOrig) {
+        onChangeOrig(title, index);
+        const item = getItemByTitle(title);
+        if (item) {
+          setScripture(item);
+        }
+      }
+    }
+
+    return dropDownConfig;
+  }
+
+  const language = getLanguage({ languageId: scriptureConfig?.resource?.languageId });
   const direction = (language?.direction) || 'ltr';
 
   const items = null;
@@ -87,7 +93,7 @@ export default function ScriptureCard({
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
       hideMarkdownToggle={true}
-      dropDownConfig={dropDownConfig}
+      getDropDownConfig={getDropDownConfig}
       title={title}
     >
       <ScripturePane refStyle={refStyle} contentStyle={contentStyle} {...scriptureConfig} direction={direction}/>
@@ -106,6 +112,5 @@ ScriptureCard.propTypes = {
   languageId: PropTypes.string.isRequired,
   bookId: PropTypes.string.isRequired,
   resourceId: PropTypes.string.isRequired,
-  disableWordPopover: PropTypes.bool,
-  scriptureVersionHistory: PropTypes.object.isRequired,
+  disableWordPopover: PropTypes.bool
 }

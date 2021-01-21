@@ -11,7 +11,6 @@ import {
   OT_ORIG_LANG,
   OT_ORIG_LANG_BIBLE,
 } from '@common/BooksOfTheBible'
-import useScriptureVersionHistory from "@hooks/useScriptureVersionHistory";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -39,8 +38,6 @@ function WorkspaceContainer() {
     },
     actions: { updateTaDetails },
   } = useContext(ReferenceContext)
-  const scriptureVersionHistory = useScriptureVersionHistory();
-
 
   const layout = {
     widths: [
@@ -78,7 +75,6 @@ function WorkspaceContainer() {
         resourceId={'ult'}
         bookId={bookId}
         disableWordPopover={true}
-        scriptureVersionHistory={scriptureVersionHistory}
       />
 
       <ScriptureCard
@@ -93,7 +89,6 @@ function WorkspaceContainer() {
         languageId={originalLanguageID}
         resourceId={originalBibleID}
         bookId={bookId}
-        scriptureVersionHistory={scriptureVersionHistory}
       />
 
       <ScriptureCard
@@ -109,7 +104,6 @@ function WorkspaceContainer() {
         resourceId={'ust'}
         bookId={bookId}
         disableWordPopover={true}
-        scriptureVersionHistory={scriptureVersionHistory}
       />
 
       <ResourceCard
