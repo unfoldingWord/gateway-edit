@@ -1364,18 +1364,6 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@netlify/plugin-nextjs@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@netlify/plugin-nextjs/-/plugin-nextjs-1.0.8.tgz#2d48c947e0c9852b8997246d4cb07d891a0caa4a"
-  integrity sha512-lELrEcHvJjeE45NaPvmLaoJHGukawjpAEStQK+w48l68UufAwmFxDhikmtsLbpSBDuLpVAFoCw4ROzl1mnc1bg==
-  dependencies:
-    chalk "^4.1.0"
-    find-up "^4.1.0"
-    jimp "^0.16.1"
-    make-dir "^3.1.0"
-    next-on-netlify "2.8.4"
-    semver "^7.3.2"
-
 "@next/env@10.0.5":
   version "10.0.5"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-10.0.5.tgz#446e59ee7a8d05061be784b24732c369653038ab"
@@ -5593,7 +5581,7 @@ make-dir@^2.0.0:
     pify "^4.0.1"
     semver "^5.6.0"
 
-make-dir@^3.0.0, make-dir@^3.0.2, make-dir@^3.1.0:
+make-dir@^3.0.0, make-dir@^3.0.2:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-3.1.0.tgz#415e967046b3a7f1d185277d84aa58203726a13f"
   integrity sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==
@@ -5926,7 +5914,7 @@ neo-async@^2.5.0, neo-async@^2.6.1, neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-next-on-netlify@2.8.4, next-on-netlify@^2.8.4:
+next-on-netlify@^2.8.4:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/next-on-netlify/-/next-on-netlify-2.8.4.tgz#4e11ef04a632b0b5f58c61f8689ca6ef218ac0d2"
   integrity sha512-G3xG7ILWrMu7Rg3l/zJde+mTOP72w2XIGNoXUa7/rqitEXi2UuXabziHsGIRtJb9azJCz8wjrp+bf5gyGRq3Eg==
