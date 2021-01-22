@@ -48,14 +48,11 @@ const SettingsPage = () => {
   }
 
   async function onSubmitFeedback() {
-    console.log({ name, email, category, message })
-    const res = await fetch('/api/send-email', {
+    await fetch('/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, category, message }),
-    }).catch(e => console.log(e))
-
-    console.log('res', res)
+      body: { name, email, category, message },
+    })
   }
 
   return (
