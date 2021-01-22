@@ -47,7 +47,7 @@ const SettingsPage = () => {
   }
 
   async function onSubmitFeedback() {
-    await fetch('/api/send-email', {
+    await fetch('/api/feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: { name, email, category, message },
