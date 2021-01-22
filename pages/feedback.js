@@ -8,7 +8,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import Layout from '@components/Layout'
-// import sendFeedback from '@common/sendFeedback'
 
 const useStyles = makeStyles(theme => ({
   textField: {
