@@ -5,9 +5,9 @@ module.exports = {
     // Perform customizations to webpack config
     config.plugins.push(new webpack.IgnorePlugin(/canvas/))
     // Fixes npm packages that depend on `fs` module
-    config.node = {
-      fs: 'empty',
-    }
+    // config.node = {
+    //   fs: 'empty',
+    // }
     // Important: return the modified config
     return config
   },
