@@ -3,16 +3,16 @@ import sendFeedback from '../../src/common/sendFeedback'
 export default async (req, res) => {
   if (req.method === 'POST') {
     const { name, email, message, category } = req.body
-    const res = await sendFeedback({
+    const response = await sendFeedback({
       name,
       email,
       message,
       category,
     }).catch(e => console.log(e))
 
-    console.log({ res })
+    console.log({ response })
 
-    return res.status(200).end()
+    return response
   }
 
   return res.status(404).json({
