@@ -10,8 +10,6 @@ export default async (req, res) => {
       category,
     }).catch(e => console.log(e))
 
-    console.log({ response })
-
     return response
   }
 
