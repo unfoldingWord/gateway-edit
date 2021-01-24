@@ -50,7 +50,7 @@ const SettingsPage = () => {
     await fetch('/api/feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: { name, email, category, message },
+      body: JSON.stringify({ name, email, category, message }),
     })
   }
 
