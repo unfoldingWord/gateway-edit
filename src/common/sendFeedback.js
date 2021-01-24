@@ -13,7 +13,7 @@ export default async function sendFeedback({ name, email, message, category }) {
   }
 
   const msg = {
-    // to: process.env.HELP_DESK_EMAIL,
+    to: process.env.HELP_DESK_EMAIL,
     to: 'colonmanuel7@gmail.com',
     from: email,
     subject: `Create App v2: ${category}`,
