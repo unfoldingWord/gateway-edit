@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import Paper from 'translation-helps-rcl/dist/components/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
@@ -8,6 +9,29 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import Layout from '@components/Layout'
+import MuiAlert from '@material-ui/lab/Alert'
+
+function Alert({ severity, message }) {
+  const router = useRouter()
+
+  return (
+    <MuiAlert
+      className='w-full mt-8 mb-4'
+      elevation={6}
+      variant='filled'
+      severity={severity}
+      action={
+        severity === 'success' && (
+          <Button color='inherit' size='small' onClick={() => router.push('/')}>
+            OK
+          </Button>
+        )
+      }
+    >
+      {message}
+    </MuiAlert>
+  )
+}
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -20,11 +44,18 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     margin: theme.spacing(4),
   },
+  button: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
 }))
 
 const SettingsPage = () => {
   const classes = useStyles()
   const categories = ['Bug Report', 'Feedback']
+  const [sumitting, setSumitting] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
   const [category, setSategory] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -47,11 +78,22 @@ const SettingsPage = () => {
   }
 
   async function onSubmitFeedback() {
-    await fetch('/api/feedback', {
+    setSumitting(true)
+
+    const res = await fetch('/api/feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, category, message }),
     })
+
+    if (res.status === 200) {
+      console.log('res.status', res.status)
+      setShowSuccess(true)
+    } else {
+      setShowError(true)
+    }
+
+    setSumitting(false)
   }
 
   return (
@@ -111,17 +153,34 @@ const SettingsPage = () => {
                 onChange={onMessageChange}
                 classes={{ root: classes.textField }}
               />
-              <div className='flex justify-end mx-8 mb-4'>
+              <div className='flex flex-col mx-8 mb-4'>
                 <Button
-                  className={classes.button}
+                  className='self-end'
                   variant='contained'
                   color='primary'
+                  size='large'
                   disableElevation
-                  disabled={!name || !email || !message || !category}
+                  disabled={
+                    sumitting || !name || !email || !message || !category
+                  }
                   onClick={onSubmitFeedback}
                 >
-                  Submit
+                  {sumitting ? 'Submitting' : 'Submit'}
                 </Button>
+                {showSuccess || showError ? (
+                  <Alert
+                    severity={showSuccess ? 'success' : 'error'}
+                    message={
+                      showSuccess
+                        ? `Your ${
+                            category || 'feedback'
+                          } was submitted successfully!`
+                        : `Something went wrong submitting your ${
+                            category || 'feedback'
+                          }.`
+                    }
+                  />
+                ) : null}
               </div>
             </div>
           </Paper>

@@ -10,7 +10,7 @@ export default async (req, res) => {
       category,
     }).catch(e => console.log(e))
 
-    return response
+    return res.status(200).json({ ...response })
   }
 
   return res.status(404).json({
