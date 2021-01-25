@@ -1,30 +1,47 @@
-import useEffect from 'use-deep-compare-effect';
 import { useState } from 'react'
-import deepEqual from 'deep-equal';
-import { getLocalStorageValue, setLocalStorageValue } from "@utils/LocalStorage";
 
-export default function useLocalStorage(key, defaultValue = null) {
-  const [value, setValue] = useState(defaultValue)
+// based on example at https://usehooks.com/useLocalStorage/
 
-  useEffect(() => {
-    console.log(`useLocalStorage(${key}) - key changed, new value`, value);
-    const storedValue = getLocalStorageValue(key);
+export default function useLocalStorage(key, initialValue) {
 
-    if (!deepEqual(storedValue, value)) {
-      console.log(`useLocalStorage(${key}) - old localStorage value '${storedValue}', updating to '${value}'`);
-      setValue(storedValue)
+  // State to store our value
+  // Pass initial state function to useState so logic is only executed once
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      // Get from local storage by key
+      const item = window.localStorage.getItem(key);
+      if (item) {
+        console.log(`useLocalStorage(${key}) - initializing to stored value '${item}'`);
+      } else {
+        console.log(`useLocalStorage(${key}) - initializing to default value '${JSON.stringify(initialValue)}'`);
+      }
+      // Parse stored json or if none return initialValue
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      // If error also return initialValue
+      console.log(error);
+      return initialValue;
     }
-  }, [{key}])
+  });
 
-  useEffect(() => {
-    console.log(`useLocalStorage(${key}) - key or value changed, new value`, value);
-    const storedValue = getLocalStorageValue(key);
-
-    if (!deepEqual(storedValue, value)) {
-      console.log(`useLocalStorage(${key}) - old localStorage value '${storedValue}', updating to '${value}'`);
-      setLocalStorageValue(key, value);
+  // Return a wrapped version of useState's setter function that ...
+  // ... persists the new value to localStorage.
+  const setValue = value => {
+    try {
+      // Allow value to be a function so we have same API as useState
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
+      // Save state
+      setStoredValue(valueToStore);
+      // Save to local storage
+      let valueJSON = JSON.stringify(valueToStore);
+      window.localStorage.setItem(key, valueJSON);
+      console.log(`useLocalStorage(${key}) - setting value to '${valueJSON}'`);
+    } catch (error) {
+      // A more advanced implementation would handle the error case
+      console.log(error);
     }
-  }, [{key, value}])
+  };
 
-  return [value, setValue]
+  return [storedValue, setValue];
 }

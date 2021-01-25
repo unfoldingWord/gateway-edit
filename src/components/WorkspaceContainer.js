@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
 import ScriptureCard from '@components/ScriptureCard'
 import { ReferenceContext } from '@context/ReferenceContext'
+import { ORIGINAL_SOURCE, TARGET_LITERAL, TARGET_SIMPLIFIED } from '@hooks/useScriptureSettings'
 import {
   NT_BOOKS,
   NT_ORIG_LANG,
@@ -47,12 +48,6 @@ function WorkspaceContainer() {
     ],
   }
 
-  // select original language Bible based on which testament the book is
-  const isNewTestament = NT_BOOKS.includes(bookId)
-  const originalLanguageID = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG
-  const originalBibleID = isNewTestament
-    ? NT_ORIG_LANG_BIBLE
-    : OT_ORIG_LANG_BIBLE
   const scriptureOwner = 'unfoldingWord' //TODO blm: for testing use since test_org does not have enough bibles
 
   return (
@@ -72,7 +67,7 @@ function WorkspaceContainer() {
         owner={scriptureOwner}
         branch={branch}
         languageId={languageId}
-        resourceId={'ult'}
+        resourceId={TARGET_LITERAL}
         bookId={bookId}
         disableWordPopover={true}
       />
@@ -86,8 +81,8 @@ function WorkspaceContainer() {
         server={server}
         owner={scriptureOwner}
         branch={branch}
-        languageId={originalLanguageID}
-        resourceId={originalBibleID}
+        languageId={ORIGINAL_SOURCE}
+        resourceId={ORIGINAL_SOURCE}
         bookId={bookId}
       />
 
@@ -101,7 +96,7 @@ function WorkspaceContainer() {
         owner={scriptureOwner}
         branch={branch}
         languageId={languageId}
-        resourceId={'ust'}
+        resourceId={TARGET_SIMPLIFIED}
         bookId={bookId}
         disableWordPopover={true}
       />

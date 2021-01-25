@@ -27,9 +27,7 @@ export default function ScriptureCard(Props) {
     disableWordPopover
   } = Props;
 
-  // `${owner}/${languageId}/${projectId}/${branch}`;
-
-  const { scriptureConfig, setScripture } = useScriptureSettings(Props);
+  const { scriptureConfig, scriptureResource, setScripture } = useScriptureSettings(Props);
 
   if (scriptureConfig.title) {
     updateTitle(scriptureConfig.resourceLink, scriptureConfig.title);
@@ -38,17 +36,19 @@ export default function ScriptureCard(Props) {
   function getDropDownConfig() {
     const dropDownConfig = getScriptureVersionSettings({
       label,
-      currentTitle: scriptureConfig.title,
-      currentLink: scriptureConfig.resourceLink,
+      scriptureResource,
       style
     });
 
     const onChangeOrig = dropDownConfig.onChange;
     dropDownConfig.onChangeOrig = onChangeOrig;
     dropDownConfig.onChange = (title, index) => {
+      console.log(`onChange(${cardNum}) - new state: ${JSON.stringify({title, index})}`)
+
       if (onChangeOrig) {
         onChangeOrig(title, index);
         const item = getItemByTitle(title);
+        console.log(`onChange(${cardNum}) - new state: ${JSON.stringify(item)}`)
         if (item) {
           setScripture(item);
         }

@@ -1,4 +1,3 @@
-import deepEqual from 'deep-equal';
 import { getLocalStorageValue, setLocalStorageValue } from "@utils/LocalStorage";
 
 const maxItems = 5;
@@ -6,23 +5,11 @@ const KEY = 'scriptureVersionHistory';
 
 export function updateTitle(resourceLink, title) { // update title for resourceLink
   const history = getLatest();
-  const index = findItemIndexByKey(history, 'link', resourceLink);
+  const index = findItemIndexByKey(history, 'resourceLink', resourceLink);
   if (index >= 0) { // if found then update
     const entry = history[index];
     if (entry.title !== title) {
       entry.title = title; // update the title
-      setLocalStorageValue(KEY, history); // persist settings
-    }
-  }
-}
-
-export function updateResourceLink(url, resourceLink) { // update resource link for url
-  const history = getLatest();
-  const index = findItemIndexByKey(history, 'url', url);
-  if (index >= 0) { // if found then update
-    const entry = history[index];
-    if (entry.link !== resourceLink) {
-      entry.link = resourceLink; // update the link
       setLocalStorageValue(KEY, history); // persist settings
     }
   }
@@ -44,7 +31,7 @@ export function getItemByTitle(title) {
   return item;
 }
 
-export function removeItem(index) {
+export function removeItemByIndex(index) {
   let history = getLatest();
   if ((index >= 0) && (index < history.length)) {
     history.splice(index, 1); // remove old item - we will add it back again to the front
@@ -55,19 +42,28 @@ export function removeItem(index) {
 export function removeUrl(url) {
   const index = findItemIndexByKey(getLatest(), 'url', url);
   if (index >= 0) {
-    removeItem(index)
+    removeItemByIndex(index)
   }
 }
 
-export function addItem(newItem) { // add new item to front of the array and only keep up to maxItems
+export function findItem(matchItem, history) {
+  if (!history) {
+    history = getLatest();
+  }
+  const index = history.findIndex((item) => (
+    (item.server === matchItem.server) &&
+    (item.resourceLink === matchItem.resourceLink)));
+  return index;
+}
+
+export function addItemToHistory(newItem) { // add new item to front of the array and only keep up to maxItems
   let history = getLatest();
   let newIndex = -1;
-  const index = history.findIndex((item) => (deepEqual(item, newItem)) );
-  if (index >= 0) {
-    history.splice(index, 1); // remove old item - we will add it back again to the front
+  let index = findItem(newItem, history);
+  if (index < 0) {
+    history.unshift(newItem);
+    index = 0;
   }
-  history.unshift(newItem);
-  newIndex = 0;
 
   if (history.length > maxItems) {
     history = history.slice(0, maxItems);
@@ -75,8 +71,4 @@ export function addItem(newItem) { // add new item to front of the array and onl
 
   setLocalStorageValue(KEY, history);
   return newIndex;
-}
-
-export default function scriptureVersionHistory() {
-  return {addItem, getLatest, updateTitle, findItemIndexByKey};
 }
