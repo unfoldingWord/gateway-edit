@@ -7,8 +7,8 @@ import { ReferenceContext } from '@context/ReferenceContext'
 import {
   NT_BOOKS,
   NT_ORIG_LANG,
-  NT_ORIG_LANG_BIBLE,
   OT_ORIG_LANG,
+  NT_ORIG_LANG_BIBLE,
   OT_ORIG_LANG_BIBLE,
 } from '@common/BooksOfTheBible'
 
@@ -34,6 +34,7 @@ function WorkspaceContainer() {
       branch,
       taArticle,
       languageId,
+      scriptureOwner,
       bibleReference: { bookId, chapter, verse },
     },
     actions: { updateTaDetails },
@@ -45,6 +46,7 @@ function WorkspaceContainer() {
       [2, 2],
       [2, 2],
     ],
+    heights: [[1.6], [3.5, 3.5], [3.5, 3.5]],
   }
 
   // select original language Bible based on which testament the book is
@@ -53,11 +55,10 @@ function WorkspaceContainer() {
   const originalBibleID = isNewTestament
     ? NT_ORIG_LANG_BIBLE
     : OT_ORIG_LANG_BIBLE
-  const scriptureOwner = 'unfoldingWord' //TODO blm: for testing use since test_org does not have enough bibles
 
   return (
     <Workspace
-      rowHeight={405}
+      rowHeight={100}
       layout={layout}
       gridMargin={[15, 15]}
       classes={classes}

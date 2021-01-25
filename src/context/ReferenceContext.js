@@ -11,6 +11,8 @@ export default function ReferenceContextProvider(props) {
     true
   )
   const [taArticle, setTaArticle] = useState(null)
+  // TODO blm: for testing use unfoldingWord since test_org does not have enough bibles
+  const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
   // TODO: To make the app more dynamic use the setters below to dynamically set and change the values
   const [server, setServer] = useState('https://git.door43.org')
   const [branch, setBranch] = useState('master')
@@ -45,6 +47,7 @@ export default function ReferenceContextProvider(props) {
   const value = {
     state: {
       showAccountSetup,
+      scriptureOwner,
       bibleReference,
       languageId,
       taArticle,
