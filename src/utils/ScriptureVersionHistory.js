@@ -1,6 +1,6 @@
 import { getLocalStorageValue, setLocalStorageValue } from "@utils/LocalStorage";
 
-const maxItems = 5;
+const maxItems = 7;
 const KEY = 'scriptureVersionHistory';
 
 export function updateTitle(resourceLink, title) { // update title for resourceLink
