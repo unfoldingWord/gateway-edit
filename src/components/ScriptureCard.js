@@ -34,9 +34,13 @@ export default function ScriptureCard(Props) {
   }
 
   function getDropDownConfig() {
+    const scriptureConfig_ = {...scriptureConfig};
+    scriptureConfig_.content = !!scriptureConfig.content;
+    console.log(`getDropDownConfig(${cardNum}) - new scripture (scriptureConfig): ${JSON.stringify(scriptureConfig_)}`)
+    console.log(`getDropDownConfig(${cardNum}) - new state: ${JSON.stringify(scriptureResource)}`)
     const dropDownConfig = getScriptureVersionSettings({
       label,
-      scriptureResource,
+      resourceLink: scriptureConfig.resourceLink,
       style
     });
 

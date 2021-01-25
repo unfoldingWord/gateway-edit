@@ -1,6 +1,6 @@
 import {
   addItemToHistory,
-  findItem,
+  findItemIndexByKey,
   getLatest,
   removeUrl,
   updateResourceLink,
@@ -121,7 +121,7 @@ export function useScriptureSettings(props) {
   const scriptureResource = getScriptureObject(props); // scripture resource based on default settings
   let [scriptureSettings, setScriptureSettings] = useLocalStorage(key, scriptureResource);
 
-  console.log(`useScriptureSettings(${cardNum}) - new state: ${JSON.stringify(scriptureSettings)}`)
+  console.log(`useScriptureSettings(${cardNum}) - new state (scriptureSettings): ${JSON.stringify(scriptureSettings)}`)
 
   if (!scriptureSettings) { // special handling on initial setup
     scriptureSettings = scriptureSettings; //TODO blm: remove
@@ -132,7 +132,7 @@ export function useScriptureSettings(props) {
 
   const scriptureConfig_ = {...scriptureConfig};
   scriptureConfig_.content = !!scriptureConfig.content;
-  console.log(`useScriptureSettings(${cardNum}) - new scripture: ${JSON.stringify(scriptureConfig_)}`)
+  console.log(`useScriptureSettings(${cardNum}) - new scripture (scriptureConfig): ${JSON.stringify(scriptureConfig_)}`)
 
   const setScripture = (item) => {
     console.log(`setScripture(${cardNum}) - new scripture resource: ${JSON.stringify(item)}`)
@@ -205,11 +205,12 @@ export function useScriptureSettings(props) {
   return { scriptureConfig, setScripture, scriptureResource };
 }
 
-export function getScriptureVersionSettings({label, scriptureResource, style}) {
+export function getScriptureVersionSettings({label, resourceLink, style}) {
   const history = getLatest();
-  console.log(`getScriptureVersionSettings() - new state: ${JSON.stringify(scriptureResource)}`)
+  console.log(`getScriptureVersionSettings() - resourceLink: ${resourceLink}`)
 
-  let index = findItem(scriptureResource, history);
+  let index = findItemIndexByKey(history, 'resourceLink', resourceLink);
+
   console.log(`getScriptureVersionSettings() - index: ${JSON.stringify({index})}`)
 
   const dropDownConfig = {
