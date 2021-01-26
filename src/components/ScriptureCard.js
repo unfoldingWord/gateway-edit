@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types'
-import {
-  Card,
-  useCardState,
-} from 'translation-helps-rcl'
+import { Card, useCardState } from 'translation-helps-rcl'
 import { ScripturePane } from "single-scripture-rcl";
+import { ComboBox } from '@components/ComboBox';
 import { getLanguage } from "@common/languages";
-import {getItemByTitle, updateTitle} from "@utils/ScriptureVersionHistory";
+import { getItemByTitle, updateTitle } from "@utils/ScriptureVersionHistory";
 import { getScriptureVersionSettings, useScriptureSettings } from "@hooks/useScriptureSettings";
 
 const label = 'Version';
@@ -33,7 +31,7 @@ export default function ScriptureCard(Props) {
     updateTitle(scriptureConfig.resourceLink, scriptureConfig.title);
   }
 
-  function getDropDownConfig() {
+  function getDropDownComponent() {
     const scriptureConfig_ = {...scriptureConfig};
     scriptureConfig_.content = !!scriptureConfig.content;
     console.log(`getDropDownConfig(${cardNum}) - new scripture (scriptureConfig): ${JSON.stringify(scriptureConfig_)}`)
@@ -59,7 +57,7 @@ export default function ScriptureCard(Props) {
       }
     }
 
-    return dropDownConfig;
+    return <ComboBox {...dropDownConfig} />;
   }
 
   const language = getLanguage({ languageId: scriptureConfig?.resource?.languageId });
@@ -97,7 +95,7 @@ export default function ScriptureCard(Props) {
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
       hideMarkdownToggle={true}
-      getDropDownConfig={getDropDownConfig}
+      getCustomComponent={getDropDownComponent}
       title={title}
     >
       <ScripturePane refStyle={refStyle} contentStyle={contentStyle} {...scriptureConfig} direction={direction}/>
