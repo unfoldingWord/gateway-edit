@@ -26,8 +26,8 @@ function Drawer({ open, onClose, onOpen, user, logout }) {
   }
 
   function onFeedbackClick() {
-    // router.push('/feedback')
-    // onClose()
+    router.push('/feedback')
+    onClose()
   }
 
   function onLogout() {
