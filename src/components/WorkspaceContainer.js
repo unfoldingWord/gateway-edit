@@ -47,7 +47,7 @@ function WorkspaceContainer() {
       [2, 2],
       [2, 2],
     ],
-    heights: [[1.6], [3.5, 3.5], [3.5, 3.5]],
+    heights: [[5], [10, 10], [10, 10]],
   }
 
   // select original language Bible based on which testament the book is
@@ -59,7 +59,7 @@ function WorkspaceContainer() {
 
   return (
     <Workspace
-      rowHeight={100}
+      rowHeight={25}
       layout={layout}
       gridMargin={[15, 15]}
       classes={classes}
