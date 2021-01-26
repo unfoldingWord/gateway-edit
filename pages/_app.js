@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import ReferenceContextProvider from '@context/ReferenceContext'
 import AuthContextProvider from '@context/AuthContext'
 import { appName } from '@common/constants'
-import Head from '@components/Head'
+import AppHead from '@components/AppHead'
 import theme from '../src/theme'
 import '@styles/globals.css'
 
@@ -19,7 +19,7 @@ function Application({ Component, pageProps }) {
 
   return (
     <>
-      <Head title={appName} />
+      <AppHead title={appName} />
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
