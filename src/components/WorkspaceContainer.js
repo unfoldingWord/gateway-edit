@@ -34,10 +34,11 @@ function WorkspaceContainer() {
       branch,
       taArticle,
       languageId,
+      selectedQuote,
       scriptureOwner,
       bibleReference: { bookId, chapter, verse },
     },
-    actions: { updateTaDetails },
+    actions: { updateTaDetails, setQuote },
   } = useContext(ReferenceContext)
 
   const layout = {
@@ -139,11 +140,16 @@ function WorkspaceContainer() {
         server={server}
         owner={owner}
         branch={branch}
-        viewMode={'markdown'}
+        viewMode={'list'}
         languageId={languageId}
         resourceId={'twl'}
         projectId={bookId}
         filePath={null}
+        setQuote={setQuote}
+        selectedQuote={selectedQuote}
+        disableFilters
+        disableNavigation
+        disableMarkdownToggle
       />
       <ResourceCard
         title='translationQuestions'

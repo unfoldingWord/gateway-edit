@@ -11,6 +11,7 @@ export default function ReferenceContextProvider(props) {
     true
   )
   const [taArticle, setTaArticle] = useState(null)
+  const [selectedQuote, setQuote] = useState(null)
   // TODO blm: for testing use unfoldingWord since test_org does not have enough bibles
   const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
   // TODO: To make the app more dynamic use the setters below to dynamically set and change the values
@@ -49,6 +50,7 @@ export default function ReferenceContextProvider(props) {
       showAccountSetup,
       scriptureOwner,
       bibleReference,
+      selectedQuote,
       languageId,
       taArticle,
       server,
@@ -57,11 +59,13 @@ export default function ReferenceContextProvider(props) {
     },
     actions: {
       setShowAccountSetup,
+      setScriptureOwner,
       onReferenceChange,
       updateTaDetails,
       setLanguageId,
       setBranch,
       setServer,
+      setQuote,
       setOwner,
     },
   }
