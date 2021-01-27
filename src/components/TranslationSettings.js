@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { Paper } from 'translation-helps-rcl'
+import Paper from 'translation-helps-rcl/dist/components/Paper'
 import FormControl from '@material-ui/core/FormControl'
 import { makeStyles } from '@material-ui/core/styles'
 import InputLabel from '@material-ui/core/InputLabel'
