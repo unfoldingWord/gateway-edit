@@ -13,42 +13,93 @@ import PropTypes from "prop-types";
 
 const filter = createFilterOptions();
 
+export function delay(ms) {
+  return new Promise((resolve) =>
+    setTimeout(resolve, ms),
+  );
+}
+
 export function ComboBox({label, options: options_, current, allowUserInput, onChange, deleteItem, style}) {
-  const currentOption = ((current >= 0) && (current < options_.length)) ? options_[current] : '';
-  const [value, setValue] = React.useState(currentOption);
+  const currentOption_ = ((current >= 0) && (current < options_.length)) ? options_[current] : '';
+  const [currentValue, setCurrentValue] = React.useState(currentOption_);
   const [options, setOptions] = React.useState(options_);
+
+  function handleChange(newValue) {
+    let newSelection = newValue;
+    if (typeof newValue === 'string') {
+      console.log(`ComboBox.onChange() - string, current: ${currentValue.title}, newValue: ${newValue}`)
+      setCurrentValue({
+        title: newValue,
+      });
+    } else if (newValue && newValue.inputValue) {
+      console.log(`ComboBox.onChange() - current: ${currentValue.title}, newValue.inputValue: ${newValue.inputValue}`)
+      // Create a new value from the user input
+      setCurrentValue({
+        title: newValue.inputValue,
+      });
+      newSelection = newValue.inputValue;
+    } else if (newValue === null) {
+      console.log(`ComboBox.onChange() - null current: ${currentValue.title}, newValue: ${JSON.stringify(newValue)}`)
+      return;
+    } else if (newValue.deleting) {
+      console.log(`ComboBox.onChange() - deleting - current: ${currentValue.title}, newValue: ${JSON.stringify(newValue)}`)
+      return;
+    } else {
+      console.log(`ComboBox.onChange() - not null, current: ${currentValue.title}, newValue: ${JSON.stringify(newValue)}`)
+      setCurrentValue(newValue);
+      newSelection = newValue?.title;
+    }
+    const index = options.findIndex(option => (option.title === newSelection));
+    console.log(`ComboBox.onChange() - newSelection: ${newSelection}, index: ${index}`)
+    onChange && onChange(newSelection, index);
+  }
+
+  function findTitle(title) {
+    const index = options.findIndex(item => (item.title === title));
+    return index;
+  }
+
+  function handleDelete(option) {
+    const currentTitle = currentValue.title;
+    const removeTitle = option.title;
+    console.log(`ComboBox.delete() - currentTitle: ${currentTitle}, removeTitle: ${removeTitle}`)
+    deleteItem(removeTitle);
+    const index = findTitle(removeTitle);
+    if (index >= 0) {
+      console.log(`ComboBox.delete() - index: ${index}`)
+      options[index].deleting = true; // flag we are deleting before onChange called
+      options.splice(index, 1);
+      setOptions(options);
+
+      if (currentTitle === removeTitle) { // if we removed current, we need to select another
+        console.log(`ComboBox.delete() - removing current`)
+        const newIndex = 0;
+        const newSelection = options[newIndex];
+        setCurrentValue(newSelection);
+        console.log(`ComboBox.delete() - newSelection: ${newSelection}`)
+        onChange && onChange(newSelection.title, newIndex);
+      } else { // reselect current item since race condition can leave wrong item shown selected
+        const index = findTitle(currentTitle);
+        if (index >= 0) {
+          delay(50).then(() => {
+            const currentSelection = options[index];
+            console.log(`ComboBox.delete() - reselecting: ${index} - ${JSON.stringify(currentSelection)}`)
+            setCurrentValue(currentSelection.title);
+            setOptions(options);
+            onChange && onChange(currentSelection.title, index);
+          });
+        }
+      }
+    }
+  }
+
+  console.log(`ComboBox() - refresh currentValue: ${JSON.stringify(currentValue)}`)
 
   return (
     <Autocomplete
-      value={value}
+      value={currentValue}
       onChange={(event, newValue) => {
-        let newSelection = newValue;
-        if (typeof newValue === 'string') {
-          console.log(`ComboBox.onChange() - string, current: ${value.title}, newValue: ${newValue}`)
-          setValue({
-            title: newValue,
-          });
-        } else if (newValue && newValue.inputValue) {
-          console.log(`ComboBox.onChange() - current: ${value.title}, newValue.inputValue: ${newValue.inputValue}`)
-         // Create a new value from the user input
-          setValue({
-            title: newValue.inputValue,
-          });
-          newSelection = newValue.inputValue;
-        } else if (newValue === null) {
-          console.log(`ComboBox.onChange() - null current: ${value.title}, newValue: ${JSON.stringify(newValue)}`)
-          return;
-        } else if (newValue.deleting) {
-          console.log(`ComboBox.onChange() - deleting - current: ${value.title}, newValue: ${JSON.stringify(newValue)}`)
-          return;
-        } else {
-          console.log(`ComboBox.onChange() - not null, current: ${value.title}, newValue: ${JSON.stringify(newValue)}`)
-          setValue(newValue);
-          newSelection = newValue?.title;
-        }
-        const index = options.findIndex(option => (option.title === newSelection));
-        console.log(`ComboBox.onChange() - newSelection: ${newSelection}, index: ${index}`)
-        onChange && onChange(newSelection, index);
+        handleChange(newValue);
       }}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
@@ -85,31 +136,7 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
           {option.title}
           {option.userAdded &&
           <Tooltip title="Remove">
-            <IconButton aria-label="delete" onClick={() => {
-              const currentTitle = value.title;
-              const removeTitle = option.title;
-              console.log(`ComboBox.delete() - currentTitle: ${currentTitle}, removeTitle: ${removeTitle}`)
-              deleteItem(removeTitle);
-              const index = options.findIndex(item => (item.title === removeTitle));
-              if (index >= 0) {
-                console.log(`ComboBox.delete() - index: ${index}`)
-                options[index].deleting = true; // flag we are deleting before onChange called
-                options.splice(index, 1);
-                setOptions(options);
-
-                if (currentTitle === removeTitle) { // if we removed current
-                  console.log(`ComboBox.delete() - removing current`)
-                  const newIndex = 0;
-                  const newSelection = options[newIndex];
-                  setValue(newSelection);
-                  console.log(`ComboBox.delete() - newSelection: ${newSelection}`)
-                  onChange && onChange(newSelection.title, newIndex);
-                } else { // reselect current item since race condition can level wrong item selected
-                  const newSelection = options[index];
-                  setValue(newSelection);
-                }
-              }
-            }} >
+            <IconButton aria-label="delete" onClick={() => { handleDelete(option) }} >
               <HighlightOffIcon/>
             </IconButton>
           </Tooltip>
@@ -123,7 +150,7 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
       )}
     />
   );
-};
+}
 
 // {, , , allowUserInput, }
 ComboBox.propTypes = {
