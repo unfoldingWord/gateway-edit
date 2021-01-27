@@ -69,9 +69,7 @@ function getDefaultSettings(bookId, scriptureSettings_) {
 }
 
 function useScriptureResources(bookId, scriptureSettings, chapter, verse) {
-  console.log(`useScriptureResources() - scripture settings 1: ${JSON.stringify(scriptureSettings)}`)
-  const scriptureSettings_ = getDefaultSettings(bookId, scriptureSettings);
-  console.log(`useScriptureResources() - scripture settings 2: ${JSON.stringify(scriptureSettings_)}`)
+   const scriptureSettings_ = getDefaultSettings(bookId, scriptureSettings);
 
   const scriptureConfig_ = {
     reference: {
@@ -91,7 +89,6 @@ function useScriptureResources(bookId, scriptureSettings, chapter, verse) {
     },
     disableWordPopover: scriptureSettings_.disableWordPopover,
   };
-  console.log(`useScriptureResources() - fetch scripture: ${JSON.stringify(scriptureConfig_)}`)
 
   const scriptureResource = useScripture(scriptureConfig_);
 
@@ -119,17 +116,13 @@ export function useScriptureSettings(props) {
   const scriptureResource = getScriptureObject(props); // scripture resource based on default settings
   let [scriptureSettings, setScriptureSettings] = useLocalStorage(key, scriptureResource);
 
-  console.log(`useScriptureSettings(${cardNum}) - new state (scriptureSettings): ${JSON.stringify(scriptureSettings)}`)
-
   addItemToHistory(scriptureSettings); // make sure current item persisted in local storage
   const scriptureConfig = useScriptureResources(bookId, scriptureSettings, chapter, verse);
 
   const scriptureConfig_ = {...scriptureConfig};
   scriptureConfig_.content = !!scriptureConfig.content;
-  console.log(`useScriptureSettings(${cardNum}) - new scripture (scriptureConfig): ${JSON.stringify(scriptureConfig_)}`)
 
   const setScripture = (item) => {
-    console.log(`setScripture(${cardNum}) - new scripture resource: ${JSON.stringify(item)}`)
     let url;
     if (item?.url) {
       try {
@@ -140,7 +133,6 @@ export function useScriptureSettings(props) {
       }
     }
     if (url) {
-      console.log(`setScripture(${cardNum}) - setScriptureSettings to: ${url}`);
       let server_;
       let hostname = url.hostname;
       if (hostname) {
@@ -171,7 +163,6 @@ export function useScriptureSettings(props) {
       }).then(resource => {
         let error = true;
         if (resource) {
-          console.log(resource);
           const {title, version} = useResourceManifest(resource);
           if (title && version) {
             // we succeeded in getting resource - use it
@@ -187,7 +178,6 @@ export function useScriptureSettings(props) {
             })
             newScripture.userAdded = true;
             addItemToHistory(newScripture); // persist in local storage
-            console.log(`setScripture(${cardNum}) - setScriptureSettings to: ${JSON.stringify(newScripture)}`)
             setScriptureSettings(newScripture);
             error = false;
           } else {
@@ -209,11 +199,7 @@ export function useScriptureSettings(props) {
 
 export function getScriptureVersionSettings({label, resourceLink, style}) {
   const history = getLatest();
-  console.log(`getScriptureVersionSettings() - resourceLink: ${resourceLink}`)
-
   let index = findItemIndexByKey(history, 'resourceLink', resourceLink);
-
-  console.log(`getScriptureVersionSettings() - index: ${JSON.stringify({index})}`)
 
   const dropDownConfig = {
     label, // label for combobox
@@ -221,7 +207,6 @@ export function getScriptureVersionSettings({label, resourceLink, style}) {
     current: index,
     allowUserInput: true,
     onChange: (title, index) => {
-      console.log(`getScriptureVersionSettings.onChange() - index ${index}, title: ${title}`)
       if ((index < 0) && title) {
         const newItem = {
           url: title,
@@ -231,10 +216,8 @@ export function getScriptureVersionSettings({label, resourceLink, style}) {
       }
     },
     deleteItem: title => {
-      console.log(`getScriptureVersionSettings.deleteItem() - title: ${title}`)
       const history = getLatest();
       const deleteIndex = findItemIndexByKey(history, 'title', title);
-      console.log(`getScriptureVersionSettings.deleteItem() - deleteIndex: ${deleteIndex}`)
       removeItemByIndex(deleteIndex);
     },
     style,

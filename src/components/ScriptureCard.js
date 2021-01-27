@@ -35,8 +35,6 @@ export default function ScriptureCard(Props) {
   function getDropDownComponent() {
     const scriptureConfig_ = {...scriptureConfig};
     scriptureConfig_.content = !!scriptureConfig.content;
-    console.log(`getDropDownConfig(${cardNum}) - new scripture (scriptureConfig): ${JSON.stringify(scriptureConfig_)}`)
-    console.log(`getDropDownConfig(${cardNum}) - new state: ${JSON.stringify(scriptureResource)}`)
     const dropDownConfig = getScriptureVersionSettings({
       label,
       resourceLink: scriptureConfig.resourceLink,
@@ -46,12 +44,10 @@ export default function ScriptureCard(Props) {
     const onChangeOrig = dropDownConfig.onChange;
     dropDownConfig.onChangeOrig = onChangeOrig;
     dropDownConfig.onChange = (title, index) => {
-      console.log(`getDropDownComponent.onChange(${cardNum}) - new state: ${JSON.stringify({title, index})}`)
 
       if (onChangeOrig) {
         onChangeOrig(title, index);
         const item = getItemByTitle(title);
-        console.log(`getDropDownComponent.onChange(${cardNum}) - new state: ${JSON.stringify(item)}`)
         if (item) {
           setScripture(item);
         }

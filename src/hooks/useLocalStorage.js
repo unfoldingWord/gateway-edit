@@ -10,11 +10,11 @@ export default function useLocalStorage(key, initialValue) {
     try {
       // Get from local storage by key
       const item = localStorage.getItem(key);
-      if (item) {
-        console.log(`useLocalStorage(${key}) - initializing to stored value '${item}'`);
-      } else {
-        console.log(`useLocalStorage(${key}) - initializing to default value '${JSON.stringify(initialValue)}'`);
-      }
+      // if (item) {
+      //   console.log(`useLocalStorage(${key}) - initializing to stored value '${item}'`);
+      // } else {
+      //   console.log(`useLocalStorage(${key}) - initializing to default value '${JSON.stringify(initialValue)}'`);
+      // }
       // Parse stored json or if none return initialValue
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
@@ -36,7 +36,7 @@ export default function useLocalStorage(key, initialValue) {
       // Save to local storage
       let valueJSON = JSON.stringify(valueToStore);
       localStorage.setItem(key, valueJSON);
-      console.log(`useLocalStorage(${key}) - setting value to '${valueJSON}'`);
+      // console.log(`useLocalStorage(${key}) - setting value to '${valueJSON}'`);
     } catch (error) {
       // A more advanced implementation would handle the error case
       console.log(`useLocalStorage.setValue(${key}) - error:'`, error);

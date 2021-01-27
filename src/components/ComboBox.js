@@ -27,30 +27,24 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
   function handleChange(newValue) {
     let newSelection = newValue;
     if (typeof newValue === 'string') {
-      console.log(`ComboBox.onChange() - string, current: ${currentValue.title}, newValue: ${newValue}`)
-      setCurrentValue({
+       setCurrentValue({
         title: newValue,
       });
     } else if (newValue && newValue.inputValue) {
-      console.log(`ComboBox.onChange() - current: ${currentValue.title}, newValue.inputValue: ${newValue.inputValue}`)
-      // Create a new value from the user input
+       // Create a new value from the user input
       setCurrentValue({
         title: newValue.inputValue,
       });
       newSelection = newValue.inputValue;
     } else if (newValue === null) {
-      console.log(`ComboBox.onChange() - null current: ${currentValue.title}, newValue: ${JSON.stringify(newValue)}`)
       return;
     } else if (newValue.deleting) {
-      console.log(`ComboBox.onChange() - deleting - current: ${currentValue.title}, newValue: ${JSON.stringify(newValue)}`)
       return;
     } else {
-      console.log(`ComboBox.onChange() - not null, current: ${currentValue.title}, newValue: ${JSON.stringify(newValue)}`)
       setCurrentValue(newValue);
       newSelection = newValue?.title;
     }
     const index = options.findIndex(option => (option.title === newSelection));
-    console.log(`ComboBox.onChange() - newSelection: ${newSelection}, index: ${index}`)
     onChange && onChange(newSelection, index);
   }
 
@@ -62,28 +56,23 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
   function handleDelete(option) {
     const currentTitle = currentValue.title;
     const removeTitle = option.title;
-    console.log(`ComboBox.delete() - currentTitle: ${currentTitle}, removeTitle: ${removeTitle}`)
     deleteItem(removeTitle);
     const index = findTitle(removeTitle);
     if (index >= 0) {
-      console.log(`ComboBox.delete() - index: ${index}`)
       options[index].deleting = true; // flag we are deleting before onChange called
       options.splice(index, 1);
       setOptions(options);
 
       if (currentTitle === removeTitle) { // if we removed current, we need to select another
-        console.log(`ComboBox.delete() - removing current`)
         const newIndex = 0;
         const newSelection = options[newIndex];
         setCurrentValue(newSelection);
-        console.log(`ComboBox.delete() - newSelection: ${newSelection}`)
         onChange && onChange(newSelection.title, newIndex);
       } else { // reselect current item since race condition can leave wrong item shown selected
         const index = findTitle(currentTitle);
         if (index >= 0) {
           delay(50).then(() => {
             const currentSelection = options[index];
-            console.log(`ComboBox.delete() - reselecting: ${index} - ${JSON.stringify(currentSelection)}`)
             setCurrentValue(currentSelection.title);
             setOptions(options);
             onChange && onChange(currentSelection.title, index);
@@ -92,8 +81,6 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
       }
     }
   }
-
-  console.log(`ComboBox() - refresh currentValue: ${JSON.stringify(currentValue)}`)
 
   return (
     <Autocomplete
