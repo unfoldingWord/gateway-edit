@@ -2,14 +2,12 @@ import {
   addItemToHistory,
   findItemIndexByKey,
   getLatest,
+  removeItemByIndex,
   removeUrl,
-  updateResourceLink,
-  updateTitle
 } from "@utils/ScriptureVersionHistory";
 import {useResourceManifest, useScripture} from "single-scripture-rcl";
 import useLocalStorage from "@hooks/useLocalStorage";
 import { core } from 'scripture-resources-rcl';
-import {getLocalStorageValue} from "@utils/LocalStorage";
 import {NT_BOOKS, NT_ORIG_LANG, NT_ORIG_LANG_BIBLE, OT_ORIG_LANG, OT_ORIG_LANG_BIBLE} from "@common/BooksOfTheBible";
 
 export const ORIGINAL_SOURCE = 'ORIGINAL_SOURCE';
@@ -123,10 +121,6 @@ export function useScriptureSettings(props) {
 
   console.log(`useScriptureSettings(${cardNum}) - new state (scriptureSettings): ${JSON.stringify(scriptureSettings)}`)
 
-  if (!scriptureSettings) { // special handling on initial setup
-    scriptureSettings = scriptureSettings; //TODO blm: remove
-  }
-
   addItemToHistory(scriptureSettings); // make sure current item persisted in local storage
   const scriptureConfig = useScriptureResources(bookId, scriptureSettings, chapter, verse);
 
@@ -136,8 +130,17 @@ export function useScriptureSettings(props) {
 
   const setScripture = (item) => {
     console.log(`setScripture(${cardNum}) - new scripture resource: ${JSON.stringify(item)}`)
+    let url;
     if (item?.url) {
-      const url = new URL(item.url);
+      try {
+        url = new URL(item.url);
+      } catch {
+        console.error('illegal url', item.url);
+        return;
+      }
+    }
+    if (url) {
+      console.log(`setScripture(${cardNum}) - setScriptureSettings to: ${url}`);
       let server_;
       let hostname = url.hostname;
       if (hostname) {
@@ -182,9 +185,8 @@ export function useScriptureSettings(props) {
               resourceLink: resource.resourceLink,
               disableWordPopover //TODO blm: need to calculate this based on language
             })
-            if (item.url) {
-              addItemToHistory(newScripture); // persist in local storage
-            }
+            newScripture.userAdded = true;
+            addItemToHistory(newScripture); // persist in local storage
             console.log(`setScripture(${cardNum}) - setScriptureSettings to: ${JSON.stringify(newScripture)}`)
             setScriptureSettings(newScripture);
             error = false;
@@ -219,7 +221,7 @@ export function getScriptureVersionSettings({label, resourceLink, style}) {
     current: index,
     allowUserInput: true,
     onChange: (title, index) => {
-      console.log(`New selection index ${index}, title: `, title);
+      console.log(`getScriptureVersionSettings.onChange() - index ${index}, title: ${title}`)
       if ((index < 0) && title) {
         const newItem = {
           url: title,
@@ -227,6 +229,13 @@ export function getScriptureVersionSettings({label, resourceLink, style}) {
         }
         addItemToHistory(newItem);
       }
+    },
+    deleteItem: title => {
+      console.log(`getScriptureVersionSettings.deleteItem() - title: ${title}`)
+      const history = getLatest();
+      const deleteIndex = findItemIndexByKey(history, 'title', title);
+      console.log(`getScriptureVersionSettings.deleteItem() - deleteIndex: ${deleteIndex}`)
+      removeItemByIndex(deleteIndex);
     },
     style,
   }
