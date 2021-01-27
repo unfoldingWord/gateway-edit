@@ -149,7 +149,7 @@ function WorkspaceContainer() {
         selectedQuote={selectedQuote}
         disableFilters
         disableNavigation
-        disableMarkdownToggle
+        hideMarkdownToggle
       />
       <ResourceCard
         title='translationQuestions'

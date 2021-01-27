@@ -77,7 +77,7 @@ export default function ScriptureCard({
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
-      disableMarkdownToggle
+      hideMarkdownToggle
     >
       <ScripturePane
         refStyle={refStyle}

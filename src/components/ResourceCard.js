@@ -25,7 +25,7 @@ export default function ResourceCard({
   updateTaDetails,
   disableFilters,
   disableNavigation,
-  disableMarkdownToggle,
+  hideMarkdownToggle,
 }) {
   const { items, markdown } = useContent({
     verse,
@@ -68,7 +68,7 @@ export default function ResourceCard({
       setMarkdownView={setMarkdownView}
       disableFilters={disableFilters}
       disableNavigation={disableNavigation}
-      disableMarkdownToggle={disableMarkdownToggle}
+      hideMarkdownToggle={hideMarkdownToggle}
     >
       <CardContent
         item={item}
@@ -102,5 +102,5 @@ ResourceCard.propTypes = {
   filePath: PropTypes.string,
   disableFilters: PropTypes.bool,
   disableNavigation: PropTypes.bool,
-  disableMarkdownToggle: PropTypes.bool,
+  hideMarkdownToggle: PropTypes.bool,
 }
