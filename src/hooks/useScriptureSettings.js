@@ -13,14 +13,14 @@ import {
   NT_ORIG_LANG,
   NT_ORIG_LANG_BIBLE,
   OT_ORIG_LANG,
-  OT_ORIG_LANG_BIBLE
+  OT_ORIG_LANG_BIBLE,
 } from '@common/BooksOfTheBible';
 
 export const ORIGINAL_SOURCE = 'ORIGINAL_SOURCE';
 export const TARGET_LITERAL = 'TARGET_LITERAL';
 export const TARGET_SIMPLIFIED = 'TARGET_SIMPLIFIED';
 export const DISABLE_WORD_POPOVER = true;
-const KEY_BASE = 'scripturePaneConfig_'
+const KEY_BASE = 'scripturePaneConfig_';
 
 function getResourceLink(scripture) {
   return `${scripture.owner}/${scripture.languageId}/${scripture.resourceId}/${scripture.branch}`;
@@ -59,11 +59,11 @@ function getDefaultSettings(bookId, scriptureSettings_) {
 
   if (scriptureSettings_.resourceId === ORIGINAL_SOURCE) {
     // select original language Bible based on which testament the book is
-    const isNewTestament = NT_BOOKS.includes(bookId)
-    scriptureSettings.languageId = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG
+    const isNewTestament = NT_BOOKS.includes(bookId);
+    scriptureSettings.languageId = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG;
     scriptureSettings.resourceId = isNewTestament
       ? NT_ORIG_LANG_BIBLE
-      : OT_ORIG_LANG_BIBLE
+      : OT_ORIG_LANG_BIBLE;
     scriptureSettings.resourceLink = getResourceLink(scriptureSettings);
     scriptureSettings.disableWordPopover = false;
   } else if (scriptureSettings_.resourceId === TARGET_LITERAL) {
@@ -101,7 +101,7 @@ function useScriptureResources(bookId, scriptureSettings, chapter, verse) {
   const scriptureResource = useScripture(scriptureConfig_);
 
   // restore any default settings
-  scriptureResource.resourceLink = scriptureSettings.resourceLink
+  scriptureResource.resourceLink = scriptureSettings.resourceLink;
   return scriptureResource;
 }
 
@@ -183,7 +183,7 @@ export function useScriptureSettings(props) {
               resourceId: resource.resourceId,
               resourceLink: resource.resourceLink,
               disableWordPopover,
-            })
+            });
             newScripture.userAdded = true;
             addItemToHistory(newScripture); // persist in local storage
             setScriptureSettings(newScripture);
@@ -194,17 +194,19 @@ export function useScriptureSettings(props) {
           console.error('not found', item.url);
         }
         removeUrl(item.url);
-      })
+      });
     } else { // selected a previous setting
-      console.log(`setScripture(${cardNum}) - setScriptureSettings to: ${JSON.stringify(item)}`)
+      console.log(`setScripture(${cardNum}) - setScriptureSettings to: ${JSON.stringify(item)}`);
       setScriptureSettings(item);
     }
-  }
+  };
 
   return { scriptureConfig, setScripture };
 }
 
-export function getScriptureVersionSettings({label, resourceLink, style}) {
+export function getScriptureVersionSettings({
+  label, resourceLink, style,
+}) {
   const history = getLatest();
   let index = findItemIndexByKey(history, 'resourceLink', resourceLink);
 
@@ -218,7 +220,7 @@ export function getScriptureVersionSettings({label, resourceLink, style}) {
         const newItem = {
           url: title,
           title,
-        }
+        };
         addItemToHistory(newItem);
       }
     },
@@ -228,7 +230,7 @@ export function getScriptureVersionSettings({label, resourceLink, style}) {
       removeItemByIndex(deleteIndex);
     },
     style,
-  }
+  };
 
   return dropDownConfig;
 }

@@ -36,7 +36,7 @@ function getItemByIndex(index, history = null) {
 
 export function getItemByTitle(title) {
   const history = getLatest();
-  const index = findItemIndexByKey(history, 'title', title)
+  const index = findItemIndexByKey(history, 'title', title);
   return getItemByIndex(index, history);
 }
 
@@ -53,7 +53,7 @@ export function removeUrl(url) {
   const index = findItemIndexByKey(getLatest(), 'url', url);
 
   if (index >= 0) {
-    removeItemByIndex(index)
+    removeItemByIndex(index);
   }
 }
 

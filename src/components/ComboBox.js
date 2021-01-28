@@ -133,7 +133,7 @@ export function ComboBox({
           {option.userAdded &&
           <Tooltip title="Remove">
             <IconButton aria-label="delete" onClick={() => {
-              handleDelete(option)
+              handleDelete(option);
             }} >
               <HighlightOffIcon/>
             </IconButton>
@@ -166,6 +166,6 @@ ComboBox.propTypes = {
   allowUserInput: PropTypes.bool,
   /** style to use for comboBox (optional) */
   style: PropTypes.object,
-}
+};
 
 export default ComboBox;

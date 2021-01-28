@@ -1,5 +1,5 @@
 export function getLocalStorageValue(key) {
-  let storedValue = localStorage.getItem(key)
+  let storedValue = localStorage.getItem(key);
 
   if (storedValue !== null) {
     try {
@@ -12,5 +12,5 @@ export function getLocalStorageValue(key) {
 }
 
 export function setLocalStorageValue(key, newValue) {
-  localStorage.setItem(key, JSON.stringify(newValue))
+  localStorage.setItem(key, JSON.stringify(newValue));
 }

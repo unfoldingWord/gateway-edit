@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types'
-import { Card, useCardState } from 'translation-helps-rcl'
-import { ScripturePane } from 'single-scripture-rcl'
-import { getLanguage } from '@common/languages'
+import PropTypes from 'prop-types';
+import { Card, useCardState } from 'translation-helps-rcl';
+import { ScripturePane } from 'single-scripture-rcl';
+import { getLanguage } from '@common/languages';
 import { ComboBox } from '@components/ComboBox';
 import { getItemByTitle, updateTitle } from '@utils/ScriptureVersionHistory';
 import { getScriptureVersionSettings, useScriptureSettings } from '@hooks/useScriptureSettings';
@@ -19,7 +19,7 @@ export default function ScriptureCard(Props) {
   const { scriptureConfig, setScripture } = useScriptureSettings(Props);
 
   if (scriptureConfig.title) {
-    const title = `${scriptureConfig.title} v${scriptureConfig.version}`
+    const title = `${scriptureConfig.title} v${scriptureConfig.version}`;
     updateTitle(scriptureConfig.resourceLink, title);
   }
 
@@ -43,7 +43,7 @@ export default function ScriptureCard(Props) {
           setScripture(item);
         }
       }
-    }
+    };
 
     return <ComboBox {...dropDownConfig} />;
   }
@@ -51,7 +51,7 @@ export default function ScriptureCard(Props) {
   const language = getLanguage({ languageId: scriptureConfig?.resource?.languageId });
   const direction = (language?.direction) || 'ltr';
 
-  const items = null
+  const items = null;
   const {
     state: {
       headers, filters, fontSize, itemIndex, markdownView,
@@ -59,17 +59,17 @@ export default function ScriptureCard(Props) {
     actions: {
       setFilters, setFontSize, setItemIndex, setMarkdownView,
     },
-  } = useCardState({ items })
+  } = useCardState({ items });
 
   const refStyle = {
     fontFamily: 'Noto Sans',
     fontSize: `${Math.round(fontSize * 0.9)}%`,
-  }
+  };
 
   const contentStyle = {
     fontFamily: 'Noto Sans',
     fontSize: `${fontSize}%`,
-  }
+  };
 
   return (
     <Card
@@ -95,7 +95,7 @@ export default function ScriptureCard(Props) {
         direction={direction}
       />
     </Card>
-  )
+  );
 }
 
 ScriptureCard.propTypes = {
@@ -121,4 +121,4 @@ ScriptureCard.propTypes = {
   resourceId: PropTypes.string.isRequired,
   /** if true then word data hover is shown */
   disableWordPopover: PropTypes.bool,
-}
+};
