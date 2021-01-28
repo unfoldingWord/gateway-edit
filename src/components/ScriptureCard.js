@@ -1,8 +1,13 @@
 import PropTypes from 'prop-types'
-import { Card, useCardState } from 'translation-helps-rcl'
-import { ScripturePane } from "single-scripture-rcl";
+import {
+  Card,
+  CardContent,
+  useContent,
+  useCardState,
+} from 'translation-helps-rcl'
+import { ScripturePane, useScripture } from 'single-scripture-rcl'
+import { getLanguage } from '@common/languages'
 import { ComboBox } from '@components/ComboBox';
-import { getLanguage } from "@common/languages";
 import { getItemByTitle, updateTitle } from "@utils/ScriptureVersionHistory";
 import { getScriptureVersionSettings, useScriptureSettings } from "@hooks/useScriptureSettings";
 
@@ -60,26 +65,27 @@ export default function ScriptureCard(Props) {
   const language = getLanguage({ languageId: scriptureConfig?.resource?.languageId });
   const direction = (language?.direction) || 'ltr';
 
-  const items = null;
+  const items = null
   const {
-    state: { item, headers, filters, fontSize, itemIndex, markdownView },
+    state: { headers, filters, fontSize, itemIndex, markdownView },
     actions: { setFilters, setFontSize, setItemIndex, setMarkdownView },
   } = useCardState({
     items,
-  });
+  })
 
   const refStyle = {
-    fontFamily: "Noto Sans",
+    fontFamily: 'Noto Sans',
     fontSize: `${Math.round(fontSize * 0.9)}%`,
   }
 
   const contentStyle = {
-    fontFamily: "Noto Sans",
+    fontFamily: 'Noto Sans',
     fontSize: `${fontSize}%`,
   }
 
   return (
     <Card
+      title={title}
       items={items}
       classes={classes}
       headers={headers}
@@ -91,11 +97,15 @@ export default function ScriptureCard(Props) {
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
-      hideMarkdownToggle={true}
+      hideMarkdownToggle
       getCustomComponent={getDropDownComponent}
-      title={title}
     >
-      <ScripturePane refStyle={refStyle} contentStyle={contentStyle} {...scriptureConfig} direction={direction}/>
+      <ScripturePane
+        refStyle={refStyle}
+        contentStyle={contentStyle}
+        {...scriptureConfig}
+        direction={direction}
+      />
     </Card>
   )
 }

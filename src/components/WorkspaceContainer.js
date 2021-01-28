@@ -35,9 +35,11 @@ function WorkspaceContainer() {
       branch,
       taArticle,
       languageId,
+      selectedQuote,
+      scriptureOwner,
       bibleReference: { bookId, chapter, verse },
     },
-    actions: { updateTaDetails },
+    actions: { updateTaDetails, setQuote },
   } = useContext(ReferenceContext)
 
   const layout = {
@@ -46,13 +48,14 @@ function WorkspaceContainer() {
       [2, 2],
       [2, 2],
     ],
+    heights: [[5], [10, 10], [10, 10]],
   }
 
   const scriptureOwner = 'unfoldingWord' //TODO blm: for testing use since test_org does not have enough bibles
 
   return (
     <Workspace
-      rowHeight={405}
+      rowHeight={25}
       layout={layout}
       gridMargin={[15, 15]}
       classes={classes}
@@ -136,11 +139,16 @@ function WorkspaceContainer() {
         server={server}
         owner={owner}
         branch={branch}
-        viewMode={'markdown'}
+        viewMode={'list'}
         languageId={languageId}
         resourceId={'twl'}
         projectId={bookId}
         filePath={null}
+        setQuote={setQuote}
+        selectedQuote={selectedQuote}
+        disableFilters
+        disableNavigation
+        hideMarkdownToggle
       />
       <ResourceCard
         title='translationQuestions'

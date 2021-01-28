@@ -16,11 +16,16 @@ export default function ResourceCard({
   chapter,
   classes,
   filePath,
+  setQuote,
   viewMode,
   projectId,
   languageId,
   resourceId,
+  selectedQuote,
   updateTaDetails,
+  disableFilters,
+  disableNavigation,
+  hideMarkdownToggle,
 }) {
   const { items, markdown } = useContent({
     verse,
@@ -49,6 +54,7 @@ export default function ResourceCard({
 
   return (
     <Card
+      title={title}
       items={items}
       classes={classes}
       headers={headers}
@@ -60,7 +66,9 @@ export default function ResourceCard({
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
-      title={title}
+      disableFilters={disableFilters}
+      disableNavigation={disableNavigation}
+      hideMarkdownToggle={hideMarkdownToggle}
     >
       <CardContent
         item={item}
@@ -69,9 +77,10 @@ export default function ResourceCard({
         viewMode={viewMode}
         fontSize={fontSize}
         markdown={markdown}
-        // isLoading={isLoading}
+        setQuote={setQuote}
         languageId={languageId}
         markdownView={markdownView}
+        selectedQuote={selectedQuote}
       />
     </Card>
   )
@@ -89,5 +98,9 @@ ResourceCard.propTypes = {
   resourceId: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
   updateTaDetails: PropTypes.func,
+  setQuote: PropTypes.func,
   filePath: PropTypes.string,
+  disableFilters: PropTypes.bool,
+  disableNavigation: PropTypes.bool,
+  hideMarkdownToggle: PropTypes.bool,
 }
