@@ -1,11 +1,6 @@
 import PropTypes from 'prop-types'
-import {
-  Card,
-  CardContent,
-  useContent,
-  useCardState,
-} from 'translation-helps-rcl'
-import { ScripturePane, useScripture } from 'single-scripture-rcl'
+import { Card, useCardState } from 'translation-helps-rcl'
+import { ScripturePane } from 'single-scripture-rcl'
 import { getLanguage } from '@common/languages'
 import { ComboBox } from '@components/ComboBox';
 import { getItemByTitle, updateTitle } from "@utils/ScriptureVersionHistory";
@@ -111,15 +106,26 @@ export default function ScriptureCard(Props) {
 }
 
 ScriptureCard.propTypes = {
+  /** scripture card number (0 to 2 for example) */
   cardNum: PropTypes.number.isRequired,
+  /** title for scripture card */
   title: PropTypes.string.isRequired,
+  /** current chapter number */
   chapter: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /** current verse number */
   verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /** server (e.g. 'https://git.door43.org') */
   server: PropTypes.string.isRequired,
+  /** repo owner such as unfoldingWord */
   owner: PropTypes.string.isRequired,
+  /** repo branch such as master */
   branch: PropTypes.string.isRequired,
+  /** resource language to use */
   languageId: PropTypes.string.isRequired,
+  /** bookID to use */
   bookId: PropTypes.string.isRequired,
+  /** resourceId to use (e.g. ugnt) */
   resourceId: PropTypes.string.isRequired,
+  /** if true then word data hover is shown */
   disableWordPopover: PropTypes.bool
 }

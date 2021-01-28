@@ -51,8 +51,6 @@ function WorkspaceContainer() {
     heights: [[5], [10, 10], [10, 10]],
   }
 
-  const scriptureOwner = 'unfoldingWord' //TODO blm: for testing use since test_org does not have enough bibles
-
   return (
     <Workspace
       rowHeight={25}
