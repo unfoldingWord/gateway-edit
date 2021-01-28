@@ -53,7 +53,7 @@ module.exports = {
     "no-debugger": "warn",
     "react/prop-types": "error",
     "curly": "error",
-    "semi": ["error", "always", {"omitLastInOneLineBlock": true}],
+    "semi": ["error", "never"],
     "semi-style": ["error", "last"],
     "no-console": "off",
     "react/jsx-uses-react": "error",

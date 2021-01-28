@@ -1,57 +1,57 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Card, useCardState } from 'translation-helps-rcl';
-import { ScripturePane } from 'single-scripture-rcl';
-import { getLanguage } from '@common/languages';
-import { ComboBox } from '@components/ComboBox';
-import { getItemByTitle, updateTitle } from '@utils/ScriptureVersionHistory';
-import { getScriptureVersionSettings, useScriptureSettings } from '@hooks/useScriptureSettings';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Card, useCardState } from 'translation-helps-rcl'
+import { ScripturePane } from 'single-scripture-rcl'
+import { getLanguage } from '@common/languages'
+import { ComboBox } from '@components/ComboBox'
+import { getItemByTitle, updateTitle } from '@utils/ScriptureVersionHistory'
+import { getScriptureVersionSettings, useScriptureSettings } from '@hooks/useScriptureSettings'
 
-const label = 'Version';
-const style = { marginTop: '16px', width: '500px' };
+const label = 'Version'
+const style = { marginTop: '16px', width: '500px' }
 
 export default function ScriptureCard(Props) {
   const {
     title,
     classes,
-  } = Props;
+  } = Props
 
-  const { scriptureConfig, setScripture } = useScriptureSettings(Props);
+  const { scriptureConfig, setScripture } = useScriptureSettings(Props)
 
   if (scriptureConfig.title) {
-    const title = `${scriptureConfig.title} v${scriptureConfig.version}`;
-    updateTitle(scriptureConfig.resourceLink, title);
+    const title = `${scriptureConfig.title} v${scriptureConfig.version}`
+    updateTitle(scriptureConfig.resourceLink, title)
   }
 
   function getDropDownComponent() {
-    const scriptureConfig_ = { ...scriptureConfig };
-    scriptureConfig_.content = !!scriptureConfig.content;
+    const scriptureConfig_ = { ...scriptureConfig }
+    scriptureConfig_.content = !!scriptureConfig.content
     const dropDownConfig = getScriptureVersionSettings({
       label,
       resourceLink: scriptureConfig.resourceLink,
       style,
-    });
+    })
 
-    const onChangeOrig = dropDownConfig.onChange;
-    dropDownConfig.onChangeOrig = onChangeOrig;
+    const onChangeOrig = dropDownConfig.onChange
+    dropDownConfig.onChangeOrig = onChangeOrig
     dropDownConfig.onChange = (title, index) => {
       if (onChangeOrig) {
-        onChangeOrig(title, index);
-        const item = getItemByTitle(title);
+        onChangeOrig(title, index)
+        const item = getItemByTitle(title)
 
         if (item) {
-          setScripture(item);
+          setScripture(item)
         }
       }
-    };
+    }
 
-    return <ComboBox {...dropDownConfig} />;
+    return <ComboBox {...dropDownConfig} />
   }
 
-  const language = getLanguage({ languageId: scriptureConfig?.resource?.languageId });
-  const direction = (language?.direction) || 'ltr';
+  const language = getLanguage({ languageId: scriptureConfig?.resource?.languageId })
+  const direction = (language?.direction) || 'ltr'
 
-  const items = null;
+  const items = null
   const {
     state: {
       headers, filters, fontSize, itemIndex, markdownView,
@@ -59,17 +59,17 @@ export default function ScriptureCard(Props) {
     actions: {
       setFilters, setFontSize, setItemIndex, setMarkdownView,
     },
-  } = useCardState({ items });
+  } = useCardState({ items })
 
   const refStyle = {
     fontFamily: 'Noto Sans',
     fontSize: `${Math.round(fontSize * 0.9)}%`,
-  };
+  }
 
   const contentStyle = {
     fontFamily: 'Noto Sans',
     fontSize: `${fontSize}%`,
-  };
+  }
 
   return (
     <Card
@@ -95,7 +95,7 @@ export default function ScriptureCard(Props) {
         direction={direction}
       />
     </Card>
-  );
+  )
 }
 
 ScriptureCard.propTypes = {
@@ -121,4 +121,4 @@ ScriptureCard.propTypes = {
   resourceId: PropTypes.string.isRequired,
   /** if true then word data hover is shown */
   disableWordPopover: PropTypes.bool,
-};
+}

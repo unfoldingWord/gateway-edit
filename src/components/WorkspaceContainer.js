@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
-import { Workspace } from 'resource-workspace-rcl';
-import { makeStyles } from '@material-ui/core/styles';
-import ResourceCard from '@components/ResourceCard';
-import ScriptureCard from '@components/ScriptureCard';
-import { ReferenceContext } from '@context/ReferenceContext';
+import React, { useContext } from 'react'
+import { Workspace } from 'resource-workspace-rcl'
+import { makeStyles } from '@material-ui/core/styles'
+import ResourceCard from '@components/ResourceCard'
+import ScriptureCard from '@components/ScriptureCard'
+import { ReferenceContext } from '@context/ReferenceContext'
 import {
   ORIGINAL_SOURCE,
   TARGET_LITERAL,
   TARGET_SIMPLIFIED,
-} from '@hooks/useScriptureSettings';
+} from '@hooks/useScriptureSettings'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,10 +21,10 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'transparent',
   },
   dragIndicator: {},
-}));
+}))
 
 function WorkspaceContainer() {
-  const classes = useStyles();
+  const classes = useStyles()
   const {
     state: {
       owner,
@@ -39,7 +39,7 @@ function WorkspaceContainer() {
       },
     },
     actions: { updateTaDetails, setQuote },
-  } = useContext(ReferenceContext);
+  } = useContext(ReferenceContext)
 
   const layout = {
     widths: [
@@ -48,7 +48,7 @@ function WorkspaceContainer() {
       [2, 2],
     ],
     heights: [[5], [10, 10], [10, 10]],
-  };
+  }
 
   return (
     <Workspace
@@ -161,7 +161,7 @@ function WorkspaceContainer() {
         filePath={null}
       />
     </Workspace>
-  );
+  )
 }
 
-export default WorkspaceContainer;
+export default WorkspaceContainer

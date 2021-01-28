@@ -1,16 +1,16 @@
 export function getLocalStorageValue(key) {
-  let storedValue = localStorage.getItem(key);
+  let storedValue = localStorage.getItem(key)
 
   if (storedValue !== null) {
     try {
-      storedValue = JSON.parse(storedValue);
+      storedValue = JSON.parse(storedValue)
     } catch (e) {
-      storedValue = null;
+      storedValue = null
     }
   }
-  return storedValue;
+  return storedValue
 }
 
 export function setLocalStorageValue(key, newValue) {
-  localStorage.setItem(key, JSON.stringify(newValue));
+  localStorage.setItem(key, JSON.stringify(newValue))
 }
