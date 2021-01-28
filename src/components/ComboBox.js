@@ -151,7 +151,7 @@ ComboBox.propTypes = {
   current: PropTypes.number,
   /** if true then the user can type in anything and add as selection (optional - default is false) */
   allowUserInput: PropTypes.bool,
-  /** style to use for comboBox (optionaL) */
+  /** style to use for comboBox (optional) */
   style: PropTypes.object,
 }
 

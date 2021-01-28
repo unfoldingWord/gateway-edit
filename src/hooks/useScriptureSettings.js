@@ -100,13 +100,8 @@ function useScriptureResources(bookId, scriptureSettings, chapter, verse) {
 export function useScriptureSettings(props) {
   const {
     cardNum,
-    title,
     chapter,
     verse,
-    server,
-    owner,
-    branch,
-    languageId,
     bookId,
     resourceId,
     disableWordPopover
@@ -161,7 +156,6 @@ export function useScriptureSettings(props) {
           cache: { maxAge: 60 * 1000 },
         },
       }).then(resource => {
-        let error = true;
         if (resource) {
           const {title, version} = useResourceManifest(resource);
           if (title && version) {
@@ -174,12 +168,11 @@ export function useScriptureSettings(props) {
               languageId: resource.languageId,
               resourceId: resource.resourceId,
               resourceLink: resource.resourceLink,
-              disableWordPopover //TODO blm: need to calculate this based on language
+              disableWordPopover
             })
             newScripture.userAdded = true;
             addItemToHistory(newScripture); // persist in local storage
             setScriptureSettings(newScripture);
-            error = false;
           } else {
             console.error('error passing manifest', item.url);
           }
@@ -194,7 +187,7 @@ export function useScriptureSettings(props) {
     }
   }
 
-  return { scriptureConfig, setScripture, scriptureResource };
+  return { scriptureConfig, setScripture };
 }
 
 export function getScriptureVersionSettings({label, resourceLink, style}) {

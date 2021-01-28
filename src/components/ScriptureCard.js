@@ -11,21 +11,11 @@ const style = {marginTop: '16px', width: '500px'};
 
 export default function ScriptureCard(Props) {
   const {
-    cardNum,
     title,
-    chapter,
-    verse,
-    server,
-    owner,
-    branch,
-    languageId,
     classes,
-    bookId,
-    resourceId,
-    disableWordPopover
   } = Props;
 
-  const { scriptureConfig, scriptureResource, setScripture } = useScriptureSettings(Props);
+  const { scriptureConfig, setScripture } = useScriptureSettings(Props);
 
   if (scriptureConfig.title) {
     const title = `${scriptureConfig.title} v${scriptureConfig.version}`
