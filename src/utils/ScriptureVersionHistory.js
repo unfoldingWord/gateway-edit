@@ -71,11 +71,11 @@ export function findItem(matchItem, history) {
 export function addItemToHistory(newItem) { // add new item to front of the array and only keep up to maxItems
   let history = getLatest();
   let newIndex = -1;
-  let index = findItem(newItem, history);
+  const index = findItem(newItem, history);
 
   if (index < 0) {
     history.unshift(newItem);
-    index = 0;
+    newIndex = 0;
   }
 
   if (history.length > maxItems) {
