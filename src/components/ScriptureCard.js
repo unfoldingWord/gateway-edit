@@ -6,8 +6,8 @@ import {
   useContent,
   useCardState,
 } from 'translation-helps-rcl'
-import { ScripturePane, useScripture } from "single-scripture-rcl";
-import { getLanguage } from "@common/languages";
+import { ScripturePane, useScripture } from 'single-scripture-rcl'
+import { getLanguage } from '@common/languages'
 
 export default function ScriptureCard({
   title,
@@ -39,31 +39,33 @@ export default function ScriptureCard({
       cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
     },
     disableWordPopover,
-  });
+  })
 
-  const language = getLanguage({ languageId });
-  const direction = (language?.direction) || 'ltr';
+  const language = getLanguage({ languageId })
+  const direction = language?.direction || 'ltr'
 
-  const items = null;
+  const items = null
   const {
-    state: { item, headers, filters, fontSize, itemIndex, markdownView },
+    state: { headers, filters, fontSize, itemIndex, markdownView },
     actions: { setFilters, setFontSize, setItemIndex, setMarkdownView },
   } = useCardState({
     items,
-  });
+  })
 
   const refStyle = {
-    fontFamily: "Noto Sans",
+    fontFamily: 'Noto Sans',
     fontSize: `${Math.round(fontSize * 0.9)}%`,
   }
 
   const contentStyle = {
-    fontFamily: "Noto Sans",
+    fontFamily: 'Noto Sans',
     fontSize: `${fontSize}%`,
   }
 
+  console.log({ scriptureConfig })
   return (
     <Card
+      title={title}
       items={items}
       classes={classes}
       headers={headers}
@@ -75,9 +77,14 @@ export default function ScriptureCard({
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       setMarkdownView={setMarkdownView}
-      title={title}
+      hideMarkdownToggle
     >
-      <ScripturePane refStyle={refStyle} contentStyle={contentStyle} {...scriptureConfig} direction={direction}/>
+      <ScripturePane
+        refStyle={refStyle}
+        contentStyle={contentStyle}
+        {...scriptureConfig}
+        direction={direction}
+      />
     </Card>
   )
 }
