@@ -6,10 +6,9 @@ const KEY = 'scriptureVersionHistory';
 export function updateTitle(resourceLink, title) { // update title for resourceLink
   const history = getLatest();
   const index = findItemIndexByKey(history, 'resourceLink', resourceLink);
+  const entry = getItemByIndex(index);
 
-  if (index >= 0) { // if found then update
-    const entry = history[index];
-
+  if (entry) {
     if (entry.title !== title) {
       entry.title = title; // update the title
       setLocalStorageValue(KEY, history); // persist settings
@@ -27,10 +26,18 @@ export function findItemIndexByKey(history, key, match) {
   return index;
 }
 
+function getItemByIndex(index, history = null) {
+  if (!history) {
+    history = getLatest();
+  }
+
+  return (index >= 0) ? history[index] : null;
+}
+
 export function getItemByTitle(title) {
   const history = getLatest();
-  const item = findItemIndexByKey(history, 'title', title)
-  return item;
+  const index = findItemIndexByKey(history, 'title', title)
+  return getItemByIndex(index, history);
 }
 
 export function removeItemByIndex(index) {
