@@ -9,7 +9,7 @@ import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete
 import IconButton from '@material-ui/core/IconButton';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Tooltip from '@material-ui/core/Tooltip';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 const filter = createFilterOptions();
 
@@ -19,22 +19,27 @@ export function delay(ms) {
   );
 }
 
-export function ComboBox({label, options: options_, current, allowUserInput, onChange, deleteItem, style}) {
+export function ComboBox({
+  label,
+  options: options_,
+  current,
+  allowUserInput,
+  onChange,
+  deleteItem,
+  style,
+}) {
   const currentOption_ = ((current >= 0) && (current < options_.length)) ? options_[current] : '';
   const [currentValue, setCurrentValue] = React.useState(currentOption_);
   const [options, setOptions] = React.useState(options_);
 
   function handleChange(newValue) {
     let newSelection = newValue;
+
     if (typeof newValue === 'string') {
-       setCurrentValue({
-        title: newValue,
-      });
+      setCurrentValue({ title: newValue });
     } else if (newValue && newValue.inputValue) {
-       // Create a new value from the user input
-      setCurrentValue({
-        title: newValue.inputValue,
-      });
+      // Create a new value from the user input
+      setCurrentValue({ title: newValue.inputValue });
       newSelection = newValue.inputValue;
     } else if (newValue === null) {
       return;
@@ -44,6 +49,7 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
       setCurrentValue(newValue);
       newSelection = newValue?.title;
     }
+
     const index = options.findIndex(option => (option.title === newSelection));
     onChange && onChange(newSelection, index);
   }
@@ -58,6 +64,7 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
     const removeTitle = option.title;
     deleteItem(removeTitle);
     const index = findTitle(removeTitle);
+
     if (index >= 0) {
       options[index].deleting = true; // flag we are deleting before onChange called
       options.splice(index, 1);
@@ -70,6 +77,7 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
         onChange && onChange(newSelection.title, newIndex);
       } else { // reselect current item since race condition can leave wrong item shown selected
         const index = findTitle(currentTitle);
+
         if (index >= 0) {
           delay(50).then(() => {
             const currentSelection = options[index];
@@ -111,6 +119,7 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
         if (typeof option === 'string') {
           return option;
         }
+
         // Add "xxx" option created dynamically
         if (option.inputValue) {
           return option.inputValue;
@@ -123,14 +132,16 @@ export function ComboBox({label, options: options_, current, allowUserInput, onC
           {option.title}
           {option.userAdded &&
           <Tooltip title="Remove">
-            <IconButton aria-label="delete" onClick={() => { handleDelete(option) }} >
+            <IconButton aria-label="delete" onClick={() => {
+              handleDelete(option)
+            }} >
               <HighlightOffIcon/>
             </IconButton>
           </Tooltip>
           }
         </React.Fragment>
       )}
-      style={style || {marginTop: '16px', width: '500px'}}
+      style={ style || { marginTop: '16px', width: '500px' }}
       freeSolo={!!allowUserInput}
       renderInput={(params) => (
         <TextField {...params} label={label} variant="outlined" />
@@ -147,6 +158,8 @@ ComboBox.propTypes = {
   label: PropTypes.string.isRequired,
   /** callback function when a new selection is made */
   onChange: PropTypes.func,
+  /** callback function for when item is deleted */
+  deleteItem: PropTypes.func.isRequired,
   /** index of current selection (optional - default is no selection) */
   current: PropTypes.number,
   /** if true then the user can type in anything and add as selection (optional - default is false) */
@@ -155,4 +168,4 @@ ComboBox.propTypes = {
   style: PropTypes.object,
 }
 
-export default ComboBox
+export default ComboBox;

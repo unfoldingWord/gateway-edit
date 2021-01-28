@@ -1,5 +1,6 @@
 export function getLocalStorageValue(key) {
   let storedValue = localStorage.getItem(key)
+
   if (storedValue !== null) {
     try {
       storedValue = JSON.parse(storedValue);

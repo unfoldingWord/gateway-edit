@@ -1,10 +1,14 @@
-import { useContext } from 'react'
+import React, { useContext } from 'react'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
 import ScriptureCard from '@components/ScriptureCard'
 import { ReferenceContext } from '@context/ReferenceContext'
-import { ORIGINAL_SOURCE, TARGET_LITERAL, TARGET_SIMPLIFIED } from '@hooks/useScriptureSettings'
+import {
+  ORIGINAL_SOURCE,
+  TARGET_LITERAL,
+  TARGET_SIMPLIFIED,
+} from '@hooks/useScriptureSettings'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -30,7 +34,9 @@ function WorkspaceContainer() {
       languageId,
       selectedQuote,
       scriptureOwner,
-      bibleReference: { bookId, chapter, verse },
+      bibleReference: {
+        bookId, chapter, verse,
+      },
     },
     actions: { updateTaDetails, setQuote },
   } = useContext(ReferenceContext)

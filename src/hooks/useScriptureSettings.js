@@ -4,11 +4,17 @@ import {
   getLatest,
   removeItemByIndex,
   removeUrl,
-} from "@utils/ScriptureVersionHistory";
-import {useResourceManifest, useScripture} from "single-scripture-rcl";
-import useLocalStorage from "@hooks/useLocalStorage";
+} from '@utils/ScriptureVersionHistory';
+import { useResourceManifest, useScripture } from 'single-scripture-rcl';
+import useLocalStorage from '@hooks/useLocalStorage';
 import { core } from 'scripture-resources-rcl';
-import {NT_BOOKS, NT_ORIG_LANG, NT_ORIG_LANG_BIBLE, OT_ORIG_LANG, OT_ORIG_LANG_BIBLE} from "@common/BooksOfTheBible";
+import {
+  NT_BOOKS,
+  NT_ORIG_LANG,
+  NT_ORIG_LANG_BIBLE,
+  OT_ORIG_LANG,
+  OT_ORIG_LANG_BIBLE
+} from '@common/BooksOfTheBible';
 
 export const ORIGINAL_SOURCE = 'ORIGINAL_SOURCE';
 export const TARGET_LITERAL = 'TARGET_LITERAL';
@@ -21,14 +27,14 @@ function getResourceLink(scripture) {
 }
 
 export function getScriptureObject(scripture_) {
-  let {
+  const {
     title,
     server,
     owner,
     branch,
     languageId,
     resourceId,
-    disableWordPopover
+    disableWordPopover,
   } = scripture_;
 
   const scripture = {
@@ -38,8 +44,9 @@ export function getScriptureObject(scripture_) {
     branch,
     languageId,
     resourceId,
-    disableWordPopover
+    disableWordPopover,
   };
+
   if (!scripture.resourceLink) {
     scripture.resourceLink = getResourceLink(scripture);
   }
@@ -47,8 +54,9 @@ export function getScriptureObject(scripture_) {
 }
 
 function getDefaultSettings(bookId, scriptureSettings_) {
-  const scriptureSettings = {...scriptureSettings_};
+  const scriptureSettings = { ...scriptureSettings_ };
   scriptureSettings.disableWordPopover = DISABLE_WORD_POPOVER;
+
   if (scriptureSettings_.resourceId === ORIGINAL_SOURCE) {
     // select original language Bible based on which testament the book is
     const isNewTestament = NT_BOOKS.includes(bookId)
@@ -69,7 +77,7 @@ function getDefaultSettings(bookId, scriptureSettings_) {
 }
 
 function useScriptureResources(bookId, scriptureSettings, chapter, verse) {
-   const scriptureSettings_ = getDefaultSettings(bookId, scriptureSettings);
+  const scriptureSettings_ = getDefaultSettings(bookId, scriptureSettings);
 
   const scriptureConfig_ = {
     reference: {
@@ -85,7 +93,7 @@ function useScriptureResources(bookId, scriptureSettings, chapter, verse) {
     },
     config: {
       server: scriptureSettings_.server,
-      cache: {maxAge: 60 * 1000},
+      cache: { maxAge: 60 * 1000 },
     },
     disableWordPopover: scriptureSettings_.disableWordPopover,
   };
@@ -104,7 +112,7 @@ export function useScriptureSettings(props) {
     verse,
     bookId,
     resourceId,
-    disableWordPopover
+    disableWordPopover,
   } = props;
 
   const key = KEY_BASE + cardNum;
@@ -114,11 +122,12 @@ export function useScriptureSettings(props) {
   addItemToHistory(scriptureSettings); // make sure current item persisted in local storage
   const scriptureConfig = useScriptureResources(bookId, scriptureSettings, chapter, verse);
 
-  const scriptureConfig_ = {...scriptureConfig};
+  const scriptureConfig_ = { ...scriptureConfig };
   scriptureConfig_.content = !!scriptureConfig.content;
 
   const setScripture = (item) => {
     let url;
+
     if (item?.url) {
       try {
         url = new URL(item.url);
@@ -127,17 +136,20 @@ export function useScriptureSettings(props) {
         return;
       }
     }
+
     if (url) {
       let server_;
       let hostname = url.hostname;
+
       if (hostname) {
         if (url.port) {
           hostname += ':' + url.port;
         }
-        server_ = "https://" + hostname;
+        server_ = 'https://' + hostname;
       }
 
       let url_ = item.url;
+
       if (!url) { // if not a new resource
         scriptureSettings = getDefaultSettings(resourceId, bookId, item);
         url_ = scriptureSettings.resourceLink;
@@ -157,7 +169,9 @@ export function useScriptureSettings(props) {
         },
       }).then(resource => {
         if (resource) {
-          const {title, version} = useResourceManifest(resource);
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const { title, version } = useResourceManifest(resource);
+
           if (title && version) {
             // we succeeded in getting resource - use it
             const newScripture = getScriptureObject({
@@ -168,7 +182,7 @@ export function useScriptureSettings(props) {
               languageId: resource.languageId,
               resourceId: resource.resourceId,
               resourceLink: resource.resourceLink,
-              disableWordPopover
+              disableWordPopover,
             })
             newScripture.userAdded = true;
             addItemToHistory(newScripture); // persist in local storage

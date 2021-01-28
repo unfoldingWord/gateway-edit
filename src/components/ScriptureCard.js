@@ -1,13 +1,14 @@
+import React from 'react';
 import PropTypes from 'prop-types'
 import { Card, useCardState } from 'translation-helps-rcl'
 import { ScripturePane } from 'single-scripture-rcl'
 import { getLanguage } from '@common/languages'
 import { ComboBox } from '@components/ComboBox';
-import { getItemByTitle, updateTitle } from "@utils/ScriptureVersionHistory";
-import { getScriptureVersionSettings, useScriptureSettings } from "@hooks/useScriptureSettings";
+import { getItemByTitle, updateTitle } from '@utils/ScriptureVersionHistory';
+import { getScriptureVersionSettings, useScriptureSettings } from '@hooks/useScriptureSettings';
 
 const label = 'Version';
-const style = {marginTop: '16px', width: '500px'};
+const style = { marginTop: '16px', width: '500px' };
 
 export default function ScriptureCard(Props) {
   const {
@@ -23,21 +24,21 @@ export default function ScriptureCard(Props) {
   }
 
   function getDropDownComponent() {
-    const scriptureConfig_ = {...scriptureConfig};
+    const scriptureConfig_ = { ...scriptureConfig };
     scriptureConfig_.content = !!scriptureConfig.content;
     const dropDownConfig = getScriptureVersionSettings({
       label,
       resourceLink: scriptureConfig.resourceLink,
-      style
+      style,
     });
 
     const onChangeOrig = dropDownConfig.onChange;
     dropDownConfig.onChangeOrig = onChangeOrig;
     dropDownConfig.onChange = (title, index) => {
-
       if (onChangeOrig) {
         onChangeOrig(title, index);
         const item = getItemByTitle(title);
+
         if (item) {
           setScripture(item);
         }
@@ -52,11 +53,13 @@ export default function ScriptureCard(Props) {
 
   const items = null
   const {
-    state: { headers, filters, fontSize, itemIndex, markdownView },
-    actions: { setFilters, setFontSize, setItemIndex, setMarkdownView },
-  } = useCardState({
-    items,
-  })
+    state: {
+      headers, filters, fontSize, itemIndex, markdownView,
+    },
+    actions: {
+      setFilters, setFontSize, setItemIndex, setMarkdownView,
+    },
+  } = useCardState({ items })
 
   const refStyle = {
     fontFamily: 'Noto Sans',
@@ -117,5 +120,5 @@ ScriptureCard.propTypes = {
   /** resourceId to use (e.g. ugnt) */
   resourceId: PropTypes.string.isRequired,
   /** if true then word data hover is shown */
-  disableWordPopover: PropTypes.bool
+  disableWordPopover: PropTypes.bool,
 }
