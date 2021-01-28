@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 // based on example at https://usehooks.com/useLocalStorage/
 
