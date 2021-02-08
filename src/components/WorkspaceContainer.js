@@ -2,13 +2,15 @@ import React, { useContext } from 'react'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
-import ScriptureCard from '@components/ScriptureCard'
+import ScriptureCard from 'single-scripture-rcl'
 import { ReferenceContext } from '@context/ReferenceContext'
 import {
   ORIGINAL_SOURCE,
   TARGET_LITERAL,
   TARGET_SIMPLIFIED,
 } from '@hooks/useScriptureSettings'
+import { NT_BOOKS } from '@common/BooksOfTheBible'
+import useLocalStorage from '@hooks/useLocalStorage'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -50,6 +52,16 @@ function WorkspaceContainer() {
     heights: [[5], [10, 10], [10, 10]],
   }
 
+  function isNT(bookId) {
+    return NT_BOOKS.includes(bookId)
+  }
+
+  const commonScriptureCardConfigs = {
+    classes,
+    useLocalStorage,
+    isNT,
+  }
+
   return (
     <Workspace
       rowHeight={25}
@@ -60,7 +72,6 @@ function WorkspaceContainer() {
       <ScriptureCard
         cardNum={0}
         title='Scripture'
-        classes={classes}
         chapter={chapter}
         verse={verse}
         server={server}
@@ -70,12 +81,12 @@ function WorkspaceContainer() {
         resourceId={TARGET_LITERAL}
         bookId={bookId}
         disableWordPopover={true}
+        {...commonScriptureCardConfigs}
       />
 
       <ScriptureCard
         cardNum={1}
         title='Scripture'
-        classes={classes}
         chapter={chapter}
         verse={verse}
         server={server}
@@ -84,12 +95,12 @@ function WorkspaceContainer() {
         languageId={ORIGINAL_SOURCE}
         resourceId={ORIGINAL_SOURCE}
         bookId={bookId}
+        {...commonScriptureCardConfigs}
       />
 
       <ScriptureCard
         cardNum={2}
         title='Scripture'
-        classes={classes}
         chapter={chapter}
         verse={verse}
         server={server}
@@ -99,6 +110,7 @@ function WorkspaceContainer() {
         resourceId={TARGET_SIMPLIFIED}
         bookId={bookId}
         disableWordPopover={true}
+        {...commonScriptureCardConfigs}
       />
 
       <ResourceCard
