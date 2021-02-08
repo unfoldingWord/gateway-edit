@@ -2,15 +2,16 @@ import React, { useContext } from 'react'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
-import ScriptureCard from 'single-scripture-rcl'
-import { ReferenceContext } from '@context/ReferenceContext'
 import {
+  ScriptureCard,
   ORIGINAL_SOURCE,
   TARGET_LITERAL,
   TARGET_SIMPLIFIED,
-} from '@hooks/useScriptureSettings'
+} from 'single-scripture-rcl'
+import { ReferenceContext } from '@context/ReferenceContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
+import { getLanguage } from "@common/languages";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -60,6 +61,7 @@ function WorkspaceContainer() {
     classes,
     useLocalStorage,
     isNT,
+    getLanguage,
   }
 
   return (
