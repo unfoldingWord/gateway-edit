@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
+import { getResourceBibles } from '@utils/resources'
 import {
   ScriptureCard,
   ORIGINAL_SOURCE,
@@ -12,6 +13,7 @@ import { ReferenceContext } from '@context/ReferenceContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
+
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,7 +43,11 @@ function WorkspaceContainer() {
         bookId, chapter, verse,
       },
     },
-    actions: { updateTaDetails, setQuote },
+    actions: {
+      updateTaDetails,
+      setQuote,
+      setSupportedBibles,
+    },
   } = useContext(ReferenceContext)
 
   const layout = {
@@ -64,6 +70,23 @@ function WorkspaceContainer() {
     getLanguage,
     originalLanguageOwner: scriptureOwner,
   }
+
+  getResourceBibles({
+    bookId,
+    chapter,
+    verse,
+    resourceId: languageId === 'en' ? 'ult' : 'glt',
+    owner,
+    languageId,
+    branch,
+    server,
+  }).then(bibles => {
+    if (bibles?.length) {
+      console.log(`found ${bibles?.length} bibles`)
+    } else {
+      console.log(`no bibles`)
+    }
+  })
 
   return (
     <Workspace
