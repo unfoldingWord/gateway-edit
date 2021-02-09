@@ -9,8 +9,15 @@ export default function useLocalStorage(key, initialValue) {
     try {
       // Get from local storage by key
       const item = localStorage.getItem(key)
-      // Parse stored json or if none return initialValue
-      return item ? JSON.parse(item) : initialValue
+
+      if (item) {
+        // Parse stored json or if none return initialValue
+        return JSON.parse(item)
+      } else { // if local storage has not yet been initialized, set to initial value
+        const valueJSON = JSON.stringify(initialValue)
+        localStorage.setItem(key, valueJSON)
+        return initialValue
+      }
     } catch (error) {
       // If error also return initialValue
       console.log(`useLocalStorage(${key}) - init error:'`, error)
@@ -28,7 +35,7 @@ export default function useLocalStorage(key, initialValue) {
       // Save state
       setStoredValue(valueToStore)
       // Save to local storage
-      let valueJSON = JSON.stringify(valueToStore)
+      const valueJSON = JSON.stringify(valueToStore)
       localStorage.setItem(key, valueJSON)
     } catch (error) {
       // A more advanced implementation would handle the error case

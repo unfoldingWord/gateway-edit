@@ -11,7 +11,7 @@ import {
 import { ReferenceContext } from '@context/ReferenceContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
-import { getLanguage } from "@common/languages";
+import { getLanguage } from "@common/languages"
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -62,6 +62,7 @@ function WorkspaceContainer() {
     useLocalStorage,
     isNT,
     getLanguage,
+    originalLanguageOwner: scriptureOwner,
   }
 
   return (
@@ -77,7 +78,7 @@ function WorkspaceContainer() {
         chapter={chapter}
         verse={verse}
         server={server}
-        owner={scriptureOwner}
+        owner={owner}
         branch={branch}
         languageId={languageId}
         resourceId={TARGET_LITERAL}
@@ -92,9 +93,9 @@ function WorkspaceContainer() {
         chapter={chapter}
         verse={verse}
         server={server}
-        owner={scriptureOwner}
+        owner={owner}
         branch={branch}
-        languageId={ORIGINAL_SOURCE}
+        languageId={languageId}
         resourceId={ORIGINAL_SOURCE}
         bookId={bookId}
         {...commonScriptureCardConfigs}
@@ -106,7 +107,7 @@ function WorkspaceContainer() {
         chapter={chapter}
         verse={verse}
         server={server}
-        owner={scriptureOwner}
+        owner={owner}
         branch={branch}
         languageId={languageId}
         resourceId={TARGET_SIMPLIFIED}
