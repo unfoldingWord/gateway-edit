@@ -11,7 +11,7 @@ import {
 import { ReferenceContext } from '@context/ReferenceContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
-import { getLanguage } from "@common/languages"
+import { getLanguage } from '@common/languages'
 
 const useStyles = makeStyles(() => ({
   root: {
