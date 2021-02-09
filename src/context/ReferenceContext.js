@@ -1,5 +1,6 @@
 import React, { useState, createContext } from 'react'
 import useLocalStorage from '@hooks/useLocalStorage'
+import { getResourceBibles } from '@components/BibleReference'
 
 export const ReferenceContext = createContext({})
 
@@ -21,6 +22,24 @@ export default function ReferenceContextProvider(props) {
     bookId: 'mat',
     chapter: '1',
     verse: '1',
+  })
+
+  const [bibles, setBibles] = useLocalStorage('bibles', [])
+
+  console.log(`found ${bibles?.length} bibles`)
+  getResourceBibles({
+    bookId: bibleReference.bookId,
+    chapter: bibleReference.chapter,
+    verse: bibleReference.verse,
+    resourceId: 'ult',
+    owner,
+    languageId,
+    branch,
+    server,
+  }).then(bibles => {
+    if (bibles?.length) {
+      setBibles(bibles)
+    }
   })
 
   function onReferenceChange(bookId, chapter, verse) {
