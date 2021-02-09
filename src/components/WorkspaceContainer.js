@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import * as isEqual from 'deep-equal'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
@@ -42,6 +43,7 @@ function WorkspaceContainer() {
       bibleReference: {
         bookId, chapter, verse,
       },
+      supportedBibles,
     },
     actions: {
       updateTaDetails,
@@ -71,6 +73,7 @@ function WorkspaceContainer() {
     originalLanguageOwner: scriptureOwner,
   }
 
+  console.log(`found ${supportedBibles?.length} bibles`)
   getResourceBibles({
     bookId,
     chapter,
@@ -83,6 +86,12 @@ function WorkspaceContainer() {
   }).then(bibles => {
     if (bibles?.length) {
       console.log(`found ${bibles?.length} bibles`)
+
+      if (!isEqual(bibles, supportedBibles )) {
+        console.log(`updating bibles`)
+
+        setSupportedBibles(bibles) //TODO blm: update bible refs
+      }
     } else {
       console.log(`no bibles`)
     }
