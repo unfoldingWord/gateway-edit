@@ -55,7 +55,7 @@ export async function getResourceBibles(resourceRef) {
   const manifest = await getResourceManifest(resourceRef)
 
   if (manifest?.projects) {
-    return manifest.projects.map((item) => (item.title))
+    return manifest.projects.map((item) => (item.identifier))
   }
 
   return null

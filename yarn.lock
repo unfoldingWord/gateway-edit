@@ -1305,10 +1305,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bible-reference-rcl@0.1.12:
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.1.12.tgz#bc4c677b257472cee93b7da4daaba54136c191b1"
-  integrity sha512-4N/7Dxac+K1yYsgNjhIBwtyN7b9VAv297TB2gjSRCiGA2aMKb9MoHygyyjkCFV+Y9ko04JCztjKioujYFCOZQQ==
+bible-reference-rcl@0.1.13-alpha:
+  version "0.1.13-alpha"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.1.13-alpha.tgz#9621f1736449dd8455066b7d3a3384d369a16f79"
+  integrity sha512-SpPR/VQ1zxxwiDS7JdrN0yqhgn6aUQqFBB900f125AFtiEfnApCPYJMkE8ou7i0iHCzmL+A2+gn4gRsBEvJoxA==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"
@@ -6683,8 +6683,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-"single-scripture-rcl@file:.yalc/single-scripture-rcl":
-  version "0.1.9-alpha"
+single-scripture-rcl@0.1.9-alpha.2:
+  version "0.1.9-alpha.2"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-0.1.9-alpha.2.tgz#25a20edc7550096d004a1a2e8e223560f8b77de7"
+  integrity sha512-XuHcH3B68SspX9/82oeB6o9Q7ThX6eqZDCaQsO7SiKko8z7bG+I6HcXzRWyRkZqgWInQg6nQaexDR32+yj6aoQ==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
