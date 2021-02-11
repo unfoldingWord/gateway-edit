@@ -6516,10 +6516,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@3.1.1-alpha:
-  version "3.1.1-alpha"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-3.1.1-alpha.tgz#4fdfaeaffa471d0052d32c6229d027277a382e11"
-  integrity sha512-8MJJyFLDJX6edjzlbyErmMRf2BkbYbL7x2ZgKsKHDIMlP4ChMfcyjBgyK/1VNHrA8oBhJj9N8TyiRjgKU64jWw==
+scripture-resources-rcl@3.0.5-alpha.2:
+  version "3.0.5-alpha.2"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-3.0.5-alpha.2.tgz#a04afe04aeaf739cf90a2451ec83da305e8cecfc"
+  integrity sha512-dE8JVxC0iA8dAAt8yGkzq/HgedO8QvaGvebY+BM8nwoMimyVGRViezVpyn85BN/l4pHYSR/dwcmyhWgnXavRrA==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.3.13"
@@ -6683,10 +6683,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@0.1.7-alpha.8:
-  version "0.1.7-alpha.8"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-0.1.7-alpha.8.tgz#5cafed023c943641fe01b58e4697500afdce0c4d"
-  integrity sha512-WGEbSkK+Ex1Y39b8fkCEdvmyg3P+IpHzFTJrS3qZERLCUUMdo05r48EwFBEMg/+WLyp769SWPSCQxo+zfPncZA==
+single-scripture-rcl@0.1.7-alpha.9:
+  version "0.1.7-alpha.9"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-0.1.7-alpha.9.tgz#7979960978e42dd28e1ef64703c6c9ce54c6589f"
+  integrity sha512-AJKb+5jAeWrhsjwtIDdq1S0O7/CysWojf2IMAFx5XRQZLYxmvclZI5LDc0CLBGh/RBNrlbLKG3I3bt9csvebzA==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
