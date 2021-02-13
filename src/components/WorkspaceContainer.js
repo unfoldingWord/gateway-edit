@@ -85,11 +85,8 @@ function WorkspaceContainer() {
     server,
   }).then(bibles => {
     if (bibles?.length) {
-      console.log(`found ${bibles?.length} bibles`)
-
       if (!isEqual(bibles, supportedBibles )) {
-        console.log(`updating bibles`)
-
+        console.log(`found ${bibles?.length} bibles`)
         setSupportedBibles(bibles) //TODO blm: update bible refs
       }
     } else {
