@@ -23,7 +23,11 @@ export default function TranslationSettings({ authentication }) {
   const [languages, setLanguages] = useState([])
   const {
     state: { owner: organization, languageId },
-    actions: { setOwner: setOrganization, setLanguageId, setShowAccountSetup },
+    actions: {
+      setOwner: setOrganization,
+      setLanguageId,
+      setShowAccountSetup
+    },
   } = useContext(ReferenceContext)
 
   useEffect(() => {
@@ -91,7 +95,9 @@ export default function TranslationSettings({ authentication }) {
             onChange={handleLanguageChange}
             label='Primary Translating Language'
           >
-            {languages.map(({ languageId, languageName, localized }, i) => (
+            {languages.map(({
+              languageId, languageName, localized,
+            }, i) => (
               <MenuItem key={`${languageId}-${i}`} value={languageId}>
                 {`${languageId} - ${languageName} - ${localized}`}
               </MenuItem>
@@ -103,6 +109,4 @@ export default function TranslationSettings({ authentication }) {
   )
 }
 
-TranslationSettings.propTypes = {
-  authentication: PropTypes.object.isRequired,
-}
+TranslationSettings.propTypes = { authentication: PropTypes.object.isRequired }

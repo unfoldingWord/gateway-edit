@@ -2,15 +2,16 @@ import { useContext } from 'react'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
-import ScriptureCard from '@components/ScriptureCard'
-import { ReferenceContext } from '@context/ReferenceContext'
 import {
-  NT_BOOKS,
-  NT_ORIG_LANG,
-  OT_ORIG_LANG,
-  NT_ORIG_LANG_BIBLE,
-  OT_ORIG_LANG_BIBLE,
-} from '@common/BooksOfTheBible'
+  ScriptureCard,
+  ORIGINAL_SOURCE,
+  TARGET_LITERAL,
+  TARGET_SIMPLIFIED,
+} from 'single-scripture-rcl'
+import { ReferenceContext } from '@context/ReferenceContext'
+import { NT_BOOKS } from '@common/BooksOfTheBible'
+import useLocalStorage from '@hooks/useLocalStorage'
+import { getLanguage } from '@common/languages'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -36,7 +37,9 @@ function WorkspaceContainer() {
       languageId,
       selectedQuote,
       scriptureOwner,
-      bibleReference: { bookId, chapter, verse },
+      bibleReference: {
+        bookId, chapter, verse,
+      },
     },
     actions: { updateTaDetails, setQuote },
   } = useContext(ReferenceContext)
@@ -50,12 +53,17 @@ function WorkspaceContainer() {
     heights: [[5], [10, 10], [10, 10]],
   }
 
-  // select original language Bible based on which testament the book is
-  const isNewTestament = NT_BOOKS.includes(bookId)
-  const originalLanguageID = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG
-  const originalBibleID = isNewTestament
-    ? NT_ORIG_LANG_BIBLE
-    : OT_ORIG_LANG_BIBLE
+  function isNT(bookId) {
+    return NT_BOOKS.includes(bookId)
+  }
+
+  const commonScriptureCardConfigs = {
+    classes,
+    useLocalStorage,
+    isNT,
+    getLanguage,
+    originalLanguageOwner: scriptureOwner,
+  }
 
   return (
     <Workspace
@@ -65,44 +73,47 @@ function WorkspaceContainer() {
       classes={classes}
     >
       <ScriptureCard
+        cardNum={0}
         title='Scripture'
-        classes={classes}
         chapter={chapter}
         verse={verse}
         server={server}
-        owner={scriptureOwner}
+        owner={owner}
         branch={branch}
         languageId={languageId}
-        resourceId={'ult'}
+        resourceId={TARGET_LITERAL}
         bookId={bookId}
         disableWordPopover={true}
+        {...commonScriptureCardConfigs}
       />
 
       <ScriptureCard
+        cardNum={1}
         title='Scripture'
-        classes={classes}
         chapter={chapter}
         verse={verse}
         server={server}
-        owner={scriptureOwner}
+        owner={owner}
         branch={branch}
-        languageId={originalLanguageID}
-        resourceId={originalBibleID}
+        languageId={languageId}
+        resourceId={ORIGINAL_SOURCE}
         bookId={bookId}
+        {...commonScriptureCardConfigs}
       />
 
       <ScriptureCard
+        cardNum={2}
         title='Scripture'
-        classes={classes}
         chapter={chapter}
         verse={verse}
         server={server}
-        owner={scriptureOwner}
+        owner={owner}
         branch={branch}
         languageId={languageId}
-        resourceId={'ust'}
+        resourceId={TARGET_SIMPLIFIED}
         bookId={bookId}
         disableWordPopover={true}
+        {...commonScriptureCardConfigs}
       />
 
       <ResourceCard
