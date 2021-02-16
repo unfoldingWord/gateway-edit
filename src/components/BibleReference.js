@@ -21,7 +21,6 @@ function BibleReferenceComponent(props) {
 
   useEffect(() => {
     if (supportedBibles?.length) {
-      console.log(`BibleReferenceComponent - supportedBibles changed, applying ${JSON.stringify(supportedBibles)}`)
       actions.applyBooksFilter(supportedBibles)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
