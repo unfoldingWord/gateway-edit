@@ -1,7 +1,9 @@
 import { useContext } from 'react'
+import * as isEqual from 'deep-equal'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import ResourceCard from '@components/ResourceCard'
+import { getResourceBibles } from '@utils/resources'
 import {
   ScriptureCard,
   ORIGINAL_SOURCE,
@@ -40,8 +42,13 @@ function WorkspaceContainer() {
       bibleReference: {
         bookId, chapter, verse,
       },
+      supportedBibles,
     },
-    actions: { updateTaDetails, setQuote },
+    actions: {
+      updateTaDetails,
+      setQuote,
+      setSupportedBibles,
+    },
   } = useContext(ReferenceContext)
 
   const layout = {
@@ -64,6 +71,26 @@ function WorkspaceContainer() {
     getLanguage,
     originalLanguageOwner: scriptureOwner,
   }
+
+  getResourceBibles({
+    bookId,
+    chapter,
+    verse,
+    resourceId: languageId === 'en' ? 'ult' : 'glt',
+    owner,
+    languageId,
+    branch,
+    server,
+  }).then(bibles => {
+    if (bibles?.length) {
+      if (!isEqual(bibles, supportedBibles )) {
+        console.log(`found ${bibles?.length} bibles`)
+        setSupportedBibles(bibles) //TODO blm: update bible refs
+      }
+    } else {
+      console.log(`no bibles`)
+    }
+  })
 
   return (
     <Workspace
