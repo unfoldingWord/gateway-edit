@@ -1305,10 +1305,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bible-reference-rcl@0.1.13-alpha:
-  version "0.1.13-alpha"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.1.13-alpha.tgz#9621f1736449dd8455066b7d3a3384d369a16f79"
-  integrity sha512-SpPR/VQ1zxxwiDS7JdrN0yqhgn6aUQqFBB900f125AFtiEfnApCPYJMkE8ou7i0iHCzmL+A2+gn4gRsBEvJoxA==
+bible-reference-rcl@0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.1.13.tgz#e6bf5bcdceff553c2ac5ae4033946bba4e3764d5"
+  integrity sha512-CsX6y5cD+nku+AyL/++C/8efnBq7m3aG0vjDiWmaQvoHe+jQV8+99T/Uu89g5DZH5nznk8Cqj6S5rq+MLmsMxg==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"
@@ -6516,10 +6516,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@3.2.0-alpha.3:
-  version "3.2.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-3.2.0-alpha.3.tgz#af88cdc2f0f98aa963bf1967bce10a8111a546e0"
-  integrity sha512-KTzm9/0Dnko90JQaEX9jlEnbkP6l+xY8AhD3JQfjWt2CKF9c3AV9G0wrBY3akJ+B9ouEMpC/EU7INqNnceEBiQ==
+scripture-resources-rcl@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-3.2.0.tgz#2b60c733ed2098f142a7b0a598d5b2ebb73b9f9f"
+  integrity sha512-Hlpbqb4u8vkizwwxeXQaboX5ETodTR6MftiOjD8kJEA+Uw9Vy/oAiN7Z/1+B9AkA/AHraRnqekYuD2D2KSXZEg==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.3.13"
