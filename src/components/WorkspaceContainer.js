@@ -72,7 +72,6 @@ function WorkspaceContainer() {
     originalLanguageOwner: scriptureOwner,
   }
 
-  console.log(`found ${supportedBibles?.length} bibles`)
   getResourceBibles({
     bookId,
     chapter,
