@@ -1305,10 +1305,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bible-reference-rcl@0.1.13:
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.1.13.tgz#e6bf5bcdceff553c2ac5ae4033946bba4e3764d5"
-  integrity sha512-CsX6y5cD+nku+AyL/++C/8efnBq7m3aG0vjDiWmaQvoHe+jQV8+99T/Uu89g5DZH5nznk8Cqj6S5rq+MLmsMxg==
+bible-reference-rcl@0.1.14-alpha:
+  version "0.1.14-alpha"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.1.14-alpha.tgz#f5002d275897a950ae0a83610b7563bc6fef73f7"
+  integrity sha512-MTgI026Xj03nuOuPC41YGLrFuk40PREZXFzFx+d03V8Q9ALh65AXZMTzrWGyfXvsU75sNGnOiC1WZ/jt/p12sA==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"
