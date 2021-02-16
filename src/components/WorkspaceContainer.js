@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import * as isEqual from 'deep-equal'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
@@ -14,7 +14,6 @@ import { ReferenceContext } from '@context/ReferenceContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
-
 
 const useStyles = makeStyles(() => ({
   root: {

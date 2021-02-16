@@ -58,6 +58,7 @@ module.exports = {
     "no-console": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
+    "react/react-in-jsx-scope": "off",
     "no-prototype-builtins": "off",
     "react/no-unescaped-entities": "off",
     "object-curly-spacing": ["error", "always"],
