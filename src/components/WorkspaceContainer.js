@@ -132,8 +132,8 @@ function WorkspaceContainer() {
 
   return (
     <SelectionsContextProvider
-      quote={selectedQuote?.text}
-      occurrence={1}
+      quote={selectedQuote?.quote}
+      occurrence={selectedQuote?.occurrence}
       selections={selections}
       verseObjects={greekScriptureConfig.verseObjects || []}
       onSelections={setSelections}
@@ -255,10 +255,12 @@ function WorkspaceContainer() {
           server={server}
           owner={owner}
           branch={branch}
-          languageId={languageId}
+          filePath={null}
           resourceId={'tn'}
           projectId={bookId}
-          filePath={null}
+          languageId={languageId}
+          setQuote={setQuote}
+          selectedQuote={selectedQuote}
           updateTaDetails={updateTaDetails}
         />
         <ResourceCard
