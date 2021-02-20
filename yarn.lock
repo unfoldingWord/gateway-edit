@@ -6375,10 +6375,10 @@ resolve@^1.10.0, resolve@^1.12.0, resolve@^1.13.1, resolve@^1.17.0, resolve@^1.1
     is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
-resource-workspace-rcl@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-0.5.0.tgz#32eebc90c833d4f5b038b41fe96b178172a834a3"
-  integrity sha512-2qEbZO4cPBlBcd2IReF6jl0XM0iZAK7p2VYKXFn0q897f+HECeznRSItZ+ycInvsqcC+CcuruqbRHfMDr5tNnA==
+resource-workspace-rcl@0.6.0-alpha:
+  version "0.6.0-alpha"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-0.6.0-alpha.tgz#e1915f40bc39495a73b677e89931b46e9ea6c687"
+  integrity sha512-LHTM1CGxVwzcW1j7WHcCicFlusf9+ja11HHCGjCztEPmxvfs+Sxdlr3ZfE2aymmb7my/AtahSpAToSMw0kdNtg==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
