@@ -6683,10 +6683,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@^1.0.0-rc0:
-  version "1.0.0-rc0"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.0.0-rc0.tgz#24a88aef1cbfbb7651fac0089f38829f66640d79"
-  integrity sha512-wozTJHYd8LEUKN1A5wBIfgNq+T3dBZebqBT9mDcfompGW9464LJmnE4koctnaFiwMEyJMS4WutHT+OOtB9NURQ==
+single-scripture-rcl@^1.0.0-rc1:
+  version "1.0.0-rc1"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.0.0-rc1.tgz#71b1fa9914d96e001bb89a66f26d51ac3835f7ce"
+  integrity sha512-Qnvt1U8qRJT6d2JD7IKi2p7IHQ7g5ioT6omE4Xh4byU7HeOPsB7fclPEEttRk+bhRq1QQVKxgWfzQUaIVa8RlA==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -7388,7 +7388,7 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.5.0:
+translation-helps-rcl@1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.5.0.tgz#19f9f8201f9a35237de33bb455e9d8a356da24d8"
   integrity sha512-SANsNtAth386VeRKQTtWM6ukbN8A8G8ugX/kxjZ9YMoy8tgK1qtj03CfEQeIbc+TJtUZBtql6bR6d7MfxvNEuA==
