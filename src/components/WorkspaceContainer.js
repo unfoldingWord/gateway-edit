@@ -15,7 +15,7 @@ import { ReferenceContext } from '@context/ReferenceContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
-import { core, SelectionsContextProvider } from 'scripture-resources-rcl'
+import { SelectionsContextProvider } from 'scripture-resources-rcl'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -46,11 +46,13 @@ function WorkspaceContainer() {
         bookId, chapter, verse,
       },
       supportedBibles,
+      currentLayout,
     },
     actions: {
       setQuote,
       updateTaDetails,
       setSupportedBibles,
+      setCurrentLayout,
     },
   } = useContext(ReferenceContext)
 
@@ -61,6 +63,10 @@ function WorkspaceContainer() {
       [2, 2],
     ],
     heights: [[5], [10, 10], [10, 10]],
+  }
+
+  if (currentLayout) {
+    layout.absolute = currentLayout
   }
 
   function isNT(bookId) {
@@ -141,8 +147,9 @@ function WorkspaceContainer() {
       <Workspace
         rowHeight={25}
         layout={layout}
-        gridMargin={[15, 15]}
         classes={classes}
+        gridMargin={[15, 15]}
+        onLayoutChange={setCurrentLayout}
       >
         <ScriptureCard
           isNT={isNT}
