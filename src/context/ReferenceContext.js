@@ -24,6 +24,7 @@ export default function ReferenceContextProvider(props) {
   })
 
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
+  const [currentLayout, setCurrentLayout] = useLocalStorage('resourceLayout', null)
 
   function onReferenceChange(bookId, chapter, verse) {
     setBibleReference(prevState => ({
@@ -59,6 +60,7 @@ export default function ReferenceContextProvider(props) {
       branch,
       owner,
       supportedBibles,
+      currentLayout,
     },
     actions: {
       setShowAccountSetup,
@@ -71,6 +73,7 @@ export default function ReferenceContextProvider(props) {
       setQuote,
       setOwner,
       setSupportedBibles,
+      setCurrentLayout,
     },
   }
 

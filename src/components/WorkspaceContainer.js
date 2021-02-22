@@ -43,11 +43,13 @@ function WorkspaceContainer() {
         bookId, chapter, verse,
       },
       supportedBibles,
+      currentLayout,
     },
     actions: {
       updateTaDetails,
       setQuote,
       setSupportedBibles,
+      setCurrentLayout,
     },
   } = useContext(ReferenceContext)
 
@@ -58,6 +60,10 @@ function WorkspaceContainer() {
       [2, 2],
     ],
     heights: [[5], [10, 10], [10, 10]],
+  }
+
+  if (currentLayout) {
+    layout.absolute = currentLayout
   }
 
   function isNT(bookId) {
@@ -98,6 +104,7 @@ function WorkspaceContainer() {
       layout={layout}
       gridMargin={[15, 15]}
       classes={classes}
+      onLayoutChange={setCurrentLayout}
     >
       <ScriptureCard
         cardNum={0}
