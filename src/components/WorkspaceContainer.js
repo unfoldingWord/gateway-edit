@@ -203,7 +203,6 @@ function WorkspaceContainer() {
           server={server}
           branch={branch}
           getLanguage={getLanguage}
-          disableWordPopover={true}
           useLocalStorage={useLocalStorage}
         // cardNum={1}
         // title='Scripture'
