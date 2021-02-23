@@ -270,6 +270,7 @@ function WorkspaceContainer() {
           resourceId={'tq'}
           projectId={bookId}
           filePath={null}
+          viewMode='question'
         />
       </Workspace>
     </SelectionsContextProvider>

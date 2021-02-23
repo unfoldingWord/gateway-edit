@@ -6515,7 +6515,7 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@^4.0.0:
+scripture-resources-rcl@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.0.0.tgz#3d947b480795a5685bb70f87a9010d1c6bfbcbaf"
   integrity sha512-DvHJoa9VAoAu8fRUyGW0FZ7U+aKruRSM8g6EQPTMTJkpB/41i3ahyn0E4SeNSGcj/EWs7S0f657wlEuV8oGFLA==
@@ -6682,7 +6682,7 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@^1.0.0:
+single-scripture-rcl@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.0.0.tgz#08fdfad1b0e3500917dc07403031671f5d6181cc"
   integrity sha512-a1IQV2z2k2pN4xqS6hyrD3MSXC2a2GXIDRSApMdBd+GnhS5Kdg80gpmmOi7uzyiiD0dYBFaeqZgEh1OupbO6pQ==
@@ -7387,10 +7387,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.5.0.tgz#19f9f8201f9a35237de33bb455e9d8a356da24d8"
-  integrity sha512-SANsNtAth386VeRKQTtWM6ukbN8A8G8ugX/kxjZ9YMoy8tgK1qtj03CfEQeIbc+TJtUZBtql6bR6d7MfxvNEuA==
+translation-helps-rcl@^1.6.0-rc2:
+  version "1.6.0-rc2"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.6.0-rc2.tgz#66421cce28c4229d280e27660f11e2961dad5b0f"
+  integrity sha512-XKLMGXu+YJEJtyprd+9mEQ4SzKTo2Vu+jlVJVgb2I25Z7iAQUiQgCCLDblAA92SdKqmhHAO57K98ZPtCxmdqDQ==
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
