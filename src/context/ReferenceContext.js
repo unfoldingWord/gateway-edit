@@ -8,16 +8,15 @@ export default function ReferenceContextProvider(props) {
   const [languageId, setLanguageId] = useLocalStorage('languageId', '')
   const [showAccountSetup, setShowAccountSetup] = useLocalStorage(
     'showAccountSetup',
-    true
+    true,
   )
   const [taArticle, setTaArticle] = useState(null)
-  const [selectedQuote, setQuote] = useState(null)
+  const [selectedQuote, setQuote] = useLocalStorage('selectedQuote', null)
   // TODO blm: for testing use unfoldingWord since test_org does not have enough bibles
   const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
-  // TODO: To make the app more dynamic use the setters below to dynamically set and change the values
   const [server, setServer] = useState('https://git.door43.org')
   const [branch, setBranch] = useState('master')
-  const [bibleReference, setBibleReference] = useState({
+  const [bibleReference, setBibleReference] = useLocalStorage('bibleReference', {
     bookId: 'mat',
     chapter: '1',
     verse: '1',
@@ -39,6 +38,7 @@ export default function ReferenceContextProvider(props) {
     if (supportReference) {
       const path = supportReference?.replace('rc://*/ta/man/', '')
       const split = path.split('/')
+
       setTaArticle({
         projectId: split[0],
         filePath: `${split[1]}/01.md`,
