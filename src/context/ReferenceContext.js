@@ -16,7 +16,7 @@ export default function ReferenceContextProvider(props) {
   const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
   const [server, setServer] = useState('https://git.door43.org')
   const [branch, setBranch] = useState('master')
-  const [bibleReference, setBibleReference] = useState({
+  const [bibleReference, setBibleReference] = useLocalStorage('bibleReference', {
     bookId: 'mat',
     chapter: '1',
     verse: '1',
