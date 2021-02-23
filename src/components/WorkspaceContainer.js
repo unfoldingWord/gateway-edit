@@ -124,9 +124,9 @@ function WorkspaceContainer() {
   }
 
   const config = {
-    server: 'https://git.door43.org',
+    server,
+    branch,
     cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
-    branch: 'master',
   }
 
   const originalScriptureConfig = useScripture({
