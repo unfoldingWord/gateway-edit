@@ -6515,7 +6515,7 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@^4.0.0:
+scripture-resources-rcl@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.0.0.tgz#3d947b480795a5685bb70f87a9010d1c6bfbcbaf"
   integrity sha512-DvHJoa9VAoAu8fRUyGW0FZ7U+aKruRSM8g6EQPTMTJkpB/41i3ahyn0E4SeNSGcj/EWs7S0f657wlEuV8oGFLA==
@@ -6682,10 +6682,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.0.0.tgz#08fdfad1b0e3500917dc07403031671f5d6181cc"
-  integrity sha512-a1IQV2z2k2pN4xqS6hyrD3MSXC2a2GXIDRSApMdBd+GnhS5Kdg80gpmmOi7uzyiiD0dYBFaeqZgEh1OupbO6pQ==
+single-scripture-rcl@1.0.1-alpha:
+  version "1.0.1-alpha"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.0.1-alpha.tgz#f0aa971b6ec9eaedfca4d1fc1e6abb698a449c12"
+  integrity sha512-XPM9iIkGOlrR6+QjoGJ2Kqbgwac88T+k9vmesLrZ62YKAL7mo2Vf/+/IPkPt9uU0YerLGaLOOnznqkn2l7xgRg==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -7387,10 +7387,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.5.0.tgz#19f9f8201f9a35237de33bb455e9d8a356da24d8"
-  integrity sha512-SANsNtAth386VeRKQTtWM6ukbN8A8G8ugX/kxjZ9YMoy8tgK1qtj03CfEQeIbc+TJtUZBtql6bR6d7MfxvNEuA==
+translation-helps-rcl@1.5.1-alpha:
+  version "1.5.1-alpha"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.5.1-alpha.tgz#f186ea60d3b0bc4b478f4975b27629d867d22528"
+  integrity sha512-Sc4/V5HScgczqha5bSHhrwnpp723o/U1qnTaY7iVTsWhAujkKgrB22amhczYZAJHA1jZbk5de8KHNMeNBYNuTA==
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
