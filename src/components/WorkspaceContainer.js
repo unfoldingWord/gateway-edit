@@ -75,6 +75,8 @@ function WorkspaceContainer() {
 
   const commonScriptureCardConfigs = {
     isNT,
+    server,
+    branch,
     classes,
     getLanguage,
     useLocalStorage,
@@ -133,16 +135,13 @@ function WorkspaceContainer() {
     config,
   })
 
-  console.log({ selections, selectedQuote })
-  console.log(greekScriptureConfig.verseObjects)
-
   return (
     <SelectionsContextProvider
+      selections={selections}
+      onSelections={setSelections}
       quote={selectedQuote?.quote}
       occurrence={selectedQuote?.occurrence}
-      selections={selections}
       verseObjects={greekScriptureConfig.verseObjects || []}
-      onSelections={setSelections}
     >
       <Workspace
         rowHeight={25}
@@ -152,9 +151,7 @@ function WorkspaceContainer() {
         onLayoutChange={setCurrentLayout}
       >
         <ScriptureCard
-          isNT={isNT}
           cardNum={0}
-          classes={classes}
           title='Scripture'
           reference={{
             chapter,
@@ -168,25 +165,12 @@ function WorkspaceContainer() {
             resourceId: TARGET_LITERAL,
             originalLanguageOwner: scriptureOwner,
           }}
-          server={server}
-          branch={branch}
-          getLanguage={getLanguage}
           disableWordPopover={true}
-          useLocalStorage={useLocalStorage}
-
-        // owner={owner}
-        // chapter={chapter}
-        // verse={verse}
-        // languageId={languageId}
-        // resourceId={TARGET_LITERAL}
-        // bookId={bookId}
-        // {...commonScriptureCardConfigs}
+          {...commonScriptureCardConfigs}
         />
 
         <ScriptureCard
-          isNT={isNT}
           cardNum={1}
-          classes={classes}
           title='Scripture'
           reference={{
             chapter,
@@ -200,27 +184,11 @@ function WorkspaceContainer() {
             resourceId: ORIGINAL_SOURCE,
             originalLanguageOwner: scriptureOwner,
           }}
-          server={server}
-          branch={branch}
-          getLanguage={getLanguage}
-          useLocalStorage={useLocalStorage}
-        // cardNum={1}
-        // title='Scripture'
-        // chapter={chapter}
-        // verse={verse}
-        // server={server}
-        // owner={owner}
-        // branch={branch}
-        // languageId={languageId}
-        // resourceId={ORIGINAL_SOURCE}
-        // bookId={bookId}
-        // {...commonScriptureCardConfigs}
+          {...commonScriptureCardConfigs}
         />
 
         <ScriptureCard
-          isNT={isNT}
           cardNum={2}
-          classes={classes}
           title='Scripture'
           reference={{
             chapter,
@@ -234,23 +202,8 @@ function WorkspaceContainer() {
             resourceId: TARGET_SIMPLIFIED,
             originalLanguageOwner: scriptureOwner,
           }}
-          server={server}
-          branch={branch}
-          getLanguage={getLanguage}
           disableWordPopover={true}
-          useLocalStorage={useLocalStorage}
-        // cardNum={2}
-        // title='Scripture'
-        // chapter={chapter}
-        // verse={verse}
-        // server={server}
-        // owner={owner}
-        // branch={branch}
-        // languageId={languageId}
-        // resourceId={TARGET_SIMPLIFIED}
-        // bookId={bookId}
-        // disableWordPopover={true}
-        // {...commonScriptureCardConfigs}
+          {...commonScriptureCardConfigs}
         />
 
         <ResourceCard
