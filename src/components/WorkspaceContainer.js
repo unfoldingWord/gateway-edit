@@ -2,20 +2,24 @@ import { useContext, useState } from 'react'
 import * as isEqual from 'deep-equal'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
-import ResourceCard from '@components/ResourceCard'
-import { getResourceBibles } from '@utils/resources'
+import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
+  OT_ORIG_LANG,
+  NT_ORIG_LANG,
   useScripture,
   ScriptureCard,
-  ORIGINAL_SOURCE,
   TARGET_LITERAL,
+  ORIGINAL_SOURCE,
   TARGET_SIMPLIFIED,
+  NT_ORIG_LANG_BIBLE,
+  OT_ORIG_LANG_BIBLE,
 } from 'single-scripture-rcl'
+import ResourceCard from '@components/ResourceCard'
+import { getResourceBibles } from '@utils/resources'
 import { ReferenceContext } from '@context/ReferenceContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
-import { SelectionsContextProvider } from 'scripture-resources-rcl'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -103,20 +107,20 @@ function WorkspaceContainer() {
     }
   })
 
-  const greekScripture = {
+  const originalScripture = {
     reference: {
       projectId: bookId,
       chapter,
       verse,
     },
-    isNT: () => true,
+    isNT: () => isNT(bookId),
     resource: {
       owner: 'unfoldingWord',
       originalLanguageOwner: 'unfoldingWord',
-      languageId: 'el-x-koine',
+      languageId: isNT(bookId) ? NT_ORIG_LANG : OT_ORIG_LANG,
       resourceId: ORIGINAL_SOURCE,
     },
-    getLanguage: () => ({ direction: 'ltr' }),
+    getLanguage: () => ({ direction: isNT(bookId) ? 'ltr' : 'rtl' }),
   }
 
   const config = {
@@ -125,12 +129,12 @@ function WorkspaceContainer() {
     branch: 'master',
   }
 
-  const greekScriptureConfig = useScripture({
-    ...greekScripture,
+  const originalScriptureConfig = useScripture({
+    ...originalScripture,
     resource: {
-      ...greekScripture.resource,
-      resourceId: 'ugnt',
-      projectId: 'ugnt',
+      ...originalScripture.resource,
+      resourceId: isNT(bookId) ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      projectId: isNT(bookId) ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
     },
     config,
   })
@@ -141,7 +145,7 @@ function WorkspaceContainer() {
       onSelections={setSelections}
       quote={selectedQuote?.quote}
       occurrence={selectedQuote?.occurrence}
-      verseObjects={greekScriptureConfig.verseObjects || []}
+      verseObjects={originalScriptureConfig.verseObjects || []}
     >
       <Workspace
         rowHeight={25}
