@@ -3,27 +3,27 @@
 
 @layer base {
   h1 {
-    @apply text-4xl;
+    @apply text-3xl;
     @apply font-bold;
     @apply my-7;
   }
   h2 {
-    @apply text-3xl;
+    @apply text-2xl;
     @apply font-semibold;
     @apply my-6;
   }
   h3 {
-    @apply text-2xl;
+    @apply text-xl;
     @apply font-medium;
     @apply my-5;
   }
   h4 {
-    @apply text-xl;
+    @apply text-lg;
     @apply font-medium;
     @apply my-4;
   }
   h5 {
-    @apply text-lg;
+    @apply text-base;
     @apply font-medium;
     @apply my-4;
   }
