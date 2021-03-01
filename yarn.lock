@@ -6393,10 +6393,10 @@ resolve@^1.10.0, resolve@^1.12.0, resolve@^1.13.1, resolve@^1.17.0, resolve@^1.1
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
-resource-workspace-rcl@0.6.1-alpha.2:
-  version "0.6.1-alpha.2"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-0.6.1-alpha.2.tgz#4cdba3cf291545d95ebc28f37b5050f12c8d9fdd"
-  integrity sha512-2R4DUNZCPL7ej2jXKTkpklWFKEyYDcclvfoaQ73dFekTUE6tVWIOSHP/Lo3gW87Ku+U58tFSY5CCEK1X1l7cYA==
+resource-workspace-rcl@0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-0.6.1.tgz#3018f33f2684af176842d0841c44404711c6e134"
+  integrity sha512-F6222e23DmeFi3owsmOqT9IM85Ry+AzQPjXRlVNAuH/re3uVphu8RJrZ8sGtkB0J1LL4rhmsw7Qw09du1Ow2qQ==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
@@ -7413,10 +7413,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.7.1-alpha:
-  version "1.7.1-alpha"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.7.1-alpha.tgz#ae7f892a8d45d1b62880a236e21c99834194ba16"
-  integrity sha512-tZsliHJ9ubIaG+LYMM4/9QVvktnPTtxLTgpo8l0b/JRgMhkTyqmlVTPxrcY75PbS/Xk6RW/0AT7DvLFtN6ZtAw==
+translation-helps-rcl@1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.7.1.tgz#accf34cdd08575757da8d54ea3588d7a80dfdb9e"
+  integrity sha512-NkyJ5MgWW7tYsErW9XY8DSgiPmTsSQpqbylZTJVhrMteqBzJD3f2jwPlYLsB+hoo5+T+lIJzY/vO03+DuZh6JQ==
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
