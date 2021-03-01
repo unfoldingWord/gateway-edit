@@ -26,6 +26,7 @@ export default function ReferenceContextProvider(props) {
   const [currentLayout, setCurrentLayout] = useLocalStorage('resourceLayout', null)
 
   function onReferenceChange(bookId, chapter, verse) {
+    setQuote(null)
     setBibleReference(prevState => ({
       ...prevState,
       bookId,
