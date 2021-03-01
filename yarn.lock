@@ -7407,10 +7407,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.8.0-rc0:
-  version "1.8.0-rc0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.8.0-rc0.tgz#f8934805bd0d23e98c1b8a0ed7967c97c03ff10d"
-  integrity sha512-Wt4tnerEFPq4BwprcBfkMxaLq1nR+9kcTNdjW2kC91R+qLT8PjOoN1XnjTa8nNdtCS5RNBBENaHDs7/HwWiyVA==
+translation-helps-rcl@^1.8.0-rc1:
+  version "1.8.0-rc1"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.8.0-rc1.tgz#0974f2adb83c6af6ebff487acc0ad09041d63f17"
+  integrity sha512-Qw5dN62LoUK3TtG99IkxmR6CCPuEglKyRmXrz8dKaL0VPZGGhXPLb9l8ow9KDAM3gPJ7ee2rpyphu5NO7rDdNg==
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
