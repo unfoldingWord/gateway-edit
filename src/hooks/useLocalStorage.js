@@ -7,15 +7,19 @@ export default function useLocalStorage(key, initialValue) {
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState(() => {
     try {
-      // Get from local storage by key
-      const item = localStorage.getItem(key)
+      if (typeof window !== 'undefined') {
+        // Get from local storage by key
+        const item = localStorage.getItem(key)
 
-      if (item) {
+        if (item) {
         // Parse stored json or if none return initialValue
-        return JSON.parse(item)
-      } else { // if local storage has not yet been initialized, set to initial value
-        const valueJSON = JSON.stringify(initialValue)
-        localStorage.setItem(key, valueJSON)
+          return JSON.parse(item)
+        } else { // if local storage has not yet been initialized, set to initial value
+          const valueJSON = JSON.stringify(initialValue)
+          localStorage.setItem(key, valueJSON)
+          return initialValue
+        }
+      } else {
         return initialValue
       }
     } catch (error) {
