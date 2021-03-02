@@ -238,6 +238,7 @@ function WorkspaceContainer() {
           resourceId={'ta'}
           projectId={taArticle?.projectId}
           filePath={taArticle?.filePath}
+          errorMessage={taArticle ? null : 'No article is specified in the current note'}
         />
         <ResourceCard
           title='translationWords List'
