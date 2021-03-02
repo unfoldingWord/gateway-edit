@@ -40,10 +40,7 @@ export default function useLocalStorage(key, initialValue) {
       setStoredValue(valueToStore)
       // Save to local storage
       const valueJSON = JSON.stringify(valueToStore)
-
-      if (localStorage) {
-        localStorage.setItem(key, valueJSON)
-      }
+      localStorage.setItem(key, valueJSON)
     } catch (error) {
       // A more advanced implementation would handle the error case
       console.log(`useLocalStorage.setValue(${key}) - error:'`, error)
