@@ -21,6 +21,7 @@ export default function ResourceCard({
   projectId,
   languageId,
   resourceId,
+  errorMessage,
   selectedQuote,
   disableFilters,
   updateTaDetails,
@@ -87,10 +88,13 @@ export default function ResourceCard({
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        errorMessage={errorMessage}
       />
     </Card>
   )
 }
+
+ResourceCard.defaultProps = { errorMessage: false }
 
 ResourceCard.propTypes = {
   viewMode: PropTypes.string,
@@ -111,4 +115,5 @@ ResourceCard.propTypes = {
   hideMarkdownToggle: PropTypes.bool,
   classes: PropTypes.object,
   selectedQuote: PropTypes.object,
+  errorMessage: PropTypes.string,
 }
