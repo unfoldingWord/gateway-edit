@@ -139,8 +139,6 @@ function WorkspaceContainer() {
     config,
   })
 
-  console.log({ taArticle })
-
   return (
     <SelectionsContextProvider
       selections={selections}
