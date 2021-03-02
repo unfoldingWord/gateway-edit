@@ -22,8 +22,8 @@ export default function ResourceCard({
   languageId,
   resourceId,
   selectedQuote,
-  updateTaDetails,
   disableFilters,
+  updateTaDetails,
   disableNavigation,
   hideMarkdownToggle,
 }) {
@@ -40,10 +40,16 @@ export default function ResourceCard({
   })
 
   const {
-    state: { item, headers, filters, fontSize, itemIndex, markdownView },
-    actions: { setFilters, setFontSize, setItemIndex, setMarkdownView },
+    state: {
+      item, headers, filters, fontSize, itemIndex, markdownView,
+    },
+    actions: {
+      setFilters, setFontSize, setItemIndex, setMarkdownView,
+    },
   } = useCardState({
     items,
+    setQuote,
+    selectedQuote,
   })
 
   useEffect(() => {
@@ -103,4 +109,6 @@ ResourceCard.propTypes = {
   disableFilters: PropTypes.bool,
   disableNavigation: PropTypes.bool,
   hideMarkdownToggle: PropTypes.bool,
+  classes: PropTypes.object,
+  selectedQuote: PropTypes.object,
 }

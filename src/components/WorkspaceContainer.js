@@ -64,7 +64,7 @@ function WorkspaceContainer() {
     widths: [
       [1, 1, 1],
       [2, 2],
-      [2, 2],
+      [1, 1.5, 1.5],
     ],
     heights: [[5], [10, 10], [10, 10]],
   }
@@ -240,7 +240,7 @@ function WorkspaceContainer() {
           filePath={taArticle?.filePath}
         />
         <ResourceCard
-          title='translationWords'
+          title='translationWords List'
           classes={classes}
           chapter={chapter}
           verse={verse}
@@ -259,6 +259,24 @@ function WorkspaceContainer() {
           hideMarkdownToggle
         />
         <ResourceCard
+          title='translationWords Article'
+          classes={classes}
+          chapter={chapter}
+          verse={verse}
+          server={server}
+          owner={owner}
+          branch={branch}
+          viewMode={'markdown'}
+          languageId={languageId}
+          resourceId={'twl'}
+          projectId={bookId}
+          filePath={null}
+          setQuote={setQuote}
+          selectedQuote={selectedQuote}
+          disableFilters
+          hideMarkdownToggle
+        />
+        <ResourceCard
           title='translationQuestions'
           classes={classes}
           chapter={chapter}
@@ -271,6 +289,7 @@ function WorkspaceContainer() {
           projectId={bookId}
           filePath={null}
           viewMode='question'
+          disableFilters
         />
       </Workspace>
     </SelectionsContextProvider>
