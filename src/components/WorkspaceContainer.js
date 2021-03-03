@@ -154,7 +154,7 @@ function WorkspaceContainer() {
         gridMargin={[15, 15]}
         onLayoutChange={setCurrentLayout}
       >
-        {/* <ScriptureCard
+        <ScriptureCard
           cardNum={0}
           title='Scripture'
           reference={{
@@ -208,7 +208,7 @@ function WorkspaceContainer() {
           }}
           disableWordPopover={true}
           {...commonScriptureCardConfigs}
-        /> */}
+        />
 
         <ResourceCard
           title='translationNotes'
@@ -226,7 +226,7 @@ function WorkspaceContainer() {
           selectedQuote={selectedQuote}
           updateTaDetails={updateTaDetails}
         />
-        {/* <ResourceCard
+        <ResourceCard
           title='translationAcademy'
           classes={classes}
           chapter={chapter}
@@ -291,7 +291,7 @@ function WorkspaceContainer() {
           filePath={null}
           viewMode='question'
           disableFilters
-        /> */}
+        />
       </Workspace>
     </SelectionsContextProvider>
   )
