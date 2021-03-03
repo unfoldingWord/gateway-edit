@@ -40,8 +40,6 @@ export default function ResourceCard({
     server,
   })
 
-  console.log({ items })
-
   const {
     state: {
       item, headers, filters, fontSize, itemIndex, markdownView,
