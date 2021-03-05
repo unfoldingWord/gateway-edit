@@ -1333,10 +1333,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bible-reference-rcl@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.2.1.tgz#868bdbb2069122de9624dad2b68960d95553621f"
-  integrity sha512-1DqPkZ627wE4k420r3vvQTUUhkHa6KmGewS6RLTI1B4vZ3XY04dyKoxfPo84tSSjPFCEwB17+nbhXDF3CP6xIw==
+bible-reference-rcl@^0.3.0-rc0:
+  version "0.3.0-rc0"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.3.0-rc0.tgz#8afdcf4fed862f1a5d37327b263fc5e1d7b024cd"
+  integrity sha512-pv9LJBfemwvS4qLCXM4h8P3S0CQDXoEyY6nS4RwG9EUKVZ3D9bijMXt7rgDj5YGLQsFNfvXkyTQ3KPngcz02nA==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"
@@ -7407,7 +7407,7 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.10.0:
+translation-helps-rcl@1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.10.0.tgz#aa25166dba0b069ce21b4900323eb9d5953a4ffd"
   integrity sha512-pIZfPVsNvOYBQPWZZoQCz+ETz5LUAvTSPu1DcEVBDAHuiT83awIDc4VX5vW6cDvVjPEbnrTZldZFvNfikCE7lg==
