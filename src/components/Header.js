@@ -106,7 +106,7 @@ export default function Header({
         open={drawerOpen}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
-        resetCardLayout={resetResourceLayout}
+        resetResourceLayout={resetResourceLayout}
       />
     </header>
   )
