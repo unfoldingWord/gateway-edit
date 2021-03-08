@@ -25,7 +25,7 @@ export default function Drawer({
   onOpen,
   logout,
   onClose,
-  resetCardLayout,
+  resetResourceLayout,
 }) {
   const router = useRouter()
 
@@ -44,8 +44,8 @@ export default function Drawer({
     onClose()
   }
 
-  function onResetCardLayout() {
-    resetCardLayout()
+  function onResetResourceLayout() {
+    resetResourceLayout()
     onClose()
   }
 
@@ -88,11 +88,11 @@ export default function Drawer({
         </ListItem>
       </List>
       <List disablePadding>
-        <ListItem button key={'Reset Card Layout'} onClick={onResetCardLayout}>
+        <ListItem button key={'Reset Resource Layout'} onClick={onResetResourceLayout}>
           <ListItemIcon>
             <DashboardOutlinedIcon />
           </ListItemIcon>
-          <ListItemText primary={'Reset Card Layout'} />
+          <ListItemText primary={'Reset Resource Layout'} />
         </ListItem>
       </List>
       {/* <div className='mx-4 mt-2 m-1'>
@@ -201,5 +201,5 @@ Drawer.propTypes = {
   onOpen: PropTypes.func,
   logout: PropTypes.func,
   onClose: PropTypes.func,
-  resetCardLayout: PropTypes.func,
+  resetResourceLayout: PropTypes.func,
 }

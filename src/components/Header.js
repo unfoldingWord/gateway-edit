@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Header({
   title,
-  resetCardLayout,
+  resetResourceLayout,
   authentication: { user },
 }) {
   const classes = useStyles()
@@ -106,7 +106,7 @@ export default function Header({
         open={drawerOpen}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
-        resetCardLayout={resetCardLayout}
+        resetCardLayout={resetResourceLayout}
       />
     </header>
   )
@@ -114,6 +114,6 @@ export default function Header({
 
 Header.propTypes = {
   title: PropTypes.string,
-  resetCardLayout: PropTypes.func,
   authentication: PropTypes.object,
+  resetResourceLayout: PropTypes.func,
 }

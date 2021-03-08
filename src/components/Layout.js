@@ -25,7 +25,7 @@ export default function Layout({
       <Header
         title={title}
         authentication={authentication || {}}
-        resetCardLayout={() => setCurrentLayout(null)}
+        resetResourceLayout={() => setCurrentLayout(null)}
       />
       <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
         {authentication && !showAccountSetup ? (
