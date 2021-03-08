@@ -17,20 +17,14 @@ import { AuthContext } from '@context/AuthContext'
 // import ShareIcon from '@material-ui/icons/Share'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
+  root: { flexGrow: 1 },
   button: {
     minWidth: '40px',
     padding: '5px 0px',
     marginRight: theme.spacing(3),
   },
-  icon: {
-    width: '40px',
-  },
-  menuButton: {
-    marginRight: theme.spacing(1),
-  },
+  icon: { width: '40px' },
+  menuButton: { marginRight: theme.spacing(1) },
   title: {
     flexGrow: 1,
     cursor: 'pointer',
@@ -43,7 +37,11 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Header({ title, authentication: { user } }) {
+export default function Header({
+  title,
+  resetCardLayout,
+  authentication: { user },
+}) {
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
@@ -108,11 +106,14 @@ export default function Header({ title, authentication: { user } }) {
         open={drawerOpen}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
+        resetCardLayout={resetCardLayout}
       />
     </header>
   )
 }
 
 Header.propTypes = {
+  title: PropTypes.string,
+  resetCardLayout: PropTypes.func,
   authentication: PropTypes.object,
 }

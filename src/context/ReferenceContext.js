@@ -1,4 +1,5 @@
 import React, { useState, createContext } from 'react'
+import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
 
 export const ReferenceContext = createContext({})
@@ -84,3 +85,5 @@ export default function ReferenceContextProvider(props) {
     </ReferenceContext.Provider>
   )
 }
+
+ReferenceContextProvider.propTypes = { children: PropTypes.object }

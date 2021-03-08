@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
@@ -10,6 +11,7 @@ import BugReportIcon from '@material-ui/icons/BugReport'
 import IconButton from '@material-ui/core/IconButton'
 import ListItem from '@material-ui/core/ListItem'
 import List from '@material-ui/core/List'
+import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined'
 // TODO: Enable buttons once ready to fully implement functionality
 // import DashboardIcon from '@material-ui/icons/Dashboard'
 // import Crop54Icon from '@material-ui/icons/Crop54'
@@ -17,7 +19,14 @@ import List from '@material-ui/core/List'
 // import Divider from '@material-ui/core/Divider'
 // import Button from '@material-ui/core/Button'
 
-function Drawer({ open, onClose, onOpen, user, logout }) {
+export default function Drawer({
+  user,
+  open,
+  onOpen,
+  logout,
+  onClose,
+  resetCardLayout,
+}) {
   const router = useRouter()
 
   function onSettingsClick() {
@@ -35,15 +44,18 @@ function Drawer({ open, onClose, onOpen, user, logout }) {
     onClose()
   }
 
+  function onResetCardLayout() {
+    resetCardLayout()
+    onClose()
+  }
+
   return (
     <SwipeableDrawer
       anchor='left'
       open={open}
       onClose={onClose}
       onOpen={onOpen}
-      classes={{
-        paper: 'w-72',
-      }}
+      classes={{ paper: 'w-72' }}
     >
       <div className='flex items-center flex-end py-2 px-2 bg-primary shadow-xs'>
         <IconButton onClick={onClose}>
@@ -73,6 +85,14 @@ function Drawer({ open, onClose, onOpen, user, logout }) {
             <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary={'Account Settings'} />
+        </ListItem>
+      </List>
+      <List disablePadding>
+        <ListItem button key={'Reset Card Layout'} onClick={onResetCardLayout}>
+          <ListItemIcon>
+            <DashboardOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary={'Reset Card Layout'} />
         </ListItem>
       </List>
       {/* <div className='mx-4 mt-2 m-1'>
@@ -175,4 +195,11 @@ function Drawer({ open, onClose, onOpen, user, logout }) {
   )
 }
 
-export default Drawer
+Drawer.propTypes = {
+  open: PropTypes.bool,
+  user: PropTypes.object,
+  onOpen: PropTypes.func,
+  logout: PropTypes.func,
+  onClose: PropTypes.func,
+  resetCardLayout: PropTypes.func,
+}
