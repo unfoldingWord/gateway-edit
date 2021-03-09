@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, {
+  useState, useEffect, useContext,
+} from 'react'
 import PropTypes from 'prop-types'
 import Paper from 'translation-helps-rcl/dist/components/Paper'
 import FormControl from '@material-ui/core/FormControl'
@@ -7,7 +9,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import { getGatewayLanguages } from '@common/languages'
-import { ReferenceContext } from '@context/ReferenceContext'
+import { StoreContext } from '@context/StoreContext'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -26,15 +28,12 @@ export default function TranslationSettings({ authentication }) {
     actions: {
       setOwner: setOrganization,
       setLanguageId,
-      setShowAccountSetup
     },
-  } = useContext(ReferenceContext)
+  } = useContext(StoreContext)
 
   useEffect(() => {
     async function getOrgs() {
-      const orgs = await fetch('https://git.door43.org/api/v1/user/orgs', {
-        ...authentication.config,
-      })
+      const orgs = await fetch('https://git.door43.org/api/v1/user/orgs', { ...authentication.config })
         .then(response => response.json())
         .then(data => data.map(org => org.username))
       setOrganizations(orgs)

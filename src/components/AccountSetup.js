@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import Paper from 'translation-helps-rcl/dist/components/Paper'
 import SaveIcon from '@material-ui/icons/Save'
-import { ReferenceContext } from '@context/ReferenceContext'
+import { StoreContext } from '@context/StoreContext'
 import TranslationSettings from '@components/TranslationSettings'
 
 function AccountSetup({ authentication }) {
   const {
     state: { owner: organization, languageId },
     actions: { setShowAccountSetup },
-  } = useContext(ReferenceContext)
+  } = useContext(StoreContext)
 
   const handleSubmit = () => {
     setShowAccountSetup(false)
@@ -47,8 +47,6 @@ function AccountSetup({ authentication }) {
   )
 }
 
-AccountSetup.propTypes = {
-  authentication: PropTypes.object.isRequired,
-}
+AccountSetup.propTypes = { authentication: PropTypes.object.isRequired }
 
 export default AccountSetup
