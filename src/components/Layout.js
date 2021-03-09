@@ -17,11 +17,16 @@ export default function Layout({
 
   const {
     state: { showAccountSetup },
+    actions: { setCurrentLayout },
   } = useContext(ReferenceContext)
 
   return (
     <div className='h-screen w-screen flex flex-col'>
-      <Header title={title} authentication={authentication || {}} />
+      <Header
+        title={title}
+        authentication={authentication || {}}
+        resetResourceLayout={() => setCurrentLayout(null)}
+      />
       <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
         {authentication && !showAccountSetup ? (
           children
@@ -38,5 +43,6 @@ export default function Layout({
 }
 
 Layout.propTypes = {
+  title: PropTypes.string,
   children: PropTypes.node.isRequired,
 }
