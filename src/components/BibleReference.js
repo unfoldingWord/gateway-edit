@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import useEffect from 'use-deep-compare-effect'
 import BibleReference, { useBibleReference } from 'bible-reference-rcl'
-import { ReferenceContext } from '@context/ReferenceContext'
+import { StoreContext } from '@context/StoreContext'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,7 @@ function BibleReferenceComponent(props) {
       supportedBibles,
     },
     actions: { onReferenceChange },
-  } = useContext(ReferenceContext)
+  } = useContext(StoreContext)
 
   const { state, actions } = useBibleReference({
     initialBook: bookId,

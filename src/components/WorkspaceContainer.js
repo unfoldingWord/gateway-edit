@@ -16,7 +16,7 @@ import {
 } from 'single-scripture-rcl'
 import ResourceCard from '@components/ResourceCard'
 import { getResourceBibles } from '@utils/resources'
-import { ReferenceContext } from '@context/ReferenceContext'
+import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
@@ -58,7 +58,7 @@ function WorkspaceContainer() {
       setSupportedBibles,
       setCurrentLayout,
     },
-  } = useContext(ReferenceContext)
+  } = useContext(StoreContext)
 
   const layout = {
     widths: [

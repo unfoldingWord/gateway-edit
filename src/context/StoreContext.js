@@ -2,9 +2,9 @@ import React, { useState, createContext } from 'react'
 import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
 
-export const ReferenceContext = createContext({})
+export const StoreContext = createContext({})
 
-export default function ReferenceContextProvider(props) {
+export default function StoreContextProvider(props) {
   const [owner, setOwner] = useLocalStorage('owner', '')
   const [languageId, setLanguageId] = useLocalStorage('languageId', '')
   const [showAccountSetup, setShowAccountSetup] = useLocalStorage(
@@ -80,10 +80,10 @@ export default function ReferenceContextProvider(props) {
   }
 
   return (
-    <ReferenceContext.Provider value={value}>
+    <StoreContext.Provider value={value}>
       {props.children}
-    </ReferenceContext.Provider>
+    </StoreContext.Provider>
   )
 }
 
-ReferenceContextProvider.propTypes = { children: PropTypes.object }
+StoreContextProvider.propTypes = { children: PropTypes.object }

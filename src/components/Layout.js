@@ -4,7 +4,7 @@ import { AuthenticationContext } from 'gitea-react-toolkit'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
-import { ReferenceContext } from '@context/ReferenceContext'
+import { StoreContext } from '@context/StoreContext'
 
 export default function Layout({
   children,
@@ -18,7 +18,7 @@ export default function Layout({
   const {
     state: { showAccountSetup },
     actions: { setCurrentLayout },
-  } = useContext(ReferenceContext)
+  } = useContext(StoreContext)
 
   return (
     <div className='h-screen w-screen flex flex-col'>
