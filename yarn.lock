@@ -1333,7 +1333,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bible-reference-rcl@^0.3.0:
+bible-reference-rcl@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.3.0.tgz#2e43717ae78709b423cdda6591a8a542c6832f25"
   integrity sha512-B8oMEQb6DyuAxnIr8G3z+IYIQQbN0qkiAZE3abICBDgR0s6Z+BRte+ubJIN+79Kv5VYar5Moza8fJk5YCSgA5A==
@@ -6702,10 +6702,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.0.1.tgz#1ede45f24471a66dd4182d3e16f745ac8919c63b"
-  integrity sha512-GZ9smzDLFUk3r+T15bm9u1/eA2/gl+imf05AYjLDrpZ4JFjoBqfC5m9bEPfWbXcwBlPsdyyBt+pUCdX9YO0XvQ==
+single-scripture-rcl@1.1.0-alpha.3:
+  version "1.1.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.1.0-alpha.3.tgz#465ba3053c7339934b04b1afb75b30fb2665a736"
+  integrity sha512-x+v5ZZGWbXMfntFVYVibxqlWbzvGzFAUDIhzj0N/llrdxO9NbWK3fhqAERogn76lxyHQmlO1d52mBkWLjInLog==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -7407,10 +7407,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.10.0.tgz#aa25166dba0b069ce21b4900323eb9d5953a4ffd"
-  integrity sha512-pIZfPVsNvOYBQPWZZoQCz+ETz5LUAvTSPu1DcEVBDAHuiT83awIDc4VX5vW6cDvVjPEbnrTZldZFvNfikCE7lg==
+translation-helps-rcl@1.11.0-alpha:
+  version "1.11.0-alpha"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.11.0-alpha.tgz#3a801200bc4af2a051989ccbbf3be6a10cafcc4f"
+  integrity sha512-Y6XiKai5k7golMkkA+XVm7F9COXZZGZnTbWND7IDbRyhvxw0aAw3puIe6nTt5lopfq6fPNb/TgiuE9vCixk1CQ==
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
