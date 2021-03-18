@@ -162,7 +162,7 @@ function WorkspaceContainer() {
       >
         <ScriptureCard
           cardNum={0}
-          title='Scripture'
+          title='Literal Translation'
           reference={{
             chapter,
             verse,
@@ -181,7 +181,7 @@ function WorkspaceContainer() {
 
         <ScriptureCard
           cardNum={1}
-          title='Scripture'
+          title='Original Source'
           reference={{
             chapter,
             verse,
@@ -199,7 +199,7 @@ function WorkspaceContainer() {
 
         <ScriptureCard
           cardNum={2}
-          title='Scripture'
+          title='Simplified Translation'
           reference={{
             chapter,
             verse,
