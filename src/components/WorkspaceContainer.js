@@ -1,4 +1,8 @@
-import { useContext, useState } from 'react'
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import * as isEqual from 'deep-equal'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
@@ -87,25 +91,27 @@ function WorkspaceContainer() {
     originalLanguageOwner: scriptureOwner,
   }
 
-  getResourceBibles({
-    bookId,
-    chapter,
-    verse,
-    resourceId: languageId === 'en' ? 'ult' : 'glt',
-    owner,
-    languageId,
-    branch,
-    server,
-  }).then(bibles => {
-    if (bibles?.length) {
-      if (!isEqual(bibles, supportedBibles )) {
-        console.log(`found ${bibles?.length} bibles`)
-        setSupportedBibles(bibles) //TODO blm: update bible refs
+  useEffect(() => {
+    getResourceBibles({
+      bookId,
+      chapter,
+      verse,
+      resourceId: languageId === 'en' ? 'ult' : 'glt',
+      owner,
+      languageId,
+      branch,
+      server,
+    }).then(bibles => {
+      if (bibles?.length) {
+        if (!isEqual(bibles, supportedBibles )) {
+          console.log(`found ${bibles?.length} bibles`)
+          setSupportedBibles(bibles) //TODO blm: update bible refs
+        }
+      } else {
+        console.log(`no bibles`)
       }
-    } else {
-      console.log(`no bibles`)
-    }
-  })
+    })
+  }, [owner, languageId, branch, server])
 
   const originalScripture = {
     reference: {
@@ -156,7 +162,7 @@ function WorkspaceContainer() {
       >
         <ScriptureCard
           cardNum={0}
-          title='Scripture'
+          title='Literal Translation'
           reference={{
             chapter,
             verse,
@@ -175,7 +181,7 @@ function WorkspaceContainer() {
 
         <ScriptureCard
           cardNum={1}
-          title='Scripture'
+          title='Original Source'
           reference={{
             chapter,
             verse,
@@ -193,7 +199,7 @@ function WorkspaceContainer() {
 
         <ScriptureCard
           cardNum={2}
-          title='Scripture'
+          title='Simplified Translation'
           reference={{
             chapter,
             verse,
