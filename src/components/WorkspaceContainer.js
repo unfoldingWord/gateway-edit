@@ -1,6 +1,7 @@
 import {
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import * as isEqual from 'deep-equal'
@@ -19,7 +20,7 @@ import {
   OT_ORIG_LANG_BIBLE,
 } from 'single-scripture-rcl'
 import ResourceCard from '@components/ResourceCard'
-import { getResourceBibles } from '@utils/resources'
+import { getBuildId, getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
@@ -63,6 +64,8 @@ function WorkspaceContainer() {
       setCurrentLayout,
     },
   } = useContext(StoreContext)
+
+  const buildId = useMemo(getBuildId, [])
 
   const layout = {
     widths: [
