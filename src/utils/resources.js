@@ -5,7 +5,6 @@ import {
   MANIFEST_INVALID_ERROR,
   MANIFEST_NOT_FOUND_ERROR,
 } from '@common/constants'
-import { version } from '../../package.json'
 
 export async function getResource({
   bookId,
@@ -123,22 +122,4 @@ export function getResourceMessage(resourceStatus, owner, languageId, resourceId
     }
   }
   return messageKey
-}
-
-export function getBuildId() {
-  const hash = getCommitHash()
-  const buildId = { version, hash }
-  console.log(`getBuildVersion() = ${JSON.stringify(buildId)}`)
-  return buildId
-}
-
-export function getCommitHash() {
-  let commitHash
-
-  try {
-    commitHash = process.env.NEXT_PUBLIC_BUILD_NUMBER
-  } catch (e) {
-    console.error(`getCommitHash() - could not get commit hash`, e)
-  }
-  return commitHash
 }

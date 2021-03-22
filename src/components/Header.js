@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Header({
   title,
+  subTitle,
   resetResourceLayout,
   authentication: { user },
 }) {
@@ -75,7 +76,7 @@ export default function Header({
               className={classes.title}
               onClick={() => router.push('/')}
             >
-              {title}
+              {title} <span style={{ fontSize: '0.6em' }}>{subTitle}</span>
             </Typography>
           </div>
           <div className={classes.navigation}>
@@ -114,6 +115,7 @@ export default function Header({
 
 Header.propTypes = {
   title: PropTypes.string,
+  subTitle: PropTypes.string,
   authentication: PropTypes.object,
   resetResourceLayout: PropTypes.func,
 }

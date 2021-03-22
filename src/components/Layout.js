@@ -1,10 +1,11 @@
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { AuthenticationContext } from 'gitea-react-toolkit'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
+import { getBuildId } from '@utils/build'
 
 export default function Layout({
   children,
@@ -20,10 +21,13 @@ export default function Layout({
     actions: { setCurrentLayout },
   } = useContext(StoreContext)
 
+  const buildId = useMemo(getBuildId, [])
+
   return (
     <div className='h-screen w-screen flex flex-col'>
       <Header
-        title={title}
+        title={`${title} - v${buildId?.version}`}
+        subTitle={`build ${buildId?.hash}`}
         authentication={authentication || {}}
         resetResourceLayout={() => setCurrentLayout(null)}
       />
@@ -45,4 +49,5 @@ export default function Layout({
 Layout.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
+  buildId: PropTypes.object,
 }
