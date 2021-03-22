@@ -6,6 +6,7 @@ import {
   useContent,
   useCardState,
 } from 'translation-helps-rcl'
+import { getResourceMessage } from '@utils/resources'
 
 export default function ResourceCard({
   title,
@@ -28,7 +29,11 @@ export default function ResourceCard({
   disableNavigation,
   hideMarkdownToggle,
 }) {
-  const { items, markdown } = useContent({
+  const {
+    items,
+    markdown,
+    resourceStatus,
+  } = useContent({
     verse,
     chapter,
     projectId,
@@ -39,6 +44,8 @@ export default function ResourceCard({
     owner,
     server,
   })
+
+  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
 
   const {
     state: {
@@ -88,7 +95,7 @@ export default function ResourceCard({
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
-        errorMessage={errorMessage}
+        errorMessage={message || errorMessage}
       />
     </Card>
   )
