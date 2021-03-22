@@ -114,7 +114,6 @@ export default function Header({
 
 Header.propTypes = {
   title: PropTypes.string,
-  subTitle: PropTypes.string,
   authentication: PropTypes.object,
   resetResourceLayout: PropTypes.func,
 }
