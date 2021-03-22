@@ -26,8 +26,7 @@ export default function Layout({
   return (
     <div className='h-screen w-screen flex flex-col'>
       <Header
-        title={`${title} - v${buildId?.version}`}
-        subTitle={`build ${buildId?.hash}`}
+        title={title}
         authentication={authentication || {}}
         resetResourceLayout={() => setCurrentLayout(null)}
       />
@@ -41,7 +40,10 @@ export default function Layout({
           />
         )}
       </main>
-      <Footer />
+      <Footer
+        buildVersion = {buildId?.version}
+        buildHash = {buildId?.hash}
+      />
     </div>
   )
 }
