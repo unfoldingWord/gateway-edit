@@ -11,7 +11,7 @@ export default function Footer({
       <Typography
         variant='h6'
       >
-        <div style={{ color: 'white' }}>
+        <div style={{ color: 'white', width: 'max-content', paddingLeft: '20px' }}>
           <span id='build_version'>{`v${buildVersion} `}</span>
           <span id='build_hash' style={{ fontSize: '0.6em' }}>{`build ${buildHash}`}</span>
         </div>
