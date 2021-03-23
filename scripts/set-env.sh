@@ -7,4 +7,4 @@ ENV_FILE=".env.local"
 BUILD_NUMBER=$(cat public/build_number)
 
 echo "NEXT_PUBLIC_BUILD_NUMBER=$BUILD_NUMBER" > $ENV_FILE
-echo "NEXT_PUBLIC_BUILD_NUMBER=$BUILD_NUMBER"
+echo "Setting environment variable: NEXT_PUBLIC_BUILD_NUMBER=$BUILD_NUMBER"
