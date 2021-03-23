@@ -3,7 +3,6 @@ import { version } from '../../package.json'
 export function getBuildId() {
   const hash = getCommitHash()
   const buildId = { version, hash }
-  console.log(`getBuildVersion() = ${JSON.stringify(buildId)}`)
   return buildId
 }
 
