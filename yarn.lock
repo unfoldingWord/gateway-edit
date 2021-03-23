@@ -6171,10 +6171,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.1.1.tgz#88398ab54fb5f64a4af7a70990abbce87adec84d"
-  integrity sha512-NZDdC9uapKLuAWtJnBc+GtDePeqWYDcdQpvCoX6l/VY24znLO+ECFZAd6pNU3OQmbqpsIFXyxNYiH8hoPQ2/pA==
+single-scripture-rcl@1.2.0-alpha:
+  version "1.2.0-alpha"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-1.2.0-alpha.tgz#a4bc267d894183001f49009aa6414983a6b369c6"
+  integrity sha512-DCyMmJ0at16Q4shDwYBKM7E04Ui5tnbeVVF23wSFUu5aQrn68kgQg6aie9awJP/tTWxQqUuv+UWOaujFqORcFQ==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -6673,10 +6673,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.12.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.12.0.tgz#25ead33bb56bdb4cd96383fa70e441cebb4e6dad"
-  integrity sha512-1R4rDOue8s+psa49VYLWv2n/bgdK8I6d7hyyfDrMmZcAK7hso62Kedpb3ZtttFwcRHeI2MdRUuQnpHIbOli5vA==
+translation-helps-rcl@1.13.0-alpha:
+  version "1.13.0-alpha"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.13.0-alpha.tgz#5b2f233330096afabb2012922f92fdb8e0aabf2a"
+  integrity sha512-Ak3LNs19h3dL8pOaRQiSpRab3VmEvTppQ6LX4KmPUs/lroVfyzMXU+vquaiIF1iW4l0t/3hbIZVIrEgLwSdU3w==
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
