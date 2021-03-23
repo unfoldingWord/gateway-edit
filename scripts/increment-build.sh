@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 build_hash_dir=public/build_number
 build_hash=`cat "$build_hash_dir"`
 

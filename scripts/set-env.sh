@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-/bin/sh ./scripts/update-build.sh
+# make sure we have latest build hash in public/build_number
+source ./scripts/update-build.sh
 
 ENV_FILE=".env.local"
 BUILD_NUMBER=$(cat public/build_number)
