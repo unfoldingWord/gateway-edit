@@ -51,5 +51,4 @@ export default function Layout({
 Layout.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
-  buildId: PropTypes.object,
 }
