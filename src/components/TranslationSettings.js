@@ -70,8 +70,8 @@ export default function TranslationSettings({ authentication }) {
             Organization
           </InputLabel>
           <Select
-            labelId='demo-simple-select-outlined-label'
-            id='demo-simple-select-outlined'
+            labelId='organization-select-outlined-label'
+            id='organization-select-outlined'
             value={organization}
             onChange={handleOrgChange}
             label='Organization'
@@ -88,8 +88,8 @@ export default function TranslationSettings({ authentication }) {
             Primary Translating Language
           </InputLabel>
           <Select
-            labelId='demo-simple-select-outlined-label'
-            id='demo-simple-select-outlined'
+            labelId='primary-language-select-outlined-label'
+            id='primary-language-select-outlined'
             value={languageId}
             onChange={handleLanguageChange}
             label='Primary Translating Language'
