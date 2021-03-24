@@ -218,6 +218,7 @@ function WorkspaceContainer() {
 
         <ResourceCard
           title='translationNotes'
+          id='resource_card_tn'
           classes={classes}
           chapter={chapter}
           verse={verse}
@@ -234,6 +235,7 @@ function WorkspaceContainer() {
         />
         <ResourceCard
           title='translationAcademy'
+          id='resource_card_ta'
           classes={classes}
           chapter={chapter}
           verse={verse}
@@ -248,6 +250,7 @@ function WorkspaceContainer() {
         />
         <ResourceCard
           title='translationWords List'
+          id='resource_card_twl'
           classes={classes}
           chapter={chapter}
           verse={verse}
@@ -267,6 +270,7 @@ function WorkspaceContainer() {
         />
         <ResourceCard
           title='translationWords Article'
+          id='resource_card_twa'
           classes={classes}
           chapter={chapter}
           verse={verse}
@@ -285,6 +289,7 @@ function WorkspaceContainer() {
         />
         <ResourceCard
           title='translationQuestions'
+          id='resource_card_tq'
           classes={classes}
           chapter={chapter}
           verse={verse}

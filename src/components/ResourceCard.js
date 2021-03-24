@@ -10,6 +10,7 @@ import { getResourceMessage } from '@utils/resources'
 
 export default function ResourceCard({
   title,
+  id,
   verse,
   server,
   owner,
@@ -69,6 +70,7 @@ export default function ResourceCard({
   return (
     <Card
       title={title}
+      id={id}
       items={items}
       classes={classes}
       headers={headers}
@@ -106,6 +108,7 @@ ResourceCard.defaultProps = { errorMessage: false }
 ResourceCard.propTypes = {
   viewMode: PropTypes.string,
   title: PropTypes.string.isRequired,
+  id: PropTypes.string,
   chapter: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   server: PropTypes.string.isRequired,
