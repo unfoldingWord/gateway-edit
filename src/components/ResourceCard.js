@@ -103,11 +103,14 @@ export default function ResourceCard({
   )
 }
 
-ResourceCard.defaultProps = { errorMessage: false }
+ResourceCard.defaultProps = {
+  errorMessage: null,
+  title: '',
+}
 
 ResourceCard.propTypes = {
   viewMode: PropTypes.string,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType(PropTypes.string, PropTypes.object),
   id: PropTypes.string,
   chapter: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
