@@ -6673,10 +6673,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.13.1-alpha:
-  version "1.13.1-alpha"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.13.1-alpha.tgz#a830da65f9d07e20181866cbbe1c32705a8b7a3c"
-  integrity sha512-OLkrGruvrJ734iQt29TVTaZxoGnV3Oh/OD/olb4DtgsJMGB9HOJM9sa/4SilDp06JwdF+lhbOm0vqnM+U1nXPQ==
+translation-helps-rcl@1.13.1-alpha.2:
+  version "1.13.1-alpha.2"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.13.1-alpha.2.tgz#6497ff53ed9cef49d2acef672796080c4873365d"
+  integrity sha512-o7eWQpQvJJdb/1cHDoxQ51sGHellgsbdMaTedoPhuLIWWdONGLTei79IRRlLAkgA8M+5cqp43v1Hlj54hSLOXA==
   dependencies:
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
