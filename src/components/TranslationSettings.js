@@ -10,6 +10,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
+import { FormHelperText } from '@material-ui/core'
+import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -22,6 +24,7 @@ const useStyles = makeStyles(theme => ({
 export default function TranslationSettings({ authentication }) {
   const classes = useStyles()
   const [organizations, setOrganizations] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null)
   const [languages, setLanguages] = useState([])
   const {
     state: { owner: organization, languageId },
@@ -33,10 +36,36 @@ export default function TranslationSettings({ authentication }) {
 
   useEffect(() => {
     async function getOrgs() {
-      const orgs = await fetch('https://git.door43.org/api/v1/user/orgs', { ...authentication.config })
-        .then(response => response.json())
-        .then(data => data.map(org => org.username))
-      setOrganizations(orgs)
+      setErrorMessage(null)
+      let error
+
+      try {
+        const orgs = await fetch('https://git.door43.org/api/v1/user/orgs', { ...authentication.config })
+          .then(response => {
+            if (response?.status !== 200) {
+              console.warn(`TranslationSettings - error fetching user orgs, status code ${response?.status}`)
+              error = ORGS_NETWORK_ERROR //TODO - add checking of response.status codes in future issue
+            }
+            return response?.json()
+          })
+          .then(data => {
+            if (Array.isArray(data)) {
+              return data.map(org => org.username)
+            } else {
+              return []
+            }
+          })
+
+        if (!orgs?.length) { // if no orgs
+          setErrorMessage(error || NO_ORGS_ERROR) // if no specific error is found, then warn that user has no orgs
+        }
+
+        setOrganizations(orgs)
+      } catch (e) {
+        console.warn(`TranslationSettings - error fetching user orgs`, e)
+        setErrorMessage(ORGS_NETWORK_ERROR)
+        setOrganizations([])
+      }
     }
 
     if (authentication) {
@@ -65,7 +94,7 @@ export default function TranslationSettings({ authentication }) {
     <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
       <h5>Translation Settings</h5>
       <div className='flex flex-col justify-between my-4'>
-        <FormControl variant='outlined' className={classes.formControl}>
+        <FormControl variant='outlined' className={classes.formControl} error={!!errorMessage}>
           <InputLabel id='demo-simple-select-outlined-label'>
             Organization
           </InputLabel>
@@ -82,6 +111,7 @@ export default function TranslationSettings({ authentication }) {
               </MenuItem>
             ))}
           </Select>
+          <FormHelperText id='organization-select-message'>{errorMessage}</FormHelperText>
         </FormControl>
         <FormControl variant='outlined' className={classes.formControl}>
           <InputLabel id='demo-simple-select-outlined-label'>
