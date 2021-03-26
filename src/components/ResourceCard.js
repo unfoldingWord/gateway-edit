@@ -88,6 +88,7 @@ export default function ResourceCard({
     >
       <CardContent
         item={item}
+        id={`${id}_content`}
         items={items}
         filters={filters}
         viewMode={viewMode}
