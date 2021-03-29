@@ -1,6 +1,6 @@
 {
-  "name": "create-app",
-  "version": "0.2.0",
+  "name": "gatewayEdit",
+  "version": "0.9.0",
   "scripts": {
     "dev": "bash -c \"source ./scripts/set-env.sh && next\"",
     "build": "bash -c \"source ./scripts/set-env.sh && next build\"",

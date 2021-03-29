@@ -15,7 +15,7 @@ export default async function sendFeedback({ name, email, message, category }) {
   const msg = {
     to: process.env.HELP_DESK_EMAIL,
     from: email,
-    subject: `Create App v2: ${category}`,
+    subject: `gatewayEdit App v2: ${category}`,
     text: fullMessage,
     html: fullMessage.replace(/\n/g, '<br>'),
   }
