@@ -6,10 +6,11 @@ import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
+import { appName } from "@common/constants";
 
 export default function Layout({
   children,
-  title = 'translationCore: Create',
+  title = appName,
 }) {
   const {
     state: authentication,
