@@ -24,6 +24,8 @@ import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
+import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
+import useExternalContentFetcher from '@hooks/useExternalContentFetcher'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -63,6 +65,14 @@ function WorkspaceContainer() {
       setCurrentLayout,
     },
   } = useContext(StoreContext)
+
+  const [{ title, content }, setDraggableArticle] = useExternalContentFetcher({
+    owner,
+    server,
+    branch,
+    taArticle,
+    languageId,
+  })
 
   const layout = {
     widths: [
@@ -153,6 +163,16 @@ function WorkspaceContainer() {
       occurrence={selectedQuote?.occurrence}
       verseObjects={originalScriptureConfig.verseObjects || []}
     >
+      {content ?
+        <DraggableCard
+          open
+          title={title}
+          content={content}
+          onClose={() => setDraggableArticle(null)}
+        />
+        :
+        null
+      }
       <Workspace
         rowHeight={25}
         layout={layout}
