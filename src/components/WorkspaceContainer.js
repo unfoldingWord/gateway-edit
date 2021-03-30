@@ -18,13 +18,13 @@ import {
   NT_ORIG_LANG_BIBLE,
   OT_ORIG_LANG_BIBLE,
 } from 'single-scripture-rcl'
+import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
 import ResourceCard from '@components/ResourceCard'
 import { getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
-import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
 import useExternalContentFetcher from '@hooks/useExternalContentFetcher'
 
 const useStyles = makeStyles(() => ({
@@ -66,7 +66,9 @@ function WorkspaceContainer() {
     },
   } = useContext(StoreContext)
 
-  const [{ title, content }, setDraggableArticle] = useExternalContentFetcher({
+  const [{
+    loading, title, content,
+  }, setDraggableArticle] = useExternalContentFetcher({
     owner,
     server,
     branch,
@@ -163,10 +165,11 @@ function WorkspaceContainer() {
       occurrence={selectedQuote?.occurrence}
       verseObjects={originalScriptureConfig.verseObjects || []}
     >
-      {content ?
+      {loading || content ?
         <DraggableCard
           open
           title={title}
+          loading={loading}
           content={content}
           onClose={() => setDraggableArticle(null)}
         />
@@ -266,7 +269,7 @@ function WorkspaceContainer() {
           resourceId={'ta'}
           projectId={taArticle?.projectId}
           filePath={taArticle?.filePath}
-          errorMessage={taArticle ? null : 'No article is specified in the current note'}
+          errorMessage={taArticle ? null : 'No article is specified in the current note.'}
         />
         <ResourceCard
           title='translationWords List'

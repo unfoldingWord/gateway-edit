@@ -4,9 +4,9 @@ import {
   useContext,
   useCallback,
 } from 'react'
+import axios from 'axios'
 import { AuthenticationContext } from 'gitea-react-toolkit'
 import useEventListener from '@hooks/useEventListener'
-import axios from 'axios'
 
 export default function useExternalContentFetcher({
   owner,
@@ -19,6 +19,7 @@ export default function useExternalContentFetcher({
   const [link, setLink] = useState(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handler = useCallback(
     e => {
@@ -37,6 +38,9 @@ export default function useExternalContentFetcher({
   useEffect(() => {
     async function fetchContent() {
       if (link) {
+        setTitle('')
+        setLoading(true)
+
         try {
           const tw = ['/other/', '/kt/', '/names/']
           const slug = link.includes('http') ? new URL(link).pathname : link.replace('rc://*/', '').replace('rc://', '')
@@ -82,18 +86,25 @@ export default function useExternalContentFetcher({
 
           setContent(data)
           setTitle(title)
+          setLoading(false)
         } catch (error) {
+          setLoading(false)
           console.error(error)
         }
       }
     }
     fetchContent()
-  }, [link, owner, authentication.config])
+  }, [link, owner, server, branch, languageId, authentication?.config, taArticle?.projectId])
 
   function clearContent() {
     setLink(null)
     setContent(null)
   }
 
-  return [{ title, content }, clearContent]
+  return [
+    {
+      title, content, loading,
+    },
+    clearContent,
+  ]
 }
