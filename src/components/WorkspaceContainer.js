@@ -19,13 +19,13 @@ import {
   OT_ORIG_LANG_BIBLE,
 } from 'single-scripture-rcl'
 import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
+import useResourceClickListener from 'translation-helps-rcl/dist/hooks/useResourceClickListener'
 import ResourceCard from '@components/ResourceCard'
 import { getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
-import useExternalContentFetcher from '@hooks/useExternalContentFetcher'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -68,7 +68,7 @@ function WorkspaceContainer() {
 
   const [{
     loading, title, content,
-  }, setDraggableArticle] = useExternalContentFetcher({
+  }, clearContent] = useResourceClickListener({
     owner,
     server,
     branch,
@@ -171,7 +171,7 @@ function WorkspaceContainer() {
           title={title}
           loading={loading}
           content={content}
-          onClose={() => setDraggableArticle(null)}
+          onClose={() => clearContent()}
         />
         :
         null
