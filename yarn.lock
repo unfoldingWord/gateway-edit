@@ -6749,10 +6749,11 @@ transform-runtime@0.0.0:
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
 translation-helps-rcl@^1.14.0-rc37:
-  version "1.14.0-rc9"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.14.0-rc9.tgz#a461b1d785be2179d86570d9908272f28edf582d"
-  integrity sha512-jtu0QcqAUNQXb4Ft/YgHC7tBBMyCtBYWL+PXrRt+gwBL92A9BIMHv7WKNO6O6hFm3vJe4vDH5+M/GwLNAcEKhg==
+  version "1.14.0-rc37"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.14.0-rc37.tgz#ee29406e8e48a2caa1a6b2f6ccee5ae3cb124ffe"
+  integrity sha512-MzmAJJ9xBrIm+tjHhZoAc0MwcM56LQVTqXdn0ZlgeNIYCktlmRyKrwgVFoUTfonGqHY3zr+nVrlImryUmZUB9Q==
   dependencies:
+    axios "^0.21.1"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
 
