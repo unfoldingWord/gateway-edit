@@ -15,6 +15,22 @@ export default function AuthContextProvider(props) {
 
   const getAuth = async () => {
     const auth = await myAuthStore.getItem('authentication')
+
+    if (auth) { // verify that auth is still valid
+      fetch('https://git.door43.org/api/v1/user', { ...auth.config })
+        .then(response => {
+          if (response?.status !== 200) {
+            console.log(`TranslationSettings - error fetching user info, status code ${response?.status}`)
+
+            if (response?.status === 401) {
+              console.log(`TranslationSettings - user not authenticated, going to login`)
+              logout()
+            }
+          }
+        }).catch(e => {
+          console.warn(`TranslationSettings - hard error fetching user info, error=`, e)
+        })
+    }
     return auth
   }
 
