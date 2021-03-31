@@ -67,7 +67,7 @@ function WorkspaceContainer() {
   } = useContext(StoreContext)
 
   const [{
-    loading, title, content,
+    loading, title, content, error,
   }, clearContent] = useResourceClickListener({
     owner,
     server,
@@ -165,9 +165,10 @@ function WorkspaceContainer() {
       occurrence={selectedQuote?.occurrence}
       verseObjects={originalScriptureConfig.verseObjects || []}
     >
-      {loading || content ?
+      {loading || content || error ?
         <DraggableCard
           open
+          error={error}
           title={title}
           loading={loading}
           content={content}

@@ -6732,10 +6732,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.14.0-rc22:
-  version "1.14.0-rc22"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.14.0-rc22.tgz#e78e56e567de7fd880b2a516a9d82bc9e01b900f"
-  integrity sha512-AGuvz9pDg5UpptDKjhFHbZaO2K+UdOeD8AFyADl+Fc/nIGsSM+wFaIjiaZ0gJ3U/SUJHA2ygIuL3fWs37t2FUQ==
+translation-helps-rcl@^1.14.0-rc37:
+  version "1.14.0-rc37"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.14.0-rc37.tgz#ee29406e8e48a2caa1a6b2f6ccee5ae3cb124ffe"
+  integrity sha512-MzmAJJ9xBrIm+tjHhZoAc0MwcM56LQVTqXdn0ZlgeNIYCktlmRyKrwgVFoUTfonGqHY3zr+nVrlImryUmZUB9Q==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
