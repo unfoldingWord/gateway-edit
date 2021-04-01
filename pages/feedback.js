@@ -49,9 +49,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  pointerIcon: {
-    cursor: 'pointer',
-  },
 }))
 
 const SettingsPage = () => {
@@ -116,7 +113,7 @@ const SettingsPage = () => {
               </h3>
               <CloseIcon
                 id='settings_card_close'
-                className={`${classes.pointerIcon} flex-none mt-4 mr-7 mb-0`}
+                className={`cursor-pointer flex-none mt-4 mr-7 mb-0`}
                 onClick={onClose}
               />
             </div>
