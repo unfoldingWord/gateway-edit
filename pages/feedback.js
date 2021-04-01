@@ -10,6 +10,7 @@ import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import Layout from '@components/Layout'
 import MuiAlert from '@material-ui/lab/Alert'
+import CloseIcon from '@material-ui/icons/Close'
 
 function Alert({ severity, message }) {
   const router = useRouter()
@@ -48,21 +49,29 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  pointerIcon: {
+    cursor: 'pointer',
+  },
 }))
 
 const SettingsPage = () => {
   const classes = useStyles()
+  const router = useRouter()
   const categories = ['Bug Report', 'Feedback']
-  const [sumitting, setSumitting] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
-  const [category, setSategory] = useState('')
+  const [category, setCategory] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
 
+  function onClose() {
+    router.push('/')
+  }
+
   function onCategoryChange(e) {
-    setSategory(e.target.value)
+    setCategory(e.target.value)
   }
 
   function onNameChange(e) {
@@ -78,7 +87,7 @@ const SettingsPage = () => {
   }
 
   async function onSubmitFeedback() {
-    setSumitting(true)
+    setSubmitting(true)
 
     const res = await fetch('/api/feedback', {
       method: 'POST',
@@ -93,7 +102,7 @@ const SettingsPage = () => {
       setShowError(true)
     }
 
-    setSumitting(false)
+    setSubmitting(false)
   }
 
   return (
@@ -101,9 +110,16 @@ const SettingsPage = () => {
       <div className='flex flex-col justify-center items-center w-full h-full'>
         <div className='flex justify-center items-center w-full h-full px-4 lg:w-132 lg:p-0'>
           <Paper className='flex flex-col h-auto w-full p-4 my-2'>
-            <h3 className='text-xl text-gray-600 font-semibold mx-8 mb-0'>
-              Submit a Bug Report or Feedback
-            </h3>
+            <div  className='flex flex-row'>
+              <h3 className='flex-auto text-xl text-gray-600 font-semibold mx-8 mb-0'>
+                Submit a Bug Report or Feedback
+              </h3>
+              <CloseIcon
+                id='settings_card_close'
+                className={`${classes.pointerIcon} flex-none mt-4 mr-7 mb-0`}
+                onClick={onClose}
+              />
+            </div>
             <div>
               <TextField
                 id='name-feedback-form'
@@ -161,11 +177,11 @@ const SettingsPage = () => {
                   size='large'
                   disableElevation
                   disabled={
-                    sumitting || !name || !email || !message || !category
+                    submitting || !name || !email || !message || !category
                   }
                   onClick={onSubmitFeedback}
                 >
-                  {sumitting ? 'Submitting' : 'Submit'}
+                  {submitting ? 'Submitting' : 'Submit'}
                 </Button>
                 {showSuccess || showError ? (
                   <Alert
