@@ -18,6 +18,8 @@ import {
   NT_ORIG_LANG_BIBLE,
   OT_ORIG_LANG_BIBLE,
 } from 'single-scripture-rcl'
+import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
+import useResourceClickListener from 'translation-helps-rcl/dist/hooks/useResourceClickListener'
 import ResourceCard from '@components/ResourceCard'
 import { getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
@@ -63,6 +65,16 @@ function WorkspaceContainer() {
       setCurrentLayout,
     },
   } = useContext(StoreContext)
+
+  const [{
+    loading, title, content, error,
+  }, clearContent] = useResourceClickListener({
+    owner,
+    server,
+    branch,
+    taArticle,
+    languageId,
+  })
 
   const layout = {
     widths: [
@@ -153,6 +165,18 @@ function WorkspaceContainer() {
       occurrence={selectedQuote?.occurrence}
       verseObjects={originalScriptureConfig.verseObjects || []}
     >
+      {loading || content || error ?
+        <DraggableCard
+          open
+          error={error}
+          title={title}
+          loading={loading}
+          content={content}
+          onClose={() => clearContent()}
+        />
+        :
+        null
+      }
       <Workspace
         rowHeight={25}
         layout={layout}
@@ -246,7 +270,7 @@ function WorkspaceContainer() {
           resourceId={'ta'}
           projectId={taArticle?.projectId}
           filePath={taArticle?.filePath}
-          errorMessage={taArticle ? null : 'No article is specified in the current note'}
+          errorMessage={taArticle ? null : 'No article is specified in the current note.'}
         />
         <ResourceCard
           title='translationWords List'
