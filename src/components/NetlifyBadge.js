@@ -1,8 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-export default function NetlifyBadge() {
+export default function NetlifyBadge({ className }) {
   return (
-    <div className='w-full text-center my-2.5'>
+    <div className={className ? `${className} my-2.5` : 'my-2.5'}>
       <a
         href='https://www.netlify.com'
         target='_blank'
@@ -16,3 +17,5 @@ export default function NetlifyBadge() {
     </div>
   )
 }
+
+NetlifyBadge.propTypes = { className: PropTypes.string }
