@@ -8,8 +8,8 @@ import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
-import Layout from '@components/Layout'
 import MuiAlert from '@material-ui/lab/Alert'
+import Layout from '@components/Layout'
 
 function Alert({ severity, message }) {
   const router = useRouter()
@@ -83,7 +83,9 @@ const SettingsPage = () => {
     const res = await fetch('/api/feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, category, message }),
+      body: JSON.stringify({
+        name, email, category, message,
+      }),
     })
 
     if (res.status === 200) {
@@ -173,11 +175,11 @@ const SettingsPage = () => {
                     message={
                       showSuccess
                         ? `Your ${
-                            category || 'feedback'
-                          } was submitted successfully!`
+                          category || 'feedback'
+                        } was submitted successfully!`
                         : `Something went wrong submitting your ${
-                            category || 'feedback'
-                          }.`
+                          category || 'feedback'
+                        }.`
                     }
                   />
                 ) : null}

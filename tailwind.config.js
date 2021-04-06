@@ -5,9 +5,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        grey: {
-          450: '#eaeaea',
-        },
+        grey: { 450: '#eaeaea' },
         primary: '#38ADDF',
       },
       spacing: {
@@ -32,11 +30,7 @@ module.exports = {
       },
     },
   },
-  variants: {
-    extend: {},
-  },
+  variants: { extend: {} },
   plugins: [],
-  corePlugins: {
-    preflight: false,
-  },
+  corePlugins: { preflight: false },
 }
