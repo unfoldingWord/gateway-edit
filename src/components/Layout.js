@@ -6,10 +6,11 @@ import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
-import { appName } from "@common/constants";
+import { appName } from '@common/constants'
 
 export default function Layout({
   children,
+  showChildren,
   title = appName,
 }) {
   const {
@@ -32,7 +33,7 @@ export default function Layout({
         resetResourceLayout={() => setCurrentLayout(null)}
       />
       <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
-        {authentication && !showAccountSetup ? (
+        {showChildren || (authentication && !showAccountSetup) ? (
           children
         ) : (
           <Onboarding
@@ -42,8 +43,8 @@ export default function Layout({
         )}
       </main>
       <Footer
-        buildVersion = {buildId?.version}
-        buildHash = {buildId?.hash}
+        buildHash={buildId?.hash}
+        buildVersion={buildId?.version}
       />
     </div>
   )
@@ -51,5 +52,6 @@ export default function Layout({
 
 Layout.propTypes = {
   title: PropTypes.string,
+  showChildren: PropTypes.bool,
   children: PropTypes.node.isRequired,
 }

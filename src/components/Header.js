@@ -29,12 +29,6 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     cursor: 'pointer',
   },
-  navigation: {
-    display: 'flex',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 }))
 
 export default function Header({
@@ -78,7 +72,7 @@ export default function Header({
               {title}
             </Typography>
           </div>
-          <div className={classes.navigation}>
+          <div className='flex flex-1 justify-center items-center'>
             <BibleReference />
           </div>
           <div className='flex flex-1 justify-end'>
