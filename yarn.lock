@@ -1994,10 +1994,10 @@ base64-js@^1.0.2, base64-js@^1.3.1:
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
-bible-reference-rcl@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.3.1.tgz#f93c79f9be4774aa619f9e5b5923fde6de3623f9"
-  integrity sha512-aaSY4WmXDc9pv16o7w73yIqeDHZAEpczIChrtIAXBlLILMTtLq1THuFdxh3JadD5frnDsxhuttXpmzLoCzML6g==
+bible-reference-rcl@0.4.0-alpha:
+  version "0.4.0-alpha"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.4.0-alpha.tgz#7fdb0e3517daab1088fab2b1ff406baa3f56b7d4"
+  integrity sha512-Di2+Ce+aFgbEc+SjW0umeAae2HhYnt6IIXcoj3EMui1gysT6fJ8mijAh3ud/uMKzqx9hNAqHbwuR+S7/ZX0MvQ==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"
