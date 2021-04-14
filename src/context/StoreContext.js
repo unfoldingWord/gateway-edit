@@ -3,10 +3,29 @@ import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { AuthenticationContext } from 'gitea-react-toolkit'
 
-const refreshList = {}
+const refreshUserSettingsList = {}
 
+/**
+ * will combine username and baseKey into unique settings key
+ * @param username: string
+ * @param baseKey: string
+ * @return {string} key for user settings
+ */
+function getUserKey(username, baseKey) {
+  const key_ = username ? `${username}_${baseKey}` : baseKey // get user key
+  return key_;
+}
+
+/**
+ * set new value for user setting in both useState and localStorage if changes
+ * @param key: string - base key that will be prepended with username
+ * @param currentValue: any
+ * @param setItem: function - called to update useState
+ * @param newValue: any
+ * @param username: string
+ */
 function setUserItem(key, currentValue, setItem, newValue, username) {
-  const key_ = username ? `${username}_${key}` : key // get user key
+  const key_ = getUserKey(username, key);
   // Allow value to be a function so we have same API as useState
   const valueToStore =
     newValue instanceof Function ? newValue(currentValue) : newValue
@@ -18,19 +37,34 @@ function setUserItem(key, currentValue, setItem, newValue, username) {
   }
 }
 
+/**
+ * refresh saved value for user setting from localStorage if found, otherwise set to initialValue
+ * @param key: string
+ * @param currentValue: any
+ * @param setItem: function - called to update useState
+ * @param initialValue: any
+ * @param username: string
+ * @return {any} newValue
+ */
 function refreshUserItem(key, currentValue, setItem, initialValue, username) {
-  const key_ = username ? `${username}_${key}` : key // get user key
+  const key_ = getUserKey(username, key);
   let savedValue = localStorage.getItem(key_)
   console.log(`getUserItem(${key_}) - stored value ${savedValue}`)
 
+  if (savedValue !== null) {
+    try {
+      savedValue = JSON.parse(savedValue)
+    } catch {
+      savedValue = null // if not parsable
+    }
+  }
   if (savedValue === null) {
     savedValue = initialValue
     if (initialValue !== null) {
       localStorage.setItem(key_, JSON.stringify(initialValue)) // update with initial value
     }
-  } else {
-    savedValue = JSON.parse(savedValue)
   }
+
   setUserItem(key, currentValue, setItem, savedValue, username)
   return savedValue
 }
@@ -44,7 +78,7 @@ export default function StoreContextProvider(props) {
   function useLocalStorageUser(key,  initialValue) {
     const [currentValue, setCurrentValue_] = useState(initialValue)
     const setCurrentValue = (newValue) => setUserItem(key, currentValue, setCurrentValue_, newValue, username)
-    refreshList[key] = () => refreshUserItem(key, currentValue, setCurrentValue, initialValue, username)
+    refreshUserSettingsList[key] = () => refreshUserItem(key, currentValue, setCurrentValue_, initialValue, username)
     return [currentValue, setCurrentValue]
   }
 
@@ -71,9 +105,9 @@ export default function StoreContextProvider(props) {
 
   useEffect(() => {
     if (username) { // when user has changed, refresh the user settings states from localStorage
-      const keys = Object.keys(refreshList)
+      const keys = Object.keys(refreshUserSettingsList)
       for (const key of keys) { // update values for each useLocalStorageUser()
-        const refresh = refreshList[key]
+        const refresh = refreshUserSettingsList[key]
         refresh && refresh()
       }
     }
