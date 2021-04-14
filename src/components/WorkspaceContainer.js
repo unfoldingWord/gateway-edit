@@ -57,6 +57,7 @@ function WorkspaceContainer() {
       },
       supportedBibles,
       currentLayout,
+      useLocalStorage,
     },
     actions: {
       setQuote,

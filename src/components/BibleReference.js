@@ -32,6 +32,13 @@ function BibleReferenceComponent(props) {
   })
 
   useEffect(() => {
+    if ((state.bookId !== bookId) || (state.chapter !== chapter) || (state.verse !== verse)) {
+      // update reference if external change
+      actions.goToBookChapterVerse(bookId, chapter, verse)
+    }
+  }, [{bookId, chapter, verse}])
+
+  useEffect(() => {
     if (supportedBibles?.length) {
       actions.applyBooksFilter(supportedBibles)
     }
