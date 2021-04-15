@@ -56,7 +56,8 @@ function WorkspaceContainer() {
       },
       supportedBibles,
       currentLayout,
-      useLocalStorage,
+      useUserLocalStorage,
+      userLocalStorage,
     },
     actions: {
       setQuote,
@@ -99,7 +100,8 @@ function WorkspaceContainer() {
     branch,
     classes,
     getLanguage,
-    useLocalStorage,
+    useUserLocalStorage,
+    userLocalStorage,
     originalLanguageOwner: scriptureOwner,
   }
 
