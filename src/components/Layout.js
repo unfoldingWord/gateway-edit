@@ -19,11 +19,25 @@ export default function Layout({
   } = useContext(AuthenticationContext)
 
   const {
-    state: { showAccountSetup },
-    actions: { setCurrentLayout },
+    state: {
+      showAccountSetup,
+      languageId,
+      owner,
+    },
+    actions: {
+      setCurrentLayout,
+      setShowAccountSetup,
+    },
   } = useContext(StoreContext)
 
   const buildId = useMemo(getBuildId, [])
+
+  if (authentication && !showAccountSetup) {
+    // in case we switched users, make sure we have these settings
+    if (!languageId || !owner) {
+      setShowAccountSetup(true)
+    }
+  }
 
   return (
     <div className='h-screen w-screen flex flex-col'>
