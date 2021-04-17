@@ -1,9 +1,15 @@
-import React, { createContext, useContext, useMemo, useState } from 'react'
+import React,
+{
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { AuthenticationContext } from 'gitea-react-toolkit'
 import { UserLocalStorage } from '@utils/UserLocalStorage'
-import * as useULS from "@hooks/useUserLocalStorage";
+import * as useULS from '@hooks/useUserLocalStorage'
 
 export const StoreContext = createContext({})
 
@@ -11,6 +17,12 @@ export default function StoreContextProvider(props) {
   const { state: authentication } = useContext(AuthenticationContext)
   const username = authentication?.user?.username || ''
 
+  /**
+   * wrapper for useULS.useUserLocalStorage that applies current username
+   * @param {string} key
+   * @param {any} initialValue
+   * @return {any[]}
+   */
   function useUserLocalStorage(key, initialValue) {
     return useULS.useUserLocalStorage(username, key, initialValue)
   }
