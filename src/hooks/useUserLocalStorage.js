@@ -6,7 +6,9 @@ export function useUserLocalStorage(username, key, initialValue) {
   const refreshSettings = () => refreshUserItem(key, currentValue, setCurrentValue_, initialValue, username)
 
   useEffect(() => {
-    refreshSettings()
+    if (username) {
+      refreshSettings() // update once we have username or it has changed
+    }
   }, [username])
 
   return [currentValue, setCurrentValue, refreshSettings]

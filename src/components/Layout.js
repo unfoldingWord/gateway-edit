@@ -31,13 +31,7 @@ export default function Layout({
   } = useContext(StoreContext)
 
   const buildId = useMemo(getBuildId, [])
-
-  if (authentication && !showAccountSetup) {
-    // in case we switched users, make sure we have these settings
-    if (!languageId || !owner) {
-      setShowAccountSetup(true)
-    }
-  }
+  verifyAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup)
 
   return (
     <div className='h-screen w-screen flex flex-col'>
@@ -62,6 +56,27 @@ export default function Layout({
       />
     </div>
   )
+}
+
+let accountSettingsTimer = null
+
+function verifyAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup) {
+  const missingAccountSettings = (authentication && !showAccountSetup && (!languageId || !owner))
+
+  // TRICKY - in the case we switched users, make sure we have account settings
+  if (missingAccountSettings) {
+    if (!accountSettingsTimer) {
+      accountSettingsTimer = setTimeout(() => { // wait for account settings to update
+        // timer timed out and still missing account settings
+        console.log(`Layout - still missing account settings going to setup page`)
+        setShowAccountSetup(true)
+      }, 1000)
+    }
+  } else if (accountSettingsTimer) {
+    // no longer missing account settings - clear timer
+    clearTimeout(accountSettingsTimer)
+    accountSettingsTimer = null
+  }
 }
 
 Layout.propTypes = {
