@@ -10,15 +10,15 @@ import { useEffect, useState } from 'react'
 export function useUserLocalStorage(username, key, initialValue) {
   const [currentValue, setCurrentValue_] = useState(initialValue)
   const setCurrentValue = (newValue) => setUserItem(key, currentValue, setCurrentValue_, newValue, username)
-  const refreshSettings = () => refreshUserItem(key, currentValue, setCurrentValue_, initialValue, username)
+  const readSavedValue = () => readUserItem(key, currentValue, setCurrentValue_, initialValue, username)
 
   useEffect(() => {
     if (username) {
-      refreshSettings() // update once we have username or it has changed
+      readSavedValue() // update once we have username or it has changed
     }
   }, [username])
 
-  return [currentValue, setCurrentValue, refreshSettings]
+  return [currentValue, setCurrentValue, readSavedValue]
 }
 
 /**
@@ -63,7 +63,7 @@ function setUserItem(key, currentValue, setState, newValue, username) {
  * @param {string} username - user to save settings for
  * @return {any} returns current value
  */
-function refreshUserItem(key, currentValue, setState, initialValue, username) {
+function readUserItem(key, currentValue, setState, initialValue, username) {
   const key_ = getUserKey(username, key)
   let savedValue = getUserItem(key_)
 
