@@ -60,6 +60,14 @@ export default function Layout({
 
 let accountSettingsTimer = null
 
+/**
+ * make sure we have all the account settings for current user
+ * @param {Object} authentication
+ * @param {boolean} showAccountSetup
+ * @param {string} languageId
+ * @param {string} owner
+ * @param {function} setShowAccountSetup
+ */
 function verifyAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup) {
   const missingAccountSettings = (authentication && !showAccountSetup && (!languageId || !owner))
 

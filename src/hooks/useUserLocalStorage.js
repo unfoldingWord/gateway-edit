@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react'
 
+/**
+ * use hook for accessing local starage for user
+ * @param {Object} username
+ * @param {string} key
+ * @param {any} initialValue
+ * @return {any[]}
+ */
 export function useUserLocalStorage(username, key, initialValue) {
   const [currentValue, setCurrentValue_] = useState(initialValue)
   const setCurrentValue = (newValue) => setUserItem(key, currentValue, setCurrentValue_, newValue, username)
@@ -16,8 +23,8 @@ export function useUserLocalStorage(username, key, initialValue) {
 
 /**
  * will combine username and baseKey into unique settings key
- * @param username - string
- * @param baseKey - string
+ * @param {string} username
+ * @param {string} baseKey
  * @return {string} key for user settings
  */
 function getUserKey(username, baseKey) {
@@ -26,14 +33,14 @@ function getUserKey(username, baseKey) {
 }
 
 /**
- * set new value for user setting in both useState and localStorage if changes
- * @param key - string - base key that will be prepended with username
- * @param currentValue - current value for setting
- * @param setItem - callback function - called to update useState
- * @param newValue
- * @param username - string - user to save settings for
+ * set new value for user setting in both useState and localStorage if changed
+ * @param {string} key - base key that will be prepended with username
+ * @param {any} currentValue - current value for setting
+ * @param {function} setState - callback function - called to update useState
+ * @param {any} newValue
+ * @param {string} username
  */
-function setUserItem(key, currentValue, setItem, newValue, username) {
+function setUserItem(key, currentValue, setState, newValue, username) {
   const key_ = getUserKey(username, key)
   // Allow value to be a function so we have same API as useState
   const valueToStore =
@@ -43,20 +50,20 @@ function setUserItem(key, currentValue, setItem, newValue, username) {
   if (JSON.stringify(currentValue) !== newValueStr) {
     console.log(`setUserItem(${key_}) - saving new value ${newValueStr}`)
     localStorage.setItem(key_, newValueStr)
-    setItem && setItem(valueToStore)
+    setState && setState(valueToStore)
   }
 }
 
 /**
  * refresh saved value for user setting from localStorage if found, otherwise set to initialValue
- * @param key - string - base key that will be prepended with username
- * @param currentValue - current value for setting
- * @param setItem - callback function - called to update useState
- * @param initialValue - initial value to use if no setting found
- * @param username - string - user to save settings for
+ * @param {string} key - base key that will be prepended with username
+ * @param {any} currentValue - current value for setting
+ * @param {function} setState - callback function - called to update useState
+ * @param {any} initialValue - initial value to use if no setting found
+ * @param {string} username - user to save settings for
  * @return {any} returns current value
  */
-function refreshUserItem(key, currentValue, setItem, initialValue, username) {
+function refreshUserItem(key, currentValue, setState, initialValue, username) {
   const key_ = getUserKey(username, key)
   let savedValue = getUserItem(key_)
 
@@ -68,13 +75,13 @@ function refreshUserItem(key, currentValue, setItem, initialValue, username) {
     }
   }
 
-  setUserItem(key, currentValue, setItem, savedValue, username)
+  setUserItem(key, currentValue, setState, savedValue, username)
   return savedValue
 }
 
 /**
  * reads item from local storage
- * @param key - key for item
+ * @param {string} key - key for item
  * @return {any}
  */
 function getUserItem(key) {
