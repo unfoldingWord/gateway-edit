@@ -7,6 +7,7 @@ import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
 import { appName } from '@common/constants'
+import useValidateAccountSettings from '@hooks/useValidateAccountSettings'
 
 export default function Layout({
   children,
@@ -31,7 +32,7 @@ export default function Layout({
   } = useContext(StoreContext)
 
   const buildId = useMemo(getBuildId, [])
-  verifyAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup)
+  useValidateAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup)
 
   return (
     <div className='h-screen w-screen flex flex-col'>
@@ -56,35 +57,6 @@ export default function Layout({
       />
     </div>
   )
-}
-
-let accountSettingsTimer = null
-
-/**
- * make sure we have all the account settings for current user
- * @param {Object} authentication
- * @param {boolean} showAccountSetup
- * @param {string} languageId
- * @param {string} owner
- * @param {function} setShowAccountSetup
- */
-function verifyAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup) {
-  const missingAccountSettings = (authentication && !showAccountSetup && (!languageId || !owner))
-
-  // TRICKY - in the case we switched users, make sure we have account settings
-  if (missingAccountSettings) {
-    if (!accountSettingsTimer) {
-      accountSettingsTimer = setTimeout(() => { // wait for account settings to update
-        // timer timed out and still missing account settings
-        console.log(`Layout - still missing account settings going to setup page`)
-        setShowAccountSetup(true)
-      }, 1000)
-    }
-  } else if (accountSettingsTimer) {
-    // no longer missing account settings - clear timer
-    clearTimeout(accountSettingsTimer)
-    accountSettingsTimer = null
-  }
 }
 
 Layout.propTypes = {
