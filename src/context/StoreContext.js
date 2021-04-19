@@ -32,7 +32,7 @@ export default function StoreContextProvider(props) {
     true,
   )
   const [taArticle, setTaArticle] = useState(null)
-  const [selectedQuote, setQuote] = useLocalStorage('selectedQuote', null)
+  const [selectedQuote, setQuote] = useUserLocalStorage('selectedQuote', null)
   // TODO blm: for now we use unfoldingWord for original language bibles
   const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
   const [server, setServer] = useState('https://git.door43.org')
