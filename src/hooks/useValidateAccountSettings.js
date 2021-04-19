@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react'
  */
 export default function useValidateAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup) {
   const [timer, setTimer] = useState(null)
-
   const missingAccountSettings = (authentication && !showAccountSetup && (!languageId || !owner))
 
   useEffect(() => {
