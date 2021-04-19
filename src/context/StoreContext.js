@@ -2,13 +2,11 @@ import React,
 {
   createContext,
   useContext,
-  useMemo,
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
 import { AuthenticationContext } from 'gitea-react-toolkit'
-import { UserLocalStorage } from '@utils/UserLocalStorage'
 import * as useULS from '@hooks/useUserLocalStorage'
 
 export const StoreContext = createContext({})
@@ -33,7 +31,6 @@ export default function StoreContextProvider(props) {
     'showAccountSetup',
     true,
   )
-  const userLocalStorage = useMemo(() => (new UserLocalStorage(username)), [username])
   const [taArticle, setTaArticle] = useState(null)
   const [selectedQuote, setQuote] = useLocalStorage('selectedQuote', null)
   // TODO blm: for now we use unfoldingWord for original language bibles
@@ -87,7 +84,6 @@ export default function StoreContextProvider(props) {
       supportedBibles,
       currentLayout,
       useUserLocalStorage,
-      userLocalStorage,
     },
     actions: {
       setShowAccountSetup,

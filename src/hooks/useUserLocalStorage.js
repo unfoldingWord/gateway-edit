@@ -45,11 +45,11 @@ function setUserItem(key, currentValue, setState, newValue, username) {
   // Allow value to be a function so we have same API as useState
   const valueToStore =
     newValue instanceof Function ? newValue(currentValue) : newValue
-  const newValueStr = JSON.stringify(valueToStore)
+  const valueToStoreStr = JSON.stringify(valueToStore)
 
-  if (JSON.stringify(currentValue) !== newValueStr) {
-    console.log(`setUserItem(${key_}) - saving new value ${newValueStr}`)
-    localStorage.setItem(key_, newValueStr)
+  if (JSON.stringify(currentValue) !== valueToStoreStr) {
+    console.log(`setUserItem(${key_}) - saving new value ${valueToStoreStr}`)
+    localStorage.setItem(key_, valueToStoreStr)
     setState && setState(valueToStore)
   }
 }
