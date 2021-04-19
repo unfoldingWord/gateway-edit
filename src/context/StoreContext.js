@@ -1,30 +1,50 @@
-import React, { useState, createContext } from 'react'
+import React,
+{
+  createContext,
+  useContext,
+  useState,
+} from 'react'
 import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
+import { AuthenticationContext } from 'gitea-react-toolkit'
+import * as useULS from '@hooks/useUserLocalStorage'
 
 export const StoreContext = createContext({})
 
 export default function StoreContextProvider(props) {
-  const [owner, setOwner] = useLocalStorage('owner', '')
-  const [languageId, setLanguageId] = useLocalStorage('languageId', '')
+  const { state: authentication } = useContext(AuthenticationContext)
+  const username = authentication?.user?.username || ''
+
+  /**
+   * wrapper for useULS.useUserLocalStorage that applies current username
+   * @param {string} key
+   * @param {any} initialValue
+   * @return {any[]}
+   */
+  function useUserLocalStorage(key, initialValue) {
+    return useULS.useUserLocalStorage(username, key, initialValue)
+  }
+
+  const [owner, setOwner] = useUserLocalStorage('owner', '')
+  const [languageId, setLanguageId] = useUserLocalStorage('languageId', '')
   const [showAccountSetup, setShowAccountSetup] = useLocalStorage(
     'showAccountSetup',
     true,
   )
   const [taArticle, setTaArticle] = useState(null)
-  const [selectedQuote, setQuote] = useLocalStorage('selectedQuote', null)
-  // TODO blm: for testing use unfoldingWord since test_org does not have enough bibles
+  const [selectedQuote, setQuote] = useUserLocalStorage('selectedQuote', null)
+  // TODO blm: for now we use unfoldingWord for original language bibles
   const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
   const [server, setServer] = useState('https://git.door43.org')
   const [branch, setBranch] = useState('master')
-  const [bibleReference, setBibleReference] = useLocalStorage('bibleReference', {
+  const [bibleReference, setBibleReference] = useUserLocalStorage('bibleReference', {
     bookId: 'mat',
     chapter: '1',
     verse: '1',
   })
 
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
-  const [currentLayout, setCurrentLayout] = useLocalStorage('resourceLayout', null)
+  const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
 
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)
@@ -63,6 +83,7 @@ export default function StoreContextProvider(props) {
       owner,
       supportedBibles,
       currentLayout,
+      useUserLocalStorage,
     },
     actions: {
       setShowAccountSetup,

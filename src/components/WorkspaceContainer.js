@@ -24,7 +24,6 @@ import ResourceCard from '@components/ResourceCard'
 import { getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
-import useLocalStorage from '@hooks/useLocalStorage'
 import { getLanguage } from '@common/languages'
 
 const useStyles = makeStyles(() => ({
@@ -57,6 +56,7 @@ function WorkspaceContainer() {
       },
       supportedBibles,
       currentLayout,
+      useUserLocalStorage,
     },
     actions: {
       setQuote,
@@ -99,7 +99,7 @@ function WorkspaceContainer() {
     branch,
     classes,
     getLanguage,
-    useLocalStorage,
+    useUserLocalStorage,
     originalLanguageOwner: scriptureOwner,
   }
 

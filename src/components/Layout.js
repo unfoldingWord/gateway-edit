@@ -7,6 +7,7 @@ import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
 import { appName } from '@common/constants'
+import useValidateAccountSettings from '@hooks/useValidateAccountSettings'
 
 export default function Layout({
   children,
@@ -19,11 +20,19 @@ export default function Layout({
   } = useContext(AuthenticationContext)
 
   const {
-    state: { showAccountSetup },
-    actions: { setCurrentLayout },
+    state: {
+      showAccountSetup,
+      languageId,
+      owner,
+    },
+    actions: {
+      setCurrentLayout,
+      setShowAccountSetup,
+    },
   } = useContext(StoreContext)
 
   const buildId = useMemo(getBuildId, [])
+  useValidateAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup)
 
   return (
     <div className='h-screen w-screen flex flex-col'>
