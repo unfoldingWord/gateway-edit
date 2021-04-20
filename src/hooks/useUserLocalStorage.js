@@ -48,7 +48,6 @@ function setUserItem(key, currentValue, setState, newValue, username) {
   const valueToStoreStr = JSON.stringify(valueToStore)
 
   if (JSON.stringify(currentValue) !== valueToStoreStr) {
-    console.log(`setUserItem(${key_}) - saving new value ${valueToStoreStr}`)
     localStorage.setItem(key_, valueToStoreStr)
     setState && setState(valueToStore)
   }
@@ -86,7 +85,6 @@ function readUserItem(key, currentValue, setState, initialValue, username) {
  */
 function getUserItem(key) {
   let savedValue = localStorage.getItem(key)
-  console.log(`getUserItem(${key}) - stored value ${savedValue}`)
 
   if (savedValue !== null) {
     try {
