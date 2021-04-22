@@ -6241,14 +6241,15 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@2.0.2-alpha.2:
-  version "2.0.2-alpha.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-2.0.2-alpha.2.tgz#7ba0fe03da8b8378ae8458cb63d579dbc6e14c81"
-  integrity sha512-7GUIzL7ANxqGk6KOyffLoLbyyeFlW62FSjC650Zl1eRiZxeuTdHGI/GvYn/btZPUPgirhXLEKgYVZZPXyrZRrQ==
+single-scripture-rcl@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-2.0.2.tgz#1be1afef6cc2475ec3af713221f4e8a5e942442d"
+  integrity sha512-DrPkkAX//eCnU1sbyd7YH1gNdvbrnRSWQfKusZKEz4qUtR/5co3e4TLhy0gHErIXPYlRdsrfw/Qrt5sMeLFJ8A==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
     deep-equal "^2.0.5"
+    lodash "^4.17.21"
     react-docgen-typescript "^1.20.5"
     source-map-loader "^1.1.3"
     styled-components "^5.2.1"
