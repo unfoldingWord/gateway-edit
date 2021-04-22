@@ -199,7 +199,6 @@ function WorkspaceContainer() {
             resourceId: TARGET_LITERAL,
             originalLanguageOwner: scriptureOwner,
           }}
-          disableWordPopover={true}
           {...commonScriptureCardConfigs}
         />
 
@@ -236,7 +235,6 @@ function WorkspaceContainer() {
             resourceId: TARGET_SIMPLIFIED,
             originalLanguageOwner: scriptureOwner,
           }}
-          disableWordPopover={true}
           {...commonScriptureCardConfigs}
         />
 
