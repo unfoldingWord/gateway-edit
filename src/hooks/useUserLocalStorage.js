@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import * as isEqual from 'deep-equal'
 
 /**
  * use hook for accessing local starage for user
@@ -46,12 +47,8 @@ function setUserItem(key, currentValue, setState, newValue, username) {
   const valueToStore =
     newValue instanceof Function ? newValue(currentValue) : newValue
   const valueToStoreStr = JSON.stringify(valueToStore)
-
-  if (JSON.stringify(currentValue) !== valueToStoreStr) {
-    console.log(`setUserItem(${key_}) - saving new value ${valueToStoreStr}`)
-    localStorage.setItem(key_, valueToStoreStr)
-    setState && setState(valueToStore)
-  }
+  localStorage.setItem(key_, valueToStoreStr)
+  setState && setState(valueToStore)
 }
 
 /**
@@ -71,11 +68,13 @@ function readUserItem(key, currentValue, setState, initialValue, username) {
     savedValue = initialValue
 
     if (initialValue !== null) {
-      localStorage.setItem(key_, JSON.stringify(initialValue)) // update with initial value
+      setUserItem(key, currentValue, setState, savedValue, username)
     }
   }
 
-  setUserItem(key, currentValue, setState, savedValue, username)
+  if (!isEqual(currentValue, savedValue)) {
+    setState(savedValue)
+  }
   return savedValue
 }
 
@@ -86,7 +85,6 @@ function readUserItem(key, currentValue, setState, initialValue, username) {
  */
 function getUserItem(key) {
   let savedValue = localStorage.getItem(key)
-  console.log(`getUserItem(${key}) - stored value ${savedValue}`)
 
   if (savedValue !== null) {
     try {
