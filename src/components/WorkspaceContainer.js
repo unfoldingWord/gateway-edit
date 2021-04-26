@@ -88,6 +88,7 @@ function WorkspaceContainer() {
   }
 
   if (currentLayout) {
+    // Migrating cached currentLayout to include min width & min height.
     if (!currentLayout[0].minW || !currentLayout[0].minH) {
       const newCurrentLayout = currentLayout.map(l => {
         l.minW = layout.minW
