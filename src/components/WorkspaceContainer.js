@@ -1,7 +1,7 @@
 import {
-  useContext,
-  useEffect,
   useState,
+  useEffect,
+  useContext,
 } from 'react'
 import * as isEqual from 'deep-equal'
 import { Workspace } from 'resource-workspace-rcl'
@@ -83,9 +83,21 @@ function WorkspaceContainer() {
       [1, 1.5, 1.5],
     ],
     heights: [[5], [10, 10], [10, 10]],
+    minW: 3,
+    minH: 4,
   }
 
   if (currentLayout) {
+    // Migrating cached currentLayout to include min width & min height.
+    if (!currentLayout[0].minW || !currentLayout[0].minH) {
+      const newCurrentLayout = currentLayout.map(l => {
+        l.minW = layout.minW
+        l.minH = layout.minH
+        return l
+      })
+      setCurrentLayout(newCurrentLayout)
+    }
+
     layout.absolute = currentLayout
   }
 
@@ -122,7 +134,7 @@ function WorkspaceContainer() {
       } else {
         console.log(`no bibles`)
       }
-    })
+    })// eslint-disable-next-line
   }, [owner, languageId, branch, server])
 
   const originalScripture = {
