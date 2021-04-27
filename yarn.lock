@@ -6124,7 +6124,7 @@ resolve@^2.0.0-next.3:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
-resource-workspace-rcl@^0.7.0:
+resource-workspace-rcl@0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-0.7.0.tgz#c8e684900baa6e0f48c6c849448603e785af2602"
   integrity sha512-eI4pTheuIcXF6GSRxQPDOpx2zk51oE6txbVOxQNmNP6nxvweowzb8yCYPGFjUQMO4+/zF8lIqL7w77kmnE3/Sw==
@@ -6836,10 +6836,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.46.6:
-  version "1.46.6"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.6.tgz#b977ceeccdffac8f8cf694e4362170eef60f958f"
-  integrity sha512-GU93QUNO7ynriKhFmR6vMlP1Yl9S0UyBfabGhinxL75M7/s4YTr2oGDV+1TWk+YN1Z2/rK8oysh33mWigfsYsw==
+translation-helps-rcl@^1.46.7:
+  version "1.46.7"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.7.tgz#03531fbf6f0f1f8136a9f8e71f432c8d82ef0bc6"
+  integrity sha512-994P1QXMkhkeBEn1lQE3TLmsGHQfr31rHx63EKEr04p0sBXTNH89fdhRSn0wIBUb7FRzR0ZEZFxAvNQr2acGQg==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
