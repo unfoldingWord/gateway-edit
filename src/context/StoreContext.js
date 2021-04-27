@@ -84,6 +84,7 @@ export default function StoreContextProvider(props) {
       supportedBibles,
       currentLayout,
       useUserLocalStorage,
+      loggedInUser: username,
     },
     actions: {
       setShowAccountSetup,

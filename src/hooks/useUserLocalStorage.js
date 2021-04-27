@@ -2,20 +2,42 @@ import { useEffect, useState } from 'react'
 import * as isEqual from 'deep-equal'
 
 /**
- * use hook for accessing local starage for user
- * @param {Object} username
+ * use hook for accessing local storage for user
+ * @param {string} username
  * @param {string} key
  * @param {any} initialValue
  * @return {any[]}
  */
 export function useUserLocalStorage(username, key, initialValue) {
-  const [currentValue, setCurrentValue_] = useState(initialValue)
+  const [currentValue, setCurrentValue_] = useState(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const key_ = getUserKey(username, key)
+        const savedValue = localStorage.getItem(key_)
+
+        if (savedValue) {
+          // Parse stored json or if none return initialValue
+          return JSON.parse(savedValue)
+        }
+      }
+      return initialValue // default to initial value
+    } catch (error) {
+      // If error also return initialValue
+      console.log(`useUserLocalStorage(${key}) - init error:'`, error)
+      return initialValue
+    }
+  })
   const setCurrentValue = (newValue) => setUserItem(key, currentValue, setCurrentValue_, newValue, username)
   const readSavedValue = () => readUserItem(key, currentValue, setCurrentValue_, initialValue, username)
 
   useEffect(() => {
+    console.log(`useUserLocalStorage(${username}, ${key}) - user changed`)
+
     if (username) {
-      readSavedValue() // update once we have username or it has changed
+      const savedValue = readSavedValue() // update once we have username or it has changed
+      console.log(`useUserLocalStorage(${username}, ${key}) - new value: ${JSON.stringify(savedValue)}`)
+    } else { // otherwise set back to default
+      setCurrentValue_(initialValue)
     }
   }, [username])
 
@@ -73,7 +95,10 @@ function readUserItem(key, currentValue, setState, initialValue, username) {
   }
 
   if (!isEqual(currentValue, savedValue)) {
-    setState(savedValue)
+    console.log(`readUserItem($${key_}) - new value: ${JSON.stringify(savedValue)}`)
+    setState && setState(savedValue)
+  } else {
+    console.log(`readUserItem($${key_}) - unchanged value: ${JSON.stringify(savedValue)}`)
   }
   return savedValue
 }
