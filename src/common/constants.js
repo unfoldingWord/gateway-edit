@@ -10,3 +10,6 @@ export const MANIFEST_INVALID_ERROR = 'The manifest for this resource is invalid
 export const NO_ORGS_ERROR = 'The application can not continue. The current username is not part of a DCS organization. Please contact your administrator.'
 export const ORGS_NETWORK_ERROR = 'Network Error loading User Organizations'
 export const LOADING_RESOURCE = 'Loading Resource...'
+export const LOCAL_NETWORK_DISCONNECTED_ERROR = 'Your local network is disconnected.'
+export const SERVER_UNREACHABLE_ERROR = 'Please check your internet connection. The application is unable to reach the server.'
+export const AUTHENTICATION_ERROR = 'The application is no longer logged in. Please login again.'

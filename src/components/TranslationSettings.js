@@ -12,6 +12,7 @@ import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
 import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
+import { getServerFault } from '@utils/network';
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -38,13 +39,17 @@ export default function TranslationSettings({ authentication }) {
     async function getOrgs() {
       setErrorMessage(null)
       let error
+      let errorCode = 0
 
       try {
         const orgs = await fetch('https://git.door43.org/api/v1/user/orgs', { ...authentication.config })
           .then(response => {
             if (response?.status !== 200) {
               console.warn(`TranslationSettings - error fetching user orgs, status code ${response?.status}`)
-              error = ORGS_NETWORK_ERROR //TODO - add checking of response.status codes in future issue
+              errorCode = response?.status
+              return null
+              // checkIfServerOnline()
+              // error = ORGS_NETWORK_ERROR //TODO - add checking of response.status codes in future issue
             }
             return response?.json()
           })
@@ -63,8 +68,19 @@ export default function TranslationSettings({ authentication }) {
         setOrganizations(orgs)
       } catch (e) {
         console.warn(`TranslationSettings - error fetching user orgs`, e)
-        setErrorMessage(ORGS_NETWORK_ERROR)
+        error = ORGS_NETWORK_ERROR
         setOrganizations([])
+      }
+
+      if (error) {
+        const serverError = await getServerFault()
+
+        if (serverError) {
+          error = serverError
+        } else {
+          error = `HTTP error code ${errorCode}`
+        }
+        setErrorMessage(error)
       }
     }
 
