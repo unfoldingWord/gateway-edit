@@ -29,6 +29,7 @@ export default function ResourceCard({
   updateTaDetails,
   disableNavigation,
   hideMarkdownToggle,
+  useUserLocalStorage,
 }) {
   const {
     items,
@@ -56,9 +57,11 @@ export default function ResourceCard({
       setFilters, setFontSize, setItemIndex, setMarkdownView,
     },
   } = useCardState({
+    id,
     items,
     setQuote,
     selectedQuote,
+    useUserLocalStorage,
   })
 
   useEffect(() => {
@@ -130,4 +133,5 @@ ResourceCard.propTypes = {
   classes: PropTypes.object,
   selectedQuote: PropTypes.object,
   errorMessage: PropTypes.string,
+  useUserLocalStorage: PropTypes.func,
 }

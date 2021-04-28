@@ -266,6 +266,7 @@ function WorkspaceContainer() {
           setQuote={setQuote}
           selectedQuote={selectedQuote}
           updateTaDetails={updateTaDetails}
+          useUserLocalStorage={useUserLocalStorage}
         />
         <ResourceCard
           title='translationAcademy'
@@ -281,6 +282,7 @@ function WorkspaceContainer() {
           projectId={taArticle?.projectId}
           filePath={taArticle?.filePath}
           errorMessage={taArticle ? null : 'No article is specified in the current note.'}
+          useUserLocalStorage={useUserLocalStorage}
         />
         <ResourceCard
           title='translationWords List'
@@ -301,6 +303,7 @@ function WorkspaceContainer() {
           disableFilters
           disableNavigation
           hideMarkdownToggle
+          useUserLocalStorage={useUserLocalStorage}
         />
         <ResourceCard
           title='translationWords Article'
@@ -320,6 +323,7 @@ function WorkspaceContainer() {
           selectedQuote={selectedQuote}
           disableFilters
           hideMarkdownToggle
+          useUserLocalStorage={useUserLocalStorage}
         />
         <ResourceCard
           title='translationQuestions'
@@ -336,6 +340,7 @@ function WorkspaceContainer() {
           filePath={null}
           viewMode='question'
           disableFilters
+          useUserLocalStorage={useUserLocalStorage}
         />
       </Workspace>
     </SelectionsContextProvider>
