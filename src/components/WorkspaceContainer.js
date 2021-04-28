@@ -138,7 +138,6 @@ function WorkspaceContainer() {
       } else {
         console.log(`no bibles`)
       }
-      // wait for settings to be read from localStorage
       setWorkspaceReady(true)
     }).catch(() => {
       setWorkspaceReady(true)

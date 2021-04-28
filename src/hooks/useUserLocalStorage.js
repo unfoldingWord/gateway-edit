@@ -31,12 +31,9 @@ export function useUserLocalStorage(username, key, initialValue) {
   const readSavedValue = () => readUserItem(key, currentValue, setCurrentValue_, initialValue, username)
 
   useEffect(() => {
-    console.log(`useUserLocalStorage(${username}, ${key}) - user changed`)
-
     if (username) {
-      const savedValue = readSavedValue() // update once we have username or it has changed
-      console.log(`useUserLocalStorage(${username}, ${key}) - new value: ${JSON.stringify(savedValue)}`)
-    } else { // otherwise set back to default
+      readSavedValue() // update once we have username or it has changed
+    } else { // if no username, set back to default
       setCurrentValue_(initialValue)
     }
   }, [username])
@@ -95,10 +92,7 @@ function readUserItem(key, currentValue, setState, initialValue, username) {
   }
 
   if (!isEqual(currentValue, savedValue)) {
-    console.log(`readUserItem($${key_}) - new value: ${JSON.stringify(savedValue)}`)
     setState && setState(savedValue)
-  } else {
-    console.log(`readUserItem($${key_}) - unchanged value: ${JSON.stringify(savedValue)}`)
   }
   return savedValue
 }
