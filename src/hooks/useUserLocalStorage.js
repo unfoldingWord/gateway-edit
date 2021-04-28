@@ -16,7 +16,7 @@ export function useUserLocalStorage(username, key, initialValue) {
         const savedValue = localStorage.getItem(key_)
 
         if (savedValue) {
-          // Parse stored json or if none return initialValue
+          // Parse saved json data
           return JSON.parse(savedValue)
         }
       }
