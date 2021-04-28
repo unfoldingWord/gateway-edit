@@ -57,7 +57,10 @@ export default function ResourceCard({
     },
   } = useCardState({
     items,
+    verse,
+    chapter,
     setQuote,
+    projectId,
     selectedQuote,
   })
 
