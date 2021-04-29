@@ -6,13 +6,13 @@ import React,
 } from 'react'
 import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
-import { AuthenticationContext } from 'gitea-react-toolkit'
 import * as useULS from '@hooks/useUserLocalStorage'
+import { AuthContext } from '@context/AuthContext'
 
 export const StoreContext = createContext({})
 
 export default function StoreContextProvider(props) {
-  const { state: authentication } = useContext(AuthenticationContext)
+  const { authentication } = useContext(AuthContext)
   const username = authentication?.user?.username || ''
 
   /**
@@ -84,6 +84,7 @@ export default function StoreContextProvider(props) {
       supportedBibles,
       currentLayout,
       useUserLocalStorage,
+      loggedInUser: username,
     },
     actions: {
       setShowAccountSetup,
