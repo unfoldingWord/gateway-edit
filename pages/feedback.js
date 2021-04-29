@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/router'
 import Paper from 'translation-helps-rcl/dist/components/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -11,6 +11,9 @@ import Button from '@material-ui/core/Button'
 import MuiAlert from '@material-ui/lab/Alert'
 import CloseIcon from '@material-ui/icons/Close'
 import Layout from '@components/Layout'
+import { StoreContext } from '@context/StoreContext'
+import { getBuildId } from '@utils/build'
+import { getUserItem, getUserKey } from '@hooks/useUserLocalStorage'
 
 function Alert({ severity, message }) {
   const router = useRouter()
@@ -63,6 +66,23 @@ const SettingsPage = () => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
 
+  const {
+    state: {
+      owner,
+      server,
+      branch,
+      taArticle,
+      languageId,
+      selectedQuote,
+      scriptureOwner,
+      bibleReference,
+      supportedBibles,
+      currentLayout,
+      lastError,
+      loggedInUser,
+    },
+  } = useContext(StoreContext)
+
   function onClose() {
     router.push('/')
   }
@@ -83,14 +103,70 @@ const SettingsPage = () => {
     setMessage(e.target.value)
   }
 
+  function getUserSettings(username, baseKey) {
+    const key = getUserKey(username, baseKey)
+    const savedValue = getUserItem(key)
+    return savedValue
+  }
+
+  function getScriptureCardSettings(username) {
+    const settings = ['scripturePaneTarget', 'scripturePaneConfig', 'scripturePaneFontSize']
+    const cards = []
+
+    for (let i = 0; ; i++) {
+      const cardSettings = {}
+
+      for (let j = 0; j < settings.length; j++) {
+        const settingKey = settings[j]
+        const savedValue = getUserSettings(username, `${settingKey}_${i}`)
+
+        if (savedValue !== null) {
+          cardSettings.settingKey = savedValue
+        } else {
+          break
+        }
+      }
+
+      if (Object.keys(cardSettings).length > 0) {
+        cards.push(cardSettings)
+      } else {
+        break
+      }
+    }
+    return cards
+  }
+
   async function onSubmitFeedback() {
     setSubmitting(true)
+    const build = getBuildId()
+    const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
+    const scriptureVersionHistory = getUserSettings(loggedInUser, `scriptureVersionHistory`)
+
+    const extraData = JSON.stringify({
+      lastError,
+      loggedInUser,
+      build,
+      owner,
+      server,
+      branch,
+      taArticle,
+      languageId,
+      selectedQuote,
+      scriptureOwner,
+      bibleReference,
+      supportedBibles,
+      currentLayout,
+      scriptureCardSettings,
+      scriptureVersionHistory,
+    })
+
+    console.log(`onSubmitFeedback() - sending data:`, extraData)
 
     const res = await fetch('/api/feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name, email, category, message,
+        name, email, category, message, extraData,
       }),
     })
 
@@ -109,7 +185,7 @@ const SettingsPage = () => {
       <div className='flex flex-col justify-center items-center w-full h-full'>
         <div className='flex justify-center items-center w-full h-full px-4 lg:w-132 lg:p-0'>
           <Paper className='flex flex-col h-auto w-full p-4 my-2'>
-            <div  className='flex flex-row'>
+            <div className='flex flex-row'>
               <h3 className='flex-auto text-xl text-gray-600 font-semibold mx-8 mb-0'>
                 Submit a Bug Report or Feedback
               </h3>

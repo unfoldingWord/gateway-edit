@@ -85,6 +85,7 @@ export default function StoreContextProvider(props) {
       supportedBibles,
       currentLayout,
       useUserLocalStorage,
+      loggedInUser: username,
       lastError,
     },
     actions: {
