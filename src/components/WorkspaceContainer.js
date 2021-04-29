@@ -120,28 +120,31 @@ function WorkspaceContainer() {
 
   useEffect(() => {
     setWorkspaceReady(false)
-    getResourceBibles({
-      bookId,
-      chapter,
-      verse,
-      resourceId: languageId === 'en' ? 'ult' : 'glt',
-      owner,
-      languageId,
-      branch,
-      server,
-    }).then(bibles => {
-      if (bibles?.length) {
-        if (!isEqual(bibles, supportedBibles )) {
-          console.log(`found ${bibles?.length} bibles`)
-          setSupportedBibles(bibles) //TODO blm: update bible refs
+
+    if (owner && languageId && branch && server && loggedInUser) {
+      getResourceBibles({
+        bookId,
+        chapter,
+        verse,
+        resourceId: languageId === 'en' ? 'ult' : 'glt',
+        owner,
+        languageId,
+        branch,
+        server,
+      }).then(bibles => {
+        if (bibles?.length) {
+          if (!isEqual(bibles, supportedBibles)) {
+            console.log(`found ${bibles?.length} bibles`)
+            setSupportedBibles(bibles) //TODO blm: update bible refs
+          }
+        } else {
+          console.log(`no bibles`)
         }
-      } else {
-        console.log(`no bibles`)
-      }
-      setWorkspaceReady(true)
-    }).catch(() => {
-      setWorkspaceReady(true)
-    }) // eslint-disable-next-line
+        setWorkspaceReady(true)
+      }).catch(() => {
+        setWorkspaceReady(true)
+      }) // eslint-disable-next-line
+    }
   }, [owner, languageId, branch, server, loggedInUser])
 
   const originalScripture = {
