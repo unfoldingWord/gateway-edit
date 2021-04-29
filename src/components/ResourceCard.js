@@ -75,8 +75,8 @@ export default function ResourceCard({
 
   return (
     <Card
-      title={title}
       id={id}
+      title={title}
       items={items}
       classes={classes}
       headers={headers}
