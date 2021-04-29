@@ -25,6 +25,7 @@ export default function StoreContextProvider(props) {
     return useULS.useUserLocalStorage(username, key, initialValue)
   }
 
+  const [lastError, setLastError] = useState(null)
   const [owner, setOwner] = useUserLocalStorage('owner', '')
   const [languageId, setLanguageId] = useUserLocalStorage('languageId', '')
   const [showAccountSetup, setShowAccountSetup] = useLocalStorage(
@@ -84,6 +85,7 @@ export default function StoreContextProvider(props) {
       supportedBibles,
       currentLayout,
       useUserLocalStorage,
+      lastError,
     },
     actions: {
       setShowAccountSetup,
@@ -97,6 +99,7 @@ export default function StoreContextProvider(props) {
       setOwner,
       setSupportedBibles,
       setCurrentLayout,
+      setLastError,
     },
   }
 

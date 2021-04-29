@@ -12,7 +12,7 @@ import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
 import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
-import { getServerFault } from '@utils/network'
+import { showNetworkError } from '@utils/network'
 import ErrorPopup from '@components/ErrorPopUp'
 
 const useStyles = makeStyles(theme => ({
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 export default function TranslationSettings({ authentication }) {
   const classes = useStyles()
   const [organizations, setOrganizations] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [orgErrorMessage, setOrgErrorMessage] = useState(null)
   const [languages, setLanguages] = useState([])
   const [networkError, setNetworkError] = useState(null)
   const {
@@ -34,12 +34,14 @@ export default function TranslationSettings({ authentication }) {
     actions: {
       setOwner: setOrganization,
       setLanguageId,
+      setLastError,
     },
   } = useContext(StoreContext)
 
   useEffect(() => {
     async function getOrgs() {
-      setErrorMessage(null)
+      setOrgErrorMessage(null)
+      setLastError(null)
       let error
       let errorCode = 0
 
@@ -64,7 +66,7 @@ export default function TranslationSettings({ authentication }) {
           })
 
         if (!orgs?.length) { // if no orgs
-          setErrorMessage(error || NO_ORGS_ERROR) // if no specific error is found, then warn that user has no orgs
+          setOrgErrorMessage(error || NO_ORGS_ERROR) // if no specific error is found, then warn that user has no orgs
         }
 
         setOrganizations(orgs)
@@ -75,18 +77,10 @@ export default function TranslationSettings({ authentication }) {
       }
 
       if (error) {
-        const serverError = await getServerFault()
-
-        if (serverError) {
-          error = serverError
-        } else {
-          error = `HTTP error code ${errorCode}`
-        }
-        setErrorMessage(error)
-
-        if (error) {
+        await showNetworkError(error, errorCode, setLastError, (error) => {
+          setOrgErrorMessage(error)
           setNetworkError(error)
-        }
+        })
       }
     }
 
@@ -127,7 +121,7 @@ export default function TranslationSettings({ authentication }) {
       <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
         <h5>Translation Settings</h5>
         <div className='flex flex-col justify-between my-4'>
-          <FormControl variant='outlined' className={classes.formControl} error={!!errorMessage}>
+          <FormControl variant='outlined' className={classes.formControl} error={!!orgErrorMessage}>
             <InputLabel id='demo-simple-select-outlined-label'>
               Organization
             </InputLabel>
@@ -144,7 +138,7 @@ export default function TranslationSettings({ authentication }) {
                 </MenuItem>
               ))}
             </Select>
-            <FormHelperText id='organization-select-message'>{errorMessage}</FormHelperText>
+            <FormHelperText id='organization-select-message'>{orgErrorMessage}</FormHelperText>
           </FormControl>
           <FormControl variant='outlined' className={classes.formControl}>
             <InputLabel id='demo-simple-select-outlined-label'>

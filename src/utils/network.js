@@ -10,8 +10,9 @@ import {
 } from '@common/constants'
 
 /**
- * checks to see if
- * @param errorDetails
+ * checks to see if there is a fault with the server
+ * @param {string} errorDetails
+ * @return {Promise<string>} error message if server is not reachable
  */
 export async function getServerFault(errorDetails) {
   try {
@@ -37,3 +38,28 @@ export async function getServerFault(errorDetails) {
   }
 }
 
+/**
+ * on network error, do check if server is accessible
+ * @param {string} errorMessage - error message for type of network problem
+ * @param {number} errorCode - HTTP code returned
+ * @param {function} saveErrorMessage - callback to apply final error message
+ * @param {function} setLastError - callback to save last error object
+ * @return {Promise<string>} returns final error string
+ */
+export async function showNetworkError(errorMessage, errorCode, setLastError, saveErrorMessage ) {
+  const lastError = {
+    errorMessage,
+    errorCode,
+  }
+  const serverError = await getServerFault() // check if server is responding
+
+  if (serverError) {
+    errorMessage = serverError
+  } else {
+    errorMessage = `${errorMessage}, HTTP error code ${errorCode}`
+  }
+  saveErrorMessage && saveErrorMessage(errorMessage)
+  lastError.errorMessage = errorMessage
+  setLastError && setLastError(lastError)
+  return errorMessage
+}
