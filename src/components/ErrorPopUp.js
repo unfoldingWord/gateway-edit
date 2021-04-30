@@ -11,22 +11,25 @@ export default function ErrorPopup(
     title,
     message,
     id,
+    actionButtonStr,
   }) {
   const router = useRouter()
 
   const content =
     <>
       {message}
-      <Button
-        size='large'
-        color='primary'
-        className='my-3'
-        variant='contained'
-        onClick={() => router.push('/feedback')}
-        startIcon={<SaveIcon />}
-      >
-        Submit Feedback
-      </Button>
+      {actionButtonStr &&
+        <Button
+          size='large'
+          color='primary'
+          className='my-3'
+          variant='contained'
+          onClick={() => router.push('/feedback')}
+          startIcon={<SaveIcon/>}
+        >
+          {actionButtonStr}
+        </Button>
+      }
     </>
 
   return (
@@ -35,6 +38,7 @@ export default function ErrorPopup(
       title={title}
       content={content}
       showRawContent={true}
+      id={id}
       onClose={() => onClose && onClose()}
     />
   )
@@ -42,6 +46,7 @@ export default function ErrorPopup(
 
 ErrorPopup.defaultProps = {
   id: `error_popup`,
+  actionButtonStr: '',
 }
 
 ErrorPopup.propTypes = {
@@ -53,4 +58,6 @@ ErrorPopup.propTypes = {
   message: PropTypes.oneOfType(PropTypes.string, PropTypes.object),
   /** optional identifier */
   id: PropTypes.string,
+  // ** if present, then show user button */
+  actionButtonStr: PropTypes.string,
 }

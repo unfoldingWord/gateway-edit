@@ -6,15 +6,15 @@ import {
 import {
   base_url,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
+  SERVER_OTHER_ERROR,
   SERVER_UNREACHABLE_ERROR,
 } from '@common/constants'
 
 /**
  * checks to see if there is a fault with the server
- * @param {string} errorDetails
  * @return {Promise<string>} error message if server is not reachable
  */
-export async function getServerFault(errorDetails) {
+export async function getServerFault() {
   try {
     await checkIfServerOnline(base_url) // throws exception if server disconnected
     console.log(`checkIfServerOnline() - server is online`)
@@ -44,22 +44,24 @@ export async function getServerFault(errorDetails) {
  * @param {number} errorCode - HTTP code returned
  * @param {function} saveErrorMessage - callback to apply final error message
  * @param {function} setLastError - callback to save last error object
- * @return {Promise<string>} returns final error string
+ * @return {Promise<object>} returns final error string
  */
 export async function showNetworkError(errorMessage, errorCode, setLastError, saveErrorMessage ) {
   const lastError = {
     errorMessage,
     errorCode,
   }
-  const serverError = await getServerFault() // check if server is responding
+  const serverDisconnectMessage = await getServerFault() // check if server is responding
+  let showFeedbackButton = !serverDisconnectMessage
 
-  if (serverError) {
-    errorMessage = serverError
+  if (serverDisconnectMessage) {
+    errorMessage = serverDisconnectMessage
   } else {
-    errorMessage = `${errorMessage}, HTTP error code ${errorCode}`
+    errorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${errorCode}`)
   }
   saveErrorMessage && saveErrorMessage(errorMessage)
   lastError.errorMessage = errorMessage
   setLastError && setLastError(lastError)
-  return errorMessage
+  showFeedbackButton = true
+  return { errorMessage, showFeedbackButton }
 }

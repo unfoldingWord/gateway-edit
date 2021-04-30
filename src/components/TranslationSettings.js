@@ -29,6 +29,7 @@ export default function TranslationSettings({ authentication }) {
   const [orgErrorMessage, setOrgErrorMessage] = useState(null)
   const [languages, setLanguages] = useState([])
   const [networkError, setNetworkError] = useState(null)
+  const [showFeebackButton, setShowFeebackButton] = useState(false)
   const {
     state: { owner: organization, languageId },
     actions: {
@@ -77,10 +78,12 @@ export default function TranslationSettings({ authentication }) {
       }
 
       if (error) {
-        await showNetworkError(error, errorCode, setLastError, (error) => {
+        setShowFeebackButton(false)
+        const { showFeedbackButton } = await showNetworkError(error, errorCode, setLastError, (error) => {
           setOrgErrorMessage(error)
           setNetworkError(error)
         })
+        setShowFeebackButton(showFeedbackButton)
       }
     }
 
@@ -113,6 +116,7 @@ export default function TranslationSettings({ authentication }) {
           <ErrorPopup
             title={`Network Error`}
             message={networkError}
+            showFeebackStr={showFeebackButton && 'Send Feedback'}
             onClose={() => setNetworkError(null)}
           />
           :
