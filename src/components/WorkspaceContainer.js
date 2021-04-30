@@ -179,6 +179,9 @@ function WorkspaceContainer() {
     config,
   })
 
+  console.log({ selectedQuote })
+  console.log(taArticle)
+
   return (
     !workspaceReady ? // do not render workspace until user logged in and we have user settings
       <CircularProgress size={180} />
