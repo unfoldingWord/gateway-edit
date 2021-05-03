@@ -3487,7 +3487,7 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-next@^10.2.0:
+next@10.2.0:
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/next/-/next-10.2.0.tgz#6654cc925d8abcb15474fa062fc6b3ee527dd6dc"
   integrity sha512-PKDKCSF7s82xudu3kQhOEaokxggpbLEWouEUtzP6OqV0YqKYHF+Ff+BFLycEem8ixtTM2M6ElN0VRJcskJfxPQ==
@@ -5124,10 +5124,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.46.12-rc6:
-  version "1.46.12-rc6"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.12-rc6.tgz#01f5d0ce0e4a5748e22e49830de1d1ee3bc4cdb9"
-  integrity sha512-U7l5dol5jTOT+loadvg2DXhlYiGBiVS8Z5RBDkMDwuZ+UjkF/XtkXiMK9Y1T/V+6NOf69Tk66gOam+PpuGwc4A==
+translation-helps-rcl@^1.46.12:
+  version "1.46.12"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.12.tgz#c1940b641fae80cc0481fb49915b387952e49e41"
+  integrity sha512-7Km8bFajEh2BtZRCRKDUjcsgmV/Sz4YBXHHvloTo/DE16wArIYozzXODeVxWl69ZsUFKLZRow1WKRnZR9VayGw==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
