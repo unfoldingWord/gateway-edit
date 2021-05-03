@@ -47,8 +47,6 @@ export default function ResourceCard({
     server,
   })
 
-  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
-
   const {
     state: {
       item, headers, filters, fontSize, itemIndex, markdownView,
@@ -72,6 +70,8 @@ export default function ResourceCard({
       updateTaDetails(item?.SupportReference || null)
     }
   }, [item])
+
+  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
 
   return (
     <Card

@@ -95,7 +95,6 @@ const SettingsPage = () => {
     })
 
     if (res.status === 200) {
-      console.log('res.status', res.status)
       setShowSuccess(true)
     } else {
       setShowError(true)
@@ -109,7 +108,7 @@ const SettingsPage = () => {
       <div className='flex flex-col justify-center items-center w-full h-full'>
         <div className='flex justify-center items-center w-full h-full px-4 lg:w-132 lg:p-0'>
           <Paper className='flex flex-col h-auto w-full p-4 my-2'>
-            <div  className='flex flex-row'>
+            <div className='flex flex-row'>
               <h3 className='flex-auto text-xl text-gray-600 font-semibold mx-8 mb-0'>
                 Submit a Bug Report or Feedback
               </h3>

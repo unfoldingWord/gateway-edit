@@ -1999,7 +1999,7 @@ base64-js@^1.0.2, base64-js@^1.3.1:
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
-bible-reference-rcl@^0.5.0:
+bible-reference-rcl@0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.5.0.tgz#1c03192ccd26da77c80d80d8348cb7574a7e8610"
   integrity sha512-0orw9Xof6pbgOYigu9iZisPSa9t68har9PnFxXSh1MsyEZA/bNVFG/O5sHUh8sxpOpt+konc32CKNTKbaIJJPA==
@@ -6836,10 +6836,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.46.8:
-  version "1.46.8"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.8.tgz#d433de4f8ec2e457bcaae765a7ae1cf8f02a1066"
-  integrity sha512-vbRj2bzYkwYpb/Kad1E11KlZqwBM23PzCgLuGnO+Ncf23iizNTYTMdd2/k8mzYa/UcKlwG/zxvp7f5YFrkUlTg==
+translation-helps-rcl@1.46.9:
+  version "1.46.9"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.9.tgz#d252fb593a7bf6dbbce23d2be2aea510d7ad7f15"
+  integrity sha512-thKgqNxy8xk04mXbciqS9WaDQGM+EyDP+2rvcIA+7hIry1On9WoBE+zpKGe3EqVnavf0C7H4hAQ4x+/EkCSIIg==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
