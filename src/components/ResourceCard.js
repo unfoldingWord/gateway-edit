@@ -9,8 +9,8 @@ import {
 import { getResourceMessage } from '@utils/resources'
 
 export default function ResourceCard({
-  title,
   id,
+  title,
   verse,
   server,
   owner,
