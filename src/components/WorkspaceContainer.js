@@ -180,7 +180,7 @@ function WorkspaceContainer() {
   })
 
   return (
-    !workspaceReady ? // do not render workspace until user logged in and we have user settings
+    !workspaceReady ? // Do not render workspace until user logged in and we have user settings
       <CircularProgress size={180} />
       :
       <SelectionsContextProvider
