@@ -116,7 +116,7 @@ export default function TranslationSettings({ authentication }) {
           <ErrorPopup
             title={`Network Error`}
             message={networkError}
-            showFeebackStr={showFeebackButton && 'Send Feedback'}
+            actionButtonStr={showFeebackButton && 'Send Feedback'}
             onClose={() => setNetworkError(null)}
           />
           :

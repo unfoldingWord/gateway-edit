@@ -57,6 +57,7 @@ export async function showNetworkError(errorMessage, errorCode, setLastError, sa
   if (serverDisconnectMessage) {
     errorMessage = serverDisconnectMessage
   } else {
+    // eslint-disable-next-line no-template-curly-in-string
     errorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${errorCode}`)
   }
   saveErrorMessage && saveErrorMessage(errorMessage)
