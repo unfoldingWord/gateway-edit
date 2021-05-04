@@ -10,7 +10,7 @@ export const MANIFEST_INVALID_ERROR = 'The manifest for this resource is invalid
 export const NO_ORGS_ERROR = 'The application can not continue. The current username is not part of a DCS organization. Please contact your administrator.'
 export const ORGS_NETWORK_ERROR = 'Network Error loading User Organizations'
 export const LOADING_RESOURCE = 'Loading Resource...'
-export const LOCAL_NETWORK_DISCONNECTED_ERROR = 'Please check your network connection. No network connection detected.'
+export const LOCAL_NETWORK_DISCONNECTED_ERROR = 'Please check your network connection. No network connection was detected.'
 export const SERVER_UNREACHABLE_ERROR = 'Please check your internet connection. The application is unable to reach the server.'
 // eslint-disable-next-line no-template-curly-in-string
 export const SERVER_OTHER_ERROR = 'The server returned an ${http_code} error. Please try again or submit feedback.'

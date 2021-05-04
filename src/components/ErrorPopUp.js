@@ -15,31 +15,54 @@ export default function ErrorPopup(
   }) {
   const router = useRouter()
 
+  function getActionButton() {
+    return <>
+      {actionButtonStr ?
+        <Button
+          size='large'
+          className='my-3'
+          variant='contained'
+          onClick={() => {
+            router.push('/feedback')
+            onClose && onClose()
+          }}
+          startIcon={<SaveIcon/>}
+        >
+          {actionButtonStr}
+        </Button> :
+        null
+      }
+    </>
+  }
+
+  const title_ =
+    <div className='h1 text-xl'> {title} </div>
+
   const content =
-    <>
-      {message}
-      {actionButtonStr &&
+    <div className='flex-col'>
+      <div className='h2 flex text-lg my-3'> {message} </div>
+      <div className='flex justify-end space-x-4'>
         <Button
           size='large'
           color='primary'
           className='my-3'
           variant='contained'
-          onClick={() => router.push('/feedback')}
-          startIcon={<SaveIcon/>}
+          onClick={onClose}
         >
-          {actionButtonStr}
+          Cancel
         </Button>
-      }
-    </>
+        {getActionButton()}
+      </div>
+    </div>
 
   return (
     <DraggableCard
       open={true}
-      title={title}
+      title={title_}
       content={content}
       showRawContent={true}
       id={id}
-      onClose={() => onClose && onClose()}
+      onClose={onClose}
     />
   )
 }
@@ -53,9 +76,9 @@ ErrorPopup.propTypes = {
   /** On close event handler */
   onClose: PropTypes.func,
   /** title Content */
-  title: PropTypes.oneOfType(PropTypes.string, PropTypes.object),
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   /** message Content */
-  message: PropTypes.oneOfType(PropTypes.string, PropTypes.object),
+  message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   /** optional identifier */
   id: PropTypes.string,
   // ** if present, then show user button */

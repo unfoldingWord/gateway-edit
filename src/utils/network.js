@@ -48,11 +48,12 @@ export async function getServerFault() {
  */
 export async function showNetworkError(errorMessage, errorCode, setLastError, saveErrorMessage ) {
   const lastError = {
+    initialError: errorMessage,
     errorMessage,
     errorCode,
   }
   const serverDisconnectMessage = await getServerFault() // check if server is responding
-  let showFeedbackButton = !serverDisconnectMessage
+  const showFeedbackButton = !serverDisconnectMessage
 
   if (serverDisconnectMessage) {
     errorMessage = serverDisconnectMessage
@@ -63,6 +64,5 @@ export async function showNetworkError(errorMessage, errorCode, setLastError, sa
   saveErrorMessage && saveErrorMessage(errorMessage)
   lastError.errorMessage = errorMessage
   setLastError && setLastError(lastError)
-  showFeedbackButton = true
   return { errorMessage, showFeedbackButton }
 }

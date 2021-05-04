@@ -170,4 +170,4 @@ export default function TranslationSettings({ authentication }) {
   )
 }
 
-TranslationSettings.propTypes = { authentication: PropTypes.object.isRequired }
+TranslationSettings.propTypes = { authentication: PropTypes.object }
