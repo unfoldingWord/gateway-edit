@@ -5,7 +5,10 @@ import {
 } from 'gitea-react-toolkit'
 import {
   base_url,
+  AUTHENTICATION_ERROR,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
+  LOGIN,
+  SEND_FEEDBACK,
   SERVER_OTHER_ERROR,
   SERVER_UNREACHABLE_ERROR,
 } from '@common/constants'
@@ -42,27 +45,39 @@ export async function getServerFault() {
  * on network error, do check if server is accessible
  * @param {string} errorMessage - error message for type of network problem
  * @param {number} errorCode - HTTP code returned
- * @param {function} saveErrorMessage - callback to apply final error message
- * @param {function} setLastError - callback to save last error object
  * @return {Promise<object>} returns final error string
  */
-export async function showNetworkError(errorMessage, errorCode, setLastError, saveErrorMessage ) {
+export async function showNetworkError(errorMessage, errorCode ) {
   const lastError = {
     initialError: errorMessage,
     errorMessage,
     errorCode,
   }
   const serverDisconnectMessage = await getServerFault() // check if server is responding
-  const showFeedbackButton = !serverDisconnectMessage
+  let actionButtonText = !serverDisconnectMessage ? SEND_FEEDBACK : null
+  let authenticationError = false
 
   if (serverDisconnectMessage) {
     errorMessage = serverDisconnectMessage
   } else {
-    // eslint-disable-next-line no-template-curly-in-string
-    errorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${errorCode}`)
+    if (unAuthenticated(errorCode)) {
+      errorMessage = AUTHENTICATION_ERROR
+      actionButtonText = LOGIN
+      authenticationError = true
+    } else {
+      // eslint-disable-next-line no-template-curly-in-string
+      errorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${errorCode}`)
+    }
   }
-  saveErrorMessage && saveErrorMessage(errorMessage)
   lastError.errorMessage = errorMessage
-  setLastError && setLastError(lastError)
-  return { errorMessage, showFeedbackButton }
+  return {
+    errorMessage,
+    actionButtonText,
+    authenticationError,
+    lastError,
+  }
+}
+
+export function unAuthenticated(httpCode) {
+  return ((httpCode === 403) || (httpCode === 401))
 }

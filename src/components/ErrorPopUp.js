@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import SaveIcon from '@material-ui/icons/Save'
-import { useRouter } from 'next/router'
 import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
 
 export default function ErrorPopup(
@@ -12,9 +11,8 @@ export default function ErrorPopup(
     message,
     id,
     actionButtonStr,
+    onActionButton,
   }) {
-  const router = useRouter()
-
   function getActionButton() {
     return <>
       {actionButtonStr ?
@@ -23,7 +21,7 @@ export default function ErrorPopup(
           className='my-3'
           variant='contained'
           onClick={() => {
-            router.push('/feedback')
+            onActionButton && onActionButton()
             onClose && onClose()
           }}
           startIcon={<SaveIcon/>}
@@ -83,4 +81,6 @@ ErrorPopup.propTypes = {
   id: PropTypes.string,
   // ** if present, then show user button */
   actionButtonStr: PropTypes.string,
+  //** callback if action button clicked */
+  onActionButton: PropTypes.func,
 }

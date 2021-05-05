@@ -11,9 +11,11 @@ import Select from '@material-ui/core/Select'
 import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
-import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
+import { NETWORK_ERROR, NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
 import { showNetworkError } from '@utils/network'
 import ErrorPopup from '@components/ErrorPopUp'
+import { useRouter } from 'next/router'
+import { AuthContext } from '@context/AuthContext'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -24,12 +26,15 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function TranslationSettings({ authentication }) {
+  const router = useRouter()
+  const { logout } = useContext(AuthContext)
   const classes = useStyles()
   const [organizations, setOrganizations] = useState([])
   const [orgErrorMessage, setOrgErrorMessage] = useState(null)
   const [languages, setLanguages] = useState([])
   const [networkError, setNetworkError] = useState(null)
-  const [showFeebackButton, setShowFeebackButton] = useState(false)
+  const [authenticationError, setAuthenticationError] = useState(null)
+  const [actionButtonText, setActionButtonText] = useState(null)
   const {
     state: { owner: organization, languageId },
     actions: {
@@ -78,12 +83,18 @@ export default function TranslationSettings({ authentication }) {
       }
 
       if (error) {
-        setShowFeebackButton(false)
-        const { showFeedbackButton } = await showNetworkError(error, errorCode, setLastError, (error) => {
-          setOrgErrorMessage(error)
-          setNetworkError(error)
-        })
-        setShowFeebackButton(showFeedbackButton)
+        setNetworkError(null)
+        const {
+          errorMessage,
+          actionButtonText,
+          authenticationError,
+          lastError,
+        } = await showNetworkError(error, errorCode)
+        setOrgErrorMessage(errorMessage)
+        setNetworkError(errorMessage)
+        setLastError(lastError)
+        setActionButtonText(actionButtonText)
+        setAuthenticationError(authenticationError)
       }
     }
 
@@ -114,10 +125,17 @@ export default function TranslationSettings({ authentication }) {
       {
         networkError ?
           <ErrorPopup
-            title={`Network Error`}
+            title={NETWORK_ERROR}
             message={networkError}
-            actionButtonStr={showFeebackButton && 'Send Feedback'}
+            actionButtonStr={actionButtonText}
             onClose={() => setNetworkError(null)}
+            onActionButton={() => {
+              if (authenticationError) {
+                logout && logout()
+              } else {
+                router.push('/feedback')
+              }
+            }}
           />
           :
           null

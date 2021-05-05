@@ -15,3 +15,6 @@ export const SERVER_UNREACHABLE_ERROR = 'Please check your internet connection. 
 // eslint-disable-next-line no-template-curly-in-string
 export const SERVER_OTHER_ERROR = 'The server returned an ${http_code} error. Please try again or submit feedback.'
 export const AUTHENTICATION_ERROR = 'The application is no longer logged in. Please login again.'
+export const NETWORK_ERROR = `Network Error`
+export const SEND_FEEDBACK = 'Send Feedback'
+export const LOGIN = 'Login'
