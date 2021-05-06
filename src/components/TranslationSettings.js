@@ -11,9 +11,8 @@ import Select from '@material-ui/core/Select'
 import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
-import { NETWORK_ERROR, NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
-import { showNetworkError } from '@utils/network'
-import ErrorPopup from '@components/ErrorPopUp'
+import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
+import { getNetworkError, showNetworkErrorPopup } from '@utils/network'
 import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
 
@@ -42,6 +41,20 @@ export default function TranslationSettings({ authentication }) {
     },
   } = useContext(StoreContext)
 
+  /**
+   * in the case of a network error, process and display error dialog
+   * @param {string} errorMessage
+   * @param {number} httpCode - http code returned
+   * @return {Promise<void>}
+   */
+  async function processError(errorMessage, httpCode=0) {
+    setNetworkError(null) // clear until processing finished
+    const networkError_ = await getNetworkError(errorMessage, httpCode)
+    setNetworkError(networkError_) // this triggers popup
+    setOrgErrorMessage(networkError_.errorMessage)
+    setLastError(networkError_.lastError) // error info to attach to sendmail
+  }
+
   useEffect(() => {
     async function getOrgs() {
       setOrgErrorMessage(null)
@@ -55,6 +68,7 @@ export default function TranslationSettings({ authentication }) {
             if (response?.status !== 200) {
               console.warn(`TranslationSettings - error fetching user orgs, status code ${response?.status}`)
               errorCode = response?.status
+              processError(null, errorCode)
               return null
               // checkIfServerOnline()
               // error = ORGS_NETWORK_ERROR //TODO - add checking of response.status codes in future issue
@@ -78,14 +92,7 @@ export default function TranslationSettings({ authentication }) {
         console.warn(`TranslationSettings - error fetching user orgs`, e)
         error = ORGS_NETWORK_ERROR
         setOrganizations([])
-      }
-
-      if (error) {
-        setNetworkError(null) // clear until processing finished
-        const networkError_ = await showNetworkError(error, errorCode)
-        setNetworkError(networkError_)
-        setOrgErrorMessage(networkError_.errorMessage)
-        setLastError(networkError_.lastError)
+        processError(error)
       }
     }
 
@@ -113,24 +120,7 @@ export default function TranslationSettings({ authentication }) {
 
   return (
     <>
-      {
-        networkError ?
-          <ErrorPopup
-            title={NETWORK_ERROR}
-            message={networkError.errorMessage}
-            actionButtonStr={networkError.actionButtonText}
-            onClose={() => setNetworkError(null)}
-            onActionButton={() => {
-              if (networkError.authenticationError) {
-                logout && logout()
-              } else {
-                router.push('/feedback')
-              }
-            }}
-          />
-          :
-          null
-      }
+      { showNetworkErrorPopup(networkError, setNetworkError, logout, router) }
       <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
         <h5>Translation Settings</h5>
         <div className='flex flex-col justify-between my-4'>

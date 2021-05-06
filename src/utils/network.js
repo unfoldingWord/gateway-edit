@@ -8,10 +8,12 @@ import {
   BASE_URL,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
+  NETWORK_ERROR,
   SEND_FEEDBACK,
   SERVER_OTHER_ERROR,
   SERVER_UNREACHABLE_ERROR,
 } from '@common/constants'
+import ErrorPopup from '@components/ErrorPopUp'
 
 /**
  * checks to see if there is a fault with the server
@@ -42,16 +44,21 @@ export async function getServerFault() {
 }
 
 /**
- * on network error, first do check if server is accessible, then return appropriate error messages
+ * on network error, first do check if server is accessible, then return appropriate error message and prompting details
  * @param {string} errorMessage - error message for type of network problem
- * @param {number} errorCode - HTTP code returned
+ * @param {number} httpCode - HTTP code returned
  * @return {Promise<object>} returns final error string
  */
-export async function showNetworkError(errorMessage, errorCode ) {
+export async function getNetworkError(errorMessage, httpCode ) {
+  if (!errorMessage) { // if not given, set to default error message
+    // eslint-disable-next-line no-template-curly-in-string
+    errorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${httpCode}`)
+  }
+
   const lastError = {
     initialError: errorMessage,
     errorMessage,
-    errorCode,
+    httpCode,
   }
   const serverDisconnectMessage = await getServerFault() // check if server is responding
   let actionButtonText = !serverDisconnectMessage ? SEND_FEEDBACK : null
@@ -60,13 +67,10 @@ export async function showNetworkError(errorMessage, errorCode ) {
   if (serverDisconnectMessage) {
     errorMessage = serverDisconnectMessage
   } else {
-    if (unAuthenticated(errorCode)) {
+    if (unAuthenticated(httpCode)) {
       errorMessage = AUTHENTICATION_ERROR
       actionButtonText = LOGIN
       authenticationError = true
-    } else {
-      // eslint-disable-next-line no-template-curly-in-string
-      errorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${errorCode}`)
     }
   }
   lastError.errorMessage = errorMessage
@@ -78,6 +82,41 @@ export async function showNetworkError(errorMessage, errorCode ) {
   }
 }
 
+/**
+ * determine if http code is authentication error
+ * @param {number} httpCode
+ * @return {boolean} true if not authenticated
+ */
 export function unAuthenticated(httpCode) {
   return ((httpCode === 403) || (httpCode === 401))
+}
+
+/**
+ * if network error, show popup with actions appropriate for error type
+ * @param {object} networkError - contains details about how to display error
+ *    - created by getNetworkError.  If null then error popup not shown.
+ * @param {function} setNetworkError - to close pop up
+ * @param {function} logout - invalidate current login
+ * @param {object} router - to change to different web page
+ * @return {JSX.Element|null}
+ */
+export function showNetworkErrorPopup(networkError, setNetworkError, logout, router) {
+  return (
+    networkError ?
+      <ErrorPopup
+        title={NETWORK_ERROR}
+        message={networkError.errorMessage}
+        actionButtonStr={networkError.actionButtonText}
+        onClose={() => setNetworkError(null)}
+        onActionButton={() => {
+          if (networkError.authenticationError) {
+            logout && logout()
+          } else {
+            router && router.push('/feedback')
+          }
+        }}
+      />
+      :
+      null
+  )
 }
