@@ -83,6 +83,23 @@ export async function getNetworkError(errorMessage, httpCode ) {
 }
 
 /**
+ * in the case of a network error, process and display error dialog
+ * @param {string} errorMessage
+ * @param {number} httpCode - http code returned
+ * @param {function} setNetworkError - callback to toggle display of error popup
+ * @param {function} setLastError - callback to save error details
+ * @param {function} setErrorMessage - optional callback to apply error message
+ * @return {Promise<void>}
+ */
+async function processNetworkError(errorMessage, httpCode, setNetworkError, setLastError, setErrorMessage=null ) {
+  setNetworkError && setNetworkError(null) // clear until processing finished
+  const networkError_ = await getNetworkError(errorMessage, httpCode)
+  setErrorMessage && setErrorMessage(networkError_.errorMessage)
+  setLastError && setLastError(networkError_.lastError) // error info to attach to sendmail
+  setNetworkError && setNetworkError(networkError_) // this triggers network error popup
+}
+
+/**
  * determine if http code is authentication error
  * @param {number} httpCode
  * @return {boolean} true if not authenticated

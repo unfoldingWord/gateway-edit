@@ -12,7 +12,7 @@ import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
 import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
-import { getNetworkError, showNetworkErrorPopup } from '@utils/network'
+import { processNetworkError, showNetworkErrorPopup } from '@utils/network'
 import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
 
@@ -43,16 +43,12 @@ export default function TranslationSettings({ authentication }) {
 
   /**
    * in the case of a network error, process and display error dialog
-   * @param {string} errorMessage
+   * @param {string} errorMessage - optional error message returned
    * @param {number} httpCode - http code returned
    * @return {Promise<void>}
    */
-  async function processError(errorMessage, httpCode=0) {
-    setNetworkError(null) // clear until processing finished
-    const networkError_ = await getNetworkError(errorMessage, httpCode)
-    setNetworkError(networkError_) // this triggers popup
-    setOrgErrorMessage(networkError_.errorMessage)
-    setLastError(networkError_.lastError) // error info to attach to sendmail
+  function processError(errorMessage, httpCode=0) {
+    processNetworkError(errorMessage, httpCode, setNetworkError, setLastError, setOrgErrorMessage )
   }
 
   useEffect(() => {
