@@ -5124,14 +5124,15 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.46.12:
-  version "1.46.12"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.12.tgz#c1940b641fae80cc0481fb49915b387952e49e41"
-  integrity sha512-7Km8bFajEh2BtZRCRKDUjcsgmV/Sz4YBXHHvloTo/DE16wArIYozzXODeVxWl69ZsUFKLZRow1WKRnZR9VayGw==
+translation-helps-rcl@1.46.14:
+  version "1.46.14"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.14.tgz#ed3da3d8a7556fb5cca21e05dcc52683482de3fe"
+  integrity sha512-Byo3GM0jMVNZ4RIfZLEm0eZGiazLfo/WLcoaLWqYMy/VwBYiNBkFYj2vv3CIMjXZ7ZkqY8JjDQmClGx0sl5moQ==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
+    use-deep-compare-effect "^1.6.1"
 
 trim-trailing-lines@^1.0.0:
   version "1.1.4"
@@ -5338,7 +5339,7 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-use-deep-compare-effect@^1.3.1:
+use-deep-compare-effect@^1.3.1, use-deep-compare-effect@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/use-deep-compare-effect/-/use-deep-compare-effect-1.6.1.tgz#061a0ac5400aa0461e33dddfaa2a98bca873182a"
   integrity sha512-VB3b+7tFI81dHm8buGyrpxi8yBhzYZdyMX9iBJra7SMFMZ4ci4FJ1vFc1nvChiB1iLv4GfjqaYfvbNEpTT1rFQ==
