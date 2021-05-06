@@ -5124,7 +5124,7 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.46.15:
+translation-helps-rcl@1.46.15:
   version "1.46.15"
   resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.15.tgz#01da7820de3b9f2626d7847d36072580aa87070c"
   integrity sha512-WFuvs/EBaEh4DniZhigwKnAGAITRP4ZSVpWxGj2HY4nwBaAlyqkcG4BjB4dHsr54Bvdx5T1BOuick7YZHBaBGw==
