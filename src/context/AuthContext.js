@@ -60,6 +60,7 @@ export default function AuthContextProvider(props) {
   }
 
   const value = {
+    authentication,
     logout,
   }
 

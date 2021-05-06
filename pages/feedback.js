@@ -171,7 +171,6 @@ const SettingsPage = () => {
     })
 
     if (res.status === 200) {
-      console.log('res.status', res.status)
       setShowSuccess(true)
     } else {
       setShowError(true)

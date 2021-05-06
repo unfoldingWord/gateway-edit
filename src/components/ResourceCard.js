@@ -9,8 +9,8 @@ import {
 import { getResourceMessage } from '@utils/resources'
 
 export default function ResourceCard({
-  title,
   id,
+  title,
   verse,
   server,
   owner,
@@ -29,6 +29,7 @@ export default function ResourceCard({
   updateTaDetails,
   disableNavigation,
   hideMarkdownToggle,
+  useUserLocalStorage,
 }) {
   const {
     items,
@@ -46,8 +47,6 @@ export default function ResourceCard({
     server,
   })
 
-  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
-
   const {
     state: {
       item, headers, filters, fontSize, itemIndex, markdownView,
@@ -56,12 +55,14 @@ export default function ResourceCard({
       setFilters, setFontSize, setItemIndex, setMarkdownView,
     },
   } = useCardState({
+    id,
     items,
     verse,
     chapter,
     setQuote,
     projectId,
     selectedQuote,
+    useUserLocalStorage,
   })
 
   useEffect(() => {
@@ -70,10 +71,12 @@ export default function ResourceCard({
     }
   }, [item])
 
+  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
+
   return (
     <Card
-      title={title}
       id={id}
+      title={title}
       items={items}
       classes={classes}
       headers={headers}
@@ -133,4 +136,5 @@ ResourceCard.propTypes = {
   classes: PropTypes.object,
   selectedQuote: PropTypes.object,
   errorMessage: PropTypes.string,
+  useUserLocalStorage: PropTypes.func,
 }
