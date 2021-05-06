@@ -4,8 +4,8 @@ import {
   ERROR_SERVER_UNREACHABLE,
 } from 'gitea-react-toolkit'
 import {
-  base_url,
   AUTHENTICATION_ERROR,
+  BASE_URL,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
   SEND_FEEDBACK,
@@ -19,7 +19,7 @@ import {
  */
 export async function getServerFault() {
   try {
-    await checkIfServerOnline(base_url) // throws exception if server disconnected
+    await checkIfServerOnline(BASE_URL) // throws exception if server disconnected
     console.log(`checkIfServerOnline() - server is online`)
     return null
   } catch (e) {
@@ -42,7 +42,7 @@ export async function getServerFault() {
 }
 
 /**
- * on network error, do check if server is accessible
+ * on network error, first do check if server is accessible, then return appropriate error messages
  * @param {string} errorMessage - error message for type of network problem
  * @param {number} errorCode - HTTP code returned
  * @return {Promise<object>} returns final error string

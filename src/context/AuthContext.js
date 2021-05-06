@@ -1,7 +1,7 @@
 import React, { useState, createContext } from 'react'
 import localforage from 'localforage'
 import { AuthenticationContextProvider } from 'gitea-react-toolkit'
-import { base_url, tokenid } from '@common/constants'
+import { BASE_URL, TOKEN_ID } from '@common/constants'
 
 export const AuthContext = createContext({})
 
@@ -67,8 +67,8 @@ export default function AuthContextProvider(props) {
     <AuthContext.Provider value={value}>
       <AuthenticationContextProvider
         config={{
-          server: base_url,
-          tokenid,
+          server: BASE_URL,
+          tokenid: TOKEN_ID,
         }}
         authentication={authentication}
         onAuthentication={setAuthentication}

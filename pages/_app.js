@@ -4,7 +4,7 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import StoreContextProvider from '@context/StoreContext'
 import AuthContextProvider from '@context/AuthContext'
-import { appName } from '@common/constants'
+import { APP_NAME } from '@common/constants'
 import AppHead from '@components/AppHead'
 import theme from '../src/theme'
 import '@styles/globals.css'
@@ -21,7 +21,7 @@ export default function Application({ Component, pageProps }) {
 
   return (
     <>
-      <AppHead title={appName} />
+      <AppHead title={APP_NAME} />
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />

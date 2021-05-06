@@ -33,8 +33,6 @@ export default function TranslationSettings({ authentication }) {
   const [orgErrorMessage, setOrgErrorMessage] = useState(null)
   const [languages, setLanguages] = useState([])
   const [networkError, setNetworkError] = useState(null)
-  const [authenticationError, setAuthenticationError] = useState(null)
-  const [actionButtonText, setActionButtonText] = useState(null)
   const {
     state: { owner: organization, languageId },
     actions: {
@@ -83,18 +81,11 @@ export default function TranslationSettings({ authentication }) {
       }
 
       if (error) {
-        setNetworkError(null)
-        const {
-          errorMessage,
-          actionButtonText,
-          authenticationError,
-          lastError,
-        } = await showNetworkError(error, errorCode)
-        setOrgErrorMessage(errorMessage)
-        setNetworkError(errorMessage)
-        setLastError(lastError)
-        setActionButtonText(actionButtonText)
-        setAuthenticationError(authenticationError)
+        setNetworkError(null) // clear until processing finished
+        const networkError_ = await showNetworkError(error, errorCode)
+        setNetworkError(networkError_)
+        setOrgErrorMessage(networkError_.errorMessage)
+        setLastError(networkError_.lastError)
       }
     }
 
@@ -126,11 +117,11 @@ export default function TranslationSettings({ authentication }) {
         networkError ?
           <ErrorPopup
             title={NETWORK_ERROR}
-            message={networkError}
-            actionButtonStr={actionButtonText}
+            message={networkError.errorMessage}
+            actionButtonStr={networkError.actionButtonText}
             onClose={() => setNetworkError(null)}
             onActionButton={() => {
-              if (authenticationError) {
+              if (networkError.authenticationError) {
                 logout && logout()
               } else {
                 router.push('/feedback')
