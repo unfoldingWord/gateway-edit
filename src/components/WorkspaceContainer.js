@@ -26,6 +26,8 @@ import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
+import { showNetworkErrorPopup } from '@utils/network'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,6 +43,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 function WorkspaceContainer() {
+  const router = useRouter()
   const classes = useStyles()
   const [workspaceReady, setWorkspaceReady] = useState(false)
   const [selections, setSelections] = useState([])
@@ -60,12 +63,15 @@ function WorkspaceContainer() {
       currentLayout,
       useUserLocalStorage,
       loggedInUser,
+      tokenNetworkError,
     },
     actions: {
+      logout,
       setQuote,
-      updateTaDetails,
       setSupportedBibles,
       setCurrentLayout,
+      setTokenNetworkError,
+      updateTaDetails,
     },
   } = useContext(StoreContext)
 
@@ -180,8 +186,11 @@ function WorkspaceContainer() {
   })
 
   return (
-    !workspaceReady ? // Do not render workspace until user logged in and we have user settings
-      <CircularProgress size={180} />
+    (tokenNetworkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+      <>
+        {showNetworkErrorPopup(tokenNetworkError, setTokenNetworkError, logout, router)}
+        <CircularProgress size={180} />
+      </>
       :
       <SelectionsContextProvider
         selections={selections}

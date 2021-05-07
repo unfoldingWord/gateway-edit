@@ -91,7 +91,7 @@ export async function getNetworkError(errorMessage, httpCode ) {
  * @param {function} setErrorMessage - optional callback to apply error message
  * @return {Promise<void>}
  */
-async function processNetworkError(errorMessage, httpCode, setNetworkError, setLastError, setErrorMessage=null ) {
+export async function processNetworkError(errorMessage, httpCode, setNetworkError, setLastError, setErrorMessage=null ) {
   setNetworkError && setNetworkError(null) // clear until processing finished
   const networkError_ = await getNetworkError(errorMessage, httpCode)
   setErrorMessage && setErrorMessage(networkError_.errorMessage)

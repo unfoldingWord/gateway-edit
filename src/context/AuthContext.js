@@ -76,10 +76,14 @@ export default function AuthContextProvider(props) {
   }
 
   const value = {
-    authentication,
-    logout,
-    networkError,
-    setNetworkError,
+    state: {
+      authentication,
+      networkError,
+    },
+    actions: {
+      logout,
+      setNetworkError,
+    },
   }
 
   return (

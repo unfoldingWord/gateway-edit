@@ -40,7 +40,7 @@ export default function Header({
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
 
-  const { logout } = useContext(AuthContext)
+  const { actions: logout } = useContext(AuthContext)
 
   const handleDrawerOpen = () => {
     setOpen(true)
