@@ -45,7 +45,6 @@ export default function TranslationSettings({ authentication }) {
    * in the case of a network error, process and display error dialog
    * @param {string} errorMessage - optional error message returned
    * @param {number} httpCode - http code returned
-   * @return {Promise<void>}
    */
   function processError(errorMessage, httpCode=0) {
     processNetworkError(errorMessage, httpCode, setNetworkError, setLastError, setOrgErrorMessage )
