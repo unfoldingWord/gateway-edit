@@ -26,8 +26,9 @@ import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
-import { showNetworkErrorPopup } from '@utils/network'
+import { goToPage, reloadApp, showNetworkErrorPopup } from '@utils/network'
 import { useRouter } from 'next/router'
+import { FEEDBACK_PAGE, RESTART_APP } from '@common/constants'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -188,7 +189,7 @@ function WorkspaceContainer() {
   return (
     (tokenNetworkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
-        {showNetworkErrorPopup(tokenNetworkError, setTokenNetworkError, logout, router)}
+        {showNetworkErrorPopup(tokenNetworkError, setTokenNetworkError, logout, router, true)}
         <CircularProgress size={180} />
       </>
       :

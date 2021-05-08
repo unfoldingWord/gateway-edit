@@ -6,14 +6,17 @@ import {
 import {
   AUTHENTICATION_ERROR,
   BASE_URL,
+  FEEDBACK_PAGE,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
   NETWORK_ERROR,
+  RETRY,
   SEND_FEEDBACK,
   SERVER_OTHER_ERROR,
   SERVER_UNREACHABLE_ERROR,
 } from '@common/constants'
 import ErrorPopup from '@components/ErrorPopUp'
+import SaveIcon from '@material-ui/icons/Save'
 
 /**
  * checks to see if there is a fault with the server
@@ -109,27 +112,53 @@ export function unAuthenticated(httpCode) {
 }
 
 /**
+ * refresh app
+ * @param {object} router - to change to different web page
+ */
+export function reloadApp(router) {
+  router && router.reload()
+}
+
+/**
+ * go to specific page
+ * @param {object} router - to change to different web page
+ * @param {string} page - URL to redirect to
+ */
+export function goToPage(router, page) {
+  router && router.push(page)
+}
+
+/**
  * if network error, show popup with actions appropriate for error type
  * @param {object} networkError - contains details about how to display error
  *    - created by getNetworkError.  If null then error popup not shown.
  * @param {function} setNetworkError - to close pop up
  * @param {function} logout - invalidate current login
  * @param {object} router - to change to different web page
+ * @param {boolean} addRetryButton - add retry button
  * @return {JSX.Element|null}
  */
-export function showNetworkErrorPopup(networkError, setNetworkError, logout, router) {
+export function showNetworkErrorPopup(networkError, setNetworkError, logout, router, addRetryButton=false) {
+  const actionButtonStr = addRetryButton ? RETRY : networkError.actionButtonText;
+  const actionStartIcon = addRetryButton ? null : <SaveIcon/>;
   return (
     networkError ?
       <ErrorPopup
         title={NETWORK_ERROR}
         message={networkError.errorMessage}
-        actionButtonStr={networkError.actionButtonText}
-        onClose={() => setNetworkError(null)}
+        actionButtonStr={actionButtonStr}
+        actionStartIcon={actionStartIcon}
+        onClose={() => {
+          onClose && onClose()
+          setNetworkError(null)
+        }}
         onActionButton={() => {
           if (networkError.authenticationError) {
             logout && logout()
+          } else if (addRetryButton) {
+            reloadApp(router)
           } else {
-            router && router.push('/feedback')
+            goToPage(router, FEEDBACK_PAGE)
           }
         }}
       />

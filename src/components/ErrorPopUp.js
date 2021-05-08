@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
-import SaveIcon from '@material-ui/icons/Save'
 import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
 
 export default function ErrorPopup(
@@ -12,6 +11,7 @@ export default function ErrorPopup(
     id,
     actionButtonStr,
     onActionButton,
+    actionStartIcon,
   }) {
   function getActionButton() {
     return <>
@@ -24,7 +24,7 @@ export default function ErrorPopup(
             onActionButton && onActionButton()
             onClose && onClose()
           }}
-          startIcon={<SaveIcon/>}
+          startIcon={actionStartIcon}
         >
           {actionButtonStr}
         </Button> :
@@ -68,6 +68,7 @@ export default function ErrorPopup(
 ErrorPopup.defaultProps = {
   id: `error_popup`,
   actionButtonStr: '',
+  startIcon: null,
 }
 
 ErrorPopup.propTypes = {
@@ -79,8 +80,10 @@ ErrorPopup.propTypes = {
   message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   /** optional identifier */
   id: PropTypes.string,
-  // ** if present, then show user button */
+  /** if present, then show user button */
   actionButtonStr: PropTypes.string,
-  //** callback if action button clicked */
+  /** callback if action button clicked */
   onActionButton: PropTypes.func,
+  /** if given then attach icon to action button */
+  actionStartIcon: PropTypes.object,
 }
