@@ -1,8 +1,4 @@
-import {
-  checkIfServerOnline,
-  ERROR_NETWORK_DISCONNECTED,
-  ERROR_SERVER_UNREACHABLE,
-} from 'gitea-react-toolkit'
+import {checkIfServerOnline, ERROR_NETWORK_DISCONNECTED, ERROR_SERVER_UNREACHABLE,} from 'gitea-react-toolkit'
 import {
   AUTHENTICATION_ERROR,
   BASE_URL,
@@ -133,32 +129,52 @@ export function goToPage(router, page) {
  * @param {object} networkError - contains details about how to display error
  *    - created by getNetworkError.  If null then error popup not shown.
  * @param {function} setNetworkError - to close pop up
- * @param {function} logout - invalidate current login
- * @param {object} router - to change to different web page
- * @param {boolean} addRetryButton - add retry button
+ * @param {function} [logout] - invalidate current login
+ * @param {object} [router] - to change to different web page
+ * @param {boolean} [noActionButton] - if true then normal action button not shown (sendfeedback or login)
+ * @param {boolean} [addRetryButton] - if true, then add retry button
+ * @param {function} [onRetry] - optional custom handler for retry
+ * @param {string} [title] - optional custom title
  * @return {JSX.Element|null}
  */
-export function showNetworkErrorPopup(networkError, setNetworkError, logout, router, addRetryButton=false) {
-  const actionButtonStr = addRetryButton ? RETRY : networkError.actionButtonText;
-  const actionStartIcon = addRetryButton ? null : <SaveIcon/>;
+export function showNetworkErrorPopup({
+  networkError,
+  setNetworkError,
+  logout,
+  router,
+  noActionButton,
+  addRetryButton,
+  onRetry,
+  title,
+}) {
+  const actionStartIcon = addRetryButton ? null : <SaveIcon/>
+  title = title || NETWORK_ERROR
   return (
     networkError ?
       <ErrorPopup
-        title={NETWORK_ERROR}
+        title={title}
         message={networkError.errorMessage}
-        actionButtonStr={actionButtonStr}
-        actionStartIcon={actionStartIcon}
         onClose={() => {
           onClose && onClose()
           setNetworkError(null)
         }}
+        actionButtonStr={!noActionButton && networkError.actionButtonText}
+        actionStartIcon={actionStartIcon}
         onActionButton={() => {
           if (networkError.authenticationError) {
-            logout && logout()
-          } else if (addRetryButton) {
-            reloadApp(router)
-          } else {
+            logout && logout() // on authentication error, logout takes us to login page
+          } else { // otherwise we go to feedback page
             goToPage(router, FEEDBACK_PAGE)
+          }
+        }}
+        actionButton2Str={addRetryButton && RETRY}
+        onActionButton2={() => {
+          if (addRetryButton) {
+            if (onRetry) { // if custom handler, call it
+              onRetry()
+            } else {
+              reloadApp(router)
+            }
           }
         }}
       />

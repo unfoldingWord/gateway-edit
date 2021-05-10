@@ -115,7 +115,7 @@ export default function TranslationSettings({ authentication }) {
 
   return (
     <>
-      { showNetworkErrorPopup(networkError, setNetworkError, logout, router) }
+      { showNetworkErrorPopup({ networkError, setNetworkError, logout, router }) }
       <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
         <h5>Translation Settings</h5>
         <div className='flex flex-col justify-between my-4'>

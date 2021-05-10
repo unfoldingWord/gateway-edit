@@ -189,7 +189,16 @@ function WorkspaceContainer() {
   return (
     (tokenNetworkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
-        {showNetworkErrorPopup(tokenNetworkError, setTokenNetworkError, logout, router, true)}
+        {
+          // this is specifically for network or internet error on startup, in this case sending feedback is not an option, but reload is about the only option
+          showNetworkErrorPopup({
+            networkError: tokenNetworkError,
+            setNetworkError: setTokenNetworkError,
+            logout,
+            router,
+            noActionButton:true,
+            addRetryButton: true })
+        }
         <CircularProgress size={180} />
       </>
       :

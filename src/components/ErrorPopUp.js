@@ -12,8 +12,10 @@ export default function ErrorPopup(
     actionButtonStr,
     onActionButton,
     actionStartIcon,
+    actionButton2Str,
+    onActionButton2,
   }) {
-  function getActionButton() {
+  function getActionButtons() {
     return <>
       {actionButtonStr ?
         <Button
@@ -27,6 +29,20 @@ export default function ErrorPopup(
           startIcon={actionStartIcon}
         >
           {actionButtonStr}
+        </Button> :
+        null
+      }
+      {actionButton2Str ?
+        <Button
+          size='large'
+          className='my-3'
+          variant='contained'
+          onClick={() => {
+            onActionButton2 && onActionButton2()
+            onClose && onClose()
+          }}
+        >
+          {actionButton2Str}
         </Button> :
         null
       }
@@ -49,7 +65,7 @@ export default function ErrorPopup(
         >
           Cancel
         </Button>
-        {getActionButton()}
+        {getActionButtons()}
       </div>
     </div>
 
@@ -80,10 +96,14 @@ ErrorPopup.propTypes = {
   message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   /** optional identifier */
   id: PropTypes.string,
-  /** if present, then show user button */
+  /** if present, then show action button */
   actionButtonStr: PropTypes.string,
   /** callback if action button clicked */
   onActionButton: PropTypes.func,
   /** if given then attach icon to action button */
   actionStartIcon: PropTypes.object,
+  /** if present, then show second action button */
+  actionButton2Str: PropTypes.string,
+  /** callback if second action button clicked */
+  onActionButton2: PropTypes.func,
 }
