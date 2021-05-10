@@ -171,12 +171,12 @@ const SettingsPage = () => {
     })
 
     const response = await res.json()
-    console.log(`onSubmitFeedback() - response status = ${res.status}, res.json = ${response}`)
+    console.log(`onSubmitFeedback() - response status = ${res.status}, res.json = ${JSON.stringify(response)}`)
 
     if (res.status === 200) {
       setShowSuccess(true)
     } else {
-      console.log(`onSubmitFeedback() - error response = ${response.error}`)
+      console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(response.error)}`)
       setShowError(true)
     }
 
