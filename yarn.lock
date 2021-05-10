@@ -3355,10 +3355,10 @@ markdown-translatable@1.2.12:
     turndown "^7.0.0"
     turndown-plugin-gfm "^1.0.2"
 
-markdown-translatable@^1.2.16-rc3:
-  version "1.2.16-rc3"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.16-rc3.tgz#0c933747aa275b1c54fef490cc732460d075d8e0"
-  integrity sha512-BlGyCAEFBHciA8EtP5L1eCNWeEPtZs5R1kKWTwFXJRgFnGRw9xPlv5K4Lodk9hlBCEpdJSf54gmACSzYgS08FA==
+markdown-translatable@1.2.15:
+  version "1.2.15"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.15.tgz#b993165b7fa2dd254cc6a5fb25bf9a7a8822b123"
+  integrity sha512-If2WYTUiL8zJdfyyaiy+DqHklJqxHlTtOQJpXESDNfFR6vbdbTZqmcgiNFfE5Lt4RlXKz9Hb25CjoR5OOA+MbQ==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
@@ -5127,10 +5127,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.46.16-rc2:
-  version "1.46.16-rc2"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.16-rc2.tgz#73f9e916107d92a3837f815bc0ac545e906e5ee1"
-  integrity sha512-BKDFYUt6pjv1KpEeUSfz4D8mQIm0S+0Qo0ag3y1qKEKGUmse9M8yvLsfwz6nMrsqHPFx5ijVV75HKgGxafLRTQ==
+translation-helps-rcl@^1.46.16-rc3:
+  version "1.46.16-rc3"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.16-rc3.tgz#e6da4e08d106e19c80520ee40845a4266da3ba33"
+  integrity sha512-pkvFy065fXpbVNhHuZ0nPoSAgXZEhmtXXRsO6x15D4BWr6659Qcmg5lTy+L7WiCSSKHvzik7pXM/bPg7HAYyHA==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
