@@ -135,6 +135,7 @@ export function goToPage(router, page) {
  * @param {boolean} [addRetryButton] - if true, then add retry button
  * @param {function} [onRetry] - optional custom handler for retry
  * @param {string} [title] - optional custom title
+ * @param {function} [onClose] - optional close handler
  * @return {JSX.Element|null}
  */
 export function showNetworkErrorPopup({
@@ -146,6 +147,7 @@ export function showNetworkErrorPopup({
   addRetryButton,
   onRetry,
   title,
+  onClose,
 }) {
   const actionStartIcon = addRetryButton ? null : <SaveIcon/>
   title = title || NETWORK_ERROR
