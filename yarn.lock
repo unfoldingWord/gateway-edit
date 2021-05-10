@@ -3355,7 +3355,21 @@ markdown-translatable@1.2.12:
     turndown "^7.0.0"
     turndown-plugin-gfm "^1.0.2"
 
-markdown-translatable@1.2.15:
+markdown-translatable@1.2.13:
+  version "1.2.13"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.13.tgz#d4b30fdad0884f0eac1d7b9a50332765bda3f9e6"
+  integrity sha512-qbLdB1G0pDH30RrUVRxGmZ7waxQyOl3/+VUTFUC5HdhRdSVa+b3nXFqneh/yFKH0i4D9DSa8OWN4o+0MLV3iPQ==
+  dependencies:
+    deep-freeze "^0.0.1"
+    md5 "^2.2.1"
+    prop-types "^15.7.2"
+    react-headroom "^3.1.0"
+    react-markdown "4.0.6"
+    showdown "^1.9.1"
+    turndown "^7.0.0"
+    turndown-plugin-gfm "^1.0.2"
+
+markdown-translatable@^1.2.15:
   version "1.2.15"
   resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.15.tgz#b993165b7fa2dd254cc6a5fb25bf9a7a8822b123"
   integrity sha512-If2WYTUiL8zJdfyyaiy+DqHklJqxHlTtOQJpXESDNfFR6vbdbTZqmcgiNFfE5Lt4RlXKz9Hb25CjoR5OOA+MbQ==
@@ -4557,16 +4571,16 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.1.tgz#69d24580fc56eaabc9838ff1afdf32b04910f0bd"
-  integrity sha512-/KzIRwWOohp9i/WqnOLoyTAkQ7pI3Syb5pEnPh3gX/ATCUoSBVIjDet7oc+ZuXCS5dJaxYhe9HuagjQvkHqiag==
+scripture-resources-rcl@4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.5.tgz#30e9da1d1bf41aeb1a2b4321ef860428b777dbce"
+  integrity sha512-VrgeaXB0sZupDrGiivACoCedZrgCvW9Kw/yyBn1kGMrfgjQiSE33N46fNZdrJ9RZfZjnfltcR7n1U9GqwRrA8Q==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.4.3"
     js-yaml-parser "^1.0.0"
     lodash "^4.17.15"
-    markdown-translatable "1.2.12"
+    markdown-translatable "1.2.13"
     nyc "^15.0.0-beta.3"
     prop-types "^15.7.2"
     react-waypoint "^9.0.2"
@@ -5127,10 +5141,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^1.46.16-rc3:
-  version "1.46.16-rc3"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.16-rc3.tgz#e6da4e08d106e19c80520ee40845a4266da3ba33"
-  integrity sha512-pkvFy065fXpbVNhHuZ0nPoSAgXZEhmtXXRsO6x15D4BWr6659Qcmg5lTy+L7WiCSSKHvzik7pXM/bPg7HAYyHA==
+translation-helps-rcl@^1.46.16-rc4:
+  version "1.46.16-rc4"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.16-rc4.tgz#681e67bbe458f04766a7c90a22afc00dd93d98aa"
+  integrity sha512-N+DrtGNgYppmMBwtJFTtofOMHa5GBhkVWzapieszvIta/PP3YMadBODMelhw2OYdWwJkh0eO3ugFKfQeaOwWqg==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
