@@ -2367,10 +2367,8 @@ gitea-react-toolkit@1.4.3:
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
-gitea-react-toolkit@^1.5.0:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.6.3.tgz#0cc34b74585530078a5e4d77c673dd34f1f9eb94"
-  integrity sha512-XfpCAsJqg/Q3tqtSE9Z8rM/ckjWzTaNdov1OD2bfsZuZbMEW4Pb25OUThLpWKISOlcUdOdCHsKU9N3y/pH3Yyg==
+"gitea-react-toolkit@file:.yalc/gitea-react-toolkit":
+  version "1.6.4-alpha"
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -4553,10 +4551,8 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.1.tgz#69d24580fc56eaabc9838ff1afdf32b04910f0bd"
-  integrity sha512-/KzIRwWOohp9i/WqnOLoyTAkQ7pI3Syb5pEnPh3gX/ATCUoSBVIjDet7oc+ZuXCS5dJaxYhe9HuagjQvkHqiag==
+"scripture-resources-rcl@file:.yalc/scripture-resources-rcl":
+  version "4.1.1-alpha"
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.4.3"
