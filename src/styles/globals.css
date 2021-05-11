@@ -32,6 +32,9 @@
     @apply font-medium;
     @apply my-4;
   }
+  .wrap-anywhere {
+    overflow-wrap: anywhere;
+  }
 }
 
 @font-face {

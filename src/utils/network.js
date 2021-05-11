@@ -1,4 +1,8 @@
-import {checkIfServerOnline, ERROR_NETWORK_DISCONNECTED, ERROR_SERVER_UNREACHABLE,} from 'gitea-react-toolkit'
+import {
+  checkIfServerOnline,
+  ERROR_NETWORK_DISCONNECTED,
+  ERROR_SERVER_UNREACHABLE,
+} from 'gitea-react-toolkit'
 import {
   AUTHENTICATION_ERROR,
   BASE_URL,
@@ -49,9 +53,13 @@ export async function getServerFault() {
  * @return {Promise<object>} returns final error string
  */
 export async function getNetworkError(errorMessage, httpCode ) {
+  // eslint-disable-next-line no-template-curly-in-string
+  const defaultErrorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${httpCode}`);
+
   if (!errorMessage) { // if not given, set to default error message
-    // eslint-disable-next-line no-template-curly-in-string
-    errorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${httpCode}`)
+    errorMessage = defaultErrorMessage
+  } else if (httpCode) {
+    errorMessage += ` ${defaultErrorMessage}` // append http code if given
   }
 
   const lastError = {
@@ -147,6 +155,7 @@ export function showNetworkErrorPopup({
   addRetryButton,
   onRetry,
   title,
+  closeButtonStr,
   onClose,
 }) {
   const actionStartIcon = addRetryButton ? null : <SaveIcon/>
@@ -156,6 +165,7 @@ export function showNetworkErrorPopup({
       <ErrorPopup
         title={title}
         message={networkError.errorMessage}
+        closeButtonStr={closeButtonStr}
         onClose={() => {
           onClose && onClose()
           setNetworkError(null)

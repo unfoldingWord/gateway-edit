@@ -14,6 +14,8 @@ import Layout from '@components/Layout'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
 import { getUserItem, getUserKey } from '@hooks/useUserLocalStorage'
+import { processNetworkError, showNetworkErrorPopup } from '@utils/network'
+import { CLOSE } from '@common/constants'
 
 function Alert({ severity, message }) {
   const router = useRouter()
@@ -65,6 +67,7 @@ const SettingsPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
+  const [networkError, setNetworkError] = useState(null)
 
   const {
     state: {
@@ -82,6 +85,15 @@ const SettingsPage = () => {
       loggedInUser,
     },
   } = useContext(StoreContext)
+
+  /**
+   * in the case of a network error, process and display error dialog
+   * @param {string} errorMessage - optional error message returned
+   * @param {number} httpCode - http code returned
+   */
+  function processError(errorMessage, httpCode=0) {
+    processNetworkError(errorMessage, httpCode, setNetworkError, null, null )
+  }
 
   function onClose() {
     router.push('/')
@@ -138,6 +150,8 @@ const SettingsPage = () => {
 
   async function onSubmitFeedback() {
     setSubmitting(true)
+    setShowSuccess(false)
+    setShowError(false)
     const build = getBuildId()
     const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
     const scriptureVersionHistory = getUserSettings(loggedInUser, `scriptureVersionHistory`)
@@ -176,8 +190,12 @@ const SettingsPage = () => {
     if (res.status === 200) {
       setShowSuccess(true)
     } else {
-      console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(response.error)}`)
+      const error = response.error
+      console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(error)}`)
+      const httpCode = parseInt(error.code, 10)
+      const errorMessage = error.message
       setShowError(true)
+      processError(errorMessage, httpCode)
     }
 
     setSubmitting(false)
@@ -280,6 +298,13 @@ const SettingsPage = () => {
           </Paper>
         </div>
       </div>
+      { showNetworkErrorPopup({
+        networkError,
+        setNetworkError,
+        router,
+        noActionButton: true,
+        closeButtonStr: CLOSE,
+      }) }
     </Layout>
   )
 }

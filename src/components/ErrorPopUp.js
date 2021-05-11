@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
+import { CANCEL } from '@common/constants'
 
 export default function ErrorPopup(
   {
@@ -14,6 +15,7 @@ export default function ErrorPopup(
     actionStartIcon,
     actionButton2Str,
     onActionButton2,
+    closeButtonStr,
   }) {
   function getActionButtons() {
     return <>
@@ -52,9 +54,10 @@ export default function ErrorPopup(
   const title_ =
     <div className='h1 text-xl'> {title} </div>
 
+  const closeButtonText = closeButtonStr || CANCEL
   const content =
     <div className='flex-col'>
-      <div className='h2 flex text-lg my-3'> {message} </div>
+      <div className='h2 flex text-lg my-3 wrap-anywhere'> {message} </div>
       <div className='flex justify-end space-x-4'>
         <Button
           size='large'
@@ -63,7 +66,7 @@ export default function ErrorPopup(
           variant='contained'
           onClick={onClose}
         >
-          Cancel
+          {closeButtonText}
         </Button>
         {getActionButtons()}
       </div>
@@ -106,4 +109,6 @@ ErrorPopup.propTypes = {
   actionButton2Str: PropTypes.string,
   /** callback if second action button clicked */
   onActionButton2: PropTypes.func,
+  /** if present, then use this text for the close button */
+  closeButtonStr: PropTypes.string,
 }

@@ -26,9 +26,8 @@ import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
-import { goToPage, reloadApp, showNetworkErrorPopup } from '@utils/network'
+import { showNetworkErrorPopup } from '@utils/network'
 import { useRouter } from 'next/router'
-import { FEEDBACK_PAGE, RESTART_APP } from '@common/constants'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -197,7 +196,8 @@ function WorkspaceContainer() {
             logout,
             router,
             noActionButton:true,
-            addRetryButton: true })
+            addRetryButton: true,
+          })
         }
         <CircularProgress size={180} />
       </>
