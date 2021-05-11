@@ -38,10 +38,13 @@ export async function getResource({
         cache: { maxAge: 60 * 1000 },
       },
     })
+    console.log(`getResource(${resourceLink}) found resource: `,resource)
   } catch (e) {
     console.log(`getResource(${resourceLink}) failed, exception: `, e)
   }
 
+  resource = resource || {}
+  resource.resourceLink = getRepoUrl(owner, languageId, resourceId, server)
   return resource
 }
 
@@ -57,13 +60,19 @@ export async function getResourceManifest(resourceRef) {
 }
 
 export async function getResourceBibles(resourceRef) {
-  const manifest = await getResourceManifest(resourceRef)
+  let bibles = null
+  let httpCode = null
+  const resource = await getResource(resourceRef)
 
-  if (manifest?.projects) {
-    return manifest.projects.map((item) => (item.identifier))
+  if (resource?.manifest?.projects) {
+    bibles = resource.manifest.projects.map((item) => (item.identifier))
+  } else {
+    console.log(`getResourceBibles() response`, resource?.manifestHttpResponse)
+    httpCode = resource?.manifestHttpResponse?.status
   }
 
-  return null
+  const resourceLink = resource?.resourceLink
+  return { bibles, httpCode, resourceLink }
 }
 
 /**

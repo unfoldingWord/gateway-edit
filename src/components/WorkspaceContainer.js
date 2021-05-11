@@ -26,8 +26,9 @@ import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
-import { showNetworkErrorPopup } from '@utils/network'
+import { processNetworkError, showNetworkErrorPopup } from '@utils/network'
 import { useRouter } from 'next/router'
+import { MANIFEST_INVALID_ERROR } from '@common/constants'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -47,6 +48,7 @@ function WorkspaceContainer() {
   const classes = useStyles()
   const [workspaceReady, setWorkspaceReady] = useState(false)
   const [selections, setSelections] = useState([])
+  const [networkError, setNetworkError] = useState(null)
   const {
     state: {
       owner,
@@ -71,6 +73,7 @@ function WorkspaceContainer() {
       setSupportedBibles,
       setCurrentLayout,
       setTokenNetworkError,
+      setLastError,
       updateTaDetails,
     },
   } = useContext(StoreContext)
@@ -114,6 +117,15 @@ function WorkspaceContainer() {
     return NT_BOOKS.includes(bookId)
   }
 
+  /**
+   * in the case of a network error, process and display error dialog
+   * @param {string} errorMessage - optional error message returned
+   * @param {number} httpCode - http code returned
+   */
+  function processError(errorMessage, httpCode=0) {
+    processNetworkError(errorMessage, httpCode, setNetworkError, setLastError )
+  }
+
   const commonScriptureCardConfigs = {
     isNT,
     server,
@@ -137,18 +149,22 @@ function WorkspaceContainer() {
         languageId,
         branch,
         server,
-      }).then(bibles => {
+      }).then(results => {
+        const { bibles, httpCode, resourceLink } = results
+
         if (bibles?.length) {
           if (!isEqual(bibles, supportedBibles)) {
             console.log(`found ${bibles?.length} bibles`)
             setSupportedBibles(bibles) //TODO blm: update bible refs
           }
         } else {
-          console.log(`no bibles`)
+          processError(`${MANIFEST_INVALID_ERROR} ${resourceLink}`, httpCode)
+          console.log(`no bibles found`)
         }
         setWorkspaceReady(true)
-      }).catch(() => {
+      }).catch((e) => {
         setWorkspaceReady(true)
+        processError(e.toString())
       }) // eslint-disable-next-line
     }
   }, [owner, languageId, branch, server, loggedInUser])
@@ -186,7 +202,7 @@ function WorkspaceContainer() {
   })
 
   return (
-    (tokenNetworkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+    (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
         {
           // this is specifically for network or internet error on startup, in this case sending feedback is not an option, but reload is about the only option
@@ -198,6 +214,10 @@ function WorkspaceContainer() {
             noActionButton:true,
             addRetryButton: true,
           })
+        }
+        {
+          // this is for network error getting books list
+          showNetworkErrorPopup({ networkError, setNetworkError, logout, router })
         }
         <CircularProgress size={180} />
       </>
