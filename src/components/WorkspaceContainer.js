@@ -335,7 +335,6 @@ function WorkspaceContainer() {
             setQuote={setQuote}
             selectedQuote={selectedQuote}
             disableFilters
-            hideMarkdownToggle
             useUserLocalStorage={useUserLocalStorage}
           />
           <ResourceCard
