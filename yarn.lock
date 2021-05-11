@@ -2367,8 +2367,10 @@ gitea-react-toolkit@1.4.3:
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
-"gitea-react-toolkit@file:.yalc/gitea-react-toolkit":
+gitea-react-toolkit@1.6.4-alpha:
   version "1.6.4-alpha"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.6.4-alpha.tgz#bd29b5a7a4b56774b1a25944eec306109ff155ad"
+  integrity sha512-z8BGBBpYGFebf2l5bFoj1SoRdQgVwQI7plo9Thk90Ps+kookBeReBrmHhgMAsIoP/ijB4n4tsKHrbq8zyEC4yA==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -3353,6 +3355,20 @@ markdown-translatable@1.2.12:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
     prop-types "^15.7.2"
+    react-markdown "4.0.6"
+    showdown "^1.9.1"
+    turndown "^7.0.0"
+    turndown-plugin-gfm "^1.0.2"
+
+markdown-translatable@1.2.13:
+  version "1.2.13"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.13.tgz#d4b30fdad0884f0eac1d7b9a50332765bda3f9e6"
+  integrity sha512-qbLdB1G0pDH30RrUVRxGmZ7waxQyOl3/+VUTFUC5HdhRdSVa+b3nXFqneh/yFKH0i4D9DSa8OWN4o+0MLV3iPQ==
+  dependencies:
+    deep-freeze "^0.0.1"
+    md5 "^2.2.1"
+    prop-types "^15.7.2"
+    react-headroom "^3.1.0"
     react-markdown "4.0.6"
     showdown "^1.9.1"
     turndown "^7.0.0"
@@ -4551,14 +4567,16 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-"scripture-resources-rcl@file:.yalc/scripture-resources-rcl":
-  version "4.1.1-alpha"
+scripture-resources-rcl@4.1.5-alpha:
+  version "4.1.5-alpha"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.5-alpha.tgz#ac46d2d7e1e4a4c925f946748446ebf4b436cb7a"
+  integrity sha512-90PatZwhNdnwoRKsbnegG9V7YLZsl6X1hbOiZbK7EcqPD2XBUCFInz2c3iyvNkTiAkL4nlyMtVG2+ot8QI4vDQ==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.4.3"
     js-yaml-parser "^1.0.0"
     lodash "^4.17.15"
-    markdown-translatable "1.2.12"
+    markdown-translatable "1.2.13"
     nyc "^15.0.0-beta.3"
     prop-types "^15.7.2"
     react-waypoint "^9.0.2"
