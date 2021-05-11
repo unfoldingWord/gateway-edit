@@ -1,8 +1,8 @@
 import React, { useState, createContext } from 'react'
 import localforage from 'localforage'
 import { AuthenticationContextProvider } from 'gitea-react-toolkit'
-import { BASE_URL, TOKEN_ID } from '@common/constants'
-import { processNetworkError, unAuthenticated } from '@utils/network'
+import { BASE_URL, CLOSE , TOKEN_ID} from '@common/constants'
+import { processNetworkError, showNetworkErrorPopup, unAuthenticated } from '@utils/network'
 
 export const AuthContext = createContext({})
 
@@ -70,6 +70,11 @@ export default function AuthContextProvider(props) {
     }
   }
 
+  const onError = (e) => {
+    console.warn('AuthContextProvider - auth error', e)
+    processError(e?.errorMessage)
+  }
+
   async function logout() {
     await myAuthStore.removeItem('authentication')
     setAuthentication(null)
@@ -97,9 +102,16 @@ export default function AuthContextProvider(props) {
         onAuthentication={setAuthentication}
         loadAuthentication={getAuth}
         saveAuthentication={saveAuth}
+        onError={onError}
       >
         {props.children}
       </AuthenticationContextProvider>
+      { showNetworkErrorPopup({
+        networkError,
+        setNetworkError,
+        noActionButton: true,
+        closeButtonStr: CLOSE,
+      }) }
     </AuthContext.Provider>
   )
 }

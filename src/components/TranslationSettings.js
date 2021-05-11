@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function TranslationSettings({ authentication }) {
   const router = useRouter()
-  const { actions: {logout} } = useContext(AuthContext)
+  const { actions: { logout } } = useContext(AuthContext)
   const classes = useStyles()
   const [organizations, setOrganizations] = useState([])
   const [orgErrorMessage, setOrgErrorMessage] = useState(null)
@@ -52,9 +52,8 @@ export default function TranslationSettings({ authentication }) {
 
   useEffect(() => {
     async function getOrgs() {
-      setOrgErrorMessage(null)
+      setOrgErrorMessage('Loading...')
       setLastError(null)
-      let error
       let errorCode = 0
 
       try {
@@ -65,8 +64,6 @@ export default function TranslationSettings({ authentication }) {
               errorCode = response?.status
               processError(null, errorCode)
               return null
-              // checkIfServerOnline()
-              // error = ORGS_NETWORK_ERROR //TODO - add checking of response.status codes in future issue
             }
             return response?.json()
           })
@@ -79,14 +76,17 @@ export default function TranslationSettings({ authentication }) {
           })
 
         if (!orgs?.length) { // if no orgs
-          setOrgErrorMessage(error || NO_ORGS_ERROR) // if no specific error is found, then warn that user has no orgs
+          setOrgErrorMessage(NO_ORGS_ERROR) // if no specific error is found, then warn that user has no orgs
+        } else {
+          setOrgErrorMessage(null)
         }
 
         setOrganizations(orgs)
       } catch (e) {
         console.warn(`TranslationSettings - error fetching user orgs`, e)
-        error = ORGS_NETWORK_ERROR
+        const error = ORGS_NETWORK_ERROR
         setOrganizations([])
+        setOrgErrorMessage(NO_ORGS_ERROR)
         processError(error)
       }
     }
