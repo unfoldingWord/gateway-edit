@@ -24,9 +24,17 @@ export default async (req, res) => {
     }
   }
 
+  let httpCode
+  const found = errorMessage.match(/\((\d+)\)/)
+  console.log(`sendFeedback() parsed error code: ${JSON.stringify(found)}`)
+
+  if (found?.length > 1) {
+    httpCode = parseInt(found[1], 10)
+  }
+
   return res.status(404).json({
     error: {
-      code: 'not_found',
+      code: httpCode || 'not_found',
       message: errorMessage ||
         'The requested endpoint was not found or doesn\'t support this method.',
     },

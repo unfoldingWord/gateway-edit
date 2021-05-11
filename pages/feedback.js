@@ -193,7 +193,7 @@ const SettingsPage = () => {
       const error = response.error
       console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(error)}`)
       const httpCode = parseInt(error.code, 10)
-      const errorMessage = error.message
+      const errorMessage = error.message + '.'
       setShowError(true)
       processError(errorMessage, httpCode)
     }

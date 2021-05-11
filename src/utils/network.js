@@ -59,7 +59,7 @@ export async function getNetworkError(errorMessage, httpCode ) {
   if (!errorMessage) { // if not given, set to default error message
     errorMessage = defaultErrorMessage
   } else if (httpCode) {
-    errorMessage += ` ${defaultErrorMessage}` // append http code if given
+    errorMessage += `\n ${defaultErrorMessage}` // append http code if given
   }
 
   const lastError = {
