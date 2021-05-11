@@ -92,7 +92,7 @@ export default function TranslationSettings({ authentication }) {
 
   return (
     <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
-      <h5>Translation Settings</h5>
+      <h3>Translation Settings</h3>
       <div className='flex flex-col justify-between my-4'>
         <FormControl variant='outlined' className={classes.formControl} error={!!errorMessage}>
           <InputLabel id='demo-simple-select-outlined-label'>
