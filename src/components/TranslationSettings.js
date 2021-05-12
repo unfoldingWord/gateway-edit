@@ -12,7 +12,11 @@ import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
 import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
-import { processNetworkError, showNetworkErrorPopup } from '@utils/network'
+import {
+  onNetworkActionButton,
+  processNetworkError,
+  showNetworkErrorPopup,
+} from '@utils/network'
 import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
 
@@ -47,7 +51,7 @@ export default function TranslationSettings({ authentication }) {
    * @param {number} httpCode - http code returned
    */
   function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, setNetworkError, setLastError, setOrgErrorMessage )
+    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError, setOrgErrorMessage )
   }
 
   useEffect(() => {
@@ -115,7 +119,11 @@ export default function TranslationSettings({ authentication }) {
 
   return (
     <>
-      { showNetworkErrorPopup({ networkError, setNetworkError, logout, router }) }
+      { showNetworkErrorPopup({
+        networkError,
+        setNetworkError,
+        onActionButton: onNetworkActionButton,
+      }) }
       <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
         <h5>Translation Settings</h5>
         <div className='flex flex-col justify-between my-4'>

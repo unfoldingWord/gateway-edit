@@ -1,8 +1,12 @@
 import React, { useState, createContext } from 'react'
 import localforage from 'localforage'
 import { AuthenticationContextProvider } from 'gitea-react-toolkit'
-import { BASE_URL, CLOSE , TOKEN_ID} from '@common/constants'
-import { processNetworkError, showNetworkErrorPopup, unAuthenticated } from '@utils/network'
+import {
+  BASE_URL, CLOSE, TOKEN_ID,
+} from '@common/constants'
+import {
+  processNetworkError, showNetworkErrorPopup, unAuthenticated,
+} from '@utils/network'
 
 export const AuthContext = createContext({})
 
@@ -16,7 +20,7 @@ export default function AuthContextProvider(props) {
    * @param {number} httpCode - http code returned
    */
   function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, setNetworkError, null, null )
+    processNetworkError(errorMessage, httpCode, null, null, setNetworkError, null, null )
   }
 
   const myAuthStore = localforage.createInstance({
@@ -109,7 +113,6 @@ export default function AuthContextProvider(props) {
       { showNetworkErrorPopup({
         networkError,
         setNetworkError,
-        noActionButton: true,
         closeButtonStr: CLOSE,
       }) }
     </AuthContext.Provider>

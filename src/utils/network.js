@@ -54,7 +54,7 @@ export async function getServerFault() {
  */
 export async function getNetworkError(errorMessage, httpCode ) {
   // eslint-disable-next-line no-template-curly-in-string
-  const defaultErrorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${httpCode}`);
+  const defaultErrorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${httpCode}`)
 
   if (!errorMessage) { // if not given, set to default error message
     errorMessage = defaultErrorMessage
@@ -91,18 +91,23 @@ export async function getNetworkError(errorMessage, httpCode ) {
 
 /**
  * in the case of a network error, process and display error dialog
- * @param {string} errorMessage
- * @param {number} httpCode - http code returned
+ * @param {string} [errorMessage] - initial error message
+ * @param {number} [httpCode] - http code returned
+ * @param {function} [logout] - invalidate current login
+ * @param {object} [router] - to change to different web page
  * @param {function} setNetworkError - callback to toggle display of error popup
- * @param {function} setLastError - callback to save error details
- * @param {function} setErrorMessage - optional callback to apply error message
+ * @param {function} [setLastError] - callback to save error details
+ * @param {function} [setErrorMessage] - optional callback to apply error message
  * @return {Promise<void>}
  */
-export async function processNetworkError(errorMessage, httpCode, setNetworkError, setLastError, setErrorMessage=null ) {
+export async function processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError, setErrorMessage ) {
   setNetworkError && setNetworkError(null) // clear until processing finished
   const networkError_ = await getNetworkError(errorMessage, httpCode)
   setErrorMessage && setErrorMessage(networkError_.errorMessage)
   setLastError && setLastError(networkError_.lastError) // error info to attach to sendmail
+  // add params needed for button actions
+  networkError_.router = router
+  networkError_.logout = logout
   setNetworkError && setNetworkError(networkError_) // this triggers network error popup
 }
 
@@ -117,10 +122,10 @@ export function unAuthenticated(httpCode) {
 
 /**
  * refresh app
- * @param {object} router - to change to different web page
+ * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
  */
-export function reloadApp(router) {
-  router && router.reload()
+export function reloadApp(networkError) {
+  networkError?.router?.reload()
 }
 
 /**
@@ -129,36 +134,59 @@ export function reloadApp(router) {
  * @param {string} page - URL to redirect to
  */
 export function goToPage(router, page) {
-  router && router.push(page)
+  router?.push(page)
+}
+
+/**
+ * go to feedback page
+ * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
+ */
+function gotoFeedback(networkError) {
+  goToPage(networkError?.router, FEEDBACK_PAGE)
+}
+
+/**
+ * to user to login page
+ * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
+ */
+function doLogin(networkError) {
+  networkError?.logout && networkError.logout() // on authentication error, logout takes us to login page
+}
+
+/**
+ * handle button actions, if error is authentication then take user to login, else take user to feedback page
+ * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
+ */
+export function onNetworkActionButton(networkError) {
+  if (networkError?.authenticationError) {
+    doLogin(networkError)
+  } else { // otherwise we go to feedback page
+    gotoFeedback(networkError)
+  }
 }
 
 /**
  * if network error, show popup with actions appropriate for error type
- * @param {object} networkError - contains details about how to display error
- *    - created by getNetworkError.  If null then error popup not shown.
+ * @param {object} networkError - contains details about how to display and handle network error
+ *    - created by processNetworkError.  If null then error popup not shown.
  * @param {function} setNetworkError - to close pop up
- * @param {function} [logout] - invalidate current login
- * @param {object} [router] - to change to different web page
- * @param {boolean} [noActionButton] - if true then normal action button not shown (sendfeedback or login)
- * @param {boolean} [addRetryButton] - if true, then add retry button
- * @param {function} [onRetry] - optional custom handler for retry
+ * @param {function} [onActionButton] - optional handler for action button click
+ * @param {function} [onRetry] - optional custom handler for retry, retry button shown if defined
  * @param {string} [title] - optional custom title
+ * @param {string} [closeButtonStr] - optional custom text to put on close button
  * @param {function} [onClose] - optional close handler
  * @return {JSX.Element|null}
  */
 export function showNetworkErrorPopup({
   networkError,
   setNetworkError,
-  logout,
-  router,
-  noActionButton,
-  addRetryButton,
+  onActionButton,
   onRetry,
   title,
   closeButtonStr,
   onClose,
 }) {
-  const actionStartIcon = addRetryButton ? null : <SaveIcon/>
+  const actionStartIcon = networkError.authenticationError ? null : <SaveIcon/>
   title = title || NETWORK_ERROR
   return (
     networkError ?
@@ -170,25 +198,11 @@ export function showNetworkErrorPopup({
           onClose && onClose()
           setNetworkError(null)
         }}
-        actionButtonStr={!noActionButton && networkError.actionButtonText}
+        actionButtonStr={onActionButton && networkError.actionButtonText}
         actionStartIcon={actionStartIcon}
-        onActionButton={() => {
-          if (networkError.authenticationError) {
-            logout && logout() // on authentication error, logout takes us to login page
-          } else { // otherwise we go to feedback page
-            goToPage(router, FEEDBACK_PAGE)
-          }
-        }}
-        actionButton2Str={addRetryButton && RETRY}
-        onActionButton2={() => {
-          if (addRetryButton) {
-            if (onRetry) { // if custom handler, call it
-              onRetry()
-            } else {
-              reloadApp(router)
-            }
-          }
-        }}
+        onActionButton={() => onActionButton && onActionButton(networkError)}
+        actionButton2Str={!!onRetry && RETRY}
+        onActionButton2={() => onRetry && onRetry(networkError)}
       />
       :
       null

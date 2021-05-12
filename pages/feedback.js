@@ -92,7 +92,7 @@ const SettingsPage = () => {
    * @param {number} httpCode - http code returned
    */
   function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, setNetworkError, null, null )
+    processNetworkError(errorMessage, httpCode, null, router, setNetworkError, null, null )
   }
 
   function onClose() {
@@ -301,8 +301,6 @@ const SettingsPage = () => {
       { showNetworkErrorPopup({
         networkError,
         setNetworkError,
-        router,
-        noActionButton: true,
         closeButtonStr: CLOSE,
       }) }
     </Layout>

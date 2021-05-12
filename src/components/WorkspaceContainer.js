@@ -26,7 +26,12 @@ import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
-import { processNetworkError, showNetworkErrorPopup } from '@utils/network'
+import {
+  onNetworkActionButton,
+  processNetworkError,
+  reloadApp,
+  showNetworkErrorPopup,
+} from '@utils/network'
 import { useRouter } from 'next/router'
 import { MANIFEST_INVALID_ERROR } from '@common/constants'
 
@@ -123,7 +128,7 @@ function WorkspaceContainer() {
    * @param {number} httpCode - http code returned
    */
   function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, setNetworkError, setLastError )
+    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
   }
 
   const commonScriptureCardConfigs = {
@@ -209,15 +214,16 @@ function WorkspaceContainer() {
           showNetworkErrorPopup({
             networkError: tokenNetworkError,
             setNetworkError: setTokenNetworkError,
-            logout,
-            router,
-            noActionButton:true,
-            addRetryButton: true,
+            onRetry: reloadApp,
           })
         }
         {
           // this is for network error getting books list
-          showNetworkErrorPopup({ networkError, setNetworkError, logout, router })
+          showNetworkErrorPopup({
+            networkError,
+            setNetworkError,
+            onActionButton: onNetworkActionButton,
+          })
         }
         <CircularProgress size={180} />
       </>
