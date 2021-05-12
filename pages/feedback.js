@@ -175,14 +175,21 @@ const SettingsPage = () => {
     })
 
     console.log(`onSubmitFeedback() - sending data:`, extraData)
+    let res
 
-    const res = await fetch('/api/feedback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name, email, category, message, extraData,
-      }),
-    })
+    try {
+      res = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name, email, category, message, extraData,
+        }),
+      })
+    } catch {
+      console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`)
+      processError(`Failure calling '/api/feedback'`)
+      return
+    }
 
     const response = await res.json()
     console.log(`onSubmitFeedback() - response status = ${res.status}, res.json = ${JSON.stringify(response)}`)

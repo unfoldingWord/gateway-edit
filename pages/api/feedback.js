@@ -5,22 +5,25 @@ export default async (req, res) => {
 
   if (req.method === 'POST') {
     const { name, email, message, category, extraData } = req.body
-    const response = await sendFeedback({
-      name,
-      email,
-      message,
-      category,
-      extraData,
-    }).catch(e => {
+
+    try {
+      const response = await sendFeedback({
+        name,
+        email,
+        message,
+        category,
+        extraData,
+      })
+
+      console.log(`sendFeedback() response: ${JSON.stringify(response)}`)
+
+      if (!errorMessage) {
+        return res.status(200).json({...response})
+      }
+    } catch (e) {
       console.log(`sendFeedback() error:`, e)
       errorMessage = e.toString()
       console.log(`sendFeedback() errorMessage: ${errorMessage}`)
-    })
-
-    console.log(`sendFeedback() response: ${JSON.stringify(response)}`)
-
-    if (!errorMessage) {
-      return res.status(200).json({...response})
     }
   }
 
