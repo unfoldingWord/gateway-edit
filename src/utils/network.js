@@ -186,7 +186,6 @@ export function showNetworkErrorPopup({
   closeButtonStr,
   onClose,
 }) {
-  const actionStartIcon = networkError.authenticationError ? null : <SaveIcon/>
   title = title || NETWORK_ERROR
   return (
     networkError ?
@@ -199,7 +198,7 @@ export function showNetworkErrorPopup({
           setNetworkError(null)
         }}
         actionButtonStr={onActionButton && networkError.actionButtonText}
-        actionStartIcon={actionStartIcon}
+        actionStartIcon={networkError.authenticationError ? null : <SaveIcon/>}
         onActionButton={() => onActionButton && onActionButton(networkError)}
         actionButton2Str={!!onRetry && RETRY}
         onActionButton2={() => onRetry && onRetry(networkError)}

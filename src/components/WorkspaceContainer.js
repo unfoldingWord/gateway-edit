@@ -131,6 +131,33 @@ function WorkspaceContainer() {
     processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
   }
 
+  /**
+   * show either tokenNetworkError or NetworkError for workspace
+   * @return {JSX.Element|null}
+   */
+  function showNetworkError() {
+    let params = {}
+
+    if (tokenNetworkError) { // if we had a token startup error
+      params = {
+        networkError: tokenNetworkError,
+        setNetworkError: (error) => {
+          setTokenNetworkError(error)
+          setNetworkError(null) // clear this flag in case it was set
+        },
+        onRetry: reloadApp,
+      }
+      tokenNetworkError.router = router // needed for reload of page
+    } else { // for workspace error
+      params = {
+        networkError,
+        setNetworkError,
+        onActionButton: onNetworkActionButton,
+      }
+    }
+    return showNetworkErrorPopup(params)
+  }
+
   const commonScriptureCardConfigs = {
     isNT,
     server,
@@ -209,22 +236,7 @@ function WorkspaceContainer() {
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
-        {
-          // this is specifically for network or internet error on startup, in this case sending feedback is not an option, but reload is about the only option
-          showNetworkErrorPopup({
-            networkError: tokenNetworkError,
-            setNetworkError: setTokenNetworkError,
-            onRetry: reloadApp,
-          })
-        }
-        {
-          // this is for network error getting books list
-          showNetworkErrorPopup({
-            networkError,
-            setNetworkError,
-            onActionButton: onNetworkActionButton,
-          })
-        }
+        {showNetworkError()}
         <CircularProgress size={180} />
       </>
       :

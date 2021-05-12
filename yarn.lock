@@ -2367,6 +2367,22 @@ gitea-react-toolkit@1.7.0-alpha.2:
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
+gitea-react-toolkit@1.7.0-alpha.3:
+  version "1.7.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.7.0-alpha.3.tgz#fac94c7842c0be409ca65069a17a42c5372bf5d3"
+  integrity sha512-XeL0T8qZpO+V1QmCQzxqYHmpov0xXFSH37QW6Vavxde2wiLOgHahZOUDmiE/qREDhajmlhr4R501fZ6GA4xeXA==
+  dependencies:
+    awesome-debounce-promise "2.1.0"
+    axios "0.19.0"
+    axios-cache-adapter "2.4.1"
+    base-64 "0.1.0"
+    jszip "^3.5.0"
+    localforage "1.7.3"
+    markdown-translatable "1.2.16"
+    prop-types "15.7.2"
+    use-deep-compare-effect "^1.3.1"
+    utf8 "3.0.0"
+
 glob-base@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/glob-base/-/glob-base-0.3.0.tgz#dbb164f6221b1c0b1ccf82aea328b497df0ea3c4"

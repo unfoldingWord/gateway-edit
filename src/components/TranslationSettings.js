@@ -15,6 +15,7 @@ import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
 import {
   onNetworkActionButton,
   processNetworkError,
+  reloadApp,
   showNetworkErrorPopup,
 } from '@utils/network'
 import { useRouter } from 'next/router'
@@ -123,6 +124,7 @@ export default function TranslationSettings({ authentication }) {
         networkError,
         setNetworkError,
         onActionButton: onNetworkActionButton,
+        onRetry: networkError?.authenticationError ? null : reloadApp,
       }) }
       <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
         <h5>Translation Settings</h5>
