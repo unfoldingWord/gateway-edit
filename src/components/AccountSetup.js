@@ -22,7 +22,7 @@ function AccountSetup({ authentication }) {
     <div className='flex flex-col justify-center items-center'>
       <div className='flex flex-col w-full px-4 lg:w-132 lg:p-0'>
         <Paper className='flex flex-col h-40 w-full p-6 pt-3 px-7 my-2'>
-          <h5>Account Setup</h5>
+          <h3>Account Setup</h3>
           <p className='text-lg'>
             Choose your Organization and Primary Language
           </p>
