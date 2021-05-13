@@ -2351,10 +2351,10 @@ get-package-type@^0.1.0:
   resolved "https://registry.yarnpkg.com/get-package-type/-/get-package-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"
   integrity sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==
 
-gitea-react-toolkit@1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.6.4.tgz#43ef60643c4015ed106d3dbe009cfb11c08a15eb"
-  integrity sha512-xSL//jpDh7A/Uqxat2bVMT+4fNp2oGi9N6kSpN57YML1l134rgIKJ26/Rhiamk8Sg3ni2fwTw2FMxADg4YibFQ==
+gitea-react-toolkit@1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.7.0.tgz#f88c256b2aa5ad35c8493da617839f3aaa7624be"
+  integrity sha512-usGkVDhM1yfzomgUERxHFCp07ri+tqrwpL0J7m0p4e3l/n562I65ZicTzwv/Ucvp8PH9Vt7j0wo7L4ZGtc7LXA==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -2363,22 +2363,6 @@ gitea-react-toolkit@1.6.4:
     jszip "^3.5.0"
     localforage "1.7.3"
     markdown-translatable "1.2.16"
-    prop-types "15.7.2"
-    use-deep-compare-effect "^1.3.1"
-    utf8 "3.0.0"
-
-gitea-react-toolkit@^1.5.0:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.6.3.tgz#0cc34b74585530078a5e4d77c673dd34f1f9eb94"
-  integrity sha512-XfpCAsJqg/Q3tqtSE9Z8rM/ckjWzTaNdov1OD2bfsZuZbMEW4Pb25OUThLpWKISOlcUdOdCHsKU9N3y/pH3Yyg==
-  dependencies:
-    awesome-debounce-promise "2.1.0"
-    axios "0.19.0"
-    axios-cache-adapter "2.4.1"
-    base-64 "0.1.0"
-    jszip "^3.5.0"
-    localforage "1.7.3"
-    markdown-translatable "1.2.12"
     prop-types "15.7.2"
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
@@ -3341,19 +3325,6 @@ markdown-escapes@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
-
-markdown-translatable@1.2.12:
-  version "1.2.12"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.12.tgz#f4100e7d5306e939c2190edcf1868c0e316a36d0"
-  integrity sha512-HvS2kpEan1mWpUBEUq1xv0PfETg6dJBlgrUBaXOO4qO7B1lq+jb1Tm806pK0f0mQrmAB6c89+HB9XRsPXCWPyw==
-  dependencies:
-    deep-freeze "^0.0.1"
-    md5 "^2.2.1"
-    prop-types "^15.7.2"
-    react-markdown "4.0.6"
-    showdown "^1.9.1"
-    turndown "^7.0.0"
-    turndown-plugin-gfm "^1.0.2"
 
 markdown-translatable@1.2.16:
   version "1.2.16"
@@ -4571,13 +4542,13 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@4.1.6:
-  version "4.1.6"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.6.tgz#3b173c84994055c4d042ae6e39e3827179cc98c6"
-  integrity sha512-VISwN0+DYKA9E4eaQmFeXeP9IcpHmRK/Db6kU2P4Xdiosta8ZBjsTroRHJoWUEggCNpouYJlIoP9Yn7vMx6I1w==
+scripture-resources-rcl@4.1.7-alpha:
+  version "4.1.7-alpha"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.7-alpha.tgz#f586e0c19d1c9a9c0ef2bd3f508c0594278b7753"
+  integrity sha512-HnMOYDwZs3xzr4Gk8chLnEp0K1Qhbnh13nqNIlqImTheU8rVGRdtxDhx3vxp25JBINiFHzL+Gp1W7La6G0TwnA==
   dependencies:
     deep-freeze "^0.0.1"
-    gitea-react-toolkit "1.6.4"
+    gitea-react-toolkit "1.7.0"
     js-yaml-parser "^1.0.0"
     lodash "^4.17.15"
     markdown-translatable "1.2.16"
@@ -5141,10 +5112,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.46.16:
-  version "1.46.16"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.16.tgz#38729efff9ad7a18281ec01bb657a54e20a7ade7"
-  integrity sha512-Cn2lZ4yphPWMBuVEeRwER8lMA9eNoDIYd5+apK7Hr1PSzIqFrxKB9dXl4+ZdNfPs73vnhacdsLjMU1/Hub1xUA==
+translation-helps-rcl@1.46.17-alpha:
+  version "1.46.17-alpha"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.17-alpha.tgz#00392554b0a35ce1e812daee352e9773b30e3675"
+  integrity sha512-OSvXt5Fya1pDU9LmjyhqUKEFNF5XWxUocTJhqdjdQ/DBIZlnaBM1L2O9B8Zuqk8SvVnZO4X39UbmBf5ttf/ZeQ==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
