@@ -9,14 +9,10 @@ import {
   FEEDBACK_PAGE,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
-  NETWORK_ERROR,
-  RETRY,
   SEND_FEEDBACK,
   SERVER_OTHER_ERROR,
   SERVER_UNREACHABLE_ERROR,
 } from '@common/constants'
-import ErrorPopup from '@components/ErrorPopUp'
-import SaveIcon from '@material-ui/icons/Save'
 
 /**
  * checks to see if there is a fault with the server
@@ -163,47 +159,4 @@ export function onNetworkActionButton(networkError) {
   } else { // otherwise we go to feedback page
     gotoFeedback(networkError)
   }
-}
-
-/**
- * if network error, show popup with actions appropriate for error type
- * @param {object} networkError - contains details about how to display and handle network error
- *    - created by processNetworkError.  If null then error popup not shown.
- * @param {function} setNetworkError - to close pop up
- * @param {function} [onActionButton] - optional handler for action button click
- * @param {function} [onRetry] - optional custom handler for retry, retry button shown if defined
- * @param {string} [title] - optional custom title
- * @param {string} [closeButtonStr] - optional custom text to put on close button
- * @param {function} [onClose] - optional close handler
- * @return {JSX.Element|null}
- */
-export function showNetworkErrorPopup({
-  networkError,
-  setNetworkError,
-  onActionButton,
-  onRetry,
-  title,
-  closeButtonStr,
-  onClose,
-}) {
-  title = title || NETWORK_ERROR
-  return (
-    networkError ?
-      <ErrorPopup
-        title={title}
-        message={networkError.errorMessage}
-        closeButtonStr={closeButtonStr}
-        onClose={() => {
-          onClose && onClose()
-          setNetworkError(null)
-        }}
-        actionButtonStr={onActionButton && networkError.actionButtonText}
-        actionStartIcon={networkError.authenticationError ? null : <SaveIcon/>}
-        onActionButton={() => onActionButton && onActionButton(networkError)}
-        actionButton2Str={!!onRetry && RETRY}
-        onActionButton2={() => onRetry && onRetry(networkError)}
-      />
-      :
-      null
-  )
 }

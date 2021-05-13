@@ -16,8 +16,6 @@ export default async function sendFeedback({ name, email, message, category, ext
     fullMessage += `\n\nExtraData: ${extraData}`
   }
 
-  console.log(`sendFeedback(): ${fullMessage}`)
-
   const msg = {
     to: process.env.HELP_DESK_EMAIL,
     from: email,

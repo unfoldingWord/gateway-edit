@@ -14,8 +14,9 @@ import Layout from '@components/Layout'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
 import { getUserItem, getUserKey } from '@hooks/useUserLocalStorage'
-import { processNetworkError, showNetworkErrorPopup } from '@utils/network'
+import { processNetworkError } from '@utils/network'
 import { CLOSE } from '@common/constants'
+import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 function Alert({ severity, message }) {
   const router = useRouter()
@@ -303,11 +304,13 @@ const SettingsPage = () => {
           </Paper>
         </div>
       </div>
-      { showNetworkErrorPopup({
-        networkError,
-        setNetworkError,
-        closeButtonStr: CLOSE,
-      }) }
+      { !!networkError &&
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          closeButtonStr={CLOSE}
+        />
+      }
     </Layout>
   )
 }

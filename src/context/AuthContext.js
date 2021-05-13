@@ -4,9 +4,8 @@ import { AuthenticationContextProvider } from 'gitea-react-toolkit'
 import {
   BASE_URL, CLOSE, TOKEN_ID,
 } from '@common/constants'
-import {
-  processNetworkError, showNetworkErrorPopup, unAuthenticated,
-} from '@utils/network'
+import { processNetworkError, unAuthenticated } from '@utils/network'
+import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 export const AuthContext = createContext({})
 
@@ -110,11 +109,13 @@ export default function AuthContextProvider(props) {
       >
         {props.children}
       </AuthenticationContextProvider>
-      { showNetworkErrorPopup({
-        networkError,
-        setNetworkError,
-        closeButtonStr: CLOSE,
-      }) }
+      { !!networkError &&
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          closeButtonStr={CLOSE}
+        />
+      }
     </AuthContext.Provider>
   )
 }

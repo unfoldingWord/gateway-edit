@@ -18,10 +18,10 @@ import {
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
-  showNetworkErrorPopup,
 } from '@utils/network'
 import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
+import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -121,12 +121,14 @@ export default function TranslationSettings({ authentication }) {
 
   return (
     <>
-      { showNetworkErrorPopup({
-        networkError,
-        setNetworkError,
-        onActionButton: onNetworkActionButton,
-        onRetry: networkError?.authenticationError ? null : reloadApp,
-      }) }
+      { !!networkError &&
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          onActionButton={onNetworkActionButton}
+          onRetry={networkError?.authenticationError ? null : reloadApp}
+        />
+      }
       <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
         <h5>Translation Settings</h5>
         <div className='flex flex-col justify-between my-4'>

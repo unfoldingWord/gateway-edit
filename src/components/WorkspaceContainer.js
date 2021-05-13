@@ -30,10 +30,10 @@ import {
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
-  showNetworkErrorPopup,
 } from '@utils/network'
 import { useRouter } from 'next/router'
 import { MANIFEST_INVALID_ERROR } from '@common/constants'
+import NetworkErrorPopup from "@components/NetworkErrorPopUp";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -136,29 +136,30 @@ function WorkspaceContainer() {
    * @return {JSX.Element|null}
    */
   function showNetworkError() {
-    let params = {}
-
     if (tokenNetworkError) { // if we had a token network error on startup
-      params = {
-        networkError: tokenNetworkError,
-        setNetworkError: (error) => {
-          setTokenNetworkError(error)
-          setNetworkError(null) // clear this flag in case it was also set
-        },
-        onRetry: reloadApp,
-      }
-
       if (!tokenNetworkError.router) { // needed for reload of page
         setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
       }
-    } else { // for all other workspace network errors
-      params = {
-        networkError,
-        setNetworkError,
-        onActionButton: onNetworkActionButton,
-      }
+      return (
+        <NetworkErrorPopup
+          networkError={tokenNetworkError}
+          setNetworkError={(error) => {
+            setTokenNetworkError(error)
+            setNetworkError(null) // clear this flag in case it was also set
+          }}
+          onRetry={reloadApp}
+        />
+      )
+    } else if (networkError) { // for all other workspace network errors
+      return (
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          onActionButton={onNetworkActionButton}
+        />
+      )
     }
-    return showNetworkErrorPopup(params)
+    return null
   }
 
   const commonScriptureCardConfigs = {
