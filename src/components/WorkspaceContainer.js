@@ -194,7 +194,7 @@ function WorkspaceContainer() {
           }
         } else {
           processError(`${MANIFEST_INVALID_ERROR} ${resourceLink}`, httpCode)
-          console.warning(`no bibles found for ${resourceLink}`)
+          console.warn(`no bibles found for ${resourceLink}`)
         }
         setWorkspaceReady(true)
       }).catch((e) => {
