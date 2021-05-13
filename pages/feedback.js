@@ -174,7 +174,6 @@ const SettingsPage = () => {
       scriptureVersionHistory,
     })
 
-    console.log(`onSubmitFeedback() - sending data:`, extraData)
     let res
 
     try {
@@ -185,14 +184,13 @@ const SettingsPage = () => {
           name, email, category, message, extraData,
         }),
       })
-    } catch {
-      console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`)
-      processError(`Failure calling '/api/feedback'`)
+    } catch (e) {
+      console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
+      processError(`Failure calling '/api/feedback': ${e.toString()}`)
       return
     }
 
     const response = await res.json()
-    console.log(`onSubmitFeedback() - response status = ${res.status}, res.json = ${JSON.stringify(response)}`)
 
     if (res.status === 200) {
       setShowSuccess(true)

@@ -138,17 +138,20 @@ function WorkspaceContainer() {
   function showNetworkError() {
     let params = {}
 
-    if (tokenNetworkError) { // if we had a token startup error
+    if (tokenNetworkError) { // if we had a token network error on startup
       params = {
         networkError: tokenNetworkError,
         setNetworkError: (error) => {
           setTokenNetworkError(error)
-          setNetworkError(null) // clear this flag in case it was set
+          setNetworkError(null) // clear this flag in case it was also set
         },
         onRetry: reloadApp,
       }
-      tokenNetworkError.router = router // needed for reload of page
-    } else { // for workspace error
+
+      if (!tokenNetworkError.router) { // needed for reload of page
+        setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
+      }
+    } else { // for all other workspace network errors
       params = {
         networkError,
         setNetworkError,
@@ -191,7 +194,7 @@ function WorkspaceContainer() {
           }
         } else {
           processError(`${MANIFEST_INVALID_ERROR} ${resourceLink}`, httpCode)
-          console.log(`no bibles found`)
+          console.warning(`no bibles found for ${resourceLink}`)
         }
         setWorkspaceReady(true)
       }).catch((e) => {

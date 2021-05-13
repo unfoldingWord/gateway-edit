@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useContext,
+  useContext, useEffect, useState,
 } from 'react'
 import PropTypes from 'prop-types'
 import Paper from 'translation-helps-rcl/dist/components/Paper'
@@ -11,7 +11,9 @@ import Select from '@material-ui/core/Select'
 import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
-import { NO_ORGS_ERROR, ORGS_NETWORK_ERROR } from '@common/constants'
+import {
+  LOADING, NO_ORGS_ERROR, ORGS_NETWORK_ERROR,
+} from '@common/constants'
 import {
   onNetworkActionButton,
   processNetworkError,
@@ -57,7 +59,7 @@ export default function TranslationSettings({ authentication }) {
 
   useEffect(() => {
     async function getOrgs() {
-      setOrgErrorMessage('Loading...')
+      setOrgErrorMessage(LOADING)
       setLastError(null)
       let errorCode = 0
 
@@ -81,7 +83,7 @@ export default function TranslationSettings({ authentication }) {
           })
 
         if (!orgs?.length) { // if no orgs
-          setOrgErrorMessage(NO_ORGS_ERROR) // if no specific error is found, then warn that user has no orgs
+          setOrgErrorMessage(NO_ORGS_ERROR)
         } else {
           setOrgErrorMessage(null)
         }
@@ -89,10 +91,9 @@ export default function TranslationSettings({ authentication }) {
         setOrganizations(orgs)
       } catch (e) {
         console.warn(`TranslationSettings - error fetching user orgs`, e)
-        const error = ORGS_NETWORK_ERROR
         setOrganizations([])
         setOrgErrorMessage(NO_ORGS_ERROR)
-        processError(error)
+        processError(ORGS_NETWORK_ERROR)
       }
     }
 

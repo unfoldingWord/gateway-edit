@@ -38,7 +38,6 @@ export async function getResource({
         cache: { maxAge: 60 * 1000 },
       },
     })
-    console.log(`getResource(${resourceLink}) found resource: `,resource)
   } catch (e) {
     console.log(`getResource(${resourceLink}) failed, exception: `, e)
   }

@@ -6,6 +6,7 @@ export const BASE_URL = 'https://git.door43.org'
 export const TOKEN_ID = 'gatewayEdit'
 export const FEEDBACK_PAGE = '/feedback'
 
+// UI text - may eventually need to localize
 export const MANIFEST_NOT_FOUND_ERROR = 'This resource manifest failed to load. Please confirm that the correct manifest.yaml file exists in the resource at:\n'
 export const MANIFEST_INVALID_ERROR = 'The manifest for this resource is invalid. Resource is at:\n'
 export const NO_ORGS_ERROR = 'The application can not continue. The current username is not part of a DCS organization. Please contact your administrator.'
@@ -22,3 +23,4 @@ export const LOGIN = 'Login'
 export const RETRY = 'Retry'
 export const CANCEL = 'Cancel'
 export const CLOSE = 'Close'
+export const LOADING = 'Loading...'

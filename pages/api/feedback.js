@@ -21,15 +21,14 @@ export default async (req, res) => {
         return res.status(200).json({...response})
       }
     } catch (e) {
-      console.log(`sendFeedback() error:`, e)
       errorMessage = e.toString()
-      console.log(`sendFeedback() errorMessage: ${errorMessage}`)
+      console.warn(`sendFeedback() errorMessage: ${errorMessage}`)
     }
   }
 
+  // see if we can parse http code from message
   let httpCode
   const found = errorMessage.match(/\((\d+)\)/)
-  console.log(`sendFeedback() parsed error code: ${JSON.stringify(found)}`)
 
   if (found?.length > 1) {
     httpCode = parseInt(found[1], 10)
