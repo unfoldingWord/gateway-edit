@@ -69,40 +69,18 @@ function WorkspaceContainer() {
     },
   } = useContext(StoreContext)
 
-  const [{
-    loading, title, content, error,
-  }, clearContent] = useResourceClickListener({
+  const [
+    {
+      loading, title, content, error,
+    },
+    clearContent,
+  ] = useResourceClickListener({
     owner,
     server,
     branch,
     taArticle,
     languageId,
   })
-
-  const layout = {
-    widths: [
-      [1, 1, 1],
-      [2, 2],
-      [1, 1.5, 1.5],
-    ],
-    heights: [[5], [10, 10], [10, 10]],
-    minW: 3,
-    minH: 4,
-  }
-
-  if (currentLayout) {
-    // Migrating cached currentLayout to include min width & min height.
-    if (!currentLayout[0].minW || !currentLayout[0].minH) {
-      const newCurrentLayout = currentLayout.map(l => {
-        l.minW = layout.minW
-        l.minH = layout.minH
-        return l
-      })
-      setCurrentLayout(newCurrentLayout)
-    }
-
-    layout.absolute = currentLayout
-  }
 
   function isNT(bookId) {
     return NT_BOOKS.includes(bookId)
@@ -143,8 +121,8 @@ function WorkspaceContainer() {
         setWorkspaceReady(true)
       }).catch(() => {
         setWorkspaceReady(true)
-      }) // eslint-disable-next-line
-    }
+      })
+    }// eslint-disable-next-line
   }, [owner, languageId, branch, server, loggedInUser])
 
   const originalScripture = {
@@ -204,10 +182,30 @@ function WorkspaceContainer() {
         }
         <Workspace
           rowHeight={25}
-          layout={layout}
+          layout={currentLayout}
           classes={classes}
-          gridMargin={[15, 15]}
-          onLayoutChange={setCurrentLayout}
+          gridMargin={[10, 10]}
+          onLayoutChange={(_layout, layouts) => {
+            setCurrentLayout(layouts)
+          }}
+          layoutWidths={[
+            [1, 1, 1],
+            [2, 2],
+            [1, 1.5, 1.5],
+          ]}
+          layoutHeights={[[5], [10, 10], [10, 10]]}
+          minW={3}
+          minH={4}
+          breakpoints={{
+            lg: 900,
+            sm: 680,
+            xs: 300,
+          }}
+          columns={{
+            lg: 12,
+            sm: 6,
+            xs: 3,
+          }}
         >
           <ScriptureCard
             cardNum={0}
