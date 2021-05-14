@@ -15,7 +15,8 @@ import {
 } from '@common/constants'
 
 /**
- * checks to see if there is a fault with the server
+ * checks to see if there is a fault with the server - first checks the networking connection and then
+ *    checks if server is responding.
  * @return {Promise<string>} error message if server is not reachable
  */
 export async function getServerFault() {
@@ -43,10 +44,11 @@ export async function getServerFault() {
 }
 
 /**
- * on network error, first do check if server is accessible, then return appropriate error message and prompting details
+ * on networking error, first check to see if connected to network and then check if server is responding.
+ *    Finally return appropriate error message and possible action steps
  * @param {string} errorMessage - error message for type of network problem
  * @param {number} httpCode - HTTP code returned
- * @return {Promise<object>} returns final error string
+ * @return {Promise<object>} returns final error details and possible actions
  */
 export async function getNetworkError(errorMessage, httpCode ) {
   // eslint-disable-next-line no-template-curly-in-string
@@ -94,7 +96,6 @@ export async function getNetworkError(errorMessage, httpCode ) {
  * @param {function} setNetworkError - callback to toggle display of error popup
  * @param {function} [setLastError] - callback to save error details
  * @param {function} [setErrorMessage] - optional callback to apply error message
- * @return {Promise<void>}
  */
 export async function processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError, setErrorMessage ) {
   setNetworkError && setNetworkError(null) // clear until processing finished

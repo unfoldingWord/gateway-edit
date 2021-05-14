@@ -14,7 +14,6 @@ export default function NetworkErrorPopup(
     closeButtonStr,
     onClose,
   }) {
-
   return (
     <ErrorPopup
       title={title}
@@ -40,7 +39,7 @@ NetworkErrorPopup.propTypes = {
   onClose: PropTypes.func,
   /** custom title text */
   title: PropTypes.string,
-  /** contains details about the networking error - created by processNetworkError */
+  /** contains details about the networking error - created by processNetworkError() */
   networkError: PropTypes.object,
   /** to close pop up */
   setNetworkError: PropTypes.func,
