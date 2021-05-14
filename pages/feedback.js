@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/router'
 import Paper from 'translation-helps-rcl/dist/components/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -11,6 +11,12 @@ import Button from '@material-ui/core/Button'
 import MuiAlert from '@material-ui/lab/Alert'
 import CloseIcon from '@material-ui/icons/Close'
 import Layout from '@components/Layout'
+import { StoreContext } from '@context/StoreContext'
+import { getBuildId } from '@utils/build'
+import { getUserItem, getUserKey } from '@hooks/useUserLocalStorage'
+import { processNetworkError } from '@utils/network'
+import { CLOSE } from '@common/constants'
+import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 function Alert({ severity, message }) {
   const router = useRouter()
@@ -62,6 +68,33 @@ const SettingsPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
+  const [networkError, setNetworkError] = useState(null)
+
+  const {
+    state: {
+      owner,
+      server,
+      branch,
+      taArticle,
+      languageId,
+      selectedQuote,
+      scriptureOwner,
+      bibleReference,
+      supportedBibles,
+      currentLayout,
+      lastError,
+      loggedInUser,
+    },
+  } = useContext(StoreContext)
+
+  /**
+   * in the case of a network error, process and display error dialog
+   * @param {string} errorMessage - optional error message returned
+   * @param {number} httpCode - http code returned
+   */
+  function processError(errorMessage, httpCode=0) {
+    processNetworkError(errorMessage, httpCode, null, router, setNetworkError, null, null )
+  }
 
   function onClose() {
     router.push('/')
@@ -83,21 +116,92 @@ const SettingsPage = () => {
     setMessage(e.target.value)
   }
 
+  function getUserSettings(username, baseKey) {
+    const key = getUserKey(username, baseKey)
+    const savedValue = getUserItem(key)
+    return savedValue
+  }
+
+  function getScriptureCardSettings(username) {
+    const settings = ['scripturePaneTarget', 'scripturePaneConfig', 'scripturePaneFontSize']
+    const cards = []
+
+    for (let i = 0; ; i++) {
+      const cardSettings = {}
+
+      for (let j = 0; j < settings.length; j++) {
+        const settingKey = settings[j]
+        const savedValue = getUserSettings(username, `${settingKey}_${i}`)
+
+        if (savedValue !== null) {
+          cardSettings.settingKey = savedValue
+        } else {
+          break
+        }
+      }
+
+      if (Object.keys(cardSettings).length > 0) {
+        cards.push(cardSettings)
+      } else {
+        break
+      }
+    }
+    return cards
+  }
+
   async function onSubmitFeedback() {
     setSubmitting(true)
+    setShowSuccess(false)
+    setShowError(false)
+    const build = getBuildId()
+    const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
+    const scriptureVersionHistory = getUserSettings(loggedInUser, `scriptureVersionHistory`)
 
-    const res = await fetch('/api/feedback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name, email, category, message,
-      }),
+    const extraData = JSON.stringify({
+      lastError,
+      loggedInUser,
+      build,
+      owner,
+      server,
+      branch,
+      taArticle,
+      languageId,
+      selectedQuote,
+      scriptureOwner,
+      bibleReference,
+      supportedBibles,
+      currentLayout,
+      scriptureCardSettings,
+      scriptureVersionHistory,
     })
+
+    let res
+
+    try {
+      res = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name, email, category, message, extraData,
+        }),
+      })
+    } catch (e) {
+      console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
+      processError(`Failure calling '/api/feedback': ${e.toString()}`)
+      return
+    }
+
+    const response = await res.json()
 
     if (res.status === 200) {
       setShowSuccess(true)
     } else {
+      const error = response.error
+      console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(error)}`)
+      const httpCode = parseInt(error.code, 10)
+      const errorMessage = error.message + '.'
       setShowError(true)
+      processError(errorMessage, httpCode)
     }
 
     setSubmitting(false)
@@ -200,6 +304,13 @@ const SettingsPage = () => {
           </Paper>
         </div>
       </div>
+      { !!networkError &&
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          closeButtonStr={CLOSE}
+        />
+      }
     </Layout>
   )
 }

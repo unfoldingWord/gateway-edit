@@ -26,6 +26,14 @@ import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
+import {
+  onNetworkActionButton,
+  processNetworkError,
+  reloadApp,
+} from '@utils/network'
+import { useRouter } from 'next/router'
+import { MANIFEST_INVALID_ERROR } from '@common/constants'
+import NetworkErrorPopup from "@components/NetworkErrorPopUp";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,9 +49,11 @@ const useStyles = makeStyles(() => ({
 }))
 
 function WorkspaceContainer() {
+  const router = useRouter()
   const classes = useStyles()
   const [workspaceReady, setWorkspaceReady] = useState(false)
   const [selections, setSelections] = useState([])
+  const [networkError, setNetworkError] = useState(null)
   const {
     state: {
       owner,
@@ -60,12 +70,16 @@ function WorkspaceContainer() {
       currentLayout,
       useUserLocalStorage,
       loggedInUser,
+      tokenNetworkError,
     },
     actions: {
+      logout,
       setQuote,
-      updateTaDetails,
       setSupportedBibles,
       setCurrentLayout,
+      setTokenNetworkError,
+      setLastError,
+      updateTaDetails,
     },
   } = useContext(StoreContext)
 
@@ -108,6 +122,46 @@ function WorkspaceContainer() {
     return NT_BOOKS.includes(bookId)
   }
 
+  /**
+   * in the case of a network error, process and display error dialog
+   * @param {string} errorMessage - optional error message returned
+   * @param {number} httpCode - http code returned
+   */
+  function processError(errorMessage, httpCode=0) {
+    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
+  }
+
+  /**
+   * show either tokenNetworkError or NetworkError for workspace
+   * @return {JSX.Element|null}
+   */
+  function showNetworkError() {
+    if (tokenNetworkError) { // if we had a token network error on startup
+      if (!tokenNetworkError.router) { // needed for reload of page
+        setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
+      }
+      return (
+        <NetworkErrorPopup
+          networkError={tokenNetworkError}
+          setNetworkError={(error) => {
+            setTokenNetworkError(error)
+            setNetworkError(null) // clear this flag in case it was also set
+          }}
+          onRetry={reloadApp}
+        />
+      )
+    } else if (networkError) { // for all other workspace network errors
+      return (
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          onActionButton={onNetworkActionButton}
+        />
+      )
+    }
+    return null
+  }
+
   const commonScriptureCardConfigs = {
     isNT,
     server,
@@ -131,18 +185,22 @@ function WorkspaceContainer() {
         languageId,
         branch,
         server,
-      }).then(bibles => {
+      }).then(results => {
+        const { bibles, httpCode, resourceLink } = results
+
         if (bibles?.length) {
           if (!isEqual(bibles, supportedBibles)) {
             console.log(`found ${bibles?.length} bibles`)
             setSupportedBibles(bibles) //TODO blm: update bible refs
           }
         } else {
-          console.log(`no bibles`)
+          processError(`${MANIFEST_INVALID_ERROR} ${resourceLink}`, httpCode)
+          console.warn(`no bibles found for ${resourceLink}`)
         }
         setWorkspaceReady(true)
-      }).catch(() => {
+      }).catch((e) => {
         setWorkspaceReady(true)
+        processError(e.toString())
       }) // eslint-disable-next-line
     }
   }, [owner, languageId, branch, server, loggedInUser])
@@ -180,8 +238,11 @@ function WorkspaceContainer() {
   })
 
   return (
-    !workspaceReady ? // Do not render workspace until user logged in and we have user settings
-      <CircularProgress size={180} />
+    (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+      <>
+        {showNetworkError()}
+        <CircularProgress size={180} />
+      </>
       :
       <SelectionsContextProvider
         selections={selections}

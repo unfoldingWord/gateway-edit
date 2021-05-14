@@ -6,13 +6,13 @@ import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
-import { appName } from '@common/constants'
+import { APP_NAME } from '@common/constants'
 import useValidateAccountSettings from '@hooks/useValidateAccountSettings'
 
 export default function Layout({
   children,
   showChildren,
-  title = appName,
+  title = APP_NAME,
 }) {
   const {
     state: authentication,

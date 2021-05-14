@@ -47,7 +47,7 @@ export function useUserLocalStorage(username, key, initialValue) {
  * @param {string} baseKey
  * @return {string} key for user settings
  */
-function getUserKey(username, baseKey) {
+export function getUserKey(username, baseKey) {
   const key_ = username ? `${username}_${baseKey}` : baseKey // get user key
   return key_
 }
@@ -60,7 +60,7 @@ function getUserKey(username, baseKey) {
  * @param {any} newValue
  * @param {string} username
  */
-function setUserItem(key, currentValue, setState, newValue, username) {
+export function setUserItem(key, currentValue, setState, newValue, username) {
   const key_ = getUserKey(username, key)
   // Allow value to be a function so we have same API as useState
   const valueToStore =
@@ -79,7 +79,7 @@ function setUserItem(key, currentValue, setState, newValue, username) {
  * @param {string} username - user to save settings for
  * @return {any} returns current value
  */
-function readUserItem(key, currentValue, setState, initialValue, username) {
+export function readUserItem(key, currentValue, setState, initialValue, username) {
   const key_ = getUserKey(username, key)
   let savedValue = getUserItem(key_)
 
@@ -102,7 +102,7 @@ function readUserItem(key, currentValue, setState, initialValue, username) {
  * @param {string} key - key for item
  * @return {any}
  */
-function getUserItem(key) {
+export function getUserItem(key) {
   let savedValue = localStorage.getItem(key)
 
   if (savedValue !== null) {

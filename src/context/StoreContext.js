@@ -11,7 +11,16 @@ import { AuthContext } from '@context/AuthContext'
 export const StoreContext = createContext({})
 
 export default function StoreContextProvider(props) {
-  const { authentication } = useContext(AuthContext)
+  const {
+    state: {
+      authentication,
+      networkError: tokenNetworkError,
+    },
+    actions: {
+      logout,
+      setNetworkError: setTokenNetworkError,
+    },
+  } = useContext(AuthContext)
   const username = authentication?.user?.username || ''
 
   /**
@@ -24,6 +33,7 @@ export default function StoreContextProvider(props) {
     return useULS.useUserLocalStorage(username, key, initialValue)
   }
 
+  const [lastError, setLastError] = useState(null)
   const [owner, setOwner] = useUserLocalStorage('owner', '')
   const [languageId, setLanguageId] = useUserLocalStorage('languageId', '')
   const [showAccountSetup, setShowAccountSetup] = useLocalStorage(
@@ -84,12 +94,14 @@ export default function StoreContextProvider(props) {
       currentLayout,
       useUserLocalStorage,
       loggedInUser: username,
+      lastError,
+      tokenNetworkError,
     },
     actions: {
+      logout,
+      onReferenceChange,
       setShowAccountSetup,
       setScriptureOwner,
-      onReferenceChange,
-      updateTaDetails,
       setLanguageId,
       setBranch,
       setServer,
@@ -97,6 +109,9 @@ export default function StoreContextProvider(props) {
       setOwner,
       setSupportedBibles,
       setCurrentLayout,
+      setLastError,
+      setTokenNetworkError,
+      updateTaDetails,
     },
   }
 
