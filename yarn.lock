@@ -4469,10 +4469,10 @@ resolve@^2.0.0-next.3:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
-resource-workspace-rcl@^1.0.0-rc0:
-  version "1.0.0-rc0"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-1.0.0-rc0.tgz#ac3a99c88349f1bc5703ba949e22d5bc781a5e3e"
-  integrity sha512-Uc6jMfJKWg83X+6Ehhf5grS2LDptf4h0puQkgE45TB6zABjWh+VxvGycKudMg7fOVewmcxGE6xPsFz3ed+hd9Q==
+resource-workspace-rcl@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-1.0.0.tgz#6699857f75b530d912fb360b9560547405b3ca77"
+  integrity sha512-BjqYdCCBnt2cjVp1rQ5A5TazdrlfVs61rtbvq7VosqNVjVkZN+PWW6mGcTWetqklYwGZWMMkvcF/7fPNLqpiMQ==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
