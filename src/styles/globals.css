@@ -1,4 +1,11 @@
 @import './resource-workspace-rcl.css';
+@tailwind base;
+
+@layer base {
+  .wrap-anywhere {
+    overflow-wrap: anywhere;
+  }
+}
 
 @font-face {
   font-family: Noto Sans;
