@@ -105,6 +105,10 @@ function WorkspaceContainer() {
     return NT_BOOKS.includes(bookId)
   }
 
+  function onResourceError() {
+
+  }
+
   const commonScriptureCardConfigs = {
     isNT,
     server,
@@ -113,9 +117,12 @@ function WorkspaceContainer() {
     getLanguage,
     useUserLocalStorage,
     originalLanguageOwner: scriptureOwner,
+    onResourceError,
   }
 
   useEffect(() => {
+    console.log(`WorkspaceContainer - getting bibles: `,{owner, languageId, branch, server})
+
     getResourceBibles({
       bookId,
       chapter,
