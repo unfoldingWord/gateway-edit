@@ -1,12 +1,26 @@
 import React, { useState, createContext } from 'react'
 import localforage from 'localforage'
 import { AuthenticationContextProvider } from 'gitea-react-toolkit'
-import { base_url, tokenid } from '@common/constants'
+import {
+  BASE_URL, CLOSE, TOKEN_ID,
+} from '@common/constants'
+import { processNetworkError, unAuthenticated } from '@utils/network'
+import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 export const AuthContext = createContext({})
 
 export default function AuthContextProvider(props) {
   const [authentication, setAuthentication] = useState(null)
+  const [networkError, setNetworkError] = useState(null)
+
+  /**
+   * in the case of a network error, process and display error dialog
+   * @param {string} errorMessage - optional error message returned
+   * @param {number} httpCode - http code returned
+   */
+  function processError(errorMessage, httpCode=0) {
+    processNetworkError(errorMessage, httpCode, null, null, setNetworkError, null, null )
+  }
 
   const myAuthStore = localforage.createInstance({
     driver: [localforage.INDEXEDDB],
@@ -19,16 +33,21 @@ export default function AuthContextProvider(props) {
     if (auth) { // verify that auth is still valid
       fetch('https://git.door43.org/api/v1/user', { ...auth.config })
         .then(response => {
-          if (response?.status !== 200) {
-            console.log(`TranslationSettings - error fetching user info, status code ${response?.status}`)
+          const httpCode = response?.status || 0
 
-            if (response?.status === 401) {
+          if (httpCode !== 200) {
+            console.log(`TranslationSettings - error fetching user info, status code ${httpCode}`)
+
+            if (unAuthenticated(httpCode)) {
               console.log(`TranslationSettings - user not authenticated, going to login`)
               logout()
+            } else {
+              processError(null, httpCode)
             }
           }
         }).catch(e => {
           console.warn(`TranslationSettings - hard error fetching user info, error=`, e)
+          processError('Unknown networking error')
         })
     }
     return auth
@@ -54,29 +73,49 @@ export default function AuthContextProvider(props) {
     }
   }
 
+  const onError = (e) => {
+    console.warn('AuthContextProvider - auth error', e)
+    processError(e?.errorMessage)
+  }
+
   async function logout() {
     await myAuthStore.removeItem('authentication')
     setAuthentication(null)
   }
 
   const value = {
-    logout,
+    state: {
+      authentication,
+      networkError,
+    },
+    actions: {
+      logout,
+      setNetworkError,
+    },
   }
 
   return (
     <AuthContext.Provider value={value}>
       <AuthenticationContextProvider
         config={{
-          server: base_url,
-          tokenid,
+          server: BASE_URL,
+          tokenid: TOKEN_ID,
         }}
         authentication={authentication}
         onAuthentication={setAuthentication}
         loadAuthentication={getAuth}
         saveAuthentication={saveAuth}
+        onError={onError}
       >
         {props.children}
       </AuthenticationContextProvider>
+      { !!networkError &&
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          closeButtonStr={CLOSE}
+        />
+      }
     </AuthContext.Provider>
   )
 }

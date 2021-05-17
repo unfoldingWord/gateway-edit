@@ -25,6 +25,15 @@ import { getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
+import CircularProgress from '@components/CircularProgress'
+import {
+  onNetworkActionButton,
+  processNetworkError,
+  reloadApp,
+} from '@utils/network'
+import { useRouter } from 'next/router'
+import { MANIFEST_INVALID_ERROR } from '@common/constants'
+import NetworkErrorPopup from "@components/NetworkErrorPopUp";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -40,8 +49,11 @@ const useStyles = makeStyles(() => ({
 }))
 
 function WorkspaceContainer() {
+  const router = useRouter()
   const classes = useStyles()
+  const [workspaceReady, setWorkspaceReady] = useState(false)
   const [selections, setSelections] = useState([])
+  const [networkError, setNetworkError] = useState(null)
   const {
     state: {
       owner,
@@ -57,12 +69,17 @@ function WorkspaceContainer() {
       supportedBibles,
       currentLayout,
       useUserLocalStorage,
+      loggedInUser,
+      tokenNetworkError,
     },
     actions: {
+      logout,
       setQuote,
-      updateTaDetails,
       setSupportedBibles,
       setCurrentLayout,
+      setTokenNetworkError,
+      setLastError,
+      updateTaDetails,
     },
   } = useContext(StoreContext)
 
@@ -105,6 +122,46 @@ function WorkspaceContainer() {
     return NT_BOOKS.includes(bookId)
   }
 
+  /**
+   * in the case of a network error, process and display error dialog
+   * @param {string} errorMessage - optional error message returned
+   * @param {number} httpCode - http code returned
+   */
+  function processError(errorMessage, httpCode=0) {
+    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
+  }
+
+  /**
+   * show either tokenNetworkError or NetworkError for workspace
+   * @return {JSX.Element|null}
+   */
+  function showNetworkError() {
+    if (tokenNetworkError) { // if we had a token network error on startup
+      if (!tokenNetworkError.router) { // needed for reload of page
+        setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
+      }
+      return (
+        <NetworkErrorPopup
+          networkError={tokenNetworkError}
+          setNetworkError={(error) => {
+            setTokenNetworkError(error)
+            setNetworkError(null) // clear this flag in case it was also set
+          }}
+          onRetry={reloadApp}
+        />
+      )
+    } else if (networkError) { // for all other workspace network errors
+      return (
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          onActionButton={onNetworkActionButton}
+        />
+      )
+    }
+    return null
+  }
+
   function onResourceError() {
 
   }
@@ -121,28 +178,37 @@ function WorkspaceContainer() {
   }
 
   useEffect(() => {
-    console.log(`WorkspaceContainer - getting bibles: `,{owner, languageId, branch, server})
+    setWorkspaceReady(false)
 
-    getResourceBibles({
-      bookId,
-      chapter,
-      verse,
-      resourceId: languageId === 'en' ? 'ult' : 'glt',
-      owner,
-      languageId,
-      branch,
-      server,
-    }).then(bibles => {
-      if (bibles?.length) {
-        if (!isEqual(bibles, supportedBibles )) {
-          console.log(`found ${bibles?.length} bibles`)
-          setSupportedBibles(bibles) //TODO blm: update bible refs
+    if (owner && languageId && branch && server && loggedInUser) {
+      getResourceBibles({
+        bookId,
+        chapter,
+        verse,
+        resourceId: languageId === 'en' ? 'ult' : 'glt',
+        owner,
+        languageId,
+        branch,
+        server,
+      }).then(results => {
+        const { bibles, httpCode, resourceLink } = results
+
+        if (bibles?.length) {
+          if (!isEqual(bibles, supportedBibles)) {
+            console.log(`found ${bibles?.length} bibles`)
+            setSupportedBibles(bibles) //TODO blm: update bible refs
+          }
+        } else {
+          processError(`${MANIFEST_INVALID_ERROR} ${resourceLink}`, httpCode)
+          console.warn(`no bibles found for ${resourceLink}`)
         }
-      } else {
-        console.log(`no bibles`)
-      }
-    })// eslint-disable-next-line
-  }, [owner, languageId, branch, server])
+        setWorkspaceReady(true)
+      }).catch((e) => {
+        setWorkspaceReady(true)
+        processError(e.toString())
+      }) // eslint-disable-next-line
+    }
+  }, [owner, languageId, branch, server, loggedInUser])
 
   const originalScripture = {
     reference: {
@@ -177,175 +243,185 @@ function WorkspaceContainer() {
   })
 
   return (
-    <SelectionsContextProvider
-      selections={selections}
-      onSelections={setSelections}
-      quote={selectedQuote?.quote}
-      occurrence={selectedQuote?.occurrence}
-      verseObjects={originalScriptureConfig.verseObjects || []}
-    >
-      {loading || content || error ?
-        <DraggableCard
-          open
-          error={error}
-          title={title}
-          loading={loading}
-          content={content}
-          onClose={() => clearContent()}
-        />
-        :
-        null
-      }
-      <Workspace
-        rowHeight={25}
-        layout={layout}
-        classes={classes}
-        gridMargin={[15, 15]}
-        onLayoutChange={setCurrentLayout}
+    (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+      <>
+        {showNetworkError()}
+        <CircularProgress size={180} />
+      </>
+      :
+      <SelectionsContextProvider
+        selections={selections}
+        onSelections={setSelections}
+        quote={selectedQuote?.quote}
+        occurrence={selectedQuote?.occurrence}
+        verseObjects={originalScriptureConfig.verseObjects || []}
       >
-        <ScriptureCard
-          cardNum={0}
-          title='Literal Translation'
-          reference={{
-            chapter,
-            verse,
-            bookId,
-            projectId: bookId,
-          }}
-          resource={{
-            owner,
-            languageId,
-            resourceId: TARGET_LITERAL,
-            originalLanguageOwner: scriptureOwner,
-          }}
-          {...commonScriptureCardConfigs}
-        />
+        {loading || content || error ?
+          <DraggableCard
+            open
+            error={error}
+            title={title}
+            loading={loading}
+            content={content}
+            onClose={() => clearContent()}
+          />
+          :
+          null
+        }
+        <Workspace
+          rowHeight={25}
+          layout={layout}
+          classes={classes}
+          gridMargin={[15, 15]}
+          onLayoutChange={setCurrentLayout}
+        >
+          <ScriptureCard
+            cardNum={0}
+            title='Literal Translation'
+            reference={{
+              chapter,
+              verse,
+              bookId,
+              projectId: bookId,
+            }}
+            resource={{
+              owner,
+              languageId,
+              resourceId: TARGET_LITERAL,
+              originalLanguageOwner: scriptureOwner,
+            }}
+            {...commonScriptureCardConfigs}
+          />
 
-        <ScriptureCard
-          cardNum={1}
-          title='Original Source'
-          reference={{
-            chapter,
-            verse,
-            bookId,
-            projectId: bookId,
-          }}
-          resource={{
-            owner,
-            languageId,
-            resourceId: ORIGINAL_SOURCE,
-            originalLanguageOwner: scriptureOwner,
-          }}
-          {...commonScriptureCardConfigs}
-        />
+          <ScriptureCard
+            cardNum={1}
+            title='Original Source'
+            reference={{
+              chapter,
+              verse,
+              bookId,
+              projectId: bookId,
+            }}
+            resource={{
+              owner,
+              languageId,
+              resourceId: ORIGINAL_SOURCE,
+              originalLanguageOwner: scriptureOwner,
+            }}
+            {...commonScriptureCardConfigs}
+          />
 
-        <ScriptureCard
-          cardNum={2}
-          title='Simplified Translation'
-          reference={{
-            chapter,
-            verse,
-            bookId,
-            projectId: bookId,
-          }}
-          resource={{
-            owner,
-            languageId,
-            resourceId: TARGET_SIMPLIFIED,
-            originalLanguageOwner: scriptureOwner,
-          }}
-          {...commonScriptureCardConfigs}
-        />
+          <ScriptureCard
+            cardNum={2}
+            title='Simplified Translation'
+            reference={{
+              chapter,
+              verse,
+              bookId,
+              projectId: bookId,
+            }}
+            resource={{
+              owner,
+              languageId,
+              resourceId: TARGET_SIMPLIFIED,
+              originalLanguageOwner: scriptureOwner,
+            }}
+            {...commonScriptureCardConfigs}
+          />
 
-        <ResourceCard
-          title='translationNotes'
-          id='resource_card_tn'
-          classes={classes}
-          chapter={chapter}
-          verse={verse}
-          server={server}
-          owner={owner}
-          branch={branch}
-          filePath={null}
-          resourceId={'tn'}
-          projectId={bookId}
-          languageId={languageId}
-          setQuote={setQuote}
-          selectedQuote={selectedQuote}
-          updateTaDetails={updateTaDetails}
-        />
-        <ResourceCard
-          title='translationAcademy'
-          id='resource_card_ta'
-          classes={classes}
-          chapter={chapter}
-          verse={verse}
-          server={server}
-          owner={owner}
-          branch={branch}
-          languageId={languageId}
-          resourceId={'ta'}
-          projectId={taArticle?.projectId}
-          filePath={taArticle?.filePath}
-          errorMessage={taArticle ? null : 'No article is specified in the current note.'}
-        />
-        <ResourceCard
-          title='translationWords List'
-          id='resource_card_twl'
-          classes={classes}
-          chapter={chapter}
-          verse={verse}
-          server={server}
-          owner={owner}
-          branch={branch}
-          viewMode={'list'}
-          languageId={languageId}
-          resourceId={'twl'}
-          projectId={bookId}
-          filePath={null}
-          setQuote={setQuote}
-          selectedQuote={selectedQuote}
-          disableFilters
-          disableNavigation
-          hideMarkdownToggle
-        />
-        <ResourceCard
-          title='translationWords Article'
-          id='resource_card_twa'
-          classes={classes}
-          chapter={chapter}
-          verse={verse}
-          server={server}
-          owner={owner}
-          branch={branch}
-          viewMode={'markdown'}
-          languageId={languageId}
-          resourceId={'twl'}
-          projectId={bookId}
-          filePath={null}
-          setQuote={setQuote}
-          selectedQuote={selectedQuote}
-          disableFilters
-          hideMarkdownToggle
-        />
-        <ResourceCard
-          title='translationQuestions'
-          id='resource_card_tq'
-          classes={classes}
-          chapter={chapter}
-          verse={verse}
-          server={server}
-          owner={owner}
-          branch={branch}
-          languageId={languageId}
-          resourceId={'tq'}
-          projectId={bookId}
-          filePath={null}
-          viewMode='question'
-          disableFilters
-        />
-      </Workspace>
-    </SelectionsContextProvider>
+          <ResourceCard
+            title='translationNotes'
+            id='resource_card_tn'
+            classes={classes}
+            chapter={chapter}
+            verse={verse}
+            server={server}
+            owner={owner}
+            branch={branch}
+            filePath={null}
+            resourceId={'tn'}
+            projectId={bookId}
+            languageId={languageId}
+            setQuote={setQuote}
+            selectedQuote={selectedQuote}
+            updateTaDetails={updateTaDetails}
+            useUserLocalStorage={useUserLocalStorage}
+          />
+          <ResourceCard
+            title='translationAcademy'
+            id='resource_card_ta'
+            classes={classes}
+            chapter={chapter}
+            verse={verse}
+            server={server}
+            owner={owner}
+            branch={branch}
+            languageId={languageId}
+            resourceId={'ta'}
+            projectId={taArticle?.projectId}
+            filePath={taArticle?.filePath}
+            errorMessage={taArticle ? null : 'No article is specified in the current note.'}
+            useUserLocalStorage={useUserLocalStorage}
+          />
+          <ResourceCard
+            title='translationWords List'
+            id='resource_card_twl'
+            classes={classes}
+            chapter={chapter}
+            verse={verse}
+            server={server}
+            owner={owner}
+            branch={branch}
+            viewMode={'list'}
+            languageId={languageId}
+            resourceId={'twl'}
+            projectId={bookId}
+            filePath={null}
+            setQuote={setQuote}
+            selectedQuote={selectedQuote}
+            disableFilters
+            disableNavigation
+            hideMarkdownToggle
+            useUserLocalStorage={useUserLocalStorage}
+          />
+          <ResourceCard
+            title='translationWords Article'
+            id='resource_card_twa'
+            classes={classes}
+            chapter={chapter}
+            verse={verse}
+            server={server}
+            owner={owner}
+            branch={branch}
+            viewMode={'markdown'}
+            languageId={languageId}
+            resourceId={'twl'}
+            projectId={bookId}
+            filePath={null}
+            setQuote={setQuote}
+            selectedQuote={selectedQuote}
+            disableFilters
+            useUserLocalStorage={useUserLocalStorage}
+          />
+          <ResourceCard
+            title='translationQuestions'
+            id='resource_card_tq'
+            classes={classes}
+            chapter={chapter}
+            verse={verse}
+            server={server}
+            owner={owner}
+            branch={branch}
+            languageId={languageId}
+            resourceId={'tq'}
+            projectId={bookId}
+            filePath={null}
+            viewMode='question'
+            disableFilters
+            useUserLocalStorage={useUserLocalStorage}
+          />
+        </Workspace>
+      </SelectionsContextProvider>
   )
 }
 

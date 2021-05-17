@@ -1,7 +1,7 @@
 import sgMail from '@sendgrid/mail'
 import { APP_VERSION } from '../common/constants'
 
-export default async function sendFeedback({ name, email, message, category }) {
+export default async function sendFeedback({ name, email, message, category, extraData }) {
   let fullMessage = `${message}\n\nApp Version: ${APP_VERSION}`
 
   if (name) {
@@ -10,6 +10,10 @@ export default async function sendFeedback({ name, email, message, category }) {
 
   if (email) {
     fullMessage += `\n\nEmail: ${email}`
+  }
+
+  if (extraData) {
+    fullMessage += `\n\nExtraData: ${extraData}`
   }
 
   const msg = {

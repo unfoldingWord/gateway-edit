@@ -2,20 +2,39 @@ import { useEffect, useState } from 'react'
 import * as isEqual from 'deep-equal'
 
 /**
- * use hook for accessing local starage for user
- * @param {Object} username
+ * use hook for accessing local storage for user
+ * @param {string} username
  * @param {string} key
  * @param {any} initialValue
  * @return {any[]}
  */
 export function useUserLocalStorage(username, key, initialValue) {
-  const [currentValue, setCurrentValue_] = useState(initialValue)
+  const [currentValue, setCurrentValue_] = useState(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const key_ = getUserKey(username, key)
+        const savedValue = localStorage.getItem(key_)
+
+        if (savedValue) {
+          // Parse saved json data
+          return JSON.parse(savedValue)
+        }
+      }
+      return initialValue // default to initial value
+    } catch (error) {
+      // If error also return initialValue
+      console.log(`useUserLocalStorage(${key}) - init error:'`, error)
+      return initialValue
+    }
+  })
   const setCurrentValue = (newValue) => setUserItem(key, currentValue, setCurrentValue_, newValue, username)
   const readSavedValue = () => readUserItem(key, currentValue, setCurrentValue_, initialValue, username)
 
   useEffect(() => {
     if (username) {
       readSavedValue() // update once we have username or it has changed
+    } else { // if no username, set back to default
+      setCurrentValue_(initialValue)
     }
   }, [username])
 
@@ -28,7 +47,7 @@ export function useUserLocalStorage(username, key, initialValue) {
  * @param {string} baseKey
  * @return {string} key for user settings
  */
-function getUserKey(username, baseKey) {
+export function getUserKey(username, baseKey) {
   const key_ = username ? `${username}_${baseKey}` : baseKey // get user key
   return key_
 }
@@ -41,7 +60,7 @@ function getUserKey(username, baseKey) {
  * @param {any} newValue
  * @param {string} username
  */
-function setUserItem(key, currentValue, setState, newValue, username) {
+export function setUserItem(key, currentValue, setState, newValue, username) {
   const key_ = getUserKey(username, key)
   // Allow value to be a function so we have same API as useState
   const valueToStore =
@@ -60,7 +79,7 @@ function setUserItem(key, currentValue, setState, newValue, username) {
  * @param {string} username - user to save settings for
  * @return {any} returns current value
  */
-function readUserItem(key, currentValue, setState, initialValue, username) {
+export function readUserItem(key, currentValue, setState, initialValue, username) {
   const key_ = getUserKey(username, key)
   let savedValue = getUserItem(key_)
 
@@ -73,7 +92,7 @@ function readUserItem(key, currentValue, setState, initialValue, username) {
   }
 
   if (!isEqual(currentValue, savedValue)) {
-    setState(savedValue)
+    setState && setState(savedValue)
   }
   return savedValue
 }
@@ -83,7 +102,7 @@ function readUserItem(key, currentValue, setState, initialValue, username) {
  * @param {string} key - key for item
  * @return {any}
  */
-function getUserItem(key) {
+export function getUserItem(key) {
   let savedValue = localStorage.getItem(key)
 
   if (savedValue !== null) {

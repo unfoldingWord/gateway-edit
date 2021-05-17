@@ -2,35 +2,8 @@
 @tailwind base;
 
 @layer base {
-  h1 {
-    @apply text-3xl;
-    @apply font-bold;
-    @apply my-7;
-  }
-  h2 {
-    @apply text-2xl;
-    @apply font-semibold;
-    @apply my-6;
-  }
-  h3 {
-    @apply text-xl;
-    @apply font-medium;
-    @apply my-5;
-  }
-  h4 {
-    @apply text-lg;
-    @apply font-medium;
-    @apply my-4;
-  }
-  h5 {
-    @apply text-base;
-    @apply font-medium;
-    @apply my-4;
-  }
-  h6 {
-    @apply text-base;
-    @apply font-medium;
-    @apply my-4;
+  .wrap-anywhere {
+    overflow-wrap: anywhere;
   }
 }
 
@@ -58,7 +31,7 @@
 }
 
 /*
-special font for Hebrew
+  special font for Hebrew
 */
 @font-face {
   font-family: Ezra;
@@ -74,7 +47,6 @@ special font for Hebrew
 * {
   font-family: Ezra, Noto Sans;
 }
-
 
 @tailwind components;
 @tailwind utilities;
