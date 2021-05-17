@@ -157,6 +157,7 @@ function WorkspaceContainer() {
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
+          onRetry={reloadApp}
         />
       )
     }

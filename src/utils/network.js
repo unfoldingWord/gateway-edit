@@ -126,7 +126,7 @@ export async function addNetworkErrorsOnly(errorMessage, httpCode, logout, route
 ) {
   const error = await getNetworkError(errorMessage, httpCode)
 
-  if (!error.networkError) {
+  if (!error.networkingError) {
     console.log(`addNetworkErrorsOnly() - not showing the non-network connection errors`)
     return // ignoring non network errors
   }
