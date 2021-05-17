@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
-import { CANCEL } from '@common/constants'
+import {CANCEL} from '@common/constants'
 
 export default function ErrorPopup(
   {
@@ -13,16 +13,20 @@ export default function ErrorPopup(
     actionButtonStr,
     onActionButton,
     actionStartIcon,
+    actionButtonDefault,
     actionButton2Str,
     onActionButton2,
+    actionButton2Default,
     closeButtonStr,
+    closeButtonDefault,
   }) {
   function getActionButtons() {
     return <>
-      {actionButtonStr ?
+      {actionButtonStr &&
         <Button
           size='large'
           className='my-3'
+          color={actionButtonDefault ? 'primary' : 'default'}
           variant='contained'
           onClick={() => {
             onActionButton && onActionButton()
@@ -31,13 +35,13 @@ export default function ErrorPopup(
           startIcon={actionStartIcon}
         >
           {actionButtonStr}
-        </Button> :
-        null
+        </Button>
       }
-      {actionButton2Str ?
+      {actionButton2Str &&
         <Button
           size='large'
           className='my-3'
+          color={actionButton2Default ? 'primary' : 'default'}
           variant='contained'
           onClick={() => {
             onActionButton2 && onActionButton2()
@@ -45,8 +49,7 @@ export default function ErrorPopup(
           }}
         >
           {actionButton2Str}
-        </Button> :
-        null
+        </Button>
       }
     </>
   }
@@ -54,19 +57,18 @@ export default function ErrorPopup(
   const title_ =
     <div className='h1 text-xl'> {title} </div>
 
-  const closeButtonText = closeButtonStr || CANCEL
   const content =
     <div className='flex-col'>
       <div className='h2 flex text-lg my-3 wrap-anywhere'> {message} </div>
       <div className='flex justify-end space-x-4'>
         <Button
           size='large'
-          color='primary'
+          color={closeButtonDefault ? 'primary' : 'default'}
           className='my-3'
           variant='contained'
           onClick={onClose}
         >
-          {closeButtonText}
+          {closeButtonStr}
         </Button>
         {getActionButtons()}
       </div>
@@ -88,6 +90,9 @@ ErrorPopup.defaultProps = {
   id: `error_popup`,
   actionButtonStr: '',
   startIcon: null,
+  actionButton2Str: '',
+  closeButtonStr: CANCEL,
+  closeButtonDefault: true,
 }
 
 ErrorPopup.propTypes = {
@@ -105,10 +110,16 @@ ErrorPopup.propTypes = {
   onActionButton: PropTypes.func,
   /** if given then attach icon to action button */
   actionStartIcon: PropTypes.object,
+  /** if true then make action button the default */
+  actionButtonDefault: PropTypes.bool,
   /** if present, then show second action button */
   actionButton2Str: PropTypes.string,
   /** callback if second action button clicked */
   onActionButton2: PropTypes.func,
+  /** if true then make action button 2 the default */
+  actionButton2Default: PropTypes.bool,
   /** if present, then use this text for the close button */
   closeButtonStr: PropTypes.string,
+  /** if true then make close button the default */
+  closeButtonDefault: PropTypes.bool,
 }

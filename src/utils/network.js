@@ -84,11 +84,12 @@ export async function getNetworkError(errorMessage, httpCode ) {
     actionButtonText,
     authenticationError,
     lastError,
+    networkingError: !!serverDisconnectMessage,
   }
 }
 
 /**
- * in the case of a network error, process and display error dialog
+ * in the case of any networking/http error, process and display error dialog
  * @param {string} [errorMessage] - initial error message
  * @param {number} [httpCode] - http code returned
  * @param {function} [logout] - invalidate current login
@@ -97,15 +98,45 @@ export async function getNetworkError(errorMessage, httpCode ) {
  * @param {function} [setLastError] - callback to save error details
  * @param {function} [setErrorMessage] - optional callback to apply error message
  */
-export async function processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError, setErrorMessage ) {
+export async function processNetworkError(errorMessage, httpCode, logout, router,
+                                          setNetworkError, setLastError, setErrorMessage,
+) {
   setNetworkError && setNetworkError(null) // clear until processing finished
-  const networkError_ = await getNetworkError(errorMessage, httpCode)
-  setErrorMessage && setErrorMessage(networkError_.errorMessage)
-  setLastError && setLastError(networkError_.lastError) // error info to attach to sendmail
+  const error = await getNetworkError(errorMessage, httpCode)
+  setErrorMessage && setErrorMessage(error.errorMessage)
+  setLastError && setLastError(error.lastError) // error info to attach to sendmail
   // add params needed for button actions
-  networkError_.router = router
-  networkError_.logout = logout
-  setNetworkError && setNetworkError(networkError_) // this triggers network error popup
+  error.router = router
+  error.logout = logout
+  setNetworkError && setNetworkError(error) // this triggers network error popup
+}
+
+/**
+ * in the case of a network connection errors only, process and display error dialog
+ * @param {string} [errorMessage] - initial error message
+ * @param {number} [httpCode] - http code returned
+ * @param {function} [logout] - invalidate current login
+ * @param {object} [router] - to change to different web page
+ * @param {function} setNetworkError - callback to toggle display of error popup
+ * @param {function} [setLastError] - callback to save error details
+ * @param {function} [setErrorMessage] - optional callback to apply error message
+ */
+export async function addNetworkErrorsOnly(errorMessage, httpCode, logout, router,
+                                           setNetworkError, setLastError, setErrorMessage,
+) {
+  const error = await getNetworkError(errorMessage, httpCode)
+
+  if (!error.networkError) {
+    console.log(`addNetworkErrorsOnly() - not showing the non-network connection errors`)
+    return // ignoring non network errors
+  }
+
+  setErrorMessage && setErrorMessage(error.errorMessage)
+  setLastError && setLastError(error.lastError) // error info to attach to sendmail
+  // add params needed for button actions
+  error.router = router
+  error.logout = logout
+  setNetworkError && setNetworkError(error) // this triggers network error popup
 }
 
 /**

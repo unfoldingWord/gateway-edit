@@ -27,6 +27,7 @@ import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
+  addNetworkErrorsOnly,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -162,8 +163,10 @@ function WorkspaceContainer() {
     return null
   }
 
-  function onResourceError() {
-
+  function onResourceError(message) {
+    if (!networkError) { // only show if another error not already showing
+      addNetworkErrorsOnly(message, 0, logout, router, setNetworkError, setLastError )
+    }
   }
 
   const commonScriptureCardConfigs = {

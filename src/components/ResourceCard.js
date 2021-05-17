@@ -117,7 +117,7 @@ ResourceCard.defaultProps = {
 
 ResourceCard.propTypes = {
   viewMode: PropTypes.string,
-  title: PropTypes.oneOfType(PropTypes.string, PropTypes.object),
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   id: PropTypes.string,
   chapter: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
