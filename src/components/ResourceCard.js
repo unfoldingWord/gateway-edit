@@ -5,8 +5,11 @@ import {
   CardContent,
   useContent,
   useCardState,
+  ERROR_STATE,
+  MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { getResourceMessage } from '@utils/resources'
+import { getResourceErrorMessage } from 'single-scripture-rcl'
 
 export default function ResourceCard({
   id,
@@ -30,6 +33,7 @@ export default function ResourceCard({
   disableNavigation,
   hideMarkdownToggle,
   useUserLocalStorage,
+  onResourceError,
 }) {
   const {
     items,
@@ -70,6 +74,16 @@ export default function ResourceCard({
       updateTaDetails(item?.SupportReference || null)
     }
   }, [item])
+
+  useEffect(() => {
+    const error = resourceStatus?.[ERROR_STATE]
+
+    if (error) { // if error was found do callback
+      const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${branch}`
+      const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
+      onResourceError && onResourceError(message, isAccessError, resourceStatus)
+    }
+  }, [resourceStatus?.[ERROR_STATE]])
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
 
@@ -137,4 +151,9 @@ ResourceCard.propTypes = {
   selectedQuote: PropTypes.object,
   errorMessage: PropTypes.string,
   useUserLocalStorage: PropTypes.func,
+  /** optional callback if error loading resource, parameter returned are:
+   *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
+   *    isAccessError - is true if this was an error trying to access file
+   *    resourceStatus - is object containing details about problems fetching resource */
+  onResourceError: PropTypes.func,
 }
