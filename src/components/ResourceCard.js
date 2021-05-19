@@ -49,6 +49,7 @@ export default function ResourceCard({
     filePath,
     owner,
     server,
+    onResourceError,
   })
 
   const {

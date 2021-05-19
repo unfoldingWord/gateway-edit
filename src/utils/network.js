@@ -14,6 +14,7 @@ import {
   SERVER_UNREACHABLE_ERROR,
 } from '@common/constants'
 
+export const NETWORK_DISCONNECT_ERROR = 'networkDisconnectError'
 /**
  * checks to see if there is a fault with the server - first checks the networking connection and then
  *    checks if server is responding.
@@ -84,7 +85,7 @@ export async function getNetworkError(errorMessage, httpCode ) {
     actionButtonText,
     authenticationError,
     lastError,
-    networkingError: !!serverDisconnectMessage,
+    [NETWORK_DISCONNECT_ERROR]: !!serverDisconnectMessage,
   }
 }
 
@@ -112,7 +113,7 @@ export async function processNetworkError(errorMessage, httpCode, logout, router
 }
 
 /**
- * in the case of a network connection errors only, process and display error dialog
+ * display popup if network disconnected error
  * @param {string} [errorMessage] - initial error message
  * @param {number} [httpCode] - http code returned
  * @param {function} [logout] - invalidate current login
@@ -121,12 +122,12 @@ export async function processNetworkError(errorMessage, httpCode, logout, router
  * @param {function} [setLastError] - callback to save error details
  * @param {function} [setErrorMessage] - optional callback to apply error message
  */
-export async function addNetworkErrorsOnly(errorMessage, httpCode, logout, router,
-                                           setNetworkError, setLastError, setErrorMessage,
+export async function addNetworkDisconnectError(errorMessage, httpCode, logout, router,
+                                                setNetworkError, setLastError, setErrorMessage,
 ) {
   const error = await getNetworkError(errorMessage, httpCode)
 
-  if (!error.networkingError) {
+  if (!error[NETWORK_DISCONNECT_ERROR]) {
     console.log(`addNetworkErrorsOnly() - not showing the non-network connection errors`)
     return // ignoring non network errors
   }

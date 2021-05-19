@@ -27,7 +27,7 @@ import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
-  addNetworkErrorsOnly,
+  addNetworkDisconnectError,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -146,7 +146,7 @@ function WorkspaceContainer() {
   function onResourceError(message, isAccessError) {
     if (!networkError && // only show if another error not already showing
         isAccessError) { // we only show popup for access errors
-      addNetworkErrorsOnly(message, 0, logout, router, setNetworkError, setLastError )
+      addNetworkDisconnectError(message, 0, logout, router, setNetworkError, setLastError )
     }
   }
 
