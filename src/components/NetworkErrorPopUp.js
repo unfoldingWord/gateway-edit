@@ -15,7 +15,7 @@ export default function NetworkErrorPopup(
     onClose,
   }) {
   const retryButtonStr = onRetry ? RETRY : ''
-  const retryDefault = !!retryButtonStr // if retry button enabled, make it default button
+  const retryDefault = !!onRetry // if retry button enabled, make it default button
   const closeButtonDefault = !retryDefault // otherwise close button is default
 
   return (
