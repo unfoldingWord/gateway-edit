@@ -95,6 +95,7 @@ function WorkspaceContainer() {
     branch,
     taArticle,
     languageId,
+    onResourceError,
   })
 
   function isNT(bookId) {
