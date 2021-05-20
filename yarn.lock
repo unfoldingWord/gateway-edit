@@ -4570,10 +4570,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@4.1.7:
-  version "4.1.7"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.7.tgz#62461aa82d07d8b494518fa03fed5a41e126548f"
-  integrity sha512-i8TKcywwZ6QSQaTZ8KDRi4UZ1f+9UNwIZcSdU8VDLoow+nyVgiM46/LhWzUMwgoHHjVbbggFsm1AlAFfr49UgQ==
+scripture-resources-rcl@4.1.8-alpha.2:
+  version "4.1.8-alpha.2"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.8-alpha.2.tgz#01fb6447a82d66be7b5bfe75a8b8040e48c33078"
+  integrity sha512-HLy+Y+TqJ4l8xSHyiEP+eMKcK8odUHpPM5r8pinWw/iC5B4RUFlJzbPLybFXZdB6fmPSGBks38UXWScy24+4xQ==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.7.0"
@@ -5140,10 +5140,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.46.18-alpha.6:
-  version "1.46.18-alpha.6"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.18-alpha.6.tgz#7442f309c5f155a3f3f4a97d467749dac3bc15c1"
-  integrity sha512-cZ7vU0ixZyGoxSeeiz7v91Fv+U7v98bvX5a6xGv4yQ1IxNhFhh93L1JGU8Tjym6/UR8cyk//xOKV+eDTvpsVvA==
+translation-helps-rcl@1.46.18-alpha.7:
+  version "1.46.18-alpha.7"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.18-alpha.7.tgz#d241f97b5217b79d71ff879d953092c6eaf7ae7d"
+  integrity sha512-Zilq3q3FUa3S85AvS+oRUfhur4KNU3/BYIPy5s7rYTlEAFcjFCw6EWE3rHqlqs6L0knLxp0nizm03AzUg+Iu+w==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
