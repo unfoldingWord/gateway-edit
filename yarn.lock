@@ -4570,10 +4570,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@4.1.8-alpha.2:
-  version "4.1.8-alpha.2"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.8-alpha.2.tgz#01fb6447a82d66be7b5bfe75a8b8040e48c33078"
-  integrity sha512-HLy+Y+TqJ4l8xSHyiEP+eMKcK8odUHpPM5r8pinWw/iC5B4RUFlJzbPLybFXZdB6fmPSGBks38UXWScy24+4xQ==
+scripture-resources-rcl@4.1.8:
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.1.8.tgz#6766c910b854ae8dae6c9fba482c16324447b686"
+  integrity sha512-8r09/AG3Olw+byv5M2SVUrjtIpouRH7zLIg18dVDf0LTreKV6Lc3xIjbxzTOIjFpzSRChIIdm2hOeiwFKB4sGw==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.7.0"
@@ -4682,10 +4682,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@2.0.4-alpha.6:
-  version "2.0.4-alpha.6"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-2.0.4-alpha.6.tgz#03baec3458e038ec5d8ee0085d8580e035035511"
-  integrity sha512-PwY18RYxwct4DA4nJQWEmSmFdKOLWee46ro9412YXrRehznixyDtcw6fnyJOW81axIyU3++PzHJqBKefs2zYvw==
+single-scripture-rcl@2.0.4-alpha.7:
+  version "2.0.4-alpha.7"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-2.0.4-alpha.7.tgz#88c5e95e6165783eaa07626fa8afa333444107d7"
+  integrity sha512-zjTvT2Xe8kYdOL2p79QBAg8D6DyQPcsPejnj2RQ1ilQH62fgtV1W0e4ZYmTsyWXhM6GU4eOK+lxb3y/fGKbUyw==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -5140,10 +5140,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@1.46.18-alpha.8:
-  version "1.46.18-alpha.8"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.18-alpha.8.tgz#8cd7d993da7b010a189bc123132795a158b7770b"
-  integrity sha512-g5a75gEW6gCphUWypFqHF+DSgbHqMFcuThRK8Bmz0kBuyUXq/2ATFkjNddF1LGYJxoRW7b+4qoLyx9/RtOp2KQ==
+translation-helps-rcl@1.46.19:
+  version "1.46.19"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.46.19.tgz#11f11b33ace2efc286e56a96be24818de24b5ae0"
+  integrity sha512-6418/zSXzcfNtNaXyB5HDqZSaYICTisTyx3FS60EQFOE7R+F3gAdbEGE5sZWcKgpP0FA4FhNQVTk+TcpBFXAYA==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
