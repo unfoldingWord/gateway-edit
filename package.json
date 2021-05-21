@@ -28,7 +28,7 @@
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "1.0.0",
     "scripture-resources-rcl": "4.1.8",
-    "single-scripture-rcl": "2.0.4-alpha.7",
+    "single-scripture-rcl": "2.0.4",
     "tailwindcss": "^2.0.4",
     "translation-helps-rcl": "1.46.19",
     "use-deep-compare-effect": "^1.3.1"
