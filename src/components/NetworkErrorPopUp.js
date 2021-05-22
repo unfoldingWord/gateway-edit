@@ -14,11 +14,16 @@ export default function NetworkErrorPopup(
     closeButtonStr,
     onClose,
   }) {
+  const retryButtonStr = onRetry ? RETRY : ''
+  const retryDefault = !!onRetry // if retry button enabled, make it default button
+  const closeButtonDefault = !retryDefault // otherwise close button is default
+
   return (
     <ErrorPopup
       title={title}
       message={networkError.errorMessage}
       closeButtonStr={closeButtonStr}
+      closeButtonDefault={closeButtonDefault}
       onClose={() => {
         onClose && onClose()
         setNetworkError(null)
@@ -26,7 +31,8 @@ export default function NetworkErrorPopup(
       actionButtonStr={onActionButton && networkError.actionButtonText}
       actionStartIcon={networkError.authenticationError ? null : <SaveIcon/>}
       onActionButton={() => onActionButton && onActionButton(networkError)}
-      actionButton2Str={!!onRetry && RETRY}
+      actionButton2Str={retryButtonStr}
+      actionButton2Default={retryDefault}
       onActionButton2={() => onRetry && onRetry(networkError)}
     />
   )
