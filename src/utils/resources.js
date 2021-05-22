@@ -25,8 +25,6 @@ export async function getResource({
 
   let resource
 
-  console.log(`getResource():`, {owner, languageId, resourceId, branch, resourceLink})
-
   try {
     resource = await core.resourceFromResourceLink({
       resourceLink,

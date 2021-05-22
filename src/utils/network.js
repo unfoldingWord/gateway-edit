@@ -128,8 +128,7 @@ export async function addNetworkDisconnectError(errorMessage, httpCode, logout, 
   const error = await getNetworkError(errorMessage, httpCode)
 
   if (!error[NETWORK_DISCONNECT_ERROR]) {
-    console.log(`addNetworkErrorsOnly() - not showing the non-network connection errors`)
-    return // ignoring non network errors
+    return // ignoring errors not due to network disconnect
   }
 
   setErrorMessage && setErrorMessage(error.errorMessage)
