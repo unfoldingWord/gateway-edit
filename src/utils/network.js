@@ -14,6 +14,7 @@ import {
   SERVER_UNREACHABLE_ERROR,
 } from '@common/constants'
 
+export const NETWORK_DISCONNECT_ERROR = 'networkDisconnectError'
 /**
  * checks to see if there is a fault with the server - first checks the networking connection and then
  *    checks if server is responding.
@@ -84,11 +85,12 @@ export async function getNetworkError(errorMessage, httpCode ) {
     actionButtonText,
     authenticationError,
     lastError,
+    [NETWORK_DISCONNECT_ERROR]: !!serverDisconnectMessage,
   }
 }
 
 /**
- * in the case of a network error, process and display error dialog
+ * in the case of any networking/http error, process and display error dialog
  * @param {string} [errorMessage] - initial error message
  * @param {number} [httpCode] - http code returned
  * @param {function} [logout] - invalidate current login
@@ -97,15 +99,44 @@ export async function getNetworkError(errorMessage, httpCode ) {
  * @param {function} [setLastError] - callback to save error details
  * @param {function} [setErrorMessage] - optional callback to apply error message
  */
-export async function processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError, setErrorMessage ) {
+export async function processNetworkError(errorMessage, httpCode, logout, router,
+                                          setNetworkError, setLastError, setErrorMessage,
+) {
   setNetworkError && setNetworkError(null) // clear until processing finished
-  const networkError_ = await getNetworkError(errorMessage, httpCode)
-  setErrorMessage && setErrorMessage(networkError_.errorMessage)
-  setLastError && setLastError(networkError_.lastError) // error info to attach to sendmail
+  const error = await getNetworkError(errorMessage, httpCode)
+  setErrorMessage && setErrorMessage(error.errorMessage)
+  setLastError && setLastError(error.lastError) // error info to attach to sendmail
   // add params needed for button actions
-  networkError_.router = router
-  networkError_.logout = logout
-  setNetworkError && setNetworkError(networkError_) // this triggers network error popup
+  error.router = router
+  error.logout = logout
+  setNetworkError && setNetworkError(error) // this triggers network error popup
+}
+
+/**
+ * display popup if network disconnected error
+ * @param {string} [errorMessage] - initial error message
+ * @param {number} [httpCode] - http code returned
+ * @param {function} [logout] - invalidate current login
+ * @param {object} [router] - to change to different web page
+ * @param {function} setNetworkError - callback to toggle display of error popup
+ * @param {function} [setLastError] - callback to save error details
+ * @param {function} [setErrorMessage] - optional callback to apply error message
+ */
+export async function addNetworkDisconnectError(errorMessage, httpCode, logout, router,
+                                                setNetworkError, setLastError, setErrorMessage,
+) {
+  const error = await getNetworkError(errorMessage, httpCode)
+
+  if (!error[NETWORK_DISCONNECT_ERROR]) {
+    return // ignoring errors not due to network disconnect
+  }
+
+  setErrorMessage && setErrorMessage(error.errorMessage)
+  setLastError && setLastError(error.lastError) // error info to attach to sendmail
+  // add params needed for button actions
+  error.router = router
+  error.logout = logout
+  setNetworkError && setNetworkError(error) // this triggers network error popup
 }
 
 /**

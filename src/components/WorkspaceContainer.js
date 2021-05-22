@@ -27,6 +27,7 @@ import { NT_BOOKS } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
+  addNetworkDisconnectError,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -94,6 +95,7 @@ function WorkspaceContainer() {
     branch,
     taArticle,
     languageId,
+    onResourceError,
   })
 
   function isNT(bookId) {
@@ -134,10 +136,19 @@ function WorkspaceContainer() {
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
+          /* show reload if send feedback not enabled */
+          onRetry={!networkError.actionButtonText ? reloadApp : null}
         />
       )
     }
     return null
+  }
+
+  function onResourceError(message, isAccessError) {
+    if (!networkError && // only show if another error not already showing
+        isAccessError) { // we only show popup for access errors
+      addNetworkDisconnectError(message, 0, logout, router, setNetworkError, setLastError )
+    }
   }
 
   const commonScriptureCardConfigs = {
@@ -148,6 +159,19 @@ function WorkspaceContainer() {
     getLanguage,
     useUserLocalStorage,
     originalLanguageOwner: scriptureOwner,
+    onResourceError,
+  }
+
+  const commonResourceCardConfigs = {
+    classes,
+    chapter,
+    verse,
+    server,
+    owner,
+    branch,
+    languageId,
+    useUserLocalStorage,
+    onResourceError,
   }
 
   useEffect(() => {
@@ -327,48 +351,28 @@ function WorkspaceContainer() {
           <ResourceCard
             title='translationNotes'
             id='resource_card_tn'
-            classes={classes}
-            chapter={chapter}
-            verse={verse}
-            server={server}
-            owner={owner}
-            branch={branch}
+            {...commonResourceCardConfigs}
             filePath={null}
             resourceId={'tn'}
             projectId={bookId}
-            languageId={languageId}
             setQuote={setQuote}
             selectedQuote={selectedQuote}
             updateTaDetails={updateTaDetails}
-            useUserLocalStorage={useUserLocalStorage}
           />
           <ResourceCard
             title='translationAcademy'
             id='resource_card_ta'
-            classes={classes}
-            chapter={chapter}
-            verse={verse}
-            server={server}
-            owner={owner}
-            branch={branch}
-            languageId={languageId}
+            {...commonResourceCardConfigs}
             resourceId={'ta'}
             projectId={taArticle?.projectId}
             filePath={taArticle?.filePath}
             errorMessage={taArticle ? null : 'No article is specified in the current note.'}
-            useUserLocalStorage={useUserLocalStorage}
           />
           <ResourceCard
             title='translationWords List'
             id='resource_card_twl'
-            classes={classes}
-            chapter={chapter}
-            verse={verse}
-            server={server}
-            owner={owner}
-            branch={branch}
+            {...commonResourceCardConfigs}
             viewMode={'list'}
-            languageId={languageId}
             resourceId={'twl'}
             projectId={bookId}
             filePath={null}
@@ -377,43 +381,28 @@ function WorkspaceContainer() {
             disableFilters
             disableNavigation
             hideMarkdownToggle
-            useUserLocalStorage={useUserLocalStorage}
           />
           <ResourceCard
             title='translationWords Article'
             id='resource_card_twa'
-            classes={classes}
-            chapter={chapter}
-            verse={verse}
-            server={server}
-            owner={owner}
-            branch={branch}
+            {...commonResourceCardConfigs}
             viewMode={'markdown'}
-            languageId={languageId}
             resourceId={'twl'}
             projectId={bookId}
             filePath={null}
             setQuote={setQuote}
             selectedQuote={selectedQuote}
             disableFilters
-            useUserLocalStorage={useUserLocalStorage}
           />
           <ResourceCard
             title='translationQuestions'
             id='resource_card_tq'
-            classes={classes}
-            chapter={chapter}
-            verse={verse}
-            server={server}
-            owner={owner}
-            branch={branch}
-            languageId={languageId}
+            {...commonResourceCardConfigs}
             resourceId={'tq'}
             projectId={bookId}
             filePath={null}
             viewMode='question'
             disableFilters
-            useUserLocalStorage={useUserLocalStorage}
           />
         </Workspace>
       </SelectionsContextProvider>
