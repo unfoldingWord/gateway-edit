@@ -89,11 +89,11 @@ const SettingsPage = () => {
 
   /**
    * in the case of a network error, process and display error dialog
-   * @param {string} errorMessage - optional error message returned
+   * @param {string|Error} error - initial error message message or object
    * @param {number} httpCode - http code returned
    */
-  function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, null, router, setNetworkError, null, null )
+  function processError(error, httpCode=0) {
+    processNetworkError(error, httpCode, null, router, setNetworkError, null, null )
   }
 
   function onClose() {
@@ -192,7 +192,7 @@ const SettingsPage = () => {
       res = await Promise.race([fetchPromise, timeout])
     } catch (e) {
       console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
-      processError(`Failure calling '/api/feedback': ${e.toString()}`)
+      processError(e)
       setSubmitting(false)
       setShowSuccess(false)
       setShowError(true)
