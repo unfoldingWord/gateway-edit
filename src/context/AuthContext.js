@@ -1,10 +1,17 @@
-import React, { useState, createContext } from 'react'
+import React, { createContext, useState } from 'react'
 import localforage from 'localforage'
 import { AuthenticationContextProvider } from 'gitea-react-toolkit'
 import {
-  BASE_URL, CLOSE, TOKEN_ID,
+  BASE_URL,
+  CLOSE,
+  HTTP_GET_MAX_WAIT_TIME,
+  TOKEN_ID,
 } from '@common/constants'
-import { processNetworkError, unAuthenticated } from '@utils/network'
+import {
+  doFetch,
+  processNetworkError,
+  unAuthenticated,
+} from '@utils/network'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 export const AuthContext = createContext({})
@@ -15,11 +22,11 @@ export default function AuthContextProvider(props) {
 
   /**
    * in the case of a network error, process and display error dialog
-   * @param {string} errorMessage - optional error message returned
+   * @param {string|Error} error - initial error message message or object
    * @param {number} httpCode - http code returned
    */
-  function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, null, null, setNetworkError, null, null )
+  function processError(error, httpCode=0) {
+    processNetworkError(error, httpCode, null, null, setNetworkError, null, null )
   }
 
   const myAuthStore = localforage.createInstance({
@@ -31,7 +38,7 @@ export default function AuthContextProvider(props) {
     const auth = await myAuthStore.getItem('authentication')
 
     if (auth) { // verify that auth is still valid
-      fetch('https://git.door43.org/api/v1/user', { ...auth.config })
+      doFetch('https://git.door43.org/api/v1/user', auth)
         .then(response => {
           const httpCode = response?.status || 0
 
@@ -47,7 +54,7 @@ export default function AuthContextProvider(props) {
           }
         }).catch(e => {
           console.warn(`TranslationSettings - hard error fetching user info, error=`, e)
-          processError('Unknown networking error')
+          processError(e)
         })
     }
     return auth
@@ -100,6 +107,7 @@ export default function AuthContextProvider(props) {
         config={{
           server: BASE_URL,
           tokenid: TOKEN_ID,
+          timeout: HTTP_GET_MAX_WAIT_TIME,
         }}
         authentication={authentication}
         onAuthentication={setAuthentication}

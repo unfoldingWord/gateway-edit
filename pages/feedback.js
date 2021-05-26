@@ -15,7 +15,7 @@ import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
 import { getLocalStorageItem, getUserKey } from '@hooks/useUserLocalStorage'
 import { processNetworkError } from '@utils/network'
-import { CLOSE } from '@common/constants'
+import { CLOSE, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 function Alert({ severity, message }) {
@@ -178,13 +178,18 @@ const SettingsPage = () => {
     let res
 
     try {
-      res = await fetch('/api/feedback', {
+      const fetchPromise = fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name, email, category, message, extraData,
         }),
       })
+      const timeout = new Promise((_r, rej) => {
+        const TIMEOUT_ERROR = `Network Timeout Error ${HTTP_GET_MAX_WAIT_TIME}ms`
+        return setTimeout(() => rej(TIMEOUT_ERROR), HTTP_GET_MAX_WAIT_TIME)
+      })
+      res = await Promise.race([fetchPromise, timeout])
     } catch (e) {
       console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
       processError(`Failure calling '/api/feedback': ${e.toString()}`)

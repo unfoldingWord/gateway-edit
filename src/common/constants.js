@@ -9,6 +9,7 @@ export const FEEDBACK_PAGE = '/feedback'
 export const SERVER_MAX_WAIT_TIME = 5000 // in milliseconds
 export const SERVER_MAX_WAIT_TIME_RETRY = 10000 // in milliseconds
 export const HTTP_GET_MAX_WAIT_TIME = 5000 // in milliseconds
+export const RESOURCES_GET_MAX_WAIT_TIME = 10000 // in milliseconds
 
 // UI text - may eventually need to localize
 export const MANIFEST_NOT_FOUND_ERROR = 'This resource manifest failed to load. Please confirm that the correct manifest.yaml file exists in the resource at:\n'

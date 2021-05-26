@@ -15,9 +15,9 @@ import {
   LOADING,
   NO_ORGS_ERROR,
   ORGS_NETWORK_ERROR,
-  SERVER_MAX_WAIT_TIME,
 } from '@common/constants'
 import {
+  doFetch,
   isServerDisconnected,
   onNetworkActionButton,
   processNetworkError,
@@ -26,7 +26,6 @@ import {
 import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
-import { get } from 'gitea-react-toolkit'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -55,11 +54,11 @@ export default function TranslationSettings({ authentication }) {
 
   /**
    * in the case of a network error, process and display error dialog
-   * @param {string} errorMessage - optional error message returned
+   * @param {string|Error} error - initial error message message or object
    * @param {number} httpCode - http code returned
    */
-  function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError, setOrgErrorMessage )
+  function processError(error, httpCode=0) {
+    processNetworkError(error, httpCode, logout, router, setNetworkError, setLastError, setOrgErrorMessage )
   }
 
   useEffect(() => {
@@ -69,17 +68,7 @@ export default function TranslationSettings({ authentication }) {
       let errorCode = 0
 
       try {
-        const timeout = SERVER_MAX_WAIT_TIME
-        console.log(`Getting orgs with timeout of ${timeout}`)
-        const orgs = await get({
-          url :'https://git.door43.org/api/v1/user/orgs',
-          config: {
-            ...authentication.config,
-            timeout,
-          },
-          noCache: true,
-          fullResponse: true,
-        })
+        const orgs = await doFetch('https://git.door43.org/api/v1/user/orgs', authentication)
           .then(response => {
             if (response?.status !== 200) {
               errorCode = response?.status

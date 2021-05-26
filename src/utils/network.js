@@ -2,11 +2,13 @@ import {
   checkIfServerOnline,
   ERROR_NETWORK_DISCONNECTED,
   ERROR_SERVER_DISCONNECT_ERROR,
+  get,
 } from 'gitea-react-toolkit'
 import {
   AUTHENTICATION_ERROR,
   BASE_URL,
   FEEDBACK_PAGE,
+  HTTP_GET_MAX_WAIT_TIME,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
   SEND_FEEDBACK,
@@ -223,4 +225,25 @@ export function onNetworkActionButton(networkError) {
   } else { // otherwise we go to feedback page
     gotoFeedback(networkError)
   }
+}
+
+/**
+ * do http fetch.  If error checks for that we have connection to server
+ * @param {string} url
+ * @param {object} authentication - optional authentication info
+ * @param {number} timeout - optional timeout in milliseconds, defaults to HTTP_GET_MAX_WAIT_TIME
+ * @param {boolean} noCache - if false then cached data can be used, if true then no caching.  Defaults to true
+ * @return {Promise<object>} returns http response or throws exception if
+ */
+export function doFetch(url, authentication={}, timeout=HTTP_GET_MAX_WAIT_TIME, noCache=true) {
+  const authConfig = authentication?.config || {}
+  return get({
+    url: url,
+    config: {
+      ...authConfig,
+      timeout: timeout,
+    },
+    noCache: noCache,
+    fullResponse: true,
+  })
 }
