@@ -13,7 +13,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import Layout from '@components/Layout'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
-import { getUserItem, getUserKey } from '@hooks/useUserLocalStorage'
+import { getLocalStorageItem, getUserKey } from '@hooks/useUserLocalStorage'
 import { processNetworkError } from '@utils/network'
 import { CLOSE } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
@@ -118,7 +118,7 @@ const SettingsPage = () => {
 
   function getUserSettings(username, baseKey) {
     const key = getUserKey(username, baseKey)
-    const savedValue = getUserItem(key)
+    const savedValue = getLocalStorageItem(key)
     return savedValue
   }
 

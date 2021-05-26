@@ -12,9 +12,13 @@ import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
 import {
-  LOADING, NO_ORGS_ERROR, ORGS_NETWORK_ERROR,
+  LOADING,
+  NO_ORGS_ERROR,
+  ORGS_NETWORK_ERROR,
+  SERVER_MAX_WAIT_TIME,
 } from '@common/constants'
 import {
+  isServerDisconnected,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -22,6 +26,7 @@ import {
 import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import { get } from 'gitea-react-toolkit'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -64,15 +69,25 @@ export default function TranslationSettings({ authentication }) {
       let errorCode = 0
 
       try {
-        const orgs = await fetch('https://git.door43.org/api/v1/user/orgs', { ...authentication.config })
+        const timeout = SERVER_MAX_WAIT_TIME
+        console.log(`Getting orgs with timeout of ${timeout}`)
+        const orgs = await get({
+          url :'https://git.door43.org/api/v1/user/orgs',
+          config: {
+            ...authentication.config,
+            timeout,
+          },
+          noCache: true,
+          fullResponse: true,
+        })
           .then(response => {
             if (response?.status !== 200) {
-              console.warn(`TranslationSettings - error fetching user orgs, status code ${response?.status}`)
               errorCode = response?.status
+              console.warn(`TranslationSettings - error fetching user orgs, status code ${errorCode}`)
               processError(null, errorCode)
               return null
             }
-            return response?.json()
+            return response?.data
           })
           .then(data => {
             if (Array.isArray(data)) {
@@ -83,6 +98,7 @@ export default function TranslationSettings({ authentication }) {
           })
 
         if (!orgs?.length) { // if no orgs
+          console.warn(`TranslationSettings - empty orgs`)
           setOrgErrorMessage(NO_ORGS_ERROR)
         } else {
           setOrgErrorMessage(null)
@@ -91,9 +107,12 @@ export default function TranslationSettings({ authentication }) {
         setOrganizations(orgs)
       } catch (e) {
         console.warn(`TranslationSettings - error fetching user orgs`, e)
+        const message = e?.message
         setOrganizations([])
-        setOrgErrorMessage(NO_ORGS_ERROR)
-        processError(ORGS_NETWORK_ERROR)
+        const disconnected = isServerDisconnected(e)
+        console.warn(`TranslationSettings - message '${message}', disconnected=${disconnected}`)
+        setOrgErrorMessage(disconnected ? ORGS_NETWORK_ERROR : NO_ORGS_ERROR)
+        processError(e)
       }
     }
 

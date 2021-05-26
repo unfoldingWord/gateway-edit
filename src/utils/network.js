@@ -1,7 +1,7 @@
 import {
   checkIfServerOnline,
   ERROR_NETWORK_DISCONNECTED,
-  ERROR_SERVER_UNREACHABLE,
+  ERROR_SERVER_DISCONNECT_ERROR,
 } from 'gitea-react-toolkit'
 import {
   AUTHENTICATION_ERROR,
@@ -10,11 +10,16 @@ import {
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
   SEND_FEEDBACK,
+  SERVER_MAX_WAIT_TIME,
+  SERVER_MAX_WAIT_TIME_RETRY,
   SERVER_OTHER_ERROR,
   SERVER_UNREACHABLE_ERROR,
 } from '@common/constants'
+import { getLocalStorageItem, setLocalStorageValue } from '@hooks/useUserLocalStorage'
 
 export const NETWORK_DISCONNECT_ERROR = 'networkDisconnectError'
+export const SERVER_CHECK_SECOND_TRY_KEY = 'serverCheckSecondTry'
+
 /**
  * checks to see if there is a fault with the server - first checks the networking connection and then
  *    checks if server is responding.
@@ -22,36 +27,48 @@ export const NETWORK_DISCONNECT_ERROR = 'networkDisconnectError'
  */
 export async function getServerFault() {
   try {
-    await checkIfServerOnline(BASE_URL) // throws exception if server disconnected
-    console.log(`checkIfServerOnline() - server is online`)
+    // on retry we set longer timeout
+    const secondTry = getLocalStorageItem(SERVER_CHECK_SECOND_TRY_KEY)
+    setLocalStorageValue(SERVER_CHECK_SECOND_TRY_KEY, false) // clear flag
+    const timeout = secondTry ? SERVER_MAX_WAIT_TIME : SERVER_MAX_WAIT_TIME_RETRY
+    console.log(`getServerFault() - setting timeout to ${timeout}`) //TODO - remove
+    await checkIfServerOnline(BASE_URL, { timeout }) // throws exception if server disconnected
+    console.log(`getServerFault() - server is online`) //TODO - remove
     return null
   } catch (e) {
-    console.log(`checkIfServerOnline() - received error`, e)
+    console.warn(`getServerFault() - received error`, e)
     let errorMessage = e?.message
 
-    // get type of server error
-    switch (errorMessage) {
-    case ERROR_NETWORK_DISCONNECTED:
-      errorMessage = LOCAL_NETWORK_DISCONNECTED_ERROR
-      break
-    case ERROR_SERVER_UNREACHABLE:
-      errorMessage = SERVER_UNREACHABLE_ERROR
-      break
-    default:
-      break
+    if (errorMessage === ERROR_NETWORK_DISCONNECTED) {
+      return LOCAL_NETWORK_DISCONNECTED_ERROR
     }
-    return errorMessage
+
+    // all other errors mean server is unreachable
+    return SERVER_UNREACHABLE_ERROR
   }
 }
 
 /**
- * on networking error, first check to see if connected to network and then check if server is responding.
- *    Finally return appropriate error message and possible action steps
- * @param {string} errorMessage - error message for type of network problem
+ * check if error message is that network is disconnected (from checkIfServerOnline())
+ * @param {Error} error
+ * @return {boolean} true if network disconnected
+ */
+export function isServerDisconnected(error) {
+  return !!error?.[ERROR_SERVER_DISCONNECT_ERROR]
+}
+
+/**
+ * on networking error, first check to see if error is a server disconnected error.  If not we do a check to see if
+ *    server is disconnected. Finally return appropriate error message and possible action steps
+ * @param {string|Error} error - initial error message message or object
  * @param {number} httpCode - HTTP code returned
  * @return {Promise<object>} returns final error details and possible actions
  */
-export async function getNetworkError(errorMessage, httpCode ) {
+export async function getNetworkError(error, httpCode ) {
+  let errorMessage = (typeof error === 'string') ? error : error?.message
+  console.log(`getNetworkError() httpCode ${httpCode}, errorMessage '${errorMessage}': `, error)
+  const serverHttpCode = error?.response?.status
+  console.log(`getNetworkError() serverHttpCode ${serverHttpCode}`)
   // eslint-disable-next-line no-template-curly-in-string
   const defaultErrorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${httpCode}`)
 
@@ -62,11 +79,19 @@ export async function getNetworkError(errorMessage, httpCode ) {
   }
 
   const lastError = {
-    initialError: errorMessage,
+    initialError: error,
     errorMessage,
     httpCode,
+    serverHttpCode,
   }
-  const serverDisconnectMessage = await getServerFault() // check if server is responding
+
+  const serverDisconnect = isServerDisconnected(error) // check if we already have a network disconnect error
+  let serverDisconnectMessage = serverDisconnect && errorMessage
+
+  if (!serverDisconnect) { // if we don't know yet if server is disconnected
+    serverDisconnectMessage = await getServerFault() // check if server is responding
+  }
+
   let actionButtonText = !serverDisconnectMessage ? SEND_FEEDBACK : null
   let authenticationError = false
 
@@ -91,52 +116,52 @@ export async function getNetworkError(errorMessage, httpCode ) {
 
 /**
  * in the case of any networking/http error, process and display error dialog
- * @param {string} [errorMessage] - initial error message
- * @param {number} [httpCode] - http code returned
- * @param {function} [logout] - invalidate current login
- * @param {object} [router] - to change to different web page
+ * @param {string|Error} error - initial error message message or object
+ * @param {number} httpCode - http code returned
+ * @param {function} logout - invalidate current login
+ * @param {object} router - to change to different web page
  * @param {function} setNetworkError - callback to toggle display of error popup
- * @param {function} [setLastError] - callback to save error details
- * @param {function} [setErrorMessage] - optional callback to apply error message
+ * @param {function} setLastError - callback to save error details
+ * @param {function} setErrorMessage - optional callback to apply error message
  */
-export async function processNetworkError(errorMessage, httpCode, logout, router,
+export async function processNetworkError(error, httpCode, logout, router,
                                           setNetworkError, setLastError, setErrorMessage,
 ) {
   setNetworkError && setNetworkError(null) // clear until processing finished
-  const error = await getNetworkError(errorMessage, httpCode)
-  setErrorMessage && setErrorMessage(error.errorMessage)
-  setLastError && setLastError(error.lastError) // error info to attach to sendmail
+  const errorObj = await getNetworkError(error, httpCode)
+  setErrorMessage && setErrorMessage(errorObj.errorMessage)
+  setLastError && setLastError(errorObj.lastError) // error info to attach to sendmail
   // add params needed for button actions
-  error.router = router
-  error.logout = logout
-  setNetworkError && setNetworkError(error) // this triggers network error popup
+  errorObj.router = router
+  errorObj.logout = logout
+  setNetworkError && setNetworkError(errorObj) // this triggers network error popup
 }
 
 /**
  * display popup if network disconnected error
- * @param {string} [errorMessage] - initial error message
- * @param {number} [httpCode] - http code returned
- * @param {function} [logout] - invalidate current login
- * @param {object} [router] - to change to different web page
+ * @param {string|Error} error - initial error message message or object
+ * @param {number} httpCode - http code returned
+ * @param {function} logout - invalidate current login
+ * @param {object} router - to change to different web page
  * @param {function} setNetworkError - callback to toggle display of error popup
- * @param {function} [setLastError] - callback to save error details
- * @param {function} [setErrorMessage] - optional callback to apply error message
+ * @param {function} setLastError - callback to save error details
+ * @param {function} setErrorMessage - optional callback to apply error message
  */
-export async function addNetworkDisconnectError(errorMessage, httpCode, logout, router,
+export async function addNetworkDisconnectError(error, httpCode, logout, router,
                                                 setNetworkError, setLastError, setErrorMessage,
 ) {
-  const error = await getNetworkError(errorMessage, httpCode)
+  const errorObj = await getNetworkError(error, httpCode)
 
-  if (!error[NETWORK_DISCONNECT_ERROR]) {
+  if (!errorObj[NETWORK_DISCONNECT_ERROR]) {
     return // ignoring errors not due to network disconnect
   }
 
-  setErrorMessage && setErrorMessage(error.errorMessage)
-  setLastError && setLastError(error.lastError) // error info to attach to sendmail
+  setErrorMessage && setErrorMessage(errorObj.errorMessage)
+  setLastError && setLastError(errorObj.lastError) // error info to attach to sendmail
   // add params needed for button actions
-  error.router = router
-  error.logout = logout
-  setNetworkError && setNetworkError(error) // this triggers network error popup
+  errorObj.router = router
+  errorObj.logout = logout
+  setNetworkError && setNetworkError(errorObj) // this triggers network error popup
 }
 
 /**
@@ -153,6 +178,7 @@ export function unAuthenticated(httpCode) {
  * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
  */
 export function reloadApp(networkError) {
+  setLocalStorageValue(SERVER_CHECK_SECOND_TRY_KEY, true) // we will do longer wait on retry
   networkError?.router?.reload()
 }
 
