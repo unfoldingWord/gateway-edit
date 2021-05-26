@@ -20,6 +20,15 @@ import { getLocalStorageItem, setLocalStorageValue } from '@hooks/useUserLocalSt
 export const NETWORK_DISCONNECT_ERROR = 'networkDisconnectError'
 export const SERVER_CHECK_SECOND_TRY_KEY = 'serverCheckSecondTry'
 
+export function getServerDisconnectMessage(errorMessage) {
+  if (errorMessage === ERROR_NETWORK_DISCONNECTED) {
+    return LOCAL_NETWORK_DISCONNECTED_ERROR
+  }
+
+  // all other errors mean that server is unreachable
+  return SERVER_UNREACHABLE_ERROR
+}
+
 /**
  * checks to see if there is a fault with the server - first checks the networking connection and then
  *    checks if server is responding.
@@ -38,13 +47,7 @@ export async function getServerFault() {
   } catch (e) {
     console.warn(`getServerFault() - received error`, e)
     let errorMessage = e?.message
-
-    if (errorMessage === ERROR_NETWORK_DISCONNECTED) {
-      return LOCAL_NETWORK_DISCONNECTED_ERROR
-    }
-
-    // all other errors mean server is unreachable
-    return SERVER_UNREACHABLE_ERROR
+    return getServerDisconnectMessage(errorMessage)
   }
 }
 
@@ -85,14 +88,17 @@ export async function getNetworkError(error, httpCode ) {
     serverHttpCode,
   }
 
-  const serverDisconnect = isServerDisconnected(error) // check if we already have a network disconnect error
-  let serverDisconnectMessage = serverDisconnect && errorMessage
+  let serverDisconnect = isServerDisconnected(error) // check if we already have a network disconnect error
+  let serverDisconnectMessage
 
-  if (!serverDisconnect) { // if we don't know yet if server is disconnected
+  if (serverDisconnect) {
+    serverDisconnectMessage = getServerDisconnectMessage(errorMessage)
+  } else { // if we don't know yet if server is disconnected
     serverDisconnectMessage = await getServerFault() // check if server is responding
+    serverDisconnect = !!serverDisconnectMessage
   }
 
-  let actionButtonText = !serverDisconnectMessage ? SEND_FEEDBACK : null
+  let actionButtonText = !serverDisconnect ? SEND_FEEDBACK : null
   let authenticationError = false
 
   if (serverDisconnectMessage) {
@@ -110,7 +116,7 @@ export async function getNetworkError(error, httpCode ) {
     actionButtonText,
     authenticationError,
     lastError,
-    [NETWORK_DISCONNECT_ERROR]: !!serverDisconnectMessage,
+    [NETWORK_DISCONNECT_ERROR]: serverDisconnect,
   }
 }
 
