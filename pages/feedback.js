@@ -193,6 +193,9 @@ const SettingsPage = () => {
     } catch (e) {
       console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
       processError(`Failure calling '/api/feedback': ${e.toString()}`)
+      setSubmitting(false)
+      setShowSuccess(false)
+      setShowError(true)
       return
     }
 
