@@ -2,6 +2,7 @@
 yalc.lock
 .yalc
 .env.local*
+
 # dependencies
 /node_modules
 
