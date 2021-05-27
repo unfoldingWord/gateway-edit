@@ -18,8 +18,7 @@ import {
   NT_ORIG_LANG_BIBLE,
   OT_ORIG_LANG_BIBLE,
 } from 'single-scripture-rcl'
-import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
-import useResourceClickListener from 'translation-helps-rcl/dist/hooks/useResourceClickListener'
+import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
 import { getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
@@ -33,7 +32,11 @@ import {
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import { MANIFEST_INVALID_ERROR } from '@common/constants'
+import {
+  HTTP_GET_MAX_WAIT_TIME,
+  MANIFEST_INVALID_ERROR,
+  RESOURCES_GET_MAX_WAIT_TIME,
+} from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 const useStyles = makeStyles(() => ({
@@ -96,6 +99,7 @@ function WorkspaceContainer() {
     taArticle,
     languageId,
     onResourceError,
+    timeout: HTTP_GET_MAX_WAIT_TIME,
   })
 
   function isNT(bookId) {
@@ -144,10 +148,10 @@ function WorkspaceContainer() {
     return null
   }
 
-  function onResourceError(message, isAccessError) {
+  function onResourceError(message, isAccessError, resourceStatus, error) {
     if (!networkError && // only show if another error not already showing
         isAccessError) { // we only show popup for access errors
-      addNetworkDisconnectError(message, 0, logout, router, setNetworkError, setLastError )
+      addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError )
     }
   }
 
@@ -160,6 +164,7 @@ function WorkspaceContainer() {
     useUserLocalStorage,
     originalLanguageOwner: scriptureOwner,
     onResourceError,
+    timeout: RESOURCES_GET_MAX_WAIT_TIME,
   }
 
   const commonResourceCardConfigs = {
@@ -229,6 +234,7 @@ function WorkspaceContainer() {
     server,
     branch,
     cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
+    timeout: RESOURCES_GET_MAX_WAIT_TIME,
   }
 
   const originalScriptureConfig = useScripture({

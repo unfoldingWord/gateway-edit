@@ -242,6 +242,7 @@ export function doFetch(url, authentication={}, timeout=HTTP_GET_MAX_WAIT_TIME, 
     config: {
       ...authConfig,
       timeout: timeout,
+      server: BASE_URL,
     },
     noCache: noCache,
     fullResponse: true,

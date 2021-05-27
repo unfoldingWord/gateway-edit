@@ -38,7 +38,7 @@ export default function AuthContextProvider(props) {
     const auth = await myAuthStore.getItem('authentication')
 
     if (auth) { // verify that auth is still valid
-      doFetch('https://git.door43.org/api/v1/user', auth)
+      doFetch('https://git.door43.org/api/v1/user', auth, HTTP_GET_MAX_WAIT_TIME)
         .then(response => {
           const httpCode = response?.status || 0
 

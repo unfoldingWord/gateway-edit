@@ -12,6 +12,7 @@ import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
 import {
+  HTTP_GET_MAX_WAIT_TIME,
   LOADING,
   NO_ORGS_ERROR,
   ORGS_NETWORK_ERROR,
@@ -68,7 +69,8 @@ export default function TranslationSettings({ authentication }) {
       let errorCode = 0
 
       try {
-        const orgs = await doFetch('https://git.door43.org/api/v1/user/orgs', authentication)
+        const orgs = await doFetch('https://git.door43.org/api/v1/user/orgs',
+          authentication, HTTP_GET_MAX_WAIT_TIME)
           .then(response => {
             if (response?.status !== 200) {
               errorCode = response?.status
