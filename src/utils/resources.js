@@ -1,10 +1,10 @@
 import { getResourceLink } from 'single-scripture-rcl'
 import { core } from 'scripture-resources-rcl'
 import {
+  HTTP_GET_MAX_WAIT_TIME,
   LOADING_RESOURCE,
   MANIFEST_INVALID_ERROR,
   MANIFEST_NOT_FOUND_ERROR,
-  RESOURCES_GET_MAX_WAIT_TIME,
 } from '@common/constants'
 import {
   INITIALIZED_STATE,
@@ -43,7 +43,7 @@ export async function getResource({
       config: {
         server,
         cache: { maxAge: 60 * 1000 },
-        timeout: RESOURCES_GET_MAX_WAIT_TIME,
+        timeout: HTTP_GET_MAX_WAIT_TIME,
       },
     })
   } catch (e) {

@@ -32,11 +32,7 @@ import {
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import {
-  HTTP_GET_MAX_WAIT_TIME,
-  MANIFEST_INVALID_ERROR,
-  RESOURCES_GET_MAX_WAIT_TIME,
-} from '@common/constants'
+import { HTTP_GET_MAX_WAIT_TIME, MANIFEST_INVALID_ERROR } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 const useStyles = makeStyles(() => ({
@@ -164,7 +160,7 @@ function WorkspaceContainer() {
     useUserLocalStorage,
     originalLanguageOwner: scriptureOwner,
     onResourceError,
-    timeout: RESOURCES_GET_MAX_WAIT_TIME,
+    timeout: HTTP_GET_MAX_WAIT_TIME,
   }
 
   const commonResourceCardConfigs = {
@@ -234,7 +230,7 @@ function WorkspaceContainer() {
     server,
     branch,
     cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
-    timeout: RESOURCES_GET_MAX_WAIT_TIME,
+    timeout: HTTP_GET_MAX_WAIT_TIME,
   }
 
   const originalScriptureConfig = useScripture({
