@@ -97,11 +97,10 @@ export default function TranslationSettings({ authentication }) {
 
         setOrganizations(orgs)
       } catch (e) {
-        console.warn(`TranslationSettings - error fetching user orgs`, e)
         const message = e?.message
-        setOrganizations([])
         const disconnected = isServerDisconnected(e)
-        console.warn(`TranslationSettings - message '${message}', disconnected=${disconnected}`)
+        console.warn(`TranslationSettings - error fetching user orgs, message '${message}', disconnected=${disconnected}`, e)
+        setOrganizations([])
         setOrgErrorMessage(disconnected ? ORGS_NETWORK_ERROR : NO_ORGS_ERROR)
         processError(e)
       }

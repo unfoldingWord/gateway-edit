@@ -70,9 +70,7 @@ export function isServerDisconnected(error) {
  */
 export async function getNetworkError(error, httpCode ) {
   let errorMessage = (typeof error === 'string') ? error : error?.message
-  console.log(`getNetworkError() httpCode ${httpCode}, errorMessage '${errorMessage}': `, error)
   const serverHttpCode = error?.response?.status
-  console.log(`getNetworkError() serverHttpCode ${serverHttpCode}`)
   // eslint-disable-next-line no-template-curly-in-string
   const defaultErrorMessage = SERVER_OTHER_ERROR.replace('${http_code}', `${httpCode}`)
 
