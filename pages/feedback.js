@@ -13,9 +13,9 @@ import CloseIcon from '@material-ui/icons/Close'
 import Layout from '@components/Layout'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
-import { getUserItem, getUserKey } from '@hooks/useUserLocalStorage'
+import { getLocalStorageItem, getUserKey } from '@hooks/useUserLocalStorage'
 import { processNetworkError } from '@utils/network'
-import { CLOSE } from '@common/constants'
+import { CLOSE, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 function Alert({ severity, message }) {
@@ -89,11 +89,11 @@ const SettingsPage = () => {
 
   /**
    * in the case of a network error, process and display error dialog
-   * @param {string} errorMessage - optional error message returned
+   * @param {string|Error} error - initial error message message or object
    * @param {number} httpCode - http code returned
    */
-  function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, null, router, setNetworkError, null, null )
+  function processError(error, httpCode=0) {
+    processNetworkError(error, httpCode, null, router, setNetworkError, null, null )
   }
 
   function onClose() {
@@ -118,7 +118,7 @@ const SettingsPage = () => {
 
   function getUserSettings(username, baseKey) {
     const key = getUserKey(username, baseKey)
-    const savedValue = getUserItem(key)
+    const savedValue = getLocalStorageItem(key)
     return savedValue
   }
 
@@ -178,16 +178,24 @@ const SettingsPage = () => {
     let res
 
     try {
-      res = await fetch('/api/feedback', {
+      const fetchPromise = fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name, email, category, message, extraData,
         }),
       })
+      const timeout = new Promise((_r, rej) => {
+        const TIMEOUT_ERROR = `Network Timeout Error ${HTTP_GET_MAX_WAIT_TIME}ms`
+        return setTimeout(() => rej(TIMEOUT_ERROR), HTTP_GET_MAX_WAIT_TIME)
+      })
+      res = await Promise.race([fetchPromise, timeout])
     } catch (e) {
       console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
-      processError(`Failure calling '/api/feedback': ${e.toString()}`)
+      processError(e)
+      setSubmitting(false)
+      setShowSuccess(false)
+      setShowError(true)
       return
     }
 
