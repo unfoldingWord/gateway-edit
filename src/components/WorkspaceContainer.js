@@ -8,15 +8,16 @@ import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
-  OT_ORIG_LANG,
   NT_ORIG_LANG,
-  useScripture,
-  ScriptureCard,
-  TARGET_LITERAL,
-  ORIGINAL_SOURCE,
-  TARGET_SIMPLIFIED,
   NT_ORIG_LANG_BIBLE,
+  ORIGINAL_SOURCE,
+  OT_ORIG_LANG,
   OT_ORIG_LANG_BIBLE,
+  ScriptureCard,
+  splitUrl,
+  TARGET_LITERAL,
+  TARGET_SIMPLIFIED,
+  useScripture,
 } from 'single-scripture-rcl'
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
@@ -27,6 +28,7 @@ import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
   addNetworkDisconnectError,
+  doFetch,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -71,6 +73,8 @@ function WorkspaceContainer() {
       useUserLocalStorage,
       loggedInUser,
       tokenNetworkError,
+      greekRepoUrl,
+      hebrewRepoUrl,
     },
     actions: {
       logout,
@@ -80,6 +84,8 @@ function WorkspaceContainer() {
       setTokenNetworkError,
       setLastError,
       updateTaDetails,
+      setGreekRepoUrl,
+      setHebrewRepoUrl,
     },
   } = useContext(StoreContext)
 
@@ -161,6 +167,8 @@ function WorkspaceContainer() {
     originalLanguageOwner: scriptureOwner,
     onResourceError,
     timeout: HTTP_GET_MAX_WAIT_TIME,
+    greekRepoUrl,
+    hebrewRepoUrl,
   }
 
   const commonResourceCardConfigs = {
@@ -210,6 +218,75 @@ function WorkspaceContainer() {
     }// eslint-disable-next-line
   }, [owner, languageId, branch, server, loggedInUser])
 
+  /**
+   * find the latest version for published bible
+   * @param org
+   * @param lang
+   * @param bible
+   * @return {Promise<*>}
+   */
+  async function getLatestBibleRepo(org, lang, bible) {
+    const url = `https://git.door43.org/api/catalog/v5/search/${org}/${lang}_${bible}`
+    const results = await doFetch(url, {}, HTTP_GET_MAX_WAIT_TIME)
+      .then(response => {
+        if (response?.status !== 200) {
+          const errorCode = response?.status
+          console.warn(`WorkSpace - error getting latest original lang from ${url}, ${errorCode}`)
+          processError(null, errorCode)
+          return null
+        }
+        return response?.data
+      })
+    const foundItem = results?.data?.[0]
+    let repo = foundItem?.url
+
+    if (foundItem?.metadata_api_contents_url) {
+      // "metadata_api_contents_url": "https://qa.door43.org/api/v1/repos/unfoldingWord/el-x-koine_ugnt/contents/manifest.yaml?ref=v0.9"
+      let parts = foundItem?.metadata_api_contents_url.split('?')
+      let pathParts = parts[0].split('/')
+      pathParts = pathParts.slice(0, -1)
+      repo = pathParts.join('/') + '?' + parts[1]
+    }
+    return repo
+  }
+
+  useEffect(() => {
+    const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
+
+    if (missingOrignalBibles) { // if we don't have a path
+      setWorkspaceReady(false)
+      console.log(`WorkspaceContainer - waiting on latest original bible repos`)
+    }
+
+    const hebrewPromise = getLatestBibleRepo('unfoldingWord', 'hbo', 'uhb')
+    const greekPromise = getLatestBibleRepo('unfoldingWord', 'el-x-koine', 'ugnt')
+
+    Promise.all([hebrewPromise, greekPromise]).then( (results) => {
+      const [repoHebrew, repoGreek] = results
+      let changed = false
+
+      if (repoHebrew && (repoHebrew !== hebrewRepoUrl)) {
+        setHebrewRepoUrl(repoHebrew)
+        changed = true
+      }
+
+      if (repoGreek && (repoGreek !== greekRepoUrl)) {
+        setGreekRepoUrl(repoGreek)
+        changed = true
+      }
+
+      if (missingOrignalBibles && repoHebrew && repoGreek) {
+        console.log(`WorkspaceContainer - found original bible repos`)
+        setWorkspaceReady(true)
+      } else if (changed) { // force redraw
+        console.log(`WorkspaceContainer - original bible repos changed, force reload`)
+        setWorkspaceReady(false)
+        setTimeout(() => { setWorkspaceReady(true) }, 500)
+      }
+    })
+  }, [])
+
+  const isNewTestament = isNT(bookId)
   const originalScripture = {
     reference: {
       projectId: bookId,
@@ -220,10 +297,10 @@ function WorkspaceContainer() {
     resource: {
       owner: 'unfoldingWord',
       originalLanguageOwner: 'unfoldingWord',
-      languageId: isNT(bookId) ? NT_ORIG_LANG : OT_ORIG_LANG,
+      languageId: isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG,
       resourceId: ORIGINAL_SOURCE,
     },
-    getLanguage: () => ({ direction: isNT(bookId) ? 'ltr' : 'rtl' }),
+    getLanguage: () => ({ direction: isNewTestament ? 'ltr' : 'rtl' }),
   }
 
   const config = {
@@ -233,14 +310,20 @@ function WorkspaceContainer() {
     timeout: HTTP_GET_MAX_WAIT_TIME,
   }
 
+  const { server: origServer, resourceLink: origResourceLink } = splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl)
+
   const originalScriptureConfig = useScripture({
     ...originalScripture,
     resource: {
       ...originalScripture.resource,
-      resourceId: isNT(bookId) ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
-      projectId: isNT(bookId) ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      resourceId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      projectId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
     },
-    config,
+    resourceLink: origResourceLink,
+    config: {
+      ...config,
+      server: origServer,
+    },
   })
 
   return (
