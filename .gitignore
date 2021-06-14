@@ -1,7 +1,8 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 yalc.lock
 .yalc
-.env.local*
+.env.local
+.env.localr
 # dependencies
 /node_modules
 

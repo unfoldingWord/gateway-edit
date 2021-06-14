@@ -1,7 +1,8 @@
 import {
-  useState,
-  useEffect,
   useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from 'react'
 import * as isEqual from 'deep-equal'
 import { Workspace } from 'resource-workspace-rcl'
@@ -306,11 +307,11 @@ function WorkspaceContainer() {
   const config = {
     server,
     branch,
-    cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
+    cache: { maxAge: 1 * 60 * 60 * 1000 }, // 1 hr
     timeout: HTTP_GET_MAX_WAIT_TIME,
   }
 
-  const { server: origServer, resourceLink: origResourceLink } = splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl)
+  const { server: origServer, resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
 
   const originalScriptureConfig = useScripture({
     ...originalScripture,
