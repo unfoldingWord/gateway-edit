@@ -10,6 +10,7 @@ import {
 } from 'translation-helps-rcl'
 import { getResourceMessage } from '@utils/resources'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
+import { HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
 
 export default function ResourceCard({
   id,
@@ -50,6 +51,7 @@ export default function ResourceCard({
     owner,
     server,
     onResourceError,
+    timeout: HTTP_GET_MAX_WAIT_TIME,
   })
 
   const {

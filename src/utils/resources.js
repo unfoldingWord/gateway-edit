@@ -1,10 +1,17 @@
 import { getResourceLink } from 'single-scripture-rcl'
 import { core } from 'scripture-resources-rcl'
 import {
+  HTTP_GET_MAX_WAIT_TIME,
   LOADING_RESOURCE,
   MANIFEST_INVALID_ERROR,
   MANIFEST_NOT_FOUND_ERROR,
 } from '@common/constants'
+import {
+  INITIALIZED_STATE,
+  INVALID_MANIFEST_ERROR,
+  LOADING_STATE,
+  MANIFEST_NOT_LOADED_ERROR,
+} from 'translation-helps-rcl'
 
 export async function getResource({
   bookId,
@@ -36,6 +43,7 @@ export async function getResource({
       config: {
         server,
         cache: { maxAge: 60 * 1000 },
+        timeout: HTTP_GET_MAX_WAIT_TIME,
       },
     })
   } catch (e) {
@@ -113,21 +121,21 @@ export function getErrorMessageForResourceLink(errorStr, owner, languageId, reso
  * @return empty string if no error, else returns user error message
  */
 export function getResourceMessage(resourceStatus, owner, languageId, resourceId, server) {
-  let messageKey = ''
+  let message = ''
 
-  if (resourceStatus['loading']) {
-    messageKey = LOADING_RESOURCE
-  } else {
-    if (resourceStatus['manifestNotFoundError']) {
-      messageKey = MANIFEST_NOT_FOUND_ERROR
-    } else if (resourceStatus['invalidManifestError']) {
-      messageKey = MANIFEST_INVALID_ERROR
+  if (resourceStatus[LOADING_STATE]) {
+    message = LOADING_RESOURCE
+  } else if (resourceStatus[INITIALIZED_STATE]) {
+    if (resourceStatus[MANIFEST_NOT_LOADED_ERROR]) {
+      message = MANIFEST_NOT_FOUND_ERROR
+    } else if (resourceStatus[INVALID_MANIFEST_ERROR]) {
+      message = MANIFEST_INVALID_ERROR
     }
 
-    if (messageKey) {
-      messageKey = getErrorMessageForResourceLink(messageKey, owner, languageId, resourceId, server)
-      console.log(`getResourceMessage() - Resource Error: ${messageKey}`)
+    if (message) {
+      message = getErrorMessageForResourceLink(message, owner, languageId, resourceId, server)
+      console.log(`getResourceMessage() - Resource Error: ${message}`, resourceStatus)
     }
   }
-  return messageKey
+  return message
 }

@@ -12,9 +12,14 @@ import { getGatewayLanguages } from '@common/languages'
 import { StoreContext } from '@context/StoreContext'
 import { FormHelperText } from '@material-ui/core'
 import {
-  LOADING, NO_ORGS_ERROR, ORGS_NETWORK_ERROR,
+  HTTP_GET_MAX_WAIT_TIME,
+  LOADING,
+  NO_ORGS_ERROR,
+  ORGS_NETWORK_ERROR,
 } from '@common/constants'
 import {
+  doFetch,
+  isServerDisconnected,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -50,11 +55,11 @@ export default function TranslationSettings({ authentication }) {
 
   /**
    * in the case of a network error, process and display error dialog
-   * @param {string} errorMessage - optional error message returned
+   * @param {string|Error} error - initial error message message or object
    * @param {number} httpCode - http code returned
    */
-  function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError, setOrgErrorMessage )
+  function processError(error, httpCode=0) {
+    processNetworkError(error, httpCode, logout, router, setNetworkError, setLastError, setOrgErrorMessage )
   }
 
   useEffect(() => {
@@ -64,15 +69,16 @@ export default function TranslationSettings({ authentication }) {
       let errorCode = 0
 
       try {
-        const orgs = await fetch('https://git.door43.org/api/v1/user/orgs', { ...authentication.config })
+        const orgs = await doFetch('https://git.door43.org/api/v1/user/orgs',
+          authentication, HTTP_GET_MAX_WAIT_TIME)
           .then(response => {
             if (response?.status !== 200) {
-              console.warn(`TranslationSettings - error fetching user orgs, status code ${response?.status}`)
               errorCode = response?.status
+              console.warn(`TranslationSettings - error fetching user orgs, status code ${errorCode}`)
               processError(null, errorCode)
               return null
             }
-            return response?.json()
+            return response?.data
           })
           .then(data => {
             if (Array.isArray(data)) {
@@ -83,6 +89,7 @@ export default function TranslationSettings({ authentication }) {
           })
 
         if (!orgs?.length) { // if no orgs
+          console.warn(`TranslationSettings - empty orgs`)
           setOrgErrorMessage(NO_ORGS_ERROR)
         } else {
           setOrgErrorMessage(null)
@@ -90,10 +97,12 @@ export default function TranslationSettings({ authentication }) {
 
         setOrganizations(orgs)
       } catch (e) {
-        console.warn(`TranslationSettings - error fetching user orgs`, e)
+        const message = e?.message
+        const disconnected = isServerDisconnected(e)
+        console.warn(`TranslationSettings - error fetching user orgs, message '${message}', disconnected=${disconnected}`, e)
         setOrganizations([])
-        setOrgErrorMessage(NO_ORGS_ERROR)
-        processError(ORGS_NETWORK_ERROR)
+        setOrgErrorMessage(disconnected ? ORGS_NETWORK_ERROR : NO_ORGS_ERROR)
+        processError(e)
       }
     }
 
