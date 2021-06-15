@@ -2372,10 +2372,10 @@ gitea-react-toolkit@1.7.0:
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
-gitea-react-toolkit@1.8.1-alpha:
-  version "1.8.1-alpha"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.8.1-alpha.tgz#7e3986041870b600c33772b49afbed194b22aaec"
-  integrity sha512-BiYpPccJxjY7+KyeV+9TaCG/Nh2EAdtrOp5TZZ9Fsp5Lxf3Ur65wyAENb5yKJIXA3DNIcu7XAx9OKsUTf38eTQ==
+gitea-react-toolkit@1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.8.1.tgz#592b9fecc6ca5f715593a33a60812c324a9ae6b0"
+  integrity sha512-za6H9pW8ThLnJ/BjNNgUzpShQ+D2CzECgygeFOX5HaQm4aMdwdEEBSpL0HHjABvpqPke2mhbd5YurDS4nqP5fg==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -4586,10 +4586,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@4.2.0-alpha.2:
-  version "4.2.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.2.0-alpha.2.tgz#e213e36124d6fb638d1d13861083da77136544ae"
-  integrity sha512-9If2dDSbyuvG6Z/wcxhhcLIn9FZlN80JQx1NEfYDxhQyD5NwXHyMjNNPBDHBRnbJgaucjbc24m0Q2yP9ilYJpg==
+scripture-resources-rcl@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.2.0.tgz#0c5784ccb022befab5c06ab4cb6d0fc187a1377c"
+  integrity sha512-B8ldJNfxdUgcUM+T+rmTG2X1FaQQxYydlJm1d7cLihzjqFjTkQoD+wZYkovBnM9mtCgPcUDIWts+VDflb9/uFw==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.7.0"
@@ -4698,10 +4698,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@2.0.6-alpha.2:
-  version "2.0.6-alpha.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-2.0.6-alpha.2.tgz#895fee57177cb49a24c10eb960b5deb8ec95bbc0"
-  integrity sha512-pBUknfvbYo914jlfWkZL6D1cCL5uXoVh+3DRi7grb2FhwpOoeilFPU/msae4tx3dBiGbMCUtvVr3rBOl/IR/uQ==
+single-scripture-rcl@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-2.1.0.tgz#b0203b0f75c921ef020cabc1c1a6976f01803007"
+  integrity sha512-pa8tplJSXjnlyRs78P7kDBvkoxrUyzXVO4YDPb4W9pNMKawhMqVFp+hruWtxrIjAoY5xUZnNY7vuZsNRJT0dhA==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
