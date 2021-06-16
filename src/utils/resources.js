@@ -42,7 +42,7 @@ export async function getResource({
       },
       config: {
         server,
-        cache: { maxAge: 60 * 1000 },
+        cache: { maxAge: 1 * 60 * 60 * 1000 }, // 1 hr
         timeout: HTTP_GET_MAX_WAIT_TIME,
       },
     })
