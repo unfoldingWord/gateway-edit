@@ -52,6 +52,8 @@ export default function StoreContextProvider(props) {
     verse: '1',
   })
 
+  const [greekRepoUrl, setGreekRepoUrl] = useLocalStorage('greekRepoUrl', null)
+  const [hebrewRepoUrl, setHebrewRepoUrl] = useLocalStorage('hebrewRepoUrl', null)
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
   const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
 
@@ -96,6 +98,8 @@ export default function StoreContextProvider(props) {
       loggedInUser: username,
       lastError,
       tokenNetworkError,
+      greekRepoUrl,
+      hebrewRepoUrl,
     },
     actions: {
       logout,
@@ -112,6 +116,8 @@ export default function StoreContextProvider(props) {
       setLastError,
       setTokenNetworkError,
       updateTaDetails,
+      setGreekRepoUrl,
+      setHebrewRepoUrl,
     },
   }
 
