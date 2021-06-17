@@ -10,7 +10,7 @@ import {
 } from 'translation-helps-rcl'
 import { getResourceMessage } from '@utils/resources'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
-import { HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
+import { HTTP_CONFIG } from '@common/constants'
 
 export default function ResourceCard({
   id,
@@ -18,7 +18,7 @@ export default function ResourceCard({
   verse,
   server,
   owner,
-  branch,
+  appRef,
   chapter,
   classes,
   filePath,
@@ -36,6 +36,8 @@ export default function ResourceCard({
   useUserLocalStorage,
   onResourceError,
 }) {
+  // TODO blm: in future will need to implement way in app to change ref of specific resource
+  const [ref, setRef] = useUserLocalStorage(`${id}_ref`, appRef) // initialize to default for app
   const {
     items,
     markdown,
@@ -44,14 +46,14 @@ export default function ResourceCard({
     verse,
     chapter,
     projectId,
-    branch,
+    ref,
     languageId,
     resourceId,
     filePath,
     owner,
     server,
     onResourceError,
-    timeout: HTTP_GET_MAX_WAIT_TIME,
+    httpConfig: HTTP_CONFIG,
   })
 
   const {
@@ -82,7 +84,7 @@ export default function ResourceCard({
     const error = resourceStatus?.[ERROR_STATE]
 
     if (error) { // if error was found do callback
-      const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${branch}`
+      const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${ref}`
       const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
       onResourceError && onResourceError(message, isAccessError, resourceStatus)
     }
@@ -140,7 +142,7 @@ ResourceCard.propTypes = {
   verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   server: PropTypes.string.isRequired,
   owner: PropTypes.string.isRequired,
-  branch: PropTypes.string.isRequired,
+  ref: PropTypes.string.isRequired,
   languageId: PropTypes.string.isRequired,
   resourceId: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,

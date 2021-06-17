@@ -45,7 +45,7 @@ export default function StoreContextProvider(props) {
   // TODO blm: for now we use unfoldingWord for original language bibles
   const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
   const [server, setServer] = useState('https://git.door43.org')
-  const [branch, setBranch] = useState('master')
+  const [appRef, setAppRef] = useUserLocalStorage('appRef', 'master') // default for app
   const [bibleReference, setBibleReference] = useUserLocalStorage('bibleReference', {
     bookId: 'mat',
     chapter: '1',
@@ -90,7 +90,7 @@ export default function StoreContextProvider(props) {
       languageId,
       taArticle,
       server,
-      branch,
+      appRef,
       owner,
       supportedBibles,
       currentLayout,
@@ -107,7 +107,7 @@ export default function StoreContextProvider(props) {
       setShowAccountSetup,
       setScriptureOwner,
       setLanguageId,
-      setBranch,
+      setAppRef,
       setServer,
       setQuote,
       setOwner,
