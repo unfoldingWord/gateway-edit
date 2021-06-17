@@ -4587,7 +4587,7 @@ schema-utils@^3.0.0:
     ajv-keywords "^3.5.2"
 
 "scripture-resources-rcl@file:.yalc/scripture-resources-rcl":
-  version "4.3.0"
+  version "4.3.1-alpha"
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.7.0"

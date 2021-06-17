@@ -161,7 +161,7 @@ function WorkspaceContainer() {
   const commonScriptureCardConfigs = {
     isNT,
     server,
-    ref: appRef,
+    appRef,
     classes,
     getLanguage,
     useUserLocalStorage,
@@ -195,7 +195,7 @@ function WorkspaceContainer() {
         resourceId: languageId === 'en' ? 'ult' : 'glt',
         owner,
         languageId,
-        appRef,
+        ref: appRef,
         server,
       }).then(results => {
         const {
