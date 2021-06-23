@@ -1,5 +1,7 @@
 # gateway-edit
 
+Book Package harmonized view.
+
 ## Staging Environment URLs
 
 - ***Production:*** https://gateway-edit.netlify.app/
