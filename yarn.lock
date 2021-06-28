@@ -4586,8 +4586,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-"scripture-resources-rcl@file:.yalc/scripture-resources-rcl":
-  version "4.3.1-alpha"
+scripture-resources-rcl@4.3.0-alpha:
+  version "4.3.0-alpha"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-4.3.0-alpha.tgz#fe8f1ea8bf344bfac75e5ab784cb0e9a8edb37cf"
+  integrity sha512-F/64tG/1XSVDT8zfhPjXpiQhC5EDZPnrNQEqA+XUuo6IDoHcHDdFPJFxmm066av7qq1qgQOySFXfELC3ffwFtA==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.7.0"
@@ -4696,8 +4698,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-"single-scripture-rcl@file:.yalc/single-scripture-rcl":
-  version "2.1.0"
+single-scripture-rcl@2.2.0-alpha:
+  version "2.2.0-alpha"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-2.2.0-alpha.tgz#365a65d10280abdca9b9585c8a71d54d3efc9476"
+  integrity sha512-ji7s4hAQcnXHBYwYh7nJarJPe6J0fL7Wv+MJpTYOFfeiGbfVrO8zdBDUjxU+5Cr6CvS/GbyIlM/gqYxKkVDz3w==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -5152,8 +5156,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-"translation-helps-rcl@file:.yalc/translation-helps-rcl":
-  version "1.48.0"
+translation-helps-rcl@1.49.0-alpha:
+  version "1.49.0-alpha"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-1.49.0-alpha.tgz#005ba9bd2358c7eff93dfad3340725748f7f9600"
+  integrity sha512-4WFdo6U/ap1vS3LYLdXOkEpAJlPtAFKgYBNtGh5Y+VBVX6eebKUqM9BUqhi9YADM/zL2iBDPP0i+O1NOv+YFFg==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
