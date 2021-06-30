@@ -199,7 +199,7 @@ function WorkspaceContainer() {
         server,
       }).then(results => {
         const {
-          bibles, httpCode, resourceLink,
+          bibles, resourceLink,
         } = results
 
         if (bibles?.length) {
@@ -208,7 +208,6 @@ function WorkspaceContainer() {
             setSupportedBibles(bibles) // TODO blm: update bible refs
           }
         } else {
-          processError(`${MANIFEST_INVALID_ERROR} ${resourceLink}`, httpCode)
           console.warn(`no bibles found for ${resourceLink}`)
         }
         setWorkspaceReady(true)
