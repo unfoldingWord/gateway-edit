@@ -35,7 +35,7 @@ import {
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import { HTTP_GET_MAX_WAIT_TIME, MANIFEST_INVALID_ERROR } from '@common/constants'
+import { HTTP_CONFIG, HTTP_GET_MAX_WAIT_TIME, MANIFEST_INVALID_ERROR } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 const useStyles = makeStyles(() => ({
@@ -61,7 +61,7 @@ function WorkspaceContainer() {
     state: {
       owner,
       server,
-      branch,
+      appRef,
       taArticle,
       languageId,
       selectedQuote,
@@ -98,11 +98,11 @@ function WorkspaceContainer() {
   ] = useResourceClickListener({
     owner,
     server,
-    branch,
+    ref: appRef,
     taArticle,
     languageId,
     onResourceError,
-    timeout: HTTP_GET_MAX_WAIT_TIME,
+    httpConfig: HTTP_CONFIG,
   })
 
   function isNT(bookId) {
@@ -161,13 +161,13 @@ function WorkspaceContainer() {
   const commonScriptureCardConfigs = {
     isNT,
     server,
-    branch,
+    appRef,
     classes,
     getLanguage,
     useUserLocalStorage,
     originalLanguageOwner: scriptureOwner,
     onResourceError,
-    timeout: HTTP_GET_MAX_WAIT_TIME,
+    httpConfig: HTTP_CONFIG,
     greekRepoUrl,
     hebrewRepoUrl,
   }
@@ -178,7 +178,7 @@ function WorkspaceContainer() {
     verse,
     server,
     owner,
-    branch,
+    appRef,
     languageId,
     useUserLocalStorage,
     onResourceError,
@@ -187,7 +187,7 @@ function WorkspaceContainer() {
   useEffect(() => {
     setWorkspaceReady(false)
 
-    if (owner && languageId && branch && server && loggedInUser) {
+    if (owner && languageId && appRef && server && loggedInUser) {
       getResourceBibles({
         bookId,
         chapter,
@@ -195,7 +195,7 @@ function WorkspaceContainer() {
         resourceId: languageId === 'en' ? 'ult' : 'glt',
         owner,
         languageId,
-        branch,
+        ref: appRef,
         server,
       }).then(results => {
         const {
@@ -216,7 +216,7 @@ function WorkspaceContainer() {
         processError(e.toString())
       })
     }// eslint-disable-next-line
-  }, [owner, languageId, branch, server, loggedInUser])
+  }, [owner, languageId, appRef, server, loggedInUser])
 
   /**
    * find the latest version for published bible
@@ -305,9 +305,7 @@ function WorkspaceContainer() {
 
   const config = {
     server,
-    branch,
-    cache: { maxAge: 1 * 60 * 60 * 1000 }, // 1 hr
-    timeout: HTTP_GET_MAX_WAIT_TIME,
+    ...HTTP_CONFIG,
   }
 
   const { server: origServer, resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
@@ -318,6 +316,7 @@ function WorkspaceContainer() {
       ...originalScripture.resource,
       resourceId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
       projectId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      ref: appRef,
     },
     resourceLink: origResourceLink,
     config: {

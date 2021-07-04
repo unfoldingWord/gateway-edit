@@ -20,14 +20,14 @@ export async function getResource({
   resourceId,
   owner,
   languageId,
-  branch,
+  ref,
   server,
 }) {
   const resourceLink = getResourceLink({
     owner,
     languageId,
     resourceId,
-    branch,
+    ref,
   })
 
   let resource
