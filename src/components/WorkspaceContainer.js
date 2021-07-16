@@ -73,6 +73,7 @@ function WorkspaceContainer() {
       currentLayout,
       useUserLocalStorage,
       loggedInUser,
+      authentication,
       tokenNetworkError,
       greekRepoUrl,
       hebrewRepoUrl,
@@ -151,10 +152,26 @@ function WorkspaceContainer() {
     return null
   }
 
-  function onResourceError(message, isAccessError, resourceStatus, error) {
-    if (!networkError && // only show if another error not already showing
-        isAccessError) { // we only show popup for access errors
-      addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError )
+  /**
+   * process error and determine if there is a problem with connection to server
+   *  if showAnyError is true we display an error popup
+   *    the process then is to check if this is server connection problem - if so we display that message, if not we display the error returned
+   *  if showAnyError is false (default) we only display an error popup if there is a problem connecting to server
+   * @param {string} message - the error message we received fetching a resource
+   * @param {boolean} isAccessError - if false then the error type is not one that would be caused by server connection problems
+   * @param {number} resourceStatus - status code returned fetching resource
+   * @param {object} error - error object for detected error, could be a parsing error, etc.  This will take precedence over message
+   * @param {boolean} showAllErrors - if true then always show a popup error message, otherwise just show server error message if we can't talk to server
+   */
+  function onResourceError(message, isAccessError, resourceStatus, error, showAllErrors = false) {
+    if (!networkError ) { // only show if another error not already showing
+      if (showAllErrors) {
+        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
+      } else {
+        if (isAccessError) { // we only show popup for access errors
+          addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError)
+        }
+      }
     }
   }
 
@@ -182,6 +199,8 @@ function WorkspaceContainer() {
     languageId,
     useUserLocalStorage,
     onResourceError,
+    loggedInUser,
+    authentication,
   }
 
   useEffect(() => {
