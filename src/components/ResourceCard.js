@@ -5,7 +5,7 @@ import {
   CardContent,
   useContent,
   useCardState,
-  useEditState,
+  useUserBranch,
   ERROR_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
@@ -44,12 +44,9 @@ export default function ResourceCard({
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
 
   const {
-    state: { editing },
-    actions: {
-      saveEdit,
-      startEdit,
-    },
-  } = useEditState({
+    state: { usingUserBranch },
+    actions: { startEdit },
+  } = useUserBranch({
     languageId,
     loggedInUser,
     authentication,
@@ -80,6 +77,7 @@ export default function ResourceCard({
     server,
     onResourceError,
     httpConfig: HTTP_CONFIG,
+    loggedInUser,
   })
 
   const {
@@ -118,11 +116,9 @@ export default function ResourceCard({
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
 
-  function onEditClick() {
-    if (!editing) {
+  function onEditClick() {  // TODO: testing - remove
+    if (!usingUserBranch) {
       startEdit()
-    } else {
-      saveEdit(markdown) // TODO: testing - we are expecting markdown to have the latest edits
     }
   }
 
