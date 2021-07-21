@@ -134,7 +134,6 @@ export default function ResourceCard({
       disableFilters={disableFilters}
       disableNavigation={disableNavigation}
       hideMarkdownToggle={hideMarkdownToggle}
-      source={ref}
     >
       <CardContent
         item={item}
