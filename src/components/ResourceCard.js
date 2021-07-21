@@ -114,13 +114,7 @@ export default function ResourceCard({
     }
   }, [resourceStatus?.[ERROR_STATE]])
 
-  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
-
-  function onEditClick() {  // TODO: testing - remove
-    if (!usingUserBranch) {
-      startEdit()
-    }
-  }
+  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, ref)
 
   return (
     <Card
@@ -141,7 +135,6 @@ export default function ResourceCard({
       disableNavigation={disableNavigation}
       hideMarkdownToggle={hideMarkdownToggle}
       source={ref}
-      onEditClick={onEditClick}
     >
       <CardContent
         item={item}

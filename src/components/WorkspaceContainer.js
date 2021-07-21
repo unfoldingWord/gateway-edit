@@ -35,7 +35,7 @@ import {
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import { HTTP_CONFIG, HTTP_GET_MAX_WAIT_TIME, MANIFEST_INVALID_ERROR } from '@common/constants'
+import { HTTP_CONFIG, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 const useStyles = makeStyles(() => ({

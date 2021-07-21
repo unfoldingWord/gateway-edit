@@ -42,9 +42,7 @@ export async function getServerFault() {
     const secondTry = getLocalStorageItem(SERVER_CHECK_SECOND_TRY_KEY)
     setLocalStorageValue(SERVER_CHECK_SECOND_TRY_KEY, false) // clear flag
     const timeout = secondTry ? HTTP_GET_MAX_WAIT_TIME : SERVER_MAX_WAIT_TIME_RETRY
-    console.log(`getServerFault() - setting timeout to ${timeout}`) //TODO - remove
     await checkIfServerOnline(BASE_URL, { timeout }) // throws exception if server disconnected
-    console.log(`getServerFault() - server is online`) //TODO - remove
     return null
   } catch (e) {
     console.warn(`getServerFault() - received error`, e)
