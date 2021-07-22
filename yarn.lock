@@ -3356,10 +3356,24 @@ markdown-escapes@^1.0.0:
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
 
-markdown-translatable@1.2.16, markdown-translatable@^1.2.15:
+markdown-translatable@1.2.16:
   version "1.2.16"
   resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.2.16.tgz#048624bb4762370db30030c4d0265b721c54f7e8"
   integrity sha512-miTzfgoCCFwodkNN9EuUlGg2HoKZbJlYt1BqbqsfpT2jbXbu7jMPVB4d+Jj7wh3wyNSJzON4GqV4X90ke6Gt1w==
+  dependencies:
+    deep-freeze "^0.0.1"
+    md5 "^2.2.1"
+    prop-types "^15.7.2"
+    react-headroom "^3.1.0"
+    react-markdown "4.0.6"
+    showdown "^1.9.1"
+    turndown "^7.0.0"
+    turndown-plugin-gfm "^1.0.2"
+
+markdown-translatable@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.3.0.tgz#ba6da3e0f01aa34f7c1d075117543cc57f290f2b"
+  integrity sha512-GBc5olyzw5hj7rQHah8tRWoGoqSatvD0Wc6ZEHF0IW8PVMpvgWUAAOFAbJyWbcYZe3FD5w13h1J1MqbPLz6Xww==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
@@ -5145,10 +5159,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-2.0.0.tgz#1fb55e380e4637d1c545b043c01af616015ca9aa"
-  integrity sha512-YY5vM2wmqFtrcyx8T+/YQcvdi5ADQETFp+7nMu6J0PPQlJmuqFdC1EMDY91VIgEoEf8mWxXIJ4CnF5VMvydouQ==
+translation-helps-rcl@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-2.1.1.tgz#32046e6c86230dc9a31ca33ce886bdcade68bdb8"
+  integrity sha512-A5wyKzUUqA+IWZ8ITupj1wsgbea9Yj90rtUCvh7TCywHC/tZO373dyAvbJyvjTgB7ExQj91YdOv0LWcr36qXAg==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
