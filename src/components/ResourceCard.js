@@ -5,6 +5,7 @@ import {
   CardContent,
   useContent,
   useCardState,
+  useUserBranch,
   ERROR_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
@@ -35,9 +36,36 @@ export default function ResourceCard({
   hideMarkdownToggle,
   useUserLocalStorage,
   onResourceError,
+  loggedInUser,
+  authentication,
 }) {
   // TODO blm: in future will need to implement way in app to change ref of specific resource
   const [ref, setRef] = useUserLocalStorage(`${id}_ref`, appRef) // initialize to default for app
+  const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+
+  const {
+    state: {
+      contentRef,
+      listRef,
+      usingUserBranch,
+      workingResourceBranch,
+    },
+    actions: { startEdit },
+  } = useUserBranch({
+    languageId,
+    loggedInUser,
+    authentication,
+    resourceId,
+    server,
+    owner,
+    ref,
+    setRef,
+    useUserLocalStorage,
+    cardResourceId,
+    cardId: id,
+    onResourceError,
+  })
+
   const {
     items,
     markdown,
@@ -46,7 +74,8 @@ export default function ResourceCard({
     verse,
     chapter,
     projectId,
-    ref,
+    contentRef,
+    listRef,
     languageId,
     resourceId,
     filePath,
@@ -54,6 +83,7 @@ export default function ResourceCard({
     server,
     onResourceError,
     httpConfig: HTTP_CONFIG,
+    loggedInUser,
   })
 
   const {
@@ -90,7 +120,7 @@ export default function ResourceCard({
     }
   }, [resourceStatus?.[ERROR_STATE]])
 
-  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
+  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, ref)
 
   return (
     <Card
@@ -161,4 +191,10 @@ ResourceCard.propTypes = {
    *    isAccessError - is true if this was an error trying to access file and could likely be due to network connection problem
    *    resourceStatus - is object containing details about problems fetching resource */
   onResourceError: PropTypes.func,
+  /** default ref for app (e.g. master) */
+  appRef: PropTypes.string,
+  /** username of the logged in user */
+  loggedInUser: PropTypes.string,
+  /** user authentication object */
+  authentication: PropTypes.object,
 }

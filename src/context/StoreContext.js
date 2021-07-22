@@ -96,6 +96,7 @@ export default function StoreContextProvider(props) {
       currentLayout,
       useUserLocalStorage,
       loggedInUser: username,
+      authentication,
       lastError,
       tokenNetworkError,
       greekRepoUrl,

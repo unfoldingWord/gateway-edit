@@ -7,6 +7,7 @@ import {
 import {
   AUTHENTICATION_ERROR,
   BASE_URL,
+  CHECKING_SEVER,
   FEEDBACK_PAGE,
   HTTP_GET_MAX_WAIT_TIME,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
@@ -41,9 +42,7 @@ export async function getServerFault() {
     const secondTry = getLocalStorageItem(SERVER_CHECK_SECOND_TRY_KEY)
     setLocalStorageValue(SERVER_CHECK_SECOND_TRY_KEY, false) // clear flag
     const timeout = secondTry ? HTTP_GET_MAX_WAIT_TIME : SERVER_MAX_WAIT_TIME_RETRY
-    console.log(`getServerFault() - setting timeout to ${timeout}`) //TODO - remove
     await checkIfServerOnline(BASE_URL, { timeout }) // throws exception if server disconnected
-    console.log(`getServerFault() - server is online`) //TODO - remove
     return null
   } catch (e) {
     console.warn(`getServerFault() - received error`, e)
@@ -132,7 +131,16 @@ export async function getNetworkError(error, httpCode ) {
 export async function processNetworkError(error, httpCode, logout, router,
                                           setNetworkError, setLastError, setErrorMessage,
 ) {
-  setNetworkError && setNetworkError(null) // clear until processing finished
+  // TRICKY we need to show an initial message because there may be delays checking for server connection.
+  //    if server responds, this message should be quickly replaced with final message
+  const initialMessage = (typeof error === 'string') ? error : error?.message
+  const initialShownError = {
+    errorMessage: initialMessage + CHECKING_SEVER,
+    lastError: error,
+    router: router,
+    logout: logout,
+  }
+  setNetworkError && setNetworkError(initialShownError) // clear until processing finished
   const errorObj = await getNetworkError(error, httpCode)
   setErrorMessage && setErrorMessage(errorObj.errorMessage)
   setLastError && setLastError(errorObj.lastError) // error info to attach to sendmail

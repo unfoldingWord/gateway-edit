@@ -102,10 +102,16 @@ export function getRepoUrl(owner, languageId, resourceId, server) {
  * @param languageId
  * @param resourceId
  * @param server
+ * @param {string} ref - optional ref (branch or tag)
  * @return {string} error string with resource path
  */
-export function getErrorMessageForResourceLink(errorStr, owner, languageId, resourceId, server) {
-  const repoUrl = getRepoUrl(owner, languageId, resourceId, server)
+export function getErrorMessageForResourceLink(errorStr, owner, languageId, resourceId, server, ref = null) {
+  let repoUrl = getRepoUrl(owner, languageId, resourceId, server)
+
+  if (ref) {
+    repoUrl += `&ref=${ref}`
+  }
+
   const errorMsg = errorStr + repoUrl
   return errorMsg
 }
@@ -118,9 +124,10 @@ export function getErrorMessageForResourceLink(errorStr, owner, languageId, reso
  * @param languageId
  * @param resourceId
  * @param server - contains the server being used
+ * @param {string} ref - optional ref (branch or tag)
  * @return empty string if no error, else returns user error message
  */
-export function getResourceMessage(resourceStatus, owner, languageId, resourceId, server) {
+export function getResourceMessage(resourceStatus, owner, languageId, resourceId, server, ref = null) {
   let message = ''
 
   if (resourceStatus[LOADING_STATE]) {
@@ -133,7 +140,7 @@ export function getResourceMessage(resourceStatus, owner, languageId, resourceId
     }
 
     if (message) {
-      message = getErrorMessageForResourceLink(message, owner, languageId, resourceId, server)
+      message = getErrorMessageForResourceLink(message, owner, languageId, resourceId, server, ref)
       console.log(`getResourceMessage() - Resource Error: ${message}`, resourceStatus)
     }
   }

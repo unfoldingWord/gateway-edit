@@ -2378,10 +2378,10 @@ gitea-react-toolkit@1.7.0:
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
-gitea-react-toolkit@1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.8.1.tgz#592b9fecc6ca5f715593a33a60812c324a9ae6b0"
-  integrity sha512-za6H9pW8ThLnJ/BjNNgUzpShQ+D2CzECgygeFOX5HaQm4aMdwdEEBSpL0HHjABvpqPke2mhbd5YurDS4nqP5fg==
+gitea-react-toolkit@1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.9.2.tgz#ad078219b444086189c933f1eba5d425563350af"
+  integrity sha512-eKvfn9VV73dfGfiB1+/JX6+vz8Dmvs6g403nIa/sWcwHUyRY/okWfXLn1qP7w6fGlxBSugLzahXsnNqL9IyTMg==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -3371,9 +3371,9 @@ markdown-translatable@1.2.16:
     turndown-plugin-gfm "^1.0.2"
 
 markdown-translatable@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.3.0.tgz#ba6da3e0f01aa34f7c1d075117543cc57f290f2b"
-  integrity sha512-GBc5olyzw5hj7rQHah8tRWoGoqSatvD0Wc6ZEHF0IW8PVMpvgWUAAOFAbJyWbcYZe3FD5w13h1J1MqbPLz6Xww==
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.3.1.tgz#29393f8650be38885c7991f2e2e661bbe9d000ae"
+  integrity sha512-oZieaVOCjxZISyGDvcpb3XsJsnPvKd4xCULFQawQ/L395EwGHFERG6gCH65b3w3HjkLEWhdPknWf1BLK6Mu6Tg==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
@@ -5159,10 +5159,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-2.1.1.tgz#32046e6c86230dc9a31ca33ce886bdcade68bdb8"
-  integrity sha512-A5wyKzUUqA+IWZ8ITupj1wsgbea9Yj90rtUCvh7TCywHC/tZO373dyAvbJyvjTgB7ExQj91YdOv0LWcr36qXAg==
+translation-helps-rcl@2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-2.1.3.tgz#f3af8c2a40f1785ce1b81bfff727c53c99229662"
+  integrity sha512-cl9BUsx9r7YShlSwMeZKG4CjpdsxeCmzFQS+qPykehPUPV99vhpYd/MNR8HhmmV1UQ3FWBguPlrR73AuItevyw==
   dependencies:
     axios "^0.21.1"
     react-draggable "^4.4.3"
