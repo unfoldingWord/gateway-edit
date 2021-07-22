@@ -7,7 +7,7 @@ import {
 import {
   AUTHENTICATION_ERROR,
   BASE_URL,
-  CHECKING_SEVER,
+  CHECKING_SERVER,
   FEEDBACK_PAGE,
   HTTP_GET_MAX_WAIT_TIME,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
@@ -135,7 +135,7 @@ export async function processNetworkError(error, httpCode, logout, router,
   //    if server responds, this message should be quickly replaced with final message
   const initialMessage = (typeof error === 'string') ? error : error?.message
   const initialShownError = {
-    errorMessage: initialMessage + CHECKING_SEVER,
+    errorMessage: initialMessage + CHECKING_SERVER,
     lastError: error,
     router: router,
     logout: logout,
