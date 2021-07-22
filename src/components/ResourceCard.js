@@ -44,7 +44,12 @@ export default function ResourceCard({
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
 
   const {
-    state: { usingUserBranch },
+    state: {
+      contentRef,
+      listRef,
+      usingUserBranch,
+      workingResourceBranch,
+    },
     actions: { startEdit },
   } = useUserBranch({
     languageId,
@@ -69,7 +74,8 @@ export default function ResourceCard({
     verse,
     chapter,
     projectId,
-    ref,
+    contentRef,
+    listRef,
     languageId,
     resourceId,
     filePath,
