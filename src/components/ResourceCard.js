@@ -1,5 +1,4 @@
-import path from 'path'
-import { useEffect , useState } from 'react'
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
@@ -12,8 +11,6 @@ import {
 import { getResourceMessage } from '@utils/resources'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { HTTP_CONFIG } from '@common/constants'
-import { useEdit } from 'gitea-react-toolkit'
-
 
 export default function ResourceCard({
   id,
@@ -38,20 +35,15 @@ export default function ResourceCard({
   hideMarkdownToggle,
   useUserLocalStorage,
   onResourceError,
-  authentication,
-  loggedInUser,
 }) {
-  const branch = resourceId == 'ta' ? `${loggedInUser}-tc-create-1` : appRef
-  const [content, setContent] = useState('')
   // TODO blm: in future will need to implement way in app to change ref of specific resource
-  const [ref, setRef] = useUserLocalStorage(`${id}_ref`, branch) // initialize to default for app
+  const [ref, setRef] = useUserLocalStorage(`${id}_ref`, appRef) // initialize to default for app
   const {
     items,
     markdown,
-    fetchResponse,
     resourceStatus,
   } = useContent({
-    ref: branch,
+    ref,
     verse,
     owner,
     server,
@@ -80,47 +72,6 @@ export default function ResourceCard({
     projectId,
     selectedQuote,
     useUserLocalStorage,
-  })
-
-  const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
-  console.log('content', content)
-  console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
-  console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
-  console.log('fetchResponse', fetchResponse)
-  console.log('sha', sha)
-  console.log('item', item)
-  console.log('items', items)
-  console.log('resourceId', resourceId)
-  console.log('filePath', filePath)
-  console.log('projectId', projectId)
-
-  const {
-    error,
-    isError,
-    isEditing,
-    onSaveEdit,
-    editResponse,
-  } = useEdit({
-    sha,
-    owner,
-    content,
-    token: authentication?.token,
-    branch,
-    author: loggedInUser,
-    config: {
-      ...authentication?.config,
-      token: authentication?.token,
-    },
-    filepath: item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : null),
-    repo: `${languageId}_${viewMode === 'markdown' ? 'tw' : resourceId}`,
-  })
-
-  console.table({
-    error,
-    isError,
-    isEditing,
-    onSaveEdit,
-    editResponse,
   })
 
   useEffect(() => {
@@ -218,3 +169,78 @@ ResourceCard.propTypes = {
    *    resourceStatus - is object containing details about problems fetching resource */
   onResourceError: PropTypes.func,
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ *
+ *   authentication,
+  loggedInUser,
+
+
+ * import path from 'path'
+
+ * import { useEdit } from 'gitea-react-toolkit'
+
+ *
+ *   const branch = resourceId == 'ta' ? `${loggedInUser}-tc-create-1` : appRef
+  const [content, setContent] = useState('')
+ *
+ *
+ *
+ *   const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
+  console.log('content', content)
+  console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
+  console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
+  console.log('fetchResponse', fetchResponse)
+  console.log('sha', sha)
+  console.log('item', item)
+  console.log('items', items)
+  console.log('resourceId', resourceId)
+  console.log('filePath', filePath)
+  console.log('projectId', projectId)
+  console.log('branch', branch)
+
+  const {
+    error,
+    isError,
+    isEditing,
+    onSaveEdit,
+    editResponse,
+  } = useEdit({
+    sha,
+    owner,
+    content,
+    token: authentication?.token,
+    branch,
+    author: loggedInUser,
+    config: {
+      ...authentication?.config,
+      token: authentication?.token,
+    },
+    filepath: item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : null),
+    repo: `${languageId}_${viewMode === 'markdown' ? 'tw' : resourceId}`,
+  })
+
+  console.table({
+    error,
+    isError,
+    isEditing,
+    onSaveEdit,
+    editResponse,
+  })
+ */
