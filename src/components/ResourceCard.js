@@ -1,17 +1,19 @@
-import { useEffect } from 'react'
+import path from 'path'
+import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
   CardContent,
   useContent,
   useCardState,
+  useUserBranch,
   ERROR_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
-import { getResourceMessage } from '@utils/resources'
+import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
+import { getResourceMessage } from '@utils/resources'
 import { HTTP_CONFIG } from '@common/constants'
-
 export default function ResourceCard({
   id,
   title,
@@ -35,12 +37,40 @@ export default function ResourceCard({
   hideMarkdownToggle,
   useUserLocalStorage,
   onResourceError,
+  authentication,
+  loggedInUser,
 }) {
-  // TODO blm: in future will need to implement way in app to change ref of specific resource
+  const [content, setContent] = useState('')
   const [ref, setRef] = useUserLocalStorage(`${id}_ref`, appRef) // initialize to default for app
+  const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+
+  const {
+    state: {
+      listRef,
+      contentRef,
+      usingUserBranch,
+      workingResourceBranch,
+    },
+    actions: { startEdit },
+  } = useUserBranch({
+    languageId,
+    loggedInUser,
+    authentication,
+    resourceId,
+    server,
+    owner,
+    ref,
+    setRef,
+    useUserLocalStorage,
+    cardResourceId,
+    cardId: id,
+    onResourceError,
+  })
+
   const {
     items,
     markdown,
+    fetchResponse,
     resourceStatus,
   } = useContent({
     ref,
@@ -50,10 +80,13 @@ export default function ResourceCard({
     chapter,
     filePath,
     projectId,
+    contentRef,
+    listRef,
     languageId,
     resourceId,
     onResourceError,
     httpConfig: HTTP_CONFIG,
+    loggedInUser,
   })
 
   const {
@@ -74,6 +107,48 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
+  const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
+  console.log('content', content)
+  console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
+  console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
+  console.log('fetchResponse', fetchResponse)
+  console.log('sha', sha)
+  console.log('item', item)
+  console.log('items', items)
+  console.log('resourceId', resourceId)
+  console.log('filePath', filePath)
+  console.log('projectId', projectId)
+  console.log('workingResourceBranch', workingResourceBranch)
+
+  const {
+    error,
+    isError,
+    isEditing,
+    onSaveEdit,
+    editResponse,
+  } = useEdit({
+    sha,
+    owner,
+    content,
+    config: {
+      ...authentication?.config,
+      token: authentication?.token,
+    },
+    author: loggedInUser,
+    token: authentication?.token,
+    branch: workingResourceBranch,
+    filepath: item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : null),
+    repo: `${languageId}_${cardResourceId}`,
+  })
+
+  console.table({
+    error,
+    isError,
+    isEditing,
+    onSaveEdit,
+    editResponse,
+  })
+
   useEffect(() => {
     if (updateTaDetails) {
       updateTaDetails(item?.SupportReference || null)
@@ -90,7 +165,12 @@ export default function ResourceCard({
     }
   }, [resourceStatus?.[ERROR_STATE]])
 
-  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server)
+  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, ref)
+
+  async function handleSaveEdit() {
+    await startEdit()
+    await onSaveEdit()
+  }
 
   return (
     <Card
@@ -104,7 +184,7 @@ export default function ResourceCard({
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      onSaveEdit={onSaveEdit}
+      onSaveEdit={handleSaveEdit}
       setFontSize={setFontSize}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
@@ -140,9 +220,7 @@ ResourceCard.defaultProps = {
 
 ResourceCard.propTypes = {
   id: PropTypes.string,
-  appRef: PropTypes.string,
   viewMode: PropTypes.string,
-  loggedInUser: PropTypes.string.isRequired,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   chapter: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -162,85 +240,15 @@ ResourceCard.propTypes = {
   selectedQuote: PropTypes.object,
   errorMessage: PropTypes.string,
   useUserLocalStorage: PropTypes.func,
-  authentication: PropTypes.object,
   /** optional callback if error loading resource, parameter returned are:
    *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
    *    isAccessError - is true if this was an error trying to access file and could likely be due to network connection problem
    *    resourceStatus - is object containing details about problems fetching resource */
   onResourceError: PropTypes.func,
+  /** default ref for app (e.g. master) */
+  appRef: PropTypes.string,
+  /** username of the logged in user */
+  loggedInUser: PropTypes.string,
+  /** user authentication object */
+  authentication: PropTypes.object,
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- *
- *   authentication,
-  loggedInUser,
-
-
- * import path from 'path'
-
- * import { useEdit } from 'gitea-react-toolkit'
-
- *
- *   const branch = resourceId == 'ta' ? `${loggedInUser}-tc-create-1` : appRef
-  const [content, setContent] = useState('')
- *
- *
- *
- *   const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
-  console.log('content', content)
-  console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
-  console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
-  console.log('fetchResponse', fetchResponse)
-  console.log('sha', sha)
-  console.log('item', item)
-  console.log('items', items)
-  console.log('resourceId', resourceId)
-  console.log('filePath', filePath)
-  console.log('projectId', projectId)
-  console.log('branch', branch)
-
-  const {
-    error,
-    isError,
-    isEditing,
-    onSaveEdit,
-    editResponse,
-  } = useEdit({
-    sha,
-    owner,
-    content,
-    token: authentication?.token,
-    branch,
-    author: loggedInUser,
-    config: {
-      ...authentication?.config,
-      token: authentication?.token,
-    },
-    filepath: item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : null),
-    repo: `${languageId}_${viewMode === 'markdown' ? 'tw' : resourceId}`,
-  })
-
-  console.table({
-    error,
-    isError,
-    isEditing,
-    onSaveEdit,
-    editResponse,
-  })
- */
