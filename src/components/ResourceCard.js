@@ -84,6 +84,8 @@ export default function ResourceCard({
     onResourceError,
     httpConfig: HTTP_CONFIG,
     loggedInUser,
+    viewMode,
+    useUserLocalStorage,
   })
 
   const {
