@@ -5183,12 +5183,13 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^2.2.0-rc.38:
-  version "2.2.0-rc.38"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-2.2.0-rc.38.tgz#54ffb1394df286af11f32e7603bf672432c7045c"
-  integrity sha512-KbNKATCXNx25UGEu+FmiSwLPM7vPzTiD1oQGwE77c+nw6iLlA3R/uGJ1GmEKIyVbna1SqcpiGHItmMyvevYgjA==
+translation-helps-rcl@^2.3.0-rc.1:
+  version "2.3.0-rc.1"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-2.3.0-rc.1.tgz#75b9e9db02e83be7ab5f1b1bf7b4f7e46e24c7dd"
+  integrity sha512-/SBMxxfvHqB78wXZ5C+GknwfgTjB9MDmdPVJJPHSalk5oxwx+W7vtQZQqPMG8cS+AHrftI5VHv/7YhjNQcL+Og==
   dependencies:
     axios "^0.21.1"
+    deep-equal "^2.0.5"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
     use-deep-compare-effect "^1.6.1"
