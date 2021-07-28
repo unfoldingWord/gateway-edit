@@ -3,23 +3,24 @@ import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
-  CardContent,
   useContent,
+  CardContent,
+  ERROR_STATE,
   useCardState,
   useUserBranch,
-  ERROR_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
-import { HTTP_CONFIG } from '@common/constants'
+import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
+
 export default function ResourceCard({
   id,
   title,
   verse,
-  server,
   owner,
+  server,
   appRef,
   chapter,
   classes,
@@ -41,8 +42,17 @@ export default function ResourceCard({
   loggedInUser,
 }) {
   const [content, setContent] = useState('')
-  const [ref, setRef] = useUserLocalStorage(`${id}_ref`, appRef) // initialize to default for app
+  const [saved, setSaved] = useState(true)
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+
+  // If content changes then set whether it's saved or not.
+  useEffect(() => {
+    if (content) {
+      setSaved(false)
+    } else {
+      setSaved(true)
+    }
+  }, [content])
 
   const {
     state: {
@@ -53,18 +63,16 @@ export default function ResourceCard({
     },
     actions: { startEdit },
   } = useUserBranch({
+    owner,
+    server,
+    appRef,
     languageId,
+    cardId: id,
     loggedInUser,
     authentication,
-    resourceId,
-    server,
-    owner,
-    ref,
-    setRef,
-    useUserLocalStorage,
     cardResourceId,
-    cardId: id,
     onResourceError,
+    useUserLocalStorage,
   })
 
   const {
@@ -72,21 +80,22 @@ export default function ResourceCard({
     markdown,
     fetchResponse,
     resourceStatus,
+    reloadResource,
   } = useContent({
-    ref,
     verse,
     owner,
     server,
     chapter,
+    listRef,
     filePath,
     projectId,
     contentRef,
-    listRef,
     languageId,
     resourceId,
-    onResourceError,
-    httpConfig: HTTP_CONFIG,
     loggedInUser,
+    onResourceError,
+    ref: workingResourceBranch,
+    httpConfig: RESOURCE_HTTP_CONFIG,
   })
 
   const {
@@ -107,46 +116,27 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
+  // Each item in the items array may has a unique fetchResponse.
   const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
-  console.log('content', content)
-  console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
-  console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
-  console.log('fetchResponse', fetchResponse)
-  console.log('sha', sha)
-  console.log('item', item)
-  console.log('items', items)
-  console.log('resourceId', resourceId)
-  console.log('filePath', filePath)
-  console.log('projectId', projectId)
-  console.log('workingResourceBranch', workingResourceBranch)
 
   const {
-    error,
-    isError,
     isEditing,
     onSaveEdit,
-    editResponse,
   } = useEdit({
     sha,
     owner,
     content,
     config: {
+      cache: { maxAge: 0 },
       ...authentication?.config,
       token: authentication?.token,
+      timeout: SERVER_MAX_WAIT_TIME_RETRY,
     },
     author: loggedInUser,
     token: authentication?.token,
     branch: workingResourceBranch,
     filepath: item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : null),
     repo: `${languageId}_${cardResourceId}`,
-  })
-
-  console.table({
-    error,
-    isError,
-    isEditing,
-    onSaveEdit,
-    editResponse,
   })
 
   useEffect(() => {
@@ -159,55 +149,76 @@ export default function ResourceCard({
     const error = resourceStatus?.[ERROR_STATE]
 
     if (error) { // if error was found do callback
-      const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${ref}`
+      const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
       const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
       onResourceError && onResourceError(message, isAccessError, resourceStatus)
     }
   }, [resourceStatus?.[ERROR_STATE]])
 
-  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, ref)
+  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
   async function handleSaveEdit() {
-    await startEdit()
-    await onSaveEdit()
+    /**
+     * Save edit, if succesful trigger resource reload and set saved to true.
+     * @param {String} branch
+     */
+    const saveEdit = async (branch) => {
+      await onSaveEdit(branch).then((success) => {
+        if (success) {
+          reloadResource()
+          setSaved(true)
+        }
+      })
+    }
+
+    // If not using user branch create it then save the edit.
+    if (!usingUserBranch) {
+      await startEdit().then((branch) => saveEdit(branch))
+    } else {// Else just save the edit.
+      await saveEdit()
+    }
   }
+
+  // TODO: Only markdown content (tw & ta) is editable for now.
+  const editable = cardResourceId == 'tw' || cardResourceId == 'ta'
 
   return (
     <Card
       id={id}
-      editable
       title={title}
       items={items}
       classes={classes}
       headers={headers}
       filters={filters}
+      editable={editable}
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
-      onSaveEdit={handleSaveEdit}
       setFontSize={setFontSize}
+      saved={saved || isEditing}
+      onSaveEdit={handleSaveEdit}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
-      setMarkdownView={setMarkdownView}
       disableFilters={disableFilters}
+      setMarkdownView={setMarkdownView}
       disableNavigation={disableNavigation}
       hideMarkdownToggle={hideMarkdownToggle}
     >
       <CardContent
-        editable
         id={`${id}_content`}
         item={item}
         items={items}
         filters={filters}
+        editable={editable}
         viewMode={viewMode}
         fontSize={fontSize}
         markdown={markdown}
         setQuote={setQuote}
-        onEdit={(c) => setContent(c)}
+        onEdit={setContent}
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
-        errorMessage={message || errorMessage}
+        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
       />
     </Card>
   )
