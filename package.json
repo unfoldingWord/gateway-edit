@@ -27,7 +27,7 @@
     "react-dom": "^17.0.1",
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "1.0.0",
-    "scripture-resources-rcl": "file:.yalc/scripture-resources-rcl",
+    "scripture-resources-rcl": "^5.1.0-rc0",
     "single-scripture-rcl": "3.0.0",
     "tailwindcss": "^2.0.4",
     "translation-helps-rcl": "^2.2.0-rc.38",
