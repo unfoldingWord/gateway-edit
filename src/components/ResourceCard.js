@@ -85,6 +85,7 @@ export default function ResourceCard({
     httpConfig: HTTP_CONFIG,
     loggedInUser,
     viewMode,
+    useUserLocalStorage,
   })
 
   const {
