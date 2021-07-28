@@ -2,7 +2,7 @@
   "name": "gateway-edit",
   "version": "1.0.0",
   "scripts": {
-    "dev": "bash -c \"source ./scripts/set-env.sh && next -p 8081\"",
+    "dev": "bash -c \"source ./scripts/set-env.sh && next\"",
     "build": "bash -c \"source ./scripts/set-env.sh && next build\"",
     "start": "bash -c \"source ./scripts/set-env.sh && next start\"",
     "export": "next export",
