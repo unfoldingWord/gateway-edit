@@ -6,7 +6,7 @@ import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
-import { APP_NAME } from '@common/constants'
+import { APP_NAME, QA, QA_BASE_URL } from '@common/constants'
 import useValidateAccountSettings from '@hooks/useValidateAccountSettings'
 
 export default function Layout({
@@ -24,6 +24,7 @@ export default function Layout({
       showAccountSetup,
       languageId,
       owner,
+      server,
     },
     actions: {
       setCurrentLayout,
@@ -54,6 +55,7 @@ export default function Layout({
       <Footer
         buildHash={buildId?.hash}
         buildVersion={buildId?.version}
+        serverID={(server === QA_BASE_URL) ? QA : ''}
       />
     </div>
   )

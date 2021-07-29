@@ -35,7 +35,14 @@ import {
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import { HTTP_CONFIG, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
+import {
+  BASE_URL,
+  HTTP_CONFIG,
+  HTTP_GET_MAX_WAIT_TIME,
+  PROD,
+  QA,
+  QA_BASE_URL,
+} from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 const useStyles = makeStyles(() => ({
@@ -88,6 +95,7 @@ function WorkspaceContainer() {
       updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
+      setServer,
     },
   } = useContext(StoreContext)
 
@@ -303,6 +311,20 @@ function WorkspaceContainer() {
         setTimeout(() => { setWorkspaceReady(true) }, 500)
       }
     })
+  }, [])
+
+  useEffect(() => {
+    const params = router.query
+
+    if (typeof params.server === 'string') { // if URL param given
+      const serverID_ = params.server.toUpperCase() === QA ? QA : PROD
+      const server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
+
+      if (server !== server_) {
+        console.log(`On init switching server to: ${serverID_}, url server param ${params.server}`)
+        setServer(server_)
+      }
+    }
   }, [])
 
   const isNewTestament = isNT(bookId)

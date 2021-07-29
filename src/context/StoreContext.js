@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
 import * as useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
+import { BASE_URL } from '@common/constants'
 
 export const StoreContext = createContext({})
 
@@ -44,7 +45,7 @@ export default function StoreContextProvider(props) {
   const [selectedQuote, setQuote] = useUserLocalStorage('selectedQuote', null)
   // TODO blm: for now we use unfoldingWord for original language bibles
   const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
-  const [server, setServer] = useState('https://git.door43.org')
+  const [server, setServer] = useUserLocalStorage('server', BASE_URL)
   const [appRef, setAppRef] = useUserLocalStorage('appRef', 'master') // default for app
   const [bibleReference, setBibleReference] = useUserLocalStorage('bibleReference', {
     bookId: 'mat',
