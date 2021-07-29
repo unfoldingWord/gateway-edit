@@ -8,6 +8,7 @@ export const QA = 'QA'
 export const PROD = 'PROD'
 export const TOKEN_ID = 'gatewayEdit'
 export const FEEDBACK_PAGE = '/feedback'
+export const SERVER_KEY = 'server'
 
 export const SERVER_MAX_WAIT_TIME_RETRY = 10000 // in milliseconds
 export const HTTP_GET_MAX_WAIT_TIME = 5000 // in milliseconds

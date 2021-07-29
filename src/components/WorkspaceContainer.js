@@ -95,7 +95,6 @@ function WorkspaceContainer() {
       updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
-      setServer,
     },
   } = useContext(StoreContext)
 
@@ -253,7 +252,7 @@ function WorkspaceContainer() {
    * @return {Promise<*>}
    */
   async function getLatestBibleRepo(org, lang, bible) {
-    const url = `https://git.door43.org/api/catalog/v5/search/${org}/${lang}_${bible}`
+    const url = `${server}/api/catalog/v5/search/${org}/${lang}_${bible}`
     const results = await doFetch(url, {}, HTTP_GET_MAX_WAIT_TIME)
       .then(response => {
         if (response?.status !== 200) {
@@ -311,20 +310,6 @@ function WorkspaceContainer() {
         setTimeout(() => { setWorkspaceReady(true) }, 500)
       }
     })
-  }, [])
-
-  useEffect(() => {
-    const params = router.query
-
-    if (typeof params.server === 'string') { // if URL param given
-      const serverID_ = params.server.toUpperCase() === QA ? QA : PROD
-      const server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
-
-      if (server !== server_) {
-        console.log(`On init switching server to: ${serverID_}, url server param ${params.server}`)
-        setServer(server_)
-      }
-    }
   }, [])
 
   const isNewTestament = isNT(bookId)
