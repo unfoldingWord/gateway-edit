@@ -13,6 +13,7 @@ import {
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
   SEND_FEEDBACK,
+  SERVER_KEY,
   SERVER_MAX_WAIT_TIME_RETRY,
   SERVER_OTHER_ERROR,
   SERVER_UNREACHABLE_ERROR,
@@ -42,7 +43,7 @@ export async function getServerFault() {
     const secondTry = getLocalStorageItem(SERVER_CHECK_SECOND_TRY_KEY)
     setLocalStorageValue(SERVER_CHECK_SECOND_TRY_KEY, false) // clear flag
     const timeout = secondTry ? HTTP_GET_MAX_WAIT_TIME : SERVER_MAX_WAIT_TIME_RETRY
-    await checkIfServerOnline(BASE_URL, { timeout }) // throws exception if server disconnected
+    await checkIfServerOnline(getLocalStorageItem(SERVER_KEY), { timeout }) // throws exception if server disconnected
     return null
   } catch (e) {
     console.warn(`getServerFault() - received error`, e)
