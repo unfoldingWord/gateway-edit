@@ -17,7 +17,11 @@ export const HTTP_CONFIG = {
   cache: { maxAge: HTTP_GET_CACHE_TIME },
   timeout: HTTP_GET_MAX_WAIT_TIME,
 }
-
+// Necessary for edit mode.
+export const RESOURCE_HTTP_CONFIG = {
+  cache: { maxAge: 0 },
+  timeout: HTTP_GET_MAX_WAIT_TIME,
+}
 // UI text - may eventually need to localize
 export const MANIFEST_NOT_FOUND_ERROR = 'This resource manifest failed to load. Please confirm that the correct manifest.yaml file exists in the resource at:\n'
 export const MANIFEST_INVALID_ERROR = 'The manifest for this resource is invalid. Resource is at:\n'

@@ -72,7 +72,7 @@ export default function AuthContextProvider(props) {
         .then(function (authentication) {
           console.info(
             'saveAuth() success. authentication user is:',
-            authentication.user.login
+            authentication.user.login,
           )
         })
         .catch(function (err) {
