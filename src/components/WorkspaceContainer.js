@@ -35,7 +35,14 @@ import {
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import { HTTP_CONFIG, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
+import {
+  BASE_URL,
+  HTTP_CONFIG,
+  HTTP_GET_MAX_WAIT_TIME,
+  PROD,
+  QA,
+  QA_BASE_URL,
+} from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 const useStyles = makeStyles(() => ({
@@ -245,7 +252,7 @@ function WorkspaceContainer() {
    * @return {Promise<*>}
    */
   async function getLatestBibleRepo(org, lang, bible) {
-    const url = `https://git.door43.org/api/catalog/v5/search/${org}/${lang}_${bible}`
+    const url = `${server}/api/catalog/v5/search/${org}/${lang}_${bible}`
     const results = await doFetch(url, {}, HTTP_GET_MAX_WAIT_TIME)
       .then(response => {
         if (response?.status !== 200) {
