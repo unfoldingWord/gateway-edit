@@ -35,7 +35,14 @@ import {
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import { HTTP_CONFIG, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
+import {
+  BASE_URL,
+  HTTP_CONFIG,
+  HTTP_GET_MAX_WAIT_TIME,
+  PROD,
+  QA,
+  QA_BASE_URL,
+} from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 
 const useStyles = makeStyles(() => ({
@@ -217,9 +224,7 @@ function WorkspaceContainer() {
         ref: appRef,
         server,
       }).then(results => {
-        const {
-          bibles, resourceLink,
-        } = results
+        const { bibles, resourceLink } = results
 
         if (bibles?.length) {
           if (!isEqual(bibles, supportedBibles)) {
@@ -245,7 +250,7 @@ function WorkspaceContainer() {
    * @return {Promise<*>}
    */
   async function getLatestBibleRepo(org, lang, bible) {
-    const url = `https://git.door43.org/api/catalog/v5/search/${org}/${lang}_${bible}`
+    const url = `${server}/api/catalog/v5/search/${org}/${lang}_${bible}`
     const results = await doFetch(url, {}, HTTP_GET_MAX_WAIT_TIME)
       .then(response => {
         if (response?.status !== 200) {
@@ -300,7 +305,9 @@ function WorkspaceContainer() {
       } else if (changed) { // force redraw
         console.log(`WorkspaceContainer - original bible repos changed, force reload`)
         setWorkspaceReady(false)
-        setTimeout(() => { setWorkspaceReady(true) }, 500)
+        setTimeout(() => {
+          setWorkspaceReady(true)
+        }, 500)
       }
     })
   }, [])
@@ -461,6 +468,8 @@ function WorkspaceContainer() {
             setQuote={setQuote}
             selectedQuote={selectedQuote}
             updateTaDetails={updateTaDetails}
+            loggedInUser={loggedInUser}
+            authentication={authentication}
           />
           <ResourceCard
             title='translationAcademy'
@@ -470,6 +479,8 @@ function WorkspaceContainer() {
             projectId={taArticle?.projectId}
             filePath={taArticle?.filePath}
             errorMessage={taArticle ? null : 'No article is specified in the current note.'}
+            loggedInUser={loggedInUser}
+            authentication={authentication}
           />
           <ResourceCard
             title='translationWords List'
@@ -484,6 +495,8 @@ function WorkspaceContainer() {
             disableFilters
             disableNavigation
             hideMarkdownToggle
+            loggedInUser={loggedInUser}
+            authentication={authentication}
           />
           <ResourceCard
             title='translationWords Article'
@@ -496,6 +509,8 @@ function WorkspaceContainer() {
             setQuote={setQuote}
             selectedQuote={selectedQuote}
             disableFilters
+            loggedInUser={loggedInUser}
+            authentication={authentication}
           />
           <ResourceCard
             title='translationQuestions'
@@ -506,6 +521,8 @@ function WorkspaceContainer() {
             filePath={null}
             viewMode='question'
             disableFilters
+            loggedInUser={loggedInUser}
+            authentication={authentication}
           />
         </Workspace>
       </SelectionsContextProvider>
