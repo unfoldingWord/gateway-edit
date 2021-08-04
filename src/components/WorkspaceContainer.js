@@ -36,12 +36,8 @@ import {
 } from '@utils/network'
 import { useRouter } from 'next/router'
 import {
-  BASE_URL,
   HTTP_CONFIG,
   HTTP_GET_MAX_WAIT_TIME,
-  PROD,
-  QA,
-  QA_BASE_URL,
 } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 

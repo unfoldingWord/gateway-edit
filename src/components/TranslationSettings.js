@@ -45,7 +45,11 @@ export default function TranslationSettings({ authentication }) {
   const [languages, setLanguages] = useState([])
   const [networkError, setNetworkError] = useState(null)
   const {
-    state: { owner: organization, languageId },
+    state: {
+      owner: organization,
+      languageId,
+      server,
+    },
     actions: {
       setOwner: setOrganization,
       setLanguageId,
@@ -69,7 +73,7 @@ export default function TranslationSettings({ authentication }) {
       let errorCode = 0
 
       try {
-        const orgs = await doFetch('https://git.door43.org/api/v1/user/orgs',
+        const orgs = await doFetch(`${server}/api/v1/user/orgs`,
           authentication, HTTP_GET_MAX_WAIT_TIME)
           .then(response => {
             if (response?.status !== 200) {
