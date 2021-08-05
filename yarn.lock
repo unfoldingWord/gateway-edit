@@ -2362,10 +2362,10 @@ get-package-type@^0.1.0:
   resolved "https://registry.yarnpkg.com/get-package-type/-/get-package-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"
   integrity sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==
 
-gitea-react-toolkit@1.10.1-alpha:
-  version "1.10.1-alpha"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.10.1-alpha.tgz#831e2f2974080a6d1253a16d952a541a3bcdd0c3"
-  integrity sha512-eIbmlJdkn2ARs5T4ZS7hDuxLvb/kXuMeKf/NmRVyZI3EyMpg4WaxddfbCL1qgHt3L+YWoDZ2MnhSvpeEdi64pg==
+gitea-react-toolkit@1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.10.1.tgz#df9200dbfe159acb7ef0ee6fd7c0996b2697a612"
+  integrity sha512-iBczNbcxptsvY9eF73bgXfa+orSV60eF1ELH1vcduJp6bvqyaoOfJ2FYx9LpNpvnu4aeRyJlXBhbiyy17cPs7Q==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -4569,10 +4569,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.1.1-alpha.3:
-  version "5.1.1-alpha.3"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.1.1-alpha.3.tgz#9f4861feba48ec19db0e4e352f1fd25ede0b0a0a"
-  integrity sha512-gv/Z2vTWND3DZn6fCjER/UhgxIYGyw3IV3IzDOJOYu9TLSKf2HkPtSmFbvvIKdZbXESL7vL7HNjUNLC32O8nMw==
+scripture-resources-rcl@5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.1.1.tgz#bca309526bf7b6abfd9966e3b9372c5c364f5941"
+  integrity sha512-BsDysI8l9e9tmtM7vqk2FhymhOI41yoBg3mexo6dGCN8C9ov3aC0wp9JvzWhw4tU5YhC1e0204uEoVZ8Sx7v6w==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.9.3"
