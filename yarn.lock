@@ -4681,10 +4681,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.0.1-alpha.3:
-  version "3.0.1-alpha.3"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.0.1-alpha.3.tgz#6a4e7b0777ca54e3c1e983875edb9604a3871291"
-  integrity sha512-UAuNgJh0JEnFB43AFTC5clC7eD6yyTu8VSvGYzyXM4FA7KEyleJueGMlisM253mEPEPsrpbZyqmlslxZSezNKA==
+single-scripture-rcl@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.0.1.tgz#87852b607e77e37c714c2a0d47a19ff9a2b35d4f"
+  integrity sha512-G14mkob9BIrXPjSCWTD/j4ZiH4C4RQhvemaCCEntpe57xM0R2hRXFGbKeY9KpClJtI08Ade+SJ8X4CSbbVAe6g==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
