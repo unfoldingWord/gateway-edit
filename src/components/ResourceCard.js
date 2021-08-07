@@ -7,6 +7,7 @@ import {
   CardContent,
   ERROR_STATE,
   useCardState,
+  useTsvMerger,
   useUserBranch,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
@@ -14,7 +15,6 @@ import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
-
 export default function ResourceCard({
   id,
   title,
@@ -76,8 +76,10 @@ export default function ResourceCard({
   })
 
   const {
+    tsvs,
     items,
     markdown,
+    resource,
     fetchResponse,
     resourceStatus,
     reloadResource,
@@ -120,10 +122,13 @@ export default function ResourceCard({
 
   // Each item in the items array may has a unique fetchResponse.
   const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
+  const resourcePath = resource?.project?.path ? resource?.project?.path?.replace('./', '') : null
+  const editFilePath = item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : resourcePath)
 
   const {
     isEditing,
     onSaveEdit,
+    editResponse,
   } = useEdit({
     sha,
     owner,
@@ -137,8 +142,32 @@ export default function ResourceCard({
     author: loggedInUser,
     token: authentication?.token,
     branch: workingResourceBranch,
-    filepath: item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : null),
+    filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
+  })
+
+
+  if (cardResourceId == 'tn') {
+    console.log({
+      tsvs, content, isEditing,
+      editResponse,
+    })
+    console.log('items', items)
+    console.log('sha', sha)
+    console.log('path', resource?.project?.path?.replace('./', ''))
+    console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
+    console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
+    console.log('filepath', item?.filePath)
+    console.log('repo', `${languageId}_${cardResourceId}`)
+    console.log('(projectId && filePath ? path.join(projectId, filePath) : null)', (projectId && filePath ? path.join(projectId, filePath) : null))
+  }
+
+  const { onTsvEdit } = useTsvMerger({
+    tsvs,
+    verse,
+    chapter,
+    itemIndex,
+    setContent,
   })
 
   useEffect(() => {
@@ -160,13 +189,12 @@ export default function ResourceCard({
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
   async function handleSaveEdit() {
-    /**
-     * Save edit, if succesful trigger resource reload and set saved to true.
-     * @param {String} branch
-     */
+    console.log('handleSaveEdit')
+    // Save edit, if succesful trigger resource reload and set saved to true.
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {
+          console.log('success', success)
           reloadResource()
           setSaved(true)
         }
@@ -182,7 +210,7 @@ export default function ResourceCard({
   }
 
   // TODO: Only markdown content (tw & ta) is editable for now.
-  const editable = cardResourceId == 'tw' || cardResourceId == 'ta'
+  const editable = cardResourceId == 'tw' || cardResourceId == 'ta' || cardResourceId == 'tn'
 
   return (
     <Card
@@ -217,6 +245,7 @@ export default function ResourceCard({
         markdown={markdown}
         setQuote={setQuote}
         onEdit={setContent}
+        onTsvEdit={onTsvEdit}
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
