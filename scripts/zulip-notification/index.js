@@ -24,12 +24,18 @@ module.exports = {
         content:  'This is another test',
       }
       console.log(data)
+      const dataJson = JSON.stringify(data)
+
       await axios.post('https://unfoldingword.zulipchat.com/api/v1/messages',
-        data,
+        dataJson,
         {
           auth: {
             username: user,
             password: token,
+          },
+          headers: {
+            // Overwrite Axios's automatically set Content-Type
+            'Content-Type': 'application/json',
           },
         })
     } catch (error) {
