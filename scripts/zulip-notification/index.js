@@ -18,24 +18,19 @@ module.exports = {
       // const token_ = Buffer.from(`${user}:${token}`, 'utf8').toString('base64')
 
       const data = {
-        type:     'stream',
         to:       'SOFTWARE - UR/github',
         subject:  'netlify testing',
         content:  'This is another test',
+        type:     'stream',
       }
-      console.log(data)
-      const dataJson = JSON.stringify(data)
+      console.log({ data })
 
       await axios.post('https://unfoldingword.zulipchat.com/api/v1/messages',
-        dataJson,
+        data,
         {
           auth: {
             username: user,
             password: token,
-          },
-          headers: {
-            // Overwrite Axios's automatically set Content-Type
-            'Content-Type': 'application/json',
           },
         })
     } catch (error) {
