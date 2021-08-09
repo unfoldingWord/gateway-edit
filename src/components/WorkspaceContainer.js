@@ -147,6 +147,7 @@ function WorkspaceContainer() {
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
+          disableClose={true}
           /* show reload if send feedback not enabled */
           onRetry={!networkError.actionButtonText ? reloadApp : null}
         />
