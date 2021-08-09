@@ -4,3 +4,4 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  package = "/scripts/zulip-notification"
