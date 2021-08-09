@@ -1,12 +1,12 @@
 // index.js
 
-const https = require('https')
+const got = require('got')
 
 module.exports = {
   onPreBuild: ({ packageJson, netlifyConfig }) => {
     console.log('Hello world from onPreBuild event!')
     console.log({ netlifyConfig })
-    console.log({ https })
+    console.log({ got })
     // console.log({ packageJson })
     // console.log(process.env)
     const token = process.env.ZULIP_TOKEN
