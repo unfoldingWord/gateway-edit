@@ -22,12 +22,9 @@ module.exports = {
 
 function getEnvironment(netlifyConfig, packageJson) {
   const environment = netlifyConfig.build.environment
-  console.log({ environment })
   const deployUrl = environment.DEPLOY_PRIME_URL
   const branchName = environment.BRANCH
   const pullBranch = process.env.BRANCH
-  const env = process.env
-  console.log({ env })
   const appName = packageJson.name
   const version = packageJson.version
   const appFullName = `${appName} v${version}`
