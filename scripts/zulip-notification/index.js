@@ -26,7 +26,7 @@ module.exports = {
         },
         {
           headers: {
-            'Authorization': token,
+            'Authorization': `token ${token}`,
           },
         })
     } catch (error) {
