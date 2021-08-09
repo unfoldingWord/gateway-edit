@@ -1,5 +1,6 @@
 // index.js
 
+const url = require('url')
 const axios = require('axios')
 
 module.exports = {
@@ -24,9 +25,11 @@ module.exports = {
         type:     'stream',
       }
       console.log({ data })
+      const params = new url.URLSearchParams(data)
+      console.log(params.toString())
 
       await axios.post('https://unfoldingword.zulipchat.com/api/v1/messages',
-        data,
+        params.toString(),
         {
           auth: {
             username: user,
