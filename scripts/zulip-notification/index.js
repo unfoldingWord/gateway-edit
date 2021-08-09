@@ -9,6 +9,6 @@ module.exports = {
     const token = process.env.ZULIP_TOKEN
     const name = packageJson.name
     const version = packageJson.version
-    console.log(`Building ${name} ${version}, token length = ${token}`)
+    console.log(`Building ${name} ${version}, token length = ${token?.length}`)
   },
 }
