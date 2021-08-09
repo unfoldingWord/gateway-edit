@@ -9,7 +9,10 @@ module.exports = {
     console.log({ constants })
     console.log({ netlifyConfig })
     console.log({ environment: netlifyConfig.build.environment })
-    // console.log({ packageJson })
+    const context = process.env.CONTEXT
+    console.log({ context })
+    const branch = process.env.BRANCH
+    console.log({ branch })
     // console.log(process.env)
     const token = process.env.ZULIP_TOKEN
     const name = packageJson.name
