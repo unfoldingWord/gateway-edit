@@ -11,9 +11,12 @@ module.exports = {
     const token = process.env.ZULIP_TOKEN
     const name = packageJson.name
     const version = packageJson.version
+    const user = 'netlify-bot@unfoldingword.zulipchat.com'
     console.log(`Building ${name} ${version}, token length = ${token.length}`)
 
     try {
+      const token_ = Buffer.from(`${user}:${token}`, 'utf8').toString('base64')
+
       await axios.post('https://unfoldingword.zulipchat.com/api/v1/messages',
         {
           type:     'stream',
@@ -23,7 +26,7 @@ module.exports = {
         },
         {
           headers: {
-            'Authorization': `Basic netlify-bot@unfoldingword.zulipchat.com:${token}`,
+            'Authorization': `Basic netlify-bot@unfoldingword.zulipchat.com:${token_}`,
           },
         })
     } catch (error) {
