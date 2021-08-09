@@ -8,7 +8,7 @@ module.exports = {
     console.log('Zulip notification')
     console.log({ constants })
     console.log({ netlifyConfig })
-    console.log({ netlifyConfig.build.environment })
+    // console.log({ netlifyConfig.build.environment })
     // console.log({ packageJson })
     // console.log(process.env)
     const token = process.env.ZULIP_TOKEN
