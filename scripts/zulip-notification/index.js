@@ -17,13 +17,15 @@ module.exports = {
     try {
       // const token_ = Buffer.from(`${user}:${token}`, 'utf8').toString('base64')
 
+      const data = {
+        type:     'stream',
+        to:       'SOFTWARE - UR/github',
+        subject:  'netlify testing',
+        content:  'This is another test',
+      }
+      console.log(data)
       await axios.post('https://unfoldingword.zulipchat.com/api/v1/messages',
-        {
-          type:     'stream',
-          to:       'SOFTWARE - UR/github',
-          subject:  'netlify testing',
-          content:  'This is another test',
-        },
+        data,
         {
           auth: {
             username: user,
