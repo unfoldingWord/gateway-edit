@@ -4,16 +4,19 @@ const url = require('url')
 const axios = require('axios')
 
 module.exports = {
-  onPreBuild: async ({ packageJson, netlifyConfig }) => {
-    console.log('Hello world from onPreBuild event!')
+  onPreBuild: async ({ constants, packageJson, netlifyConfig }) => {
+    console.log('Zulip notification')
+    console.log({ constants })
     console.log({ netlifyConfig })
+    console.log({ netlifyConfig.build.environment })
     // console.log({ packageJson })
     // console.log(process.env)
     const token = process.env.ZULIP_TOKEN
     const name = packageJson.name
     const version = packageJson.version
     const user = 'netlify-bot@unfoldingword.zulipchat.com'
-    console.log(`Building ${name} ${version}, token length = ${token.length}`)
+    const content = `Building ${name} ${version}, token length = ${token.length}`
+    console.log(content)
 
     try {
       // const token_ = Buffer.from(`${user}:${token}`, 'utf8').toString('base64')
@@ -21,12 +24,11 @@ module.exports = {
       const data = {
         to:       'SOFTWARE - UR/github',
         subject:  'netlify testing',
-        content:  'This is another test',
+        content,
         type:     'stream',
       }
       console.log({ data })
       const params = new url.URLSearchParams(data)
-      console.log(params.toString())
 
       await axios.post('https://unfoldingword.zulipchat.com/api/v1/messages',
         params.toString(),
