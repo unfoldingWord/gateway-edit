@@ -4,21 +4,24 @@ const url = require('url')
 const axios = require('axios')
 
 module.exports = {
-  onPreBuild: async ({ constants, packageJson, netlifyConfig }) => {
+  onSuccess: async ({ constants, packageJson, netlifyConfig }) => {
     console.log('Zulip notification')
     console.log({ constants })
     console.log({ netlifyConfig })
-    console.log({ environment: netlifyConfig.build.environment })
+    const environment = netlifyConfig.build.environment
+    console.log({ environment })
     const context = process.env.CONTEXT
     console.log({ context })
     const branch = process.env.BRANCH
     console.log({ branch })
+    const deployUrl = environment.DEPLOY_PRIME_URL
+    const branchName = environment.BRANCH
     // console.log(process.env)
     const token = process.env.ZULIP_TOKEN
     const name = packageJson.name
     const version = packageJson.version
     const user = 'netlify-bot@unfoldingword.zulipchat.com'
-    const content = `Building ${name} ${version}, token length = ${token.length}`
+    const content = `Building ${name} v${version} from branch ${branchName}, site published at ${deployUrl}`
     console.log(content)
 
     try {
@@ -26,7 +29,7 @@ module.exports = {
 
       const data = {
         to:       'SOFTWARE - UR/github',
-        subject:  'netlify testing',
+        subject:  branchName,
         content,
         type:     'stream',
       }
