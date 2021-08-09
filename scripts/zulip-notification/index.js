@@ -25,8 +25,9 @@ module.exports = {
           content:  'This is another test',
         },
         {
-          headers: {
-            'Authorization': `token ${token}`,
+          auth: {
+            username: user,
+            password: token,
           },
         })
     } catch (error) {
