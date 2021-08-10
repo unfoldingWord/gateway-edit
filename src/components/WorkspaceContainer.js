@@ -358,7 +358,7 @@ function WorkspaceContainer() {
         selections={selections}
         onSelections={setSelections}
         quote={selectedQuote?.quote}
-        occurrence={selectedQuote?.occurrence}
+        occurrence={selectedQuote?.occurrence.toString()}
         verseObjects={originalScriptureConfig.verseObjects || []}
       >
         {loading || content || error ?

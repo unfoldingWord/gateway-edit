@@ -120,7 +120,7 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
-  // Each item in the items array may has a unique fetchResponse.
+  // Each item in the items array may have a unique fetchResponse.
   const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
   const resourcePath = resource?.project?.path ? resource?.project?.path?.replace('./', '') : null
   const editFilePath = item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : resourcePath)
@@ -154,12 +154,14 @@ export default function ResourceCard({
     })
     console.log('items', items)
     console.log('sha', sha)
-    console.log('path', resource?.project?.path?.replace('./', ''))
     console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
     console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
-    console.log('filepath', item?.filePath)
-    console.log('repo', `${languageId}_${cardResourceId}`)
-    console.log('(projectId && filePath ? path.join(projectId, filePath) : null)', (projectId && filePath ? path.join(projectId, filePath) : null))
+    // console.log('path', resource?.project?.path?.replace('./', ''))
+    // console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
+    // console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
+    // console.log('filepath', item?.filePath)
+    // console.log('repo', `${languageId}_${cardResourceId}`)
+    // console.log('(projectId && filePath ? path.join(projectId, filePath) : null)', (projectId && filePath ? path.join(projectId, filePath) : null))
   }
 
   const { onTsvEdit } = useTsvMerger({
@@ -172,7 +174,15 @@ export default function ResourceCard({
 
   useEffect(() => {
     if (updateTaDetails) {
-      updateTaDetails(item?.SupportReference || null)
+      const {
+        Quote, OrigQuote, Occurrence, SupportReference = null,
+      } = item || {}
+      updateTaDetails(SupportReference)
+      setQuote({
+        quote: Quote || OrigQuote,
+        occurrence: Occurrence,
+        SupportReference,
+      })
     }
   }, [item])
 
@@ -194,7 +204,7 @@ export default function ResourceCard({
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {
-          console.log('success', success)
+          console.info('Reloading resource')
           reloadResource()
           setSaved(true)
         }

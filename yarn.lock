@@ -5188,6 +5188,7 @@ transform-runtime@0.0.0:
     deep-equal "^2.0.5"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
+    tsv "^0.2.0"
     use-deep-compare-effect "^1.6.1"
 
 trim-trailing-lines@^1.0.0:
@@ -5241,6 +5242,11 @@ tsutils@^3.21.0:
   integrity sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==
   dependencies:
     tslib "^1.8.1"
+
+tsv@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/tsv/-/tsv-0.2.0.tgz#92869a3cb5f50332f3dc90fca82be667db6f72d6"
+  integrity sha1-koaaPLX1AzLz3JD8qCvmZ9tvctY=
 
 tty-browserify@0.0.0:
   version "0.0.0"
