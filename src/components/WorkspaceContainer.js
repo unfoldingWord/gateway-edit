@@ -138,6 +138,7 @@ function WorkspaceContainer() {
             setTokenNetworkError(error)
             setNetworkError(null) // clear this flag in case it was also set
           }}
+          hideClose={true}
           onRetry={reloadApp}
         />
       )
@@ -147,7 +148,7 @@ function WorkspaceContainer() {
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
-          disableClose={true}
+          hideClose={true}
           /* show reload if send feedback not enabled */
           onRetry={!networkError.actionButtonText ? reloadApp : null}
         />

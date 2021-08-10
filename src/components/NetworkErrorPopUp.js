@@ -13,7 +13,7 @@ export default function NetworkErrorPopup(
     title,
     closeButtonStr,
     onClose,
-    disableClose,
+    hideClose,
   }) {
   const retryButtonStr = onRetry ? RETRY : ''
   const retryDefault = !!onRetry // if retry button enabled, make it default button
@@ -25,7 +25,7 @@ export default function NetworkErrorPopup(
       message={networkError.errorMessage}
       closeButtonStr={closeButtonStr}
       closeButtonDefault={closeButtonDefault}
-      disableClose={disableClose}
+      hideClose={hideClose}
       onClose={() => {
         onClose && onClose()
         setNetworkError(null)
@@ -42,7 +42,7 @@ export default function NetworkErrorPopup(
 
 NetworkErrorPopup.defaultProps = {
   title: NETWORK_ERROR,
-  disableClose: false,
+  hideClose: false,
 }
 
 NetworkErrorPopup.propTypes = {
@@ -61,5 +61,5 @@ NetworkErrorPopup.propTypes = {
   /** if present, then use this text for the close button */
   closeButtonStr: PropTypes.string,
   /** if true, don't show close button */
-  disableClose: PropTypes.bool,
+  hideClose: PropTypes.bool,
 }
