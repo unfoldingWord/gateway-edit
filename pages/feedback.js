@@ -67,6 +67,7 @@ const SettingsPage = () => {
   const [category, setCategory] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState(null)
   const [message, setMessage] = useState('')
   const [networkError, setNetworkError] = useState(null)
 
@@ -109,6 +110,12 @@ const SettingsPage = () => {
   }
 
   function onEmailChange(e) {
+    const validationError = e.target?.validationMessage
+    setEmailError(validationError)
+
+    if (validationError) {
+      console.log('email invalid', validationError)
+    }
     setEmail(e.target.value)
   }
 
@@ -245,6 +252,9 @@ const SettingsPage = () => {
                 id='Email-feedback-form'
                 type='email'
                 label='Email'
+                error={!!emailError}
+                helperText={emailError}
+                // pattern=".+@beststartupever\.com"
                 autoComplete='email'
                 defaultValue={email}
                 variant='outlined'
@@ -287,7 +297,7 @@ const SettingsPage = () => {
                   size='large'
                   disableElevation
                   disabled={
-                    submitting || !name || !email || !message || !category
+                    submitting || !name || !email || !message || !category || !!emailError
                   }
                   onClick={onSubmitFeedback}
                 >
