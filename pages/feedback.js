@@ -250,7 +250,6 @@ const SettingsPage = () => {
                 label='Email'
                 error={!!emailError}
                 helperText={emailError}
-                // pattern=".+@beststartupever\.com"
                 autoComplete='email'
                 defaultValue={email}
                 variant='outlined'
