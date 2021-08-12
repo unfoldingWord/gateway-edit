@@ -110,7 +110,7 @@ const SettingsPage = () => {
   }
 
   function onEmailChange(e) {
-    const validationError = e?.target?.validationMessage
+    const validationError = e?.target?.validationMessage || null
     setEmailError(validationError)
     setEmail(e.target.value)
   }
