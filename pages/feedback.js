@@ -162,6 +162,7 @@ const SettingsPage = () => {
 
     if (emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
       setShowEmailError(true)
+      // TODO: BLM - set focus on email address
       return
     }
 
