@@ -68,6 +68,7 @@ const SettingsPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState(null)
+  const [showEmailError, setShowEmailError] = useState(false)
   const [message, setMessage] = useState('')
   const [networkError, setNetworkError] = useState(null)
 
@@ -112,6 +113,10 @@ const SettingsPage = () => {
   function onEmailChange(e) {
     const validationError = e?.target?.validationMessage || null
     setEmailError(validationError)
+
+    if (!validationError) { // if email address corrected, then clear displayed warning
+      setShowEmailError(false)
+    }
     setEmail(e.target.value)
   }
 
@@ -153,6 +158,10 @@ const SettingsPage = () => {
   }
 
   async function onSubmitFeedback() {
+    if (emailError) { // if there is currently an error on the email, show to user and abort feedback
+      setShowEmailError(true)
+      return
+    }
     setSubmitting(true)
     setShowSuccess(false)
     setShowError(false)
@@ -248,8 +257,8 @@ const SettingsPage = () => {
                 id='Email-feedback-form'
                 type='email'
                 label='Email'
-                error={!!emailError}
-                helperText={emailError}
+                error={showEmailError}
+                helperText={showEmailError ? emailError : null}
                 autoComplete='email'
                 defaultValue={email}
                 variant='outlined'
@@ -292,7 +301,7 @@ const SettingsPage = () => {
                   size='large'
                   disableElevation
                   disabled={
-                    submitting || !name || !email || !message || !category || !!emailError
+                    submitting || !name || !email || !message || !category
                   }
                   onClick={onSubmitFeedback}
                 >
