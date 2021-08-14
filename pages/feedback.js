@@ -158,12 +158,14 @@ const SettingsPage = () => {
   }
 
   async function onSubmitFeedback() {
+    setShowSuccess(false)
+
     if (emailError) { // if there is currently an error on the email, show to user and abort feedback
       setShowEmailError(true)
       return
     }
+
     setSubmitting(true)
-    setShowSuccess(false)
     setShowError(false)
     const build = getBuildId()
     const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
