@@ -114,7 +114,7 @@ const SettingsPage = () => {
     const validationError = e?.target?.validationMessage || null
     setEmailError(validationError)
 
-    if (!validationError) { // if email address corrected, then clear displayed warning
+    if (!validationError) { // if email address error corrected, then clear any displayed warning
       setShowEmailError(false)
     }
     setEmail(e.target.value)
@@ -160,7 +160,7 @@ const SettingsPage = () => {
   async function onSubmitFeedback() {
     setShowSuccess(false)
 
-    if (emailError) { // if there is currently an error on the email, show to user and abort feedback
+    if (emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
       setShowEmailError(true)
       return
     }
