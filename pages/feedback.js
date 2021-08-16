@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import Paper from 'translation-helps-rcl/dist/components/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -71,6 +71,7 @@ const SettingsPage = () => {
   const [showEmailError, setShowEmailError] = useState(false)
   const [message, setMessage] = useState('')
   const [networkError, setNetworkError] = useState(null)
+  const emailEditRef = useRef(null)
 
   const {
     state: {
@@ -162,7 +163,7 @@ const SettingsPage = () => {
 
     if (emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
       setShowEmailError(true)
-      // TODO: BLM - set focus on email address
+      emailEditRef.current.focus()
       return
     }
 
@@ -267,6 +268,7 @@ const SettingsPage = () => {
                 variant='outlined'
                 onChange={onEmailChange}
                 classes={{ root: classes.textField }}
+                inputRef={emailEditRef}
               />
               <FormControl variant='outlined' className={classes.formControl}>
                 <InputLabel id='categories-dropdown-label'>
