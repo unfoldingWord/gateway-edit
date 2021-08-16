@@ -220,7 +220,8 @@ export default function ResourceCard({
   }
 
   // TODO: Only markdown content (tw & ta) is editable for now.
-  const editable = cardResourceId == 'tw' || cardResourceId == 'ta' || cardResourceId == 'tn'
+  const editableResources = ['tw', 'ta', 'tn', 'tq']
+  const editable = editableResources.includes(cardResourceId)
 
   return (
     <Card
