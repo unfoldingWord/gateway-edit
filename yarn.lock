@@ -2417,8 +2417,10 @@ gitea-react-toolkit@1.9.3:
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
-"gitea-react-toolkit@file:.yalc/gitea-react-toolkit":
-  version "1.10.0"
+gitea-react-toolkit@^1.11.0-rc0:
+  version "1.11.0-rc0"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.11.0-rc0.tgz#154b51cacb98805e97bc8f0f285c6f2890146554"
+  integrity sha512-ys2Or3+LAAz5cx3NYi4jHDbmuc3TxKAYce2X1yEWEmELyHzRNLTQlZcCGo0lxsq7E99v8IshC14WfRPywTBtmA==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -5181,8 +5183,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-"translation-helps-rcl@file:.yalc/translation-helps-rcl":
-  version "2.3.0"
+translation-helps-rcl@^3.0.0-rc0:
+  version "3.0.0-rc0"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.0.0-rc0.tgz#f7dc0e16f3b78dfa5efa23db5a012b98cdc2bedf"
+  integrity sha512-LqIvuvOmA9LOojfGO5OZl04zWRKavxTvhm6NHrUI+h9gCd3JcU9nOMWLFoj2PvfyCpOzmO70eHhwmcCfN4u9IQ==
   dependencies:
     axios "^0.21.1"
     deep-equal "^2.0.5"
