@@ -1,4 +1,3 @@
-import path from 'path'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
@@ -15,6 +14,8 @@ import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
+import generateEditFilePath from '@utils/generateEditFilePath'
+import getSha from '@utils/getSha'
 export default function ResourceCard({
   id,
   title,
@@ -120,10 +121,16 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
-  // Each item in the items array may have a unique fetchResponse.
-  const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
-  const resourcePath = resource?.project?.path ? resource?.project?.path?.replace('./', '') : null
-  const editFilePath = item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : resourcePath)
+  const sha = getSha ({
+    item, fetchResponse, cardResourceId,
+  })
+  const editFilePath = generateEditFilePath({
+    item,
+    resource,
+    filePath,
+    projectId,
+    cardResourceId,
+  })
 
   const {
     isEditing,
@@ -145,24 +152,6 @@ export default function ResourceCard({
     filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
   })
-
-
-  if (cardResourceId == 'tn') {
-    console.log({
-      tsvs, content, isEditing,
-      editResponse,
-    })
-    console.log('items', items)
-    console.log('sha', sha)
-    console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
-    console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
-    // console.log('path', resource?.project?.path?.replace('./', ''))
-    // console.log('item?.fetchResponse?.data?.sha', item?.fetchResponse?.data?.sha)
-    // console.log('fetchResponse?.data?.sha', fetchResponse?.data?.sha)
-    // console.log('filepath', item?.filePath)
-    // console.log('repo', `${languageId}_${cardResourceId}`)
-    // console.log('(projectId && filePath ? path.join(projectId, filePath) : null)', (projectId && filePath ? path.join(projectId, filePath) : null))
-  }
 
   const { onTsvEdit } = useTsvMerger({
     tsvs,
@@ -199,7 +188,6 @@ export default function ResourceCard({
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
   async function handleSaveEdit() {
-    console.log('handleSaveEdit')
     // Save edit, if succesful trigger resource reload and set saved to true.
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
@@ -219,8 +207,8 @@ export default function ResourceCard({
     }
   }
 
-  // TODO: Only markdown content (tw & ta) is editable for now.
-  const editableResources = ['tw', 'ta', 'tn', 'tq']
+  // Add/remove resources to/from the array to enable or disable edit mode.
+  const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
   return (
