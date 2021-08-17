@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from 'react'
+import { useContext, useEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { AuthenticationContext } from 'gitea-react-toolkit'
 import Header from '@components/Header'
@@ -16,6 +16,7 @@ export default function Layout({
   title = APP_NAME,
 }) {
   const router = useRouter()
+  const mainScreenRef = useRef(null)
   const {
     state: authentication,
     component: authenticationComponent,
@@ -32,8 +33,13 @@ export default function Layout({
       setCurrentLayout,
       setShowAccountSetup,
       setServer,
+      setMainScreenRef,
     },
   } = useContext(StoreContext)
+
+  useEffect(() => {
+    setMainScreenRef(mainScreenRef)
+  }, [ mainScreenRef?.current ])
 
   useEffect(() => {
     const params = router?.query
@@ -54,7 +60,10 @@ export default function Layout({
   useValidateAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup)
 
   return (
-    <div className='h-screen w-screen flex flex-col'>
+    <div
+      className='h-screen w-screen flex flex-col'
+      ref={mainScreenRef}
+    >
       <Header
         title={title}
         authentication={authentication || {}}
