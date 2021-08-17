@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import Paper from 'translation-helps-rcl/dist/components/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -67,8 +67,11 @@ const SettingsPage = () => {
   const [category, setCategory] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState(null)
+  const [showEmailError, setShowEmailError] = useState(false)
   const [message, setMessage] = useState('')
   const [networkError, setNetworkError] = useState(null)
+  const emailEditRef = useRef(null)
 
   const {
     state: {
@@ -109,6 +112,12 @@ const SettingsPage = () => {
   }
 
   function onEmailChange(e) {
+    const validationError = e?.target?.validationMessage || null
+    setEmailError(validationError)
+
+    if (!validationError) { // if email address error corrected, then clear any displayed warning
+      setShowEmailError(false)
+    }
     setEmail(e.target.value)
   }
 
@@ -150,8 +159,15 @@ const SettingsPage = () => {
   }
 
   async function onSubmitFeedback() {
-    setSubmitting(true)
     setShowSuccess(false)
+
+    if (emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
+      setShowEmailError(true)
+      emailEditRef.current.focus()
+      return
+    }
+
+    setSubmitting(true)
     setShowError(false)
     const build = getBuildId()
     const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
@@ -245,11 +261,14 @@ const SettingsPage = () => {
                 id='Email-feedback-form'
                 type='email'
                 label='Email'
+                error={showEmailError}
+                helperText={showEmailError ? emailError : null}
                 autoComplete='email'
                 defaultValue={email}
                 variant='outlined'
                 onChange={onEmailChange}
                 classes={{ root: classes.textField }}
+                inputRef={emailEditRef}
               />
               <FormControl variant='outlined' className={classes.formControl}>
                 <InputLabel id='categories-dropdown-label'>
