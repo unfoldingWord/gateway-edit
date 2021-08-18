@@ -30,7 +30,7 @@
     "scripture-resources-rcl": "5.1.1",
     "single-scripture-rcl": "3.0.1",
     "tailwindcss": "^2.0.4",
-    "translation-helps-rcl": "2.3.1-alpha.10",
+    "translation-helps-rcl": "2.3.1-alpha.12",
     "use-deep-compare-effect": "^1.3.1"
   },
   "devDependencies": {

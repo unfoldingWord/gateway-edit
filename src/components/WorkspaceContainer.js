@@ -372,7 +372,7 @@ function WorkspaceContainer() {
             loading={loading}
             content={content}
             onClose={() => clearContent()}
-            parentRef={mainScreenRef}
+            workspaceRef={mainScreenRef}
           />
           :
           null
