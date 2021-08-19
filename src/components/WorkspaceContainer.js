@@ -81,6 +81,7 @@ function WorkspaceContainer() {
       tokenNetworkError,
       greekRepoUrl,
       hebrewRepoUrl,
+      mainScreenRef,
       showFeedback,
     },
     actions: {
@@ -374,6 +375,7 @@ function WorkspaceContainer() {
             loading={loading}
             content={content}
             onClose={() => clearContent()}
+            workspaceRef={mainScreenRef}
           />
           :
           null
