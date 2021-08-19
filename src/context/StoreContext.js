@@ -36,6 +36,7 @@ export default function StoreContextProvider(props) {
   }
 
   const [lastError, setLastError] = useState(null)
+  const [showFeedback, setShowFeedback] = useState(false)
   const [owner, setOwner] = useUserLocalStorage('owner', '')
   const [languageId, setLanguageId] = useUserLocalStorage('languageId', '')
   const [showAccountSetup, setShowAccountSetup] = useLocalStorage(
@@ -102,6 +103,7 @@ export default function StoreContextProvider(props) {
       tokenNetworkError,
       greekRepoUrl,
       hebrewRepoUrl,
+      showFeedback,
     },
     actions: {
       logout,
@@ -120,6 +122,7 @@ export default function StoreContextProvider(props) {
       updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
+      setShowFeedback,
     },
   }
 
