@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
@@ -79,9 +79,11 @@ const FeedbackPopup = ({
   const [category, setCategory] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState(null)
+  const [showEmailError, setShowEmailError] = useState(false)
   const [message, setMessage] = useState('')
   const [networkError, setNetworkError] = useState(null)
-  const [feedbackContents, setFeedbackContents] = useState(null)
+  const emailEditRef = useRef(null)
 
   /**
    * in the case of a network error, process and display error dialog
@@ -101,6 +103,12 @@ const FeedbackPopup = ({
   }
 
   function onEmailChange(e) {
+    const validationError = e?.target?.validationMessage || null
+    setEmailError(validationError)
+
+    if (!validationError) { // if email address error corrected, then clear any displayed warning
+      setShowEmailError(false)
+    }
     setEmail(e.target.value)
   }
 
@@ -144,6 +152,14 @@ const FeedbackPopup = ({
   async function onSubmitFeedback() {
     setSubmitting(true)
     setShowSuccess(false)
+
+    if (emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
+      setShowEmailError(true)
+      emailEditRef.current.focus()
+      return
+    }
+
+    setSubmitting(true)
     setShowError(false)
     const build = getBuildId()
     const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
@@ -236,6 +252,9 @@ const FeedbackPopup = ({
               variant='outlined'
               onChange={onEmailChange}
               classes={{ root: classes.textField }}
+              error={showEmailError}
+              helperText={showEmailError ? emailError : null}
+              inputRef={emailEditRef}
             />
             <FormControl variant='outlined' className={classes.formControl}>
               <InputLabel id='categories-dropdown-label'>
@@ -307,20 +326,11 @@ const FeedbackPopup = ({
     )
   }
 
-  useEffect(() => {
-    if (open) {
-      const feedbackContents = getFeedbackContents()
-      setFeedbackContents(feedbackContents)
-    } else {
-      setFeedbackContents(null)
-    }
-  }, [ open ])
-
   return (
     <DraggableCard
       open={open}
       showRawContent
-      content={feedbackContents}
+      content={open ? getFeedbackContents() : null}
       onClose={onClose}
     />
 
