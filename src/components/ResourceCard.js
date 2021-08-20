@@ -121,7 +121,7 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
-  const sha = getSha ({
+  const sha = getSha({
     item, fetchResponse, cardResourceId,
   })
   const editFilePath = generateEditFilePath({
@@ -135,7 +135,6 @@ export default function ResourceCard({
   const {
     isEditing,
     onSaveEdit,
-    editResponse,
   } = useEdit({
     sha,
     owner,
@@ -210,7 +209,8 @@ export default function ResourceCard({
   // Add/remove resources to/from the array to enable or disable edit mode.
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
-
+  console.log({ items })
+  // TODO: EDITING an item after the first one and then editing the first one changes the wrong item, wrong item index carry over.
   return (
     <Card
       id={id}
