@@ -118,11 +118,15 @@ export default function Header({
         resetResourceLayout={resetResourceLayout}
         showFeedback={doShowFeedback}
       />
-      <FeedbackPopup
-        open={!!feedback}
-        {...feedback}
-        onClose={doHideFeedback}
-      />
+      {!!feedback ?
+        <FeedbackPopup
+          open
+          {...feedback}
+          onClose={doHideFeedback}
+        />
+        :
+        null
+      }
     </header>
   )
 }

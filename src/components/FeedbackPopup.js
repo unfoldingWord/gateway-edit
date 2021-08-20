@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
@@ -68,162 +68,162 @@ const FeedbackPopup = ({
   currentLayout,
   lastError,
   loggedInUser,
-  open,
   onClose,
 }) => {
-  const classes = useStyles()
-  const categories = ['Bug Report', 'Feedback']
-  const [submitting, setSubmitting] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
-  const [category, setCategory] = useState('')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [emailError, setEmailError] = useState(null)
-  const [showEmailError, setShowEmailError] = useState(false)
-  const [message, setMessage] = useState('')
-  const [networkError, setNetworkError] = useState(null)
-  const emailEditRef = useRef(null)
 
-  /**
-   * in the case of a network error, process and display error dialog
-   * @param {string|Error} error - initial error message message or object
-   * @param {number} httpCode - http code returned
-   */
-  function processError(error, httpCode=0) {
-    processNetworkError(error, httpCode, null, null, setNetworkError, null, null )
-  }
+  const FeedbackSettings = () => {
+    const classes = useStyles()
+    const categories = ['Bug Report', 'Feedback']
+    const [submitting, setSubmitting] = useState(false)
+    const [showSuccess, setShowSuccess] = useState(false)
+    const [showError, setShowError] = useState(false)
+    const [category, setCategory] = useState('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [emailError, setEmailError] = useState(null)
+    const [showEmailError, setShowEmailError] = useState(false)
+    const [message, setMessage] = useState('')
+    const [networkError, setNetworkError] = useState(null)
+    const emailEditRef = useRef(null)
 
-  function onCategoryChange(e) {
-    setCategory(e.target.value)
-  }
-
-  function onNameChange(e) {
-    setName(e.target.value)
-  }
-
-  function onEmailChange(e) {
-    const validationError = e?.target?.validationMessage || null
-    setEmailError(validationError)
-
-    if (!validationError) { // if email address error corrected, then clear any displayed warning
-      setShowEmailError(false)
+    /**
+     * in the case of a network error, process and display error dialog
+     * @param {string|Error} error - initial error message message or object
+     * @param {number} httpCode - http code returned
+     */
+    function processError(error, httpCode=0) {
+      processNetworkError(error, httpCode, null, null, setNetworkError, null, null )
     }
-    setEmail(e.target.value)
-  }
 
-  function onMessageChange(e) {
-    setMessage(e.target.value)
-  }
+    function onCategoryChange(e) {
+      setCategory(e.target.value)
+    }
 
-  function getUserSettings(username, baseKey) {
-    const key = getUserKey(username, baseKey)
-    const savedValue = getLocalStorageItem(key)
-    return savedValue
-  }
+    function onNameChange(e) {
+      setName(e.target.value)
+    }
 
-  function getScriptureCardSettings(username) {
-    const settings = ['scripturePaneTarget', 'scripturePaneConfig', 'scripturePaneFontSize']
-    const cards = []
+    function onEmailChange(e) {
+      const validationError = e?.target?.validationMessage || null
+      setEmailError(validationError)
 
-    for (let i = 0; ; i++) {
-      const cardSettings = {}
+      if (!validationError) { // if email address error corrected, then clear any displayed warning
+        setShowEmailError(false)
+      }
+      setEmail(e.target.value)
+    }
 
-      for (let j = 0; j < settings.length; j++) {
-        const settingKey = settings[j]
-        const savedValue = getUserSettings(username, `${settingKey}_${i}`)
+    function onMessageChange(e) {
+      setMessage(e.target.value)
+    }
 
-        if (savedValue !== null) {
-          cardSettings.settingKey = savedValue
+    function getUserSettings(username, baseKey) {
+      const key = getUserKey(username, baseKey)
+      const savedValue = getLocalStorageItem(key)
+      return savedValue
+    }
+
+    function getScriptureCardSettings(username) {
+      const settings = ['scripturePaneTarget', 'scripturePaneConfig', 'scripturePaneFontSize']
+      const cards = []
+
+      for (let i = 0; ; i++) {
+        const cardSettings = {}
+
+        for (let j = 0; j < settings.length; j++) {
+          const settingKey = settings[j]
+          const savedValue = getUserSettings(username, `${settingKey}_${i}`)
+
+          if (savedValue !== null) {
+            cardSettings.settingKey = savedValue
+          } else {
+            break
+          }
+        }
+
+        if (Object.keys(cardSettings).length > 0) {
+          cards.push(cardSettings)
         } else {
           break
         }
       }
-
-      if (Object.keys(cardSettings).length > 0) {
-        cards.push(cardSettings)
-      } else {
-        break
-      }
-    }
-    return cards
-  }
-
-  async function onSubmitFeedback() {
-    setSubmitting(true)
-    setShowSuccess(false)
-
-    if (emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
-      setShowEmailError(true)
-      emailEditRef.current.focus()
-      return
+      return cards
     }
 
-    setSubmitting(true)
-    setShowError(false)
-    const build = getBuildId()
-    const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
-    const scriptureVersionHistory = getUserSettings(loggedInUser, `scriptureVersionHistory`)
-
-    const extraData = JSON.stringify({
-      lastError,
-      loggedInUser,
-      build,
-      owner,
-      server,
-      branch,
-      taArticle,
-      languageId,
-      selectedQuote,
-      scriptureOwner,
-      bibleReference,
-      supportedBibles,
-      currentLayout,
-      scriptureCardSettings,
-      scriptureVersionHistory,
-    })
-
-    let res
-
-    try {
-      const fetchPromise = fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name, email, category, message, extraData,
-        }),
-      })
-      const timeout = new Promise((_r, rej) => {
-        const TIMEOUT_ERROR = `Network Timeout Error ${HTTP_GET_MAX_WAIT_TIME}ms`
-        return setTimeout(() => rej(TIMEOUT_ERROR), HTTP_GET_MAX_WAIT_TIME)
-      })
-      res = await Promise.race([fetchPromise, timeout])
-    } catch (e) {
-      console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
-      processError(e)
-      setSubmitting(false)
+    async function onSubmitFeedback() {
+      setSubmitting(true)
       setShowSuccess(false)
-      setShowError(true)
-      return
+
+      if (emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
+        setShowEmailError(true)
+        emailEditRef.current.focus()
+        return
+      }
+
+      setSubmitting(true)
+      setShowError(false)
+      const build = getBuildId()
+      const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
+      const scriptureVersionHistory = getUserSettings(loggedInUser, `scriptureVersionHistory`)
+
+      const extraData = JSON.stringify({
+        lastError,
+        loggedInUser,
+        build,
+        owner,
+        server,
+        branch,
+        taArticle,
+        languageId,
+        selectedQuote,
+        scriptureOwner,
+        bibleReference,
+        supportedBibles,
+        currentLayout,
+        scriptureCardSettings,
+        scriptureVersionHistory,
+      })
+
+      let res
+
+      try {
+        const fetchPromise = fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name, email, category, message, extraData,
+          }),
+        })
+        const timeout = new Promise((_r, rej) => {
+          const TIMEOUT_ERROR = `Network Timeout Error ${HTTP_GET_MAX_WAIT_TIME}ms`
+          return setTimeout(() => rej(TIMEOUT_ERROR), HTTP_GET_MAX_WAIT_TIME)
+        })
+        res = await Promise.race([fetchPromise, timeout])
+      } catch (e) {
+        console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
+        processError(e)
+        setSubmitting(false)
+        setShowSuccess(false)
+        setShowError(true)
+        return
+      }
+
+      const response = await res.json()
+
+      if (res.status === 200) {
+        setShowSuccess(true)
+      } else {
+        const error = response.error
+        console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(error)}`)
+        const httpCode = parseInt(error.code, 10)
+        const errorMessage = error.message + '.'
+        setShowError(true)
+        processError(errorMessage, httpCode)
+      }
+
+      setSubmitting(false)
     }
 
-    const response = await res.json()
-
-    if (res.status === 200) {
-      setShowSuccess(true)
-    } else {
-      const error = response.error
-      console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(error)}`)
-      const httpCode = parseInt(error.code, 10)
-      const errorMessage = error.message + '.'
-      setShowError(true)
-      processError(errorMessage, httpCode)
-    }
-
-    setSubmitting(false)
-  }
-
-  function getFeedbackContents() {
     return (
       <>
         <div className='flex flex-col h-auto w-full p-4 my-2'>
@@ -316,11 +316,11 @@ const FeedbackPopup = ({
           </div>
         </div>
         { !!networkError &&
-          <NetworkErrorPopup
-            networkError={networkError}
-            setNetworkError={setNetworkError}
-            closeButtonStr={CLOSE}
-          />
+        <NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          closeButtonStr={CLOSE}
+        />
         }
       </>
     )
@@ -328,12 +328,13 @@ const FeedbackPopup = ({
 
   return (
     <DraggableCard
-      open={open}
+      open
       showRawContent
-      content={open ? getFeedbackContents() : null}
       onClose={onClose}
+      content={
+        <FeedbackSettings/>
+      }
     />
-
   )
 }
 
