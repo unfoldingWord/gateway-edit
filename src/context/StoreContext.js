@@ -37,7 +37,6 @@ export default function StoreContextProvider(props) {
 
   const [mainScreenRef, setMainScreenRef] = useState(null)
   const [lastError, setLastError] = useState(null)
-  const [showFeedback, setShowFeedback] = useState(false)
   const [owner, setOwner] = useUserLocalStorage('owner', '')
   const [languageId, setLanguageId] = useUserLocalStorage('languageId', '')
   const [showAccountSetup, setShowAccountSetup] = useLocalStorage(
@@ -105,7 +104,6 @@ export default function StoreContextProvider(props) {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
-      showFeedback,
     },
     actions: {
       logout,
@@ -125,7 +123,6 @@ export default function StoreContextProvider(props) {
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setMainScreenRef,
-      setShowFeedback,
     },
   }
 

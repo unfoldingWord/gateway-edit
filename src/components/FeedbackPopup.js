@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Paper from 'translation-helps-rcl/dist/components/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -9,9 +8,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import MuiAlert from '@material-ui/lab/Alert'
-import CloseIcon from '@material-ui/icons/Close'
-import Layout from '@components/Layout'
-import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
 import { getLocalStorageItem, getUserKey } from '@hooks/useUserLocalStorage'
 import { processNetworkError } from '@utils/network'
@@ -19,7 +15,7 @@ import { CLOSE, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import { DraggableCard } from 'translation-helps-rcl'
 import PropTypes from 'prop-types'
-i
+
 function Alert({ severity, message }) {
   const router = useRouter()
 
@@ -59,7 +55,22 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const FeedbackPopup = ({ onClose }) => {
+const FeedbackPopup = ({
+  owner,
+  server,
+  branch,
+  taArticle,
+  languageId,
+  selectedQuote,
+  scriptureOwner,
+  bibleReference,
+  supportedBibles,
+  currentLayout,
+  lastError,
+  loggedInUser,
+  open,
+  onClose,
+}) => {
   const classes = useStyles()
   const categories = ['Bug Report', 'Feedback']
   const [submitting, setSubmitting] = useState(false)
@@ -70,23 +81,7 @@ const FeedbackPopup = ({ onClose }) => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [networkError, setNetworkError] = useState(null)
-
-  const {
-    state: {
-      owner,
-      server,
-      branch,
-      taArticle,
-      languageId,
-      selectedQuote,
-      scriptureOwner,
-      bibleReference,
-      supportedBibles,
-      currentLayout,
-      lastError,
-      loggedInUser,
-    },
-  } = useContext(StoreContext)
+  const [feedbackContents, setFeedbackContents] = useState(null)
 
   /**
    * in the case of a network error, process and display error dialog
@@ -212,119 +207,121 @@ const FeedbackPopup = ({ onClose }) => {
     setSubmitting(false)
   }
 
-  const feedbackContents = (
-    <Layout>
-      <div className='flex flex-col justify-center items-center w-full h-full'>
-        <div className='flex justify-center items-center w-full h-full px-4 lg:w-132 lg:p-0'>
-          <Paper className='flex flex-col h-auto w-full p-4 my-2'>
-            <div className='flex flex-row'>
-              <h3 className='flex-auto text-xl text-gray-600 font-semibold mx-8 mb-0'>
-                Submit a Bug Report or Feedback
-              </h3>
-              <CloseIcon
-                id='settings_card_close'
-                className={`cursor-pointer flex-none mt-4 mr-7 mb-0`}
-                onClick={onClose}
-              />
-            </div>
-            <div>
-              <TextField
-                id='name-feedback-form'
-                type='given-name'
-                label='Name'
-                autoComplete='name'
-                defaultValue={name}
-                variant='outlined'
-                onChange={onNameChange}
-                classes={{ root: classes.textField }}
-              />
-              <TextField
-                id='Email-feedback-form'
-                type='email'
-                label='Email'
-                autoComplete='email'
-                defaultValue={email}
-                variant='outlined'
-                onChange={onEmailChange}
-                classes={{ root: classes.textField }}
-              />
-              <FormControl variant='outlined' className={classes.formControl}>
-                <InputLabel id='categories-dropdown-label'>
-                  Category:
-                </InputLabel>
-                <Select
-                  id='categories-dropdown'
-                  value={category}
-                  onChange={onCategoryChange}
-                  label='Category'
-                >
-                  {categories.map((label, i) => (
-                    <MenuItem key={`${label}-${i}`} value={label}>
-                      {label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <TextField
-                id='message-feedback-form'
-                type='text'
-                label='Message'
-                multiline
-                rows={4}
-                defaultValue={message}
-                variant='outlined'
-                onChange={onMessageChange}
-                classes={{ root: classes.textField }}
-              />
-              <div className='flex flex-col mx-8 mb-4'>
-                <Button
-                  className='self-end'
-                  variant='contained'
-                  color='primary'
-                  size='large'
-                  disableElevation
-                  disabled={
-                    submitting || !name || !email || !message || !category
+  function getFeedbackContents() {
+    return (
+      <>
+        <div className='flex flex-col h-auto w-full p-4 my-2'>
+          <div className='flex flex-row'>
+            <h3 className='flex-auto text-xl text-gray-600 font-semibold mx-8 mb-0'>
+              Submit a Bug Report or Feedback
+            </h3>
+          </div>
+          <div>
+            <TextField
+              id='name-feedback-form'
+              type='given-name'
+              label='Name'
+              autoComplete='name'
+              defaultValue={name}
+              variant='outlined'
+              onChange={onNameChange}
+              classes={{ root: classes.textField }}
+            />
+            <TextField
+              id='Email-feedback-form'
+              type='email'
+              label='Email'
+              autoComplete='email'
+              defaultValue={email}
+              variant='outlined'
+              onChange={onEmailChange}
+              classes={{ root: classes.textField }}
+            />
+            <FormControl variant='outlined' className={classes.formControl}>
+              <InputLabel id='categories-dropdown-label'>
+                Category:
+              </InputLabel>
+              <Select
+                id='categories-dropdown'
+                value={category}
+                onChange={onCategoryChange}
+                label='Category'
+              >
+                {categories.map((label, i) => (
+                  <MenuItem key={`${label}-${i}`} value={label}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField
+              id='message-feedback-form'
+              type='text'
+              label='Message'
+              multiline
+              rows={4}
+              defaultValue={message}
+              variant='outlined'
+              onChange={onMessageChange}
+              classes={{ root: classes.textField }}
+            />
+            <div className='flex flex-col mx-8 mb-4'>
+              <Button
+                className='self-end'
+                variant='contained'
+                color='primary'
+                size='large'
+                disableElevation
+                disabled={
+                  submitting || !name || !email || !message || !category
+                }
+                onClick={onSubmitFeedback}
+              >
+                {submitting ? 'Submitting' : 'Submit'}
+              </Button>
+              {showSuccess || showError ? (
+                <Alert
+                  severity={showSuccess ? 'success' : 'error'}
+                  message={
+                    showSuccess
+                      ? `Your ${
+                        category || 'feedback'
+                      } was submitted successfully!`
+                      : `Something went wrong submitting your ${
+                        category || 'feedback'
+                      }.`
                   }
-                  onClick={onSubmitFeedback}
-                >
-                  {submitting ? 'Submitting' : 'Submit'}
-                </Button>
-                {showSuccess || showError ? (
-                  <Alert
-                    severity={showSuccess ? 'success' : 'error'}
-                    message={
-                      showSuccess
-                        ? `Your ${
-                          category || 'feedback'
-                        } was submitted successfully!`
-                        : `Something went wrong submitting your ${
-                          category || 'feedback'
-                        }.`
-                    }
-                  />
-                ) : null}
-              </div>
+                />
+              ) : null}
             </div>
-          </Paper>
+          </div>
         </div>
-      </div>
-      { !!networkError &&
-        <NetworkErrorPopup
-          networkError={networkError}
-          setNetworkError={setNetworkError}
-          closeButtonStr={CLOSE}
-        />
-      }
-    </Layout>
-  )
+        { !!networkError &&
+          <NetworkErrorPopup
+            networkError={networkError}
+            setNetworkError={setNetworkError}
+            closeButtonStr={CLOSE}
+          />
+        }
+      </>
+    )
+  }
+
+  useEffect(() => {
+    if (open) {
+      const feedbackContents = getFeedbackContents()
+      setFeedbackContents(feedbackContents)
+    } else {
+      setFeedbackContents(null)
+    }
+  }, [ open ])
 
   return (
     <DraggableCard
-      open
+      open={open}
       showRawContent
       content={feedbackContents}
-      onClose={() => onClose()}
+      onClose={onClose}
     />
 
   )

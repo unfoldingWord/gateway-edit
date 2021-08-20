@@ -27,9 +27,9 @@ export default function Drawer({
   logout,
   onClose,
   resetResourceLayout,
+  showFeedback,
 }) {
   const router = useRouter()
-  const { actions: { setShowFeedback } } = useContext(StoreContext)
 
   function onSettingsClick() {
     router.push('/settings')
@@ -37,7 +37,8 @@ export default function Drawer({
   }
 
   function onFeedbackClick() {
-    setShowFeedback(true)
+    onClose()
+    showFeedback && showFeedback()
   }
 
   function onLogout() {
@@ -203,4 +204,5 @@ Drawer.propTypes = {
   logout: PropTypes.func,
   onClose: PropTypes.func,
   resetResourceLayout: PropTypes.func,
+  showFeedback: PropTypes.func,
 }

@@ -40,7 +40,6 @@ import {
   HTTP_GET_MAX_WAIT_TIME,
 } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
-import FeedbackPopup from "@components/FeedbackPopup";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -82,7 +81,6 @@ function WorkspaceContainer() {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
-      showFeedback,
     },
     actions: {
       logout,
@@ -94,7 +92,6 @@ function WorkspaceContainer() {
       updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
-      setShowFeedback,
     },
   } = useContext(StoreContext)
 
@@ -376,13 +373,6 @@ function WorkspaceContainer() {
             content={content}
             onClose={() => clearContent()}
             workspaceRef={mainScreenRef}
-          />
-          :
-          null
-        }
-        {showFeedback ?
-          <FeedbackPopup
-            onClose={() => setShowFeedback(false)}
           />
           :
           null

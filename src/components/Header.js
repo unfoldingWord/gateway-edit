@@ -10,6 +10,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@components/Drawer'
 import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
+import FeedbackPopup from '@components/FeedbackPopup'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -35,19 +36,33 @@ export default function Header({
   title,
   resetResourceLayout,
   authentication: { user },
+  feedback,
+  setFeedback,
 }) {
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
 
-  const { actions: {logout} } = useContext(AuthContext)
+  const { actions: { logout } } = useContext(AuthContext)
 
   const handleDrawerOpen = () => {
-    setOpen(true)
+    if (!drawerOpen) {
+      setOpen(true)
+    }
   }
 
   const handleDrawerClose = () => {
-    setOpen(false)
+    if (drawerOpen) {
+      setOpen(false)
+    }
+  }
+
+  const doShowFeedback = () => {
+    setFeedback && setFeedback(true)
+  }
+
+  const doHideFeedback = () => {
+    setFeedback && setFeedback(false)
   }
 
   return (
@@ -101,6 +116,12 @@ export default function Header({
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
         resetResourceLayout={resetResourceLayout}
+        showFeedback={doShowFeedback}
+      />
+      <FeedbackPopup
+        open={!!feedback}
+        {...feedback}
+        onClose={doHideFeedback}
       />
     </header>
   )
@@ -110,4 +131,5 @@ Header.propTypes = {
   title: PropTypes.string,
   authentication: PropTypes.object,
   resetResourceLayout: PropTypes.func,
+  storeContext: PropTypes.object,
 }
