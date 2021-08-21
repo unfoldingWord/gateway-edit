@@ -68,7 +68,6 @@ const FeedbackCard = ({
   lastError,
   loggedInUser,
 }) => {
-
   const classes = useStyles()
   const categories = ['Bug Report', 'Feedback']
   const [submitting, setSubmitting] = useState(false)
@@ -147,6 +146,33 @@ const FeedbackCard = ({
     return cards
   }
 
+  function getHelpsCardSettings(username) {
+    const helpsCards = ['tn', 'ta', 'twl', 'twa', 'tq']
+    const helpsCardRefSettings = helpsCards.map(card => (`resource_card_${card}_ref`))
+    const helpsCardFilterSettings = helpsCards.map(card => (`filters_resource_card_${card}`))
+    const helpsCardHeadersSettings = helpsCards.map(card => (`headers_resource_card_${card}`))
+    const helpsCardMarkdownSettings = helpsCards.map(card => (`markdownViewresource_card_${card}`))
+    const helpsCardEditingSettings = helpsCards.map(card => (`editing_resource_card_${card}_${languageId}`))
+    const settingsReadList = [
+      ...helpsCardRefSettings,
+      ...helpsCardFilterSettings,
+      ...helpsCardHeadersSettings,
+      ...helpsCardMarkdownSettings,
+      ...helpsCardEditingSettings,
+    ]
+    const currentSettings = {}
+
+    for (let i = 0; i < settingsReadList.length; i++) {
+      const settingKey = settingsReadList[i]
+      const savedValue = getUserSettings(username, settingKey)
+
+      if (savedValue !== null) {
+        currentSettings[settingKey] = savedValue
+      }
+    }
+    return currentSettings
+  }
+
   async function onSubmitFeedback() {
     setShowSuccess(false)
 
@@ -160,6 +186,7 @@ const FeedbackCard = ({
     setShowError(false)
     const build = getBuildId()
     const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
+    const helpsCardSettings = getHelpsCardSettings(loggedInUser)
     const scriptureVersionHistory = getUserSettings(loggedInUser, `scriptureVersionHistory`)
 
     const extraData = JSON.stringify({
@@ -178,6 +205,7 @@ const FeedbackCard = ({
       currentLayout,
       scriptureCardSettings,
       scriptureVersionHistory,
+      helpsCardSettings,
     })
 
     let res
@@ -220,11 +248,11 @@ const FeedbackCard = ({
     setSubmitting(false)
   }
 
-  const submitDisabled = submitting || !name || !email || !message || !category;
+  const submitDisabled = submitting || !name || !email || !message || !category
 
   return (
     <>
-      <div className='flex flex-col h-auto w-full p-4 my-2'>
+      <div className='flex flex-col h-auto p-0 m-0' style={{ width: '480px' }}>
         <div className='flex flex-row'>
           <h3 className='flex-auto text-xl text-gray-600 font-semibold mx-8 mb-0'>
             Submit a Bug Report or Feedback
@@ -276,7 +304,7 @@ const FeedbackCard = ({
             type='text'
             label='Message'
             multiline
-            rows={4}
+            rows={3}
             defaultValue={message}
             variant='outlined'
             onChange={onMessageChange}
@@ -320,6 +348,21 @@ const FeedbackCard = ({
       }
     </>
   )
+}
+
+FeedbackCard.propTypes = {
+  owner: PropTypes.string,
+  server: PropTypes.string,
+  branch: PropTypes.string,
+  taArticle: PropTypes.object,
+  languageId: PropTypes.string,
+  selectedQuote: PropTypes.object,
+  scriptureOwner: PropTypes.string,
+  bibleReference: PropTypes.object,
+  supportedBibles: PropTypes.array,
+  currentLayout: PropTypes.object,
+  lastError: PropTypes.object,
+  loggedInUser: PropTypes.string,
 }
 
 export default FeedbackCard

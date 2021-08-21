@@ -47,6 +47,20 @@ const FeedbackPopup = ({
   )
 }
 
-FeedbackPopup.propTypes = { onClose: PropTypes.func.isRequired }
+FeedbackPopup.propTypes = {
+  owner: PropTypes.string,
+  server: PropTypes.string,
+  branch: PropTypes.string,
+  taArticle: PropTypes.object,
+  languageId: PropTypes.string,
+  selectedQuote: PropTypes.object,
+  scriptureOwner: PropTypes.string,
+  bibleReference: PropTypes.object,
+  supportedBibles: PropTypes.array,
+  currentLayout: PropTypes.object,
+  lastError: PropTypes.object,
+  loggedInUser: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+}
 
 export default FeedbackPopup
