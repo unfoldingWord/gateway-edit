@@ -17,6 +17,7 @@ const FeedbackPopup = ({
   lastError,
   loggedInUser,
   onClose,
+  mainScreenRef,
 }) => {
   const feedbackParams = {
     owner,
@@ -37,6 +38,8 @@ const FeedbackPopup = ({
     <DraggableCard
       open
       showRawContent
+      initialPosition={{ x: 0, y: -60 }}
+      workspaceRef={mainScreenRef}
       onClose={onClose}
       content={
         <FeedbackCard
@@ -61,6 +64,8 @@ FeedbackPopup.propTypes = {
   lastError: PropTypes.object,
   loggedInUser: PropTypes.string,
   onClose: PropTypes.func.isRequired,
+  /** Optional, used to make sure draggable card is contained within workspace */
+  mainScreenRef: PropTypes.object,
 }
 
 export default FeedbackPopup

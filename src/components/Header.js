@@ -118,7 +118,7 @@ export default function Header({
         resetResourceLayout={resetResourceLayout}
         showFeedback={doShowFeedback}
       />
-      {!!feedback ?
+      { !!feedback ?
         <FeedbackPopup
           open
           {...feedback}
