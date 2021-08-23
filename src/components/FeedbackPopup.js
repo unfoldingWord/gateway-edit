@@ -1,7 +1,16 @@
-import { DraggableCard } from 'translation-helps-rcl'
-import PropTypes from 'prop-types'
-import FeedbackCard from '@components/FeedbackCard'
 import { useEffect, useState } from 'react'
+import Backdrop from '@material-ui/core/Backdrop'
+import { makeStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
+import { DraggableCard } from 'translation-helps-rcl'
+import FeedbackCard from '@components/FeedbackCard'
+
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+}))
 
 // draggable popup for sending feedback
 const FeedbackPopup = ({
@@ -21,6 +30,7 @@ const FeedbackPopup = ({
   mainScreenRef,
   open,
 }) => {
+  const classes = useStyles()
   const [updateBounds, setUpdateBounds] = useState(0)
   const [initCard, setInitCard] = useState(false)
 
@@ -60,18 +70,24 @@ const FeedbackPopup = ({
   }
 
   return (
-    <DraggableCard
+    <Backdrop
+      className={classes.backdrop}
       open={open}
-      showRawContent
-      initialPosition={{ x: 0, y: -30 }}
-      workspaceRef={mainScreenRef}
-      onClose={onClose}
-      content={
-        <FeedbackCard
-          {...feedbackParams}
-        />
-      }
-    />
+    >
+      <DraggableCard
+        open={open}
+        showRawContent
+        initialPosition={{ x: 0, y: -30 }}
+        workspaceRef={mainScreenRef}
+        onClose={onClose}
+        content={
+          <FeedbackCard
+            {...feedbackParams}
+          />
+        }
+      />
+
+    </Backdrop>
   )
 }
 
