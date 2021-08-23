@@ -77,7 +77,7 @@ const FeedbackPopup = ({
       <DraggableCard
         open={open}
         showRawContent
-        initialPosition={{ x: 0, y: -30 }}
+        initialPosition={{ x: 0, y: -10 }}
         workspaceRef={mainScreenRef}
         onClose={onClose}
         content={
