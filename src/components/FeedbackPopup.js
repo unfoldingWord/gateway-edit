@@ -1,6 +1,7 @@
 import { DraggableCard } from 'translation-helps-rcl'
 import PropTypes from 'prop-types'
 import FeedbackCard from '@components/FeedbackCard'
+import { useEffect, useState } from 'react'
 
 // draggable popup for sending feedback
 const FeedbackPopup = ({
@@ -18,7 +19,28 @@ const FeedbackPopup = ({
   loggedInUser,
   onClose,
   mainScreenRef,
+  open,
 }) => {
+  const [updateBounds, setUpdateBounds] = useState(0)
+  const [initCard, setInitCard] = useState(false)
+
+  /**
+   * update bounds calculations
+   */
+  function doUpdateBounds() {
+    if (open) {
+      setUpdateBounds(updateBounds + 1)
+    }
+  }
+
+  useEffect(() => {
+    doUpdateBounds() // update bounds calculations after render
+
+    if (open) {
+      setInitCard(true)
+    }
+  }, [open])
+
   const feedbackParams = {
     owner,
     server,
@@ -32,13 +54,16 @@ const FeedbackPopup = ({
     currentLayout,
     lastError,
     loggedInUser,
+    initCard,
+    setInitCard,
+    open,
   }
 
   return (
     <DraggableCard
-      open
+      open={open}
       showRawContent
-      initialPosition={{ x: 0, y: -60 }}
+      initialPosition={{ x: 0, y: -30 }}
       workspaceRef={mainScreenRef}
       onClose={onClose}
       content={

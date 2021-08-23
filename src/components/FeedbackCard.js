@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
@@ -14,6 +14,7 @@ import { processNetworkError } from '@utils/network'
 import { CLOSE, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import PropTypes from 'prop-types'
+import useFeedbackData from '@hooks/useFeedbackData'
 
 function Alert({ severity, message }) {
   const router = useRouter()
@@ -67,20 +68,21 @@ const FeedbackCard = ({
   currentLayout,
   lastError,
   loggedInUser,
+  open,
+  initCard,
+  setInitCard,
 }) => {
   const classes = useStyles()
   const categories = ['Bug Report', 'Feedback']
-  const [submitting, setSubmitting] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
-  const [category, setCategory] = useState('')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [emailError, setEmailError] = useState(null)
-  const [showEmailError, setShowEmailError] = useState(false)
-  const [message, setMessage] = useState('')
-  const [networkError, setNetworkError] = useState(null)
   const emailEditRef = useRef(null)
+  const { state, actions } = useFeedbackData(open)
+
+  useEffect(() => {
+    if (initCard) {
+      actions.clearState()
+      setInitCard(false) // card initialized
+    }
+  }, [initCard])
 
   /**
    * in the case of a network error, process and display error dialog
@@ -88,29 +90,29 @@ const FeedbackCard = ({
    * @param {number} httpCode - http code returned
    */
   function processError(error, httpCode=0) {
-    processNetworkError(error, httpCode, null, null, setNetworkError, null, null )
+    processNetworkError(error, httpCode, null, null, actions.setNetworkError, null, null )
   }
 
   function onCategoryChange(e) {
-    setCategory(e.target.value)
+    actions.setCategory(e.target.value)
   }
 
   function onNameChange(e) {
-    setName(e.target.value)
+    actions.setName(e.target.value)
   }
 
   function onEmailChange(e) {
     const validationError = e?.target?.validationMessage || null
-    setEmailError(validationError)
+    actions.setEmailError(validationError)
 
     if (!validationError) { // if email address error corrected, then clear any displayed warning
-      setShowEmailError(false)
+      actions.setShowEmailError(false)
     }
-    setEmail(e.target.value)
+    actions.setEmail(e.target.value)
   }
 
   function onMessageChange(e) {
-    setMessage(e.target.value)
+    actions.setMessage(e.target.value)
   }
 
   function getUserSettings(username, baseKey) {
@@ -174,16 +176,16 @@ const FeedbackCard = ({
   }
 
   async function onSubmitFeedback() {
-    setShowSuccess(false)
+    actions.setShowSuccess(false)
 
-    if (emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
-      setShowEmailError(true)
+    if (state.emailError) { // if there is currently an error on the email address, show to user and abort submitting feedback
+      actions.setShowEmailError(true)
       emailEditRef.current.focus()
       return
     }
 
-    setSubmitting(true)
-    setShowError(false)
+    actions.setSubmitting(true)
+    actions.setShowError(false)
     const build = getBuildId()
     const scriptureCardSettings = getScriptureCardSettings(loggedInUser)
     const helpsCardSettings = getHelpsCardSettings(loggedInUser)
@@ -215,7 +217,11 @@ const FeedbackCard = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name, email, category, message, extraData,
+          name: state.name,
+          email: state.email,
+          category: state.category,
+          message: state.message,
+          extraData,
         }),
       })
       const timeout = new Promise((_r, rej) => {
@@ -226,29 +232,29 @@ const FeedbackCard = ({
     } catch (e) {
       console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
       processError(e)
-      setSubmitting(false)
-      setShowSuccess(false)
-      setShowError(true)
+      actions.setSubmitting(false)
+      actions.setShowSuccess(false)
+      actions.setShowError(true)
       return
     }
 
     const response = await res.json()
 
     if (res.status === 200) {
-      setShowSuccess(true)
+      actions.setShowSuccess(true)
     } else {
       const error = response.error
       console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(error)}`)
       const httpCode = parseInt(error.code, 10)
       const errorMessage = error.message + '.'
-      setShowError(true)
+      actions.setShowError(true)
       processError(errorMessage, httpCode)
     }
 
-    setSubmitting(false)
+    actions.setSubmitting(false)
   }
 
-  const submitDisabled = submitting || !name || !email || !message || !category
+  const submitDisabled = state.submitting || !state.name || !state.email || !state.message || !state.category
 
   return (
     <>
@@ -264,7 +270,7 @@ const FeedbackCard = ({
             type='given-name'
             label='Name'
             autoComplete='name'
-            defaultValue={name}
+            defaultValue={state.name}
             variant='outlined'
             onChange={onNameChange}
             classes={{ root: classes.textField }}
@@ -274,12 +280,12 @@ const FeedbackCard = ({
             type='email'
             label='Email'
             autoComplete='email'
-            defaultValue={email}
+            defaultValue={state.email}
             variant='outlined'
             onChange={onEmailChange}
             classes={{ root: classes.textField }}
-            error={showEmailError}
-            helperText={showEmailError ? emailError : null}
+            error={actions.showEmailError}
+            helperText={state.showEmailError ?state. emailError : null}
             inputRef={emailEditRef}
           />
           <FormControl variant='outlined' className={classes.formControl}>
@@ -288,7 +294,7 @@ const FeedbackCard = ({
             </InputLabel>
             <Select
               id='categories-dropdown'
-              value={category}
+              value={state.category}
               onChange={onCategoryChange}
               label='Category'
             >
@@ -304,8 +310,8 @@ const FeedbackCard = ({
             type='text'
             label='Message'
             multiline
-            rows={3}
-            defaultValue={message}
+            rows={4}
+            defaultValue={state.message}
             variant='outlined'
             onChange={onMessageChange}
             classes={{ root: classes.textField }}
@@ -320,18 +326,18 @@ const FeedbackCard = ({
               disabled={submitDisabled}
               onClick={onSubmitFeedback}
             >
-              {submitting ? 'Submitting' : 'Submit'}
+              {state.submitting ? 'Submitting' : 'Submit'}
             </Button>
-            {showSuccess || showError ? (
+            {state.showSuccess || state.showError ? (
               <Alert
-                severity={showSuccess ? 'success' : 'error'}
+                severity={state.showSuccess ? 'success' : 'error'}
                 message={
-                  showSuccess
+                  state.showSuccess
                     ? `Your ${
-                      category || 'feedback'
+                      state.category || 'feedback'
                     } was submitted successfully!`
                     : `Something went wrong submitting your ${
-                      category || 'feedback'
+                      state.category || 'feedback'
                     }.`
                 }
               />
@@ -339,10 +345,10 @@ const FeedbackCard = ({
           </div>
         </div>
       </div>
-      { !!networkError &&
+      { !!state.networkError &&
         <NetworkErrorPopup
-          networkError={networkError}
-          setNetworkError={setNetworkError}
+          networkError={state.networkError}
+          setNetworkError={actions.setNetworkError}
           closeButtonStr={CLOSE}
         />
       }
