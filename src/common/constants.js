@@ -17,6 +17,11 @@ export const HTTP_CONFIG = {
   cache: { maxAge: HTTP_GET_CACHE_TIME },
   timeout: HTTP_GET_MAX_WAIT_TIME,
 }
+export const HTTP_GET_LONG_CACHE_TIME = 1 * 24 * 60 * 60 * 1000 // in milliseconds, cache for 1 day
+export const HTTP_LONG_CONFIG = {
+  cache: { maxAge: HTTP_GET_LONG_CACHE_TIME },
+  timeout: HTTP_GET_MAX_WAIT_TIME,
+}
 // Necessary for edit mode.
 export const RESOURCE_HTTP_CONFIG = {
   cache: { maxAge: 0 },

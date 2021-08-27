@@ -12,6 +12,7 @@ import {
   LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
+import { doFetch } from "@utils/network"
 
 export async function getResource({
   bookId,
@@ -145,4 +146,72 @@ export function getResourceMessage(resourceStatus, owner, languageId, resourceId
     }
   }
   return message
+}
+
+/**
+ * find the latest version for published bible
+ * @param {string} server
+ * @param {string} org
+ * @param {string} lang
+ * @param {string} bible
+ * @param {function} processError
+ * @return {Promise<*>}
+ */
+export async function getLatestBibleRepo(server, org, lang, bible, processError) {
+  const url = `${server}/api/catalog/v5/search/${org}/${lang}_${bible}`
+  const results = await doFetch(url, {}, HTTP_GET_MAX_WAIT_TIME)
+    .then(response => {
+      if (response?.status !== 200) {
+        const errorCode = response?.status
+        console.warn(`WorkSpace - error getting latest original lang from ${url}, ${errorCode}`)
+        processError(null, errorCode)
+        return null
+      }
+      return response?.data
+    })
+  const foundItem = results?.data?.[0]
+  let repo = foundItem?.url
+
+  if (foundItem?.metadata_api_contents_url) {
+    // "metadata_api_contents_url": "https://qa.door43.org/api/v1/repos/unfoldingWord/el-x-koine_ugnt/contents/manifest.yaml?ref=v0.9"
+    let parts = foundItem?.metadata_api_contents_url.split('?')
+    let pathParts = parts[0].split('/')
+    pathParts = pathParts.slice(0, -1)
+    repo = pathParts.join('/') + '?' + parts[1]
+  }
+  return repo
+}
+
+export async function getLexicon(languageId, httpConfig, server, owner, isNt) {
+  const config_ = {
+    server,
+    ...httpConfig,
+    noCache: true,
+  }
+  const resourceId = isNt ? 'ugl' : 'uhl'
+  let results
+
+  try {
+    results = await core.getResourceManifest({
+      username: owner,
+      languageId,
+      resourceId: resourceId,
+      config: config_,
+      fullResponse: true,
+    })
+  } catch (e) {
+    console.warn(`getLexicon failed ${languageId}_${resourceId}: `, e)
+  }
+
+  console.log('manifest', results?.manifest)
+
+  if (!results?.manifest) {
+    return null
+  }
+
+  const lexicon = results.manifest.projects.find(item => (item.identifier === resourceId))
+  console.log(lexicon)
+  const lexiconPath = lexicon?.path
+
+  return null
 }
