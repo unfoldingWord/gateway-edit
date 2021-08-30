@@ -209,8 +209,7 @@ export default function ResourceCard({
   // Add/remove resources to/from the array to enable or disable edit mode.
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
-  console.log({ items })
-  // TODO: EDITING an item after the first one and then editing the first one changes the wrong item, wrong item index carry over.
+
   return (
     <Card
       id={id}
