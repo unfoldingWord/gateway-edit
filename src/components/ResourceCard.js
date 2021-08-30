@@ -1,4 +1,3 @@
-import path from 'path'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
@@ -7,6 +6,7 @@ import {
   CardContent,
   ERROR_STATE,
   useCardState,
+  useTsvMerger,
   useUserBranch,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
@@ -14,7 +14,8 @@ import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
-
+import generateEditFilePath from '@utils/generateEditFilePath'
+import getSha from '@utils/getSha'
 export default function ResourceCard({
   id,
   title,
@@ -79,8 +80,10 @@ export default function ResourceCard({
   })
 
   const {
+    tsvs,
     items,
     markdown,
+    resource,
     fetchResponse,
     resourceStatus,
     reloadResource,
@@ -121,8 +124,16 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
-  // Each item in the items array may has a unique fetchResponse.
-  const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
+  const sha = getSha({
+    item, fetchResponse, cardResourceId,
+  })
+  const editFilePath = generateEditFilePath({
+    item,
+    resource,
+    filePath,
+    projectId,
+    cardResourceId,
+  })
 
   const {
     isEditing,
@@ -140,13 +151,29 @@ export default function ResourceCard({
     author: loggedInUser,
     token: authentication?.token,
     branch: workingResourceBranch,
-    filepath: item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : null),
+    filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
+  })
+
+  const { onTsvEdit } = useTsvMerger({
+    tsvs,
+    verse,
+    chapter,
+    itemIndex,
+    setContent,
   })
 
   useEffect(() => {
     if (updateTaDetails) {
-      updateTaDetails(item?.SupportReference || null)
+      const {
+        Quote, OrigQuote, Occurrence, SupportReference = null,
+      } = item || {}
+      updateTaDetails(SupportReference)
+      setQuote({
+        quote: Quote || OrigQuote,
+        occurrence: Occurrence,
+        SupportReference,
+      })
     }
   }, [item])
 
@@ -163,13 +190,11 @@ export default function ResourceCard({
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
   async function handleSaveEdit() {
-    /**
-     * Save edit, if succesful trigger resource reload and set saved to true.
-     * @param {String} branch
-     */
+    // Save edit, if succesful trigger resource reload and set saved to true.
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {
+          console.info('Reloading resource')
           reloadResource()
           setSaved(true)
           setSavedChanges(true)
@@ -187,8 +212,9 @@ export default function ResourceCard({
     }
   }
 
-  // TODO: Only markdown content (tw & ta) is editable for now.
-  const editable = cardResourceId == 'tw' || cardResourceId == 'ta'
+  // Add/Remove resources to/from the array to enable or disable edit mode.
+  const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
+  const editable = editableResources.includes(cardResourceId)
 
   return (
     <Card
@@ -226,6 +252,7 @@ export default function ResourceCard({
           setContent(c)
           setSavedChanges(false)
         }}
+        onTsvEdit={onTsvEdit}
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}

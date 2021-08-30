@@ -70,7 +70,7 @@ export default function StoreContextProvider(props) {
   }
 
   function updateTaDetails(supportReference) {
-    if (supportReference) {
+    if (typeof supportReference === 'string') {
       const path = supportReference?.replace('rc://*/ta/man/', '')
       const split = path.split('/')
 
