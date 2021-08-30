@@ -40,6 +40,9 @@ export default function ResourceCard({
   onResourceError,
   authentication,
   loggedInUser,
+  savedChanges,
+  setSavedChanges,
+  showSaveChangesPrompt,
 }) {
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
@@ -169,6 +172,9 @@ export default function ResourceCard({
         if (success) {
           reloadResource()
           setSaved(true)
+          setSavedChanges(true)
+        } else {
+          setSavedChanges(false)
         }
       })
     }
@@ -216,7 +222,10 @@ export default function ResourceCard({
         fontSize={fontSize}
         markdown={markdown}
         setQuote={setQuote}
-        onEdit={setContent}
+        onEdit={(c) => {
+          setContent(c)
+          setSavedChanges(false)
+        }}
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
@@ -264,4 +273,6 @@ ResourceCard.propTypes = {
   loggedInUser: PropTypes.string,
   /** user authentication object */
   authentication: PropTypes.object,
+  /** Set whether changes are saved or not so that the saved changes prompts opens when necessary. */
+  setSavedChanges: PropTypes.func,
 }

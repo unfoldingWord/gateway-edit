@@ -40,6 +40,7 @@ import {
   HTTP_GET_MAX_WAIT_TIME,
 } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -350,6 +351,12 @@ function WorkspaceContainer() {
     },
   })
 
+  const {
+    savedChanges,
+    setSavedChanges,
+    showSaveChangesPrompt,
+  } = useSaveChangesPrompt()
+
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
@@ -470,6 +477,9 @@ function WorkspaceContainer() {
             updateTaDetails={updateTaDetails}
             loggedInUser={loggedInUser}
             authentication={authentication}
+            savedChanges={savedChanges}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationAcademy'
@@ -481,6 +491,9 @@ function WorkspaceContainer() {
             errorMessage={taArticle ? null : 'No article is specified in the current note.'}
             loggedInUser={loggedInUser}
             authentication={authentication}
+            savedChanges={savedChanges}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationWords List'
@@ -497,6 +510,9 @@ function WorkspaceContainer() {
             hideMarkdownToggle
             loggedInUser={loggedInUser}
             authentication={authentication}
+            savedChanges={savedChanges}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationWords Article'
@@ -511,6 +527,9 @@ function WorkspaceContainer() {
             disableFilters
             loggedInUser={loggedInUser}
             authentication={authentication}
+            savedChanges={savedChanges}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationQuestions'
@@ -523,6 +542,9 @@ function WorkspaceContainer() {
             disableFilters
             loggedInUser={loggedInUser}
             authentication={authentication}
+            savedChanges={savedChanges}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
         </Workspace>
       </SelectionsContextProvider>
