@@ -10,6 +10,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@components/Drawer'
 import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
+import { StoreContext } from '@context/StoreContext'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -39,8 +40,8 @@ export default function Header({
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
-
-  const { actions: {logout} } = useContext(AuthContext)
+  const { actions: { logout } } = useContext(AuthContext)
+  const { actions: { checkUnsavedChanges } } = useContext(StoreContext)
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -100,6 +101,7 @@ export default function Header({
         open={drawerOpen}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
+        checkUnsavedChanges={checkUnsavedChanges}
         resetResourceLayout={resetResourceLayout}
       />
     </header>

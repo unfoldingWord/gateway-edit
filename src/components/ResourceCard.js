@@ -41,13 +41,17 @@ export default function ResourceCard({
   onResourceError,
   authentication,
   loggedInUser,
-  savedChanges,
   setSavedChanges,
   showSaveChangesPrompt,
 }) {
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+
+  function updateTempContent(c) {
+    setContent(c)
+    setSavedChanges(cardResourceId, false)
+  }
 
   // If content changes then set whether it's saved or not.
   useEffect(() => {
@@ -57,6 +61,12 @@ export default function ResourceCard({
       setSaved(true)
     }
   }, [content])
+
+  // Useful to clear content and saved state when chapter and verse changes.
+  useEffect(() => {
+    setContent('')
+    setSaved(true)
+  }, [chapter, verse])
 
   const {
     state: {
@@ -160,7 +170,7 @@ export default function ResourceCard({
     verse,
     chapter,
     itemIndex,
-    setContent,
+    setContent: updateTempContent,
   })
 
   useEffect(() => {
@@ -197,9 +207,9 @@ export default function ResourceCard({
           console.info('Reloading resource')
           reloadResource()
           setSaved(true)
-          setSavedChanges(true)
+          setSavedChanges(cardResourceId, true)
         } else {
-          setSavedChanges(false)
+          setSavedChanges(cardResourceId, false)
         }
       })
     }
@@ -228,15 +238,18 @@ export default function ResourceCard({
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
+      setContent={setContent}
       setFontSize={setFontSize}
       saved={saved || isEditing}
       onSaveEdit={handleSaveEdit}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       disableFilters={disableFilters}
+      cardResourceId={cardResourceId}
       setMarkdownView={setMarkdownView}
       disableNavigation={disableNavigation}
       hideMarkdownToggle={hideMarkdownToggle}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
         id={`${id}_content`}
@@ -248,10 +261,7 @@ export default function ResourceCard({
         fontSize={fontSize}
         markdown={markdown}
         setQuote={setQuote}
-        onEdit={(c) => {
-          setContent(c)
-          setSavedChanges(false)
-        }}
+        onEdit={updateTempContent}
         onTsvEdit={onTsvEdit}
         languageId={languageId}
         markdownView={markdownView}
@@ -302,4 +312,6 @@ ResourceCard.propTypes = {
   authentication: PropTypes.object,
   /** Set whether changes are saved or not so that the saved changes prompts opens when necessary. */
   setSavedChanges: PropTypes.func,
+  /** Shows a unsaved changes prompt if there's any. */
+  showSaveChangesPrompt: PropTypes.func,
 }

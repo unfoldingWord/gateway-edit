@@ -26,22 +26,29 @@ export default function Drawer({
   logout,
   onClose,
   resetResourceLayout,
+  checkUnsavedChanges,
 }) {
   const router = useRouter()
 
   function onSettingsClick() {
-    router.push('/settings')
-    onClose()
+    checkUnsavedChanges().then(() => {
+      router.push('/settings')
+      onClose()
+    })
   }
 
   function onFeedbackClick() {
-    router.push('/feedback')
-    onClose()
+    checkUnsavedChanges().then(() => {
+      router.push('/feedback')
+      onClose()
+    })
   }
 
   function onLogout() {
-    logout()
-    onClose()
+    checkUnsavedChanges().then(() => {
+      logout()
+      onClose()
+    })
   }
 
   function onResetResourceLayout() {
@@ -202,4 +209,5 @@ Drawer.propTypes = {
   logout: PropTypes.func,
   onClose: PropTypes.func,
   resetResourceLayout: PropTypes.func,
+  checkUnsavedChanges: PropTypes.func,
 }

@@ -1,21 +1,80 @@
 import { useState, useEffect } from 'react'
 
 export default function useSaveChangesPrompt() {
-  const [savedChanges, setSavedChanges] = useState(true)
-  const promptText = 'Changes you made may not be locally backed up. Do you wish to continue?'
+  const [unsavedResources, setUnsavedResources] = useState([])
+  const savedChanges = !(unsavedResources.length > 0)
+  const promptText = 'Changes you made may not be saved. Do you wish to continue?'
 
-  const showSaveChangesPrompt = () => {
-    if (savedChanges) {
-      return true
+  const setSavedChanges = (resourceId, saved) => {
+    if (!saved) {
+      setUnsavedResources(prevState => {
+        const newUnsavedResources = [...prevState]
+        const found = newUnsavedResources.find(element => element === resourceId)
+
+        if (!found) {
+          newUnsavedResources.push(resourceId)
+        }
+
+        return newUnsavedResources
+      })
     } else {
-      if (window.confirm(promptText)) {
-        return true
-      }
+      setUnsavedResources(prevState => {
+        let newUnsavedResources = [...prevState]
+        newUnsavedResources = newUnsavedResources.filter(r => r !== resourceId)
+
+        return newUnsavedResources
+      })
     }
   }
 
+  const showSaveChangesPrompt = (resourceId, setContent) => new Promise((resolve, reject) => {
+    console.log({ savedChanges })
+
+    if (savedChanges) {
+      resolve()
+    } else {
+      if (unsavedResources.includes(resourceId)) {
+        if (window.confirm(promptText)) {
+          setUnsavedResources(prevState => {
+            let newUnsavedResources = [...prevState]
+            newUnsavedResources = newUnsavedResources.filter(r => r !== resourceId)
+
+            return newUnsavedResources
+          })
+          setContent('')
+          resolve()
+        } else {
+          reject()
+        }
+      } else {
+        resolve()
+      }
+    }
+  })
+
+  const checkUnsavedChanges = () => new Promise((resolve, reject) => {
+    if (savedChanges) {
+      console.log('savedChanges')
+      resolve()
+    } else {
+      if (window.confirm(promptText)) {
+        console.log('window.confirm(promptText)')
+
+        setUnsavedResources([])
+
+        resolve()
+      } else {
+        console.log('else')
+
+        reject()
+      }
+    }
+  })
+
   useEffect(() => {
     const handleBeforeunload = (event) => {
+      event.preventDefault()
+
       // Chrome requires `returnValue` to be set.
       if (event.defaultPrevented) {
         event.returnValue = ''
@@ -39,6 +98,7 @@ export default function useSaveChangesPrompt() {
   return {
     savedChanges,
     setSavedChanges,
+    checkUnsavedChanges,
     showSaveChangesPrompt,
   }
 }

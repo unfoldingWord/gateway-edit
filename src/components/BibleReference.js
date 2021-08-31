@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import useEffect from 'use-deep-compare-effect'
 import BibleReference, { useBibleReference } from 'bible-reference-rcl'
-import { StoreContext } from '@context/StoreContext'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import { StoreContext } from '@context/StoreContext'
 
 const useStyles = makeStyles((theme) => ({
   underline: {
@@ -21,7 +21,7 @@ function BibleReferenceComponent(props) {
       },
       supportedBibles,
     },
-    actions: { onReferenceChange },
+    actions: { onReferenceChange, checkUnsavedChanges },
   } = useContext(StoreContext)
 
   const { state, actions } = useBibleReference({
@@ -36,7 +36,9 @@ function BibleReferenceComponent(props) {
       // update reference if external change (such as user log in causing saved reference to be loaded)
       actions.goToBookChapterVerse(bookId, chapter, verse)
     }
-  }, [{bookId, chapter, verse}])
+  }, [{
+    bookId, chapter, verse,
+  }])
 
   useEffect(() => {
     if (supportedBibles?.length) {
@@ -45,10 +47,37 @@ function BibleReferenceComponent(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supportedBibles])
 
+
+  const actionsProp = {
+    ...actions,
+    goToNextBook: () => {
+      checkUnsavedChanges().then(() => actions.goToNextBook()).catch(() => {})
+    },
+    goToBookChapterVerse: () => {
+      checkUnsavedChanges().then(() => actions.goToBookChapterVerse()).catch(() => {})
+    },
+    goToNextChapter: () => {
+      checkUnsavedChanges().then(() => actions.goToNextChapter()).catch(() => {})
+    },
+    goToNextVerse: () => {
+      checkUnsavedChanges().then(() => actions.goToNextVerse()).catch(() => {})
+    },
+    goToPrevBook: () => {
+      checkUnsavedChanges().then(() => actions.goToPrevBook()).catch(() => {})
+    },
+    goToPrevChapter: () => {
+      checkUnsavedChanges().then(() => actions.goToPrevChapter()).catch(() => {})
+    },
+    goToPrevVerse: () => {
+      checkUnsavedChanges().then(() => actions.goToPrevVerse()).catch(() => {})
+    },
+  }
+  console.log({ actions })
+
   return (
     <BibleReference
       status={state}
-      actions={actions}
+      actions={actionsProp}
       inputProps={{ classes }}
       style={{ color: '#ffffff' }}
     />

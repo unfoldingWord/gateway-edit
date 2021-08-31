@@ -40,7 +40,6 @@ import {
   HTTP_GET_MAX_WAIT_TIME,
 } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
-import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -82,6 +81,7 @@ function WorkspaceContainer() {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
+      savedChanges,
     },
     actions: {
       logout,
@@ -93,6 +93,8 @@ function WorkspaceContainer() {
       updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
+      setSavedChanges,
+      showSaveChangesPrompt,
     },
   } = useContext(StoreContext)
 
@@ -351,12 +353,6 @@ function WorkspaceContainer() {
     },
   })
 
-  const {
-    savedChanges,
-    setSavedChanges,
-    showSaveChangesPrompt,
-  } = useSaveChangesPrompt()
-
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
@@ -477,7 +473,6 @@ function WorkspaceContainer() {
             updateTaDetails={updateTaDetails}
             loggedInUser={loggedInUser}
             authentication={authentication}
-            savedChanges={savedChanges}
             setSavedChanges={setSavedChanges}
             showSaveChangesPrompt={showSaveChangesPrompt}
           />
@@ -491,7 +486,6 @@ function WorkspaceContainer() {
             errorMessage={taArticle ? null : 'No article is specified in the current note.'}
             loggedInUser={loggedInUser}
             authentication={authentication}
-            savedChanges={savedChanges}
             setSavedChanges={setSavedChanges}
             showSaveChangesPrompt={showSaveChangesPrompt}
           />
@@ -510,7 +504,6 @@ function WorkspaceContainer() {
             hideMarkdownToggle
             loggedInUser={loggedInUser}
             authentication={authentication}
-            savedChanges={savedChanges}
             setSavedChanges={setSavedChanges}
             showSaveChangesPrompt={showSaveChangesPrompt}
           />
@@ -527,7 +520,6 @@ function WorkspaceContainer() {
             disableFilters
             loggedInUser={loggedInUser}
             authentication={authentication}
-            savedChanges={savedChanges}
             setSavedChanges={setSavedChanges}
             showSaveChangesPrompt={showSaveChangesPrompt}
           />
@@ -542,7 +534,6 @@ function WorkspaceContainer() {
             disableFilters
             loggedInUser={loggedInUser}
             authentication={authentication}
-            savedChanges={savedChanges}
             setSavedChanges={setSavedChanges}
             showSaveChangesPrompt={showSaveChangesPrompt}
           />

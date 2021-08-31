@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
 import * as useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
+import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
 
 export const StoreContext = createContext({})
 
@@ -59,6 +60,13 @@ export default function StoreContextProvider(props) {
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
   const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
 
+  const {
+    savedChanges,
+    setSavedChanges,
+    checkUnsavedChanges,
+    showSaveChangesPrompt,
+  } = useSaveChangesPrompt()
+
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)
     setBibleReference(prevState => ({
@@ -104,6 +112,7 @@ export default function StoreContextProvider(props) {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
+      savedChanges,
     },
     actions: {
       logout,
@@ -123,6 +132,9 @@ export default function StoreContextProvider(props) {
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setMainScreenRef,
+      setSavedChanges,
+      checkUnsavedChanges,
+      showSaveChangesPrompt,
     },
   }
 
