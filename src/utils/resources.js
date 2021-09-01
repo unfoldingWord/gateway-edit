@@ -1,7 +1,9 @@
 import { getResourceLink } from 'single-scripture-rcl'
 import { core } from 'scripture-resources-rcl'
+import { get } from 'gitea-react-toolkit'
 import {
   HTTP_GET_MAX_WAIT_TIME,
+  HTTP_LONG_CONFIG,
   LOADING_RESOURCE,
   MANIFEST_INVALID_ERROR,
   MANIFEST_NOT_FOUND_ERROR,
@@ -12,7 +14,8 @@ import {
   LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
-import { doFetch } from "@utils/network"
+import { doFetch } from '@utils/network'
+import { getResponseData } from 'scripture-resources-rcl/dist/core/resources'
 
 export async function getResource({
   bookId,
@@ -182,7 +185,88 @@ export async function getLatestBibleRepo(server, org, lang, bible, processError)
   return repo
 }
 
+/**
+ * get Lexicon Entry
+ * @param {object} lexConfig
+ * @param {string|number} strongs - strong's number
+ * @return {Promise<Object|null>}
+ */
+export async function getLexiconEntry(lexConfig, strongs) {
+  const config = {
+    ...lexConfig,
+    strongs,
+  }
+  const results = await getLexiconEntryLowLevel(config)
+  return results
+}
+
+/**
+ * get Lexicon Entry
+ * @param httpConfig
+ * @param {string} server
+ * @param {string} owner
+ * @param {string} languageId
+ * @param {string} resourceId
+ * @param {string} lexiconPath
+ * @param {string|number} strongs - strong's number
+ * @return {Promise<object|null>}
+ */
+async function getLexiconEntryLowLevel({
+  httpConfig,
+  server,
+  owner,
+  languageId,
+  resourceId,
+  lexiconPath,
+  strongs,
+}) {
+  const filename = `${strongs}.json`
+  const ref = 'master'
+
+  const filePath = `${lexiconPath}/${filename}`
+  let url = `${server}/api/v1/repos/${owner}/${languageId}_${resourceId}/contents/${filePath}?ref=${ref}`
+  let json = null
+
+  try {
+    const result = await get({
+      url,
+      params: {},
+      config: httpConfig,
+      fullResponse: true,
+    }).then(response => {
+      const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
+      if (response?.status !== 200) {
+        const message = `getLexiconEntryLowLevel: Error code ${response?.status} fetching '${url}' for '${resourceDescr}'`
+        console.log(`failure reading`, message)
+        return null
+      }
+      return response
+    })
+    json = getResponseData(result)
+    console.log('json', json)
+    const data = JSON.parse(json)
+    return data
+  } catch (e) {
+    const httpCode = e?.response?.status || 0
+
+    console.warn(
+      `getLexiconEntryLowLevel - httpCode ${httpCode}, article not found`, e
+    )
+  }
+  return null
+}
+
+/**
+ * get the lexicon repo
+ * @param {string} languageId
+ * @param {object} httpConfig
+ * @param {string} server
+ * @param {string} owner
+ * @param {boolean} isNt
+ * @return {Promise<{owner, server, resourceId: (string), httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
+ */
 export async function getLexicon(languageId, httpConfig, server, owner, isNt) {
+  // TODO: add searching for best lexicon
   const config_ = {
     server,
     ...httpConfig,
@@ -200,18 +284,38 @@ export async function getLexicon(languageId, httpConfig, server, owner, isNt) {
       fullResponse: true,
     })
   } catch (e) {
-    console.warn(`getLexicon failed ${languageId}_${resourceId}: `, e)
+    console.log(`getLexicon failed ${languageId}_${resourceId}: `, e)
   }
 
   console.log('manifest', results?.manifest)
 
-  if (!results?.manifest) {
-    return null
+  if (results?.manifest) {
+    const lexicon = results.manifest.projects.find(item => (item.identifier === resourceId))
+    console.log(lexicon)
+    let lexiconPath = lexicon?.path
+
+    if (lexiconPath) {
+      if (lexiconPath.substr(0,2) === './') {
+        lexiconPath = lexiconPath.substr(2)
+      }
+      results.lexiconPath = lexiconPath
+      const lexConfig = {
+        httpConfig: HTTP_LONG_CONFIG,
+        server,
+        owner,
+        languageId,
+        resourceId,
+        lexiconPath,
+      }
+      return lexConfig
+    }
   }
 
-  const lexicon = results.manifest.projects.find(item => (item.identifier === resourceId))
-  console.log(lexicon)
-  const lexiconPath = lexicon?.path
-
   return null
+}
+
+export function delay(ms) {
+  return new Promise((resolve) =>
+    setTimeout(resolve, ms),
+  )
 }

@@ -22,7 +22,7 @@ import {
 } from 'single-scripture-rcl'
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
-import { getLatestBibleRepo, getLexicon, getResourceBibles } from '@utils/resources'
+import { delay, getLatestBibleRepo, getLexicon, getLexiconEntry, getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { isNT } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
@@ -82,6 +82,8 @@ function WorkspaceContainer() {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
+      greekLexConfig,
+      hebrewLexConfig,
     },
     actions: {
       logout,
@@ -93,6 +95,8 @@ function WorkspaceContainer() {
       updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
+      setGreekLexConfig,
+      setHebrewLexConfig,
     },
   } = useContext(StoreContext)
 
@@ -204,6 +208,8 @@ function WorkspaceContainer() {
     onResourceError,
     loggedInUser,
     authentication,
+    greekLexConfig,
+    hebrewLexConfig,
   }
 
   useEffect(() => {
@@ -239,6 +245,37 @@ function WorkspaceContainer() {
   }, [owner, languageId, appRef, server, loggedInUser])
 
   useEffect(() => {
+    async function getLexicons() {
+      const LexOwner = 'test_org'
+      await delay(2000) // wait for other resources to load
+      let lexConfig = await getLexicon(languageId, HTTP_CONFIG, server, LexOwner, true)
+
+      if (lexConfig) {
+        setGreekLexConfig(lexConfig)
+        await delay(1000)
+        const data = await getLexiconEntry(lexConfig, 1)
+        console.log('greek data', data)
+      } else {
+        console.error(`WorkspaceContainer - failure to find Greek Lexicon in ${languageId}`)
+      }
+
+      await delay(1000) // wait for other resources to load
+      lexConfig = await getLexicon(languageId, HTTP_CONFIG, server, LexOwner, false)
+
+      if (lexConfig) {
+        setHebrewLexConfig(lexConfig)
+        await delay(1000)
+        const data = await getLexiconEntry(lexConfig, 1)
+        console.log('hebrew data', data)
+      } else {
+        console.error(`WorkspaceContainer - failure to find Hebrew Lexicon in ${languageId}`)
+      }
+    }
+
+    getLexicons()
+  }, [])
+
+  useEffect(() => {
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
 
     if (missingOrignalBibles) { // if we don't have a path
@@ -249,13 +286,8 @@ function WorkspaceContainer() {
     const hebrewPromise = getLatestBibleRepo(server, 'unfoldingWord', 'hbo', 'uhb', processError)
     const greekPromise = getLatestBibleRepo(server, 'unfoldingWord', 'el-x-koine', 'ugnt', processError)
 
-    // TODO: add searching for best lexicon
-    const LexOwner = 'test_org'
-    // const hebrewLexPromise = getLexicon(languageId, HTTP_LONG_CONFIG, server, LexOwner, false)
-    const greekLexPromise = getLexicon(languageId, HTTP_CONFIG, server, LexOwner, true)
-
-    Promise.all([hebrewPromise, greekPromise, greekLexPromise]).then( (results) => {
-      const [repoHebrew, repoGreek, greekLex] = results
+    Promise.all([hebrewPromise, greekPromise]).then( (results) => {
+      const [repoHebrew, repoGreek] = results
       let changed = false
 
       if (repoHebrew && (repoHebrew !== hebrewRepoUrl)) {
