@@ -28,7 +28,7 @@ export default function Layout({
 
     if (enable !== feedbackDisplayed) {
       if (enable) {
-        setFeedback_(storeContext?.state)
+        setFeedback_(storeContext?.state) // add state data to send as feedback
       } else {
         setFeedback_(null)
       }

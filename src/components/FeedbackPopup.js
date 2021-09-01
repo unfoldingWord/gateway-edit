@@ -92,6 +92,8 @@ FeedbackPopup.propTypes = {
   onClose: PropTypes.func.isRequired,
   /** Optional, used to make sure draggable card is contained within workspace */
   mainScreenRef: PropTypes.object,
+  /** to open or close the feedback card */
+  open: PropTypes.bool,
 }
 
 export default FeedbackPopup

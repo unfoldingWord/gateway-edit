@@ -377,6 +377,12 @@ FeedbackCard.propTypes = {
   currentLayout: PropTypes.object,
   lastError: PropTypes.object,
   loggedInUser: PropTypes.string,
+  // to open or close the feedback card
+  open: PropTypes.bool,
+  // flag that feedback card needs to initialize
+  initCard: PropTypes.bool,
+  // callback for when card has initialized
+  setInitCard: PropTypes.func,
 }
 
 export default FeedbackCard
