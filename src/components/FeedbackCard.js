@@ -16,6 +16,8 @@ import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import PropTypes from 'prop-types'
 import useFeedbackData from '@hooks/useFeedbackData'
 
+// FeedbackCard.js renders feedback content that is placed in FeedbackPopup
+
 function Alert({ severity, message }) {
   const router = useRouter()
 
@@ -55,6 +57,10 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+const helperTextStyles = makeStyles(theme => ({
+  root: { color: 'red' },
+}))
+
 const FeedbackCard = ({
   owner,
   server,
@@ -73,6 +79,7 @@ const FeedbackCard = ({
   setInitCard,
 }) => {
   const classes = useStyles()
+  const helperTestClasses = helperTextStyles()
   const categories = ['Bug Report', 'Feedback']
   const emailEditRef = useRef(null)
   const { state, actions } = useFeedbackData(open)
@@ -286,6 +293,7 @@ const FeedbackCard = ({
             classes={{ root: classes.textField }}
             error={actions.showEmailError}
             helperText={state.showEmailError ?state. emailError : null}
+            FormHelperTextProps={{ classes: helperTestClasses }}
             inputRef={emailEditRef}
           />
           <FormControl variant='outlined' className={classes.formControl}>
