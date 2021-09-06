@@ -20,6 +20,7 @@ export default function ErrorPopup(
     closeButtonStr,
     closeButtonDefault,
     hideClose,
+    dimBackground,
   }) {
   function getActionButtons() {
     return <>
@@ -83,6 +84,7 @@ export default function ErrorPopup(
       title={title_}
       content={content}
       showRawContent={true}
+      dimBackground={dimBackground}
       id={id}
       onClose={onClose}
     />
@@ -97,6 +99,7 @@ ErrorPopup.defaultProps = {
   closeButtonStr: CANCEL,
   closeButtonDefault: true,
   hideClose: false,
+  dimBackground: true,
 }
 
 ErrorPopup.propTypes = {
@@ -128,4 +131,6 @@ ErrorPopup.propTypes = {
   closeButtonDefault: PropTypes.bool,
   /** if true, don't show close button */
   hideClose: PropTypes.bool,
+  /** turn off or on background dimming, default is on */
+  dimBackground: PropTypes.bool,
 }
