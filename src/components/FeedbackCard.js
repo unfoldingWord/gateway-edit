@@ -25,7 +25,11 @@ import useFeedbackData from '@hooks/useFeedbackData'
  * @return {JSX.Element}
  * @constructor
  */
-function Alert({ severity, message, onClick }) {
+function Alert({
+  severity,
+  message,
+  onClick,
+}) {
   return (
     <MuiAlert
       className='w-full mt-8 mb-4'
@@ -71,9 +75,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const helperTextStyles = makeStyles(theme => ({
-  root: { color: 'red' },
-}))
+const helperTextStyles = makeStyles(() => ({ root: { color: 'red' } }))
 
 const FeedbackCard = ({
   open,
@@ -399,6 +401,8 @@ FeedbackCard.propTypes = {
   initCard: PropTypes.bool,
   // callback for when card has initialized
   setInitCard: PropTypes.func,
+  // callback to close feedback popup
+  onClose: PropTypes.func,
 }
 
 export default FeedbackCard
