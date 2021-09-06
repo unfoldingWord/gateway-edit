@@ -42,6 +42,7 @@ const FeedbackPopup = ({
   }, [open])
 
   const feedbackParams = {
+    open,
     owner,
     server,
     branch,
@@ -56,7 +57,7 @@ const FeedbackPopup = ({
     loggedInUser,
     initCard,
     setInitCard,
-    open,
+    onClose,
   }
 
   return (

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -18,9 +17,15 @@ import useFeedbackData from '@hooks/useFeedbackData'
 
 // FeedbackCard.js renders feedback content that is placed in FeedbackPopup
 
-function Alert({ severity, message }) {
-  const router = useRouter()
-
+/**
+ * show message bar with alert
+ * @param {string} severity
+ * @param {string} message
+ * @param {function} onClick - action for OK button
+ * @return {JSX.Element}
+ * @constructor
+ */
+function Alert({ severity, message, onClick }) {
   return (
     <MuiAlert
       className='w-full mt-8 mb-4'
@@ -29,7 +34,7 @@ function Alert({ severity, message }) {
       severity={severity}
       action={
         severity === 'success' && (
-          <Button color='inherit' size='small' onClick={() => router.push('/')}>
+          <Button color='inherit' size='small' onClick={() => onClick && onClick()}>
             OK
           </Button>
         )
@@ -38,6 +43,15 @@ function Alert({ severity, message }) {
       {message}
     </MuiAlert>
   )
+}
+
+Alert.propTypes = {
+  // type of the alert, selects the color
+  severity: PropTypes.string.isRequired,
+  // text to display on alert
+  message: PropTypes.string.isRequired,
+  // optional action for button click
+  onClick: PropTypes.func,
 }
 
 const useStyles = makeStyles(theme => ({
@@ -62,6 +76,7 @@ const helperTextStyles = makeStyles(theme => ({
 }))
 
 const FeedbackCard = ({
+  open,
   owner,
   server,
   branch,
@@ -74,9 +89,9 @@ const FeedbackCard = ({
   currentLayout,
   lastError,
   loggedInUser,
-  open,
   initCard,
   setInitCard,
+  onClose,
 }) => {
   const classes = useStyles()
   const helperTestClasses = helperTextStyles()
@@ -348,6 +363,7 @@ const FeedbackCard = ({
                       state.category || 'feedback'
                     }.`
                 }
+                onClick={state.showSuccess ? onClose : null}
               />
             ) : null}
           </div>
