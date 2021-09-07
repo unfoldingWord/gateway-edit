@@ -48,36 +48,10 @@ function BibleReferenceComponent(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supportedBibles])
 
-  const actionsProp = {
-    ...actions,
-    // goToNextBook: () => {
-    //   checkUnsavedChanges().then(() => actions.goToNextBook()).catch(() => {})
-    // },
-    // goToBookChapterVerse: () => {
-    //   checkUnsavedChanges().then(() => actions.goToBookChapterVerse()).catch(() => {})
-    // },
-    // goToNextChapter: () => {
-    //   checkUnsavedChanges().then(() => actions.goToNextChapter()).catch(() => {})
-    // },
-    // goToNextVerse: () => {
-    //   checkUnsavedChanges().then(() => actions.goToNextVerse()).catch(() => {})
-    // },
-    // goToPrevBook: () => {
-    //   checkUnsavedChanges().then(() => actions.goToPrevBook()).catch(() => {})
-    // },
-    // goToPrevChapter: () => {
-    //   checkUnsavedChanges().then(() => actions.goToPrevChapter()).catch(() => {})
-    // },
-    // goToPrevVerse: () => {
-    //   checkUnsavedChanges().then(() => actions.goToPrevVerse()).catch(() => {})
-    // },
-  }
-  console.log({ actions })
-
   return (
     <BibleReference
       status={state}
-      actions={actionsProp}
+      actions={actions}
       inputProps={{ classes }}
       style={{ color: '#ffffff' }}
     />
