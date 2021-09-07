@@ -26,6 +26,7 @@ export default function Drawer({
   logout,
   onClose,
   resetResourceLayout,
+  showFeedback,
 }) {
   const router = useRouter()
 
@@ -35,8 +36,8 @@ export default function Drawer({
   }
 
   function onFeedbackClick() {
-    router.push('/feedback')
     onClose()
+    showFeedback && showFeedback()
   }
 
   function onLogout() {
@@ -202,4 +203,5 @@ Drawer.propTypes = {
   logout: PropTypes.func,
   onClose: PropTypes.func,
   resetResourceLayout: PropTypes.func,
+  showFeedback: PropTypes.func,
 }
