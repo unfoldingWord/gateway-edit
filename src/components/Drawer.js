@@ -27,6 +27,7 @@ export default function Drawer({
   onClose,
   resetResourceLayout,
   checkUnsavedChanges,
+  showFeedback,
 }) {
   const router = useRouter()
 
@@ -39,13 +40,9 @@ export default function Drawer({
     }
   }
 
-  async function onFeedbackClick() {
-    const okToContinue = await checkUnsavedChanges()
-
-    if (okToContinue) {
-      router.push('/feedback')
-      onClose()
-    }
+  function onFeedbackClick() {
+    onClose()
+    showFeedback && showFeedback()
   }
 
   async function onLogout() {
@@ -216,4 +213,5 @@ Drawer.propTypes = {
   onClose: PropTypes.func,
   resetResourceLayout: PropTypes.func,
   checkUnsavedChanges: PropTypes.func,
+  showFeedback: PropTypes.func,
 }

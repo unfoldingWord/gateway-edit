@@ -11,6 +11,7 @@ import Drawer from '@components/Drawer'
 import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
 import { StoreContext } from '@context/StoreContext'
+import FeedbackPopup from '@components/FeedbackPopup'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -36,6 +37,8 @@ export default function Header({
   title,
   resetResourceLayout,
   authentication: { user },
+  feedback,
+  setFeedback,
 }) {
   const classes = useStyles()
   const router = useRouter()
@@ -44,11 +47,23 @@ export default function Header({
   const { actions: { checkUnsavedChanges } } = useContext(StoreContext)
 
   const handleDrawerOpen = () => {
-    setOpen(true)
+    if (!drawerOpen) {
+      setOpen(true)
+    }
   }
 
   const handleDrawerClose = () => {
-    setOpen(false)
+    if (drawerOpen) {
+      setOpen(false)
+    }
+  }
+
+  const doShowFeedback = () => {
+    setFeedback && setFeedback(true)
+  }
+
+  const doHideFeedback = () => {
+    setFeedback && setFeedback(false)
   }
 
   return (
@@ -103,7 +118,17 @@ export default function Header({
         onClose={handleDrawerClose}
         checkUnsavedChanges={checkUnsavedChanges}
         resetResourceLayout={resetResourceLayout}
+        showFeedback={doShowFeedback}
       />
+      { feedback ?
+        <FeedbackPopup
+          open
+          {...feedback}
+          onClose={doHideFeedback}
+        />
+        :
+        null
+      }
     </header>
   )
 }
@@ -112,4 +137,7 @@ Header.propTypes = {
   title: PropTypes.string,
   authentication: PropTypes.object,
   resetResourceLayout: PropTypes.func,
+  storeContext: PropTypes.object,
+  feedback: PropTypes.bool,
+  setFeedback: PropTypes.func,
 }
