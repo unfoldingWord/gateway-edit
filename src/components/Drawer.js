@@ -30,25 +30,31 @@ export default function Drawer({
 }) {
   const router = useRouter()
 
-  function onSettingsClick() {
-    checkUnsavedChanges().then(() => {
+  async function onSettingsClick() {
+    const okToContinue = await checkUnsavedChanges()
+
+    if (okToContinue) {
       router.push('/settings')
       onClose()
-    })
+    }
   }
 
-  function onFeedbackClick() {
-    checkUnsavedChanges().then(() => {
+  async function onFeedbackClick() {
+    const okToContinue = await checkUnsavedChanges()
+
+    if (okToContinue) {
       router.push('/feedback')
       onClose()
-    })
+    }
   }
 
-  function onLogout() {
-    checkUnsavedChanges().then(() => {
+  async function onLogout() {
+    const okToContinue = await checkUnsavedChanges()
+
+    if (okToContinue) {
       logout()
       onClose()
-    })
+    }
   }
 
   function onResetResourceLayout() {

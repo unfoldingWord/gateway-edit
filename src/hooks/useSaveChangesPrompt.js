@@ -28,8 +28,6 @@ export default function useSaveChangesPrompt() {
   }
 
   const showSaveChangesPrompt = (resourceId, setContent) => new Promise((resolve, reject) => {
-    console.log({ savedChanges })
-
     if (savedChanges) {
       resolve()
     } else {
@@ -52,21 +50,15 @@ export default function useSaveChangesPrompt() {
     }
   })
 
-  const checkUnsavedChanges = () => new Promise((resolve, reject) => {
+  const checkUnsavedChanges = () => new Promise((resolve) => {
     if (savedChanges) {
-      console.log('savedChanges')
-      resolve()
+      resolve(true)
     } else {
       if (window.confirm(promptText)) {
-        console.log('window.confirm(promptText)')
-
         setUnsavedResources([])
-
-        resolve()
+        resolve(true)
       } else {
-        console.log('else')
-
-        reject()
+        resolve(false)
       }
     }
   })
