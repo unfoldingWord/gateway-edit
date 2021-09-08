@@ -1,7 +1,11 @@
 import { getResourceLink } from 'single-scripture-rcl'
 import { core } from 'scripture-resources-rcl'
-import { get } from 'gitea-react-toolkit'
+import { get, fetchRepositoryZipFile } from 'gitea-react-toolkit'
+// const GRT = require('gitea-react-toolkit')
+// console.log('GRT', GRT)
+
 import {
+  HTTP_CONFIG,
   HTTP_GET_MAX_WAIT_TIME,
   HTTP_LONG_CONFIG,
   LOADING_RESOURCE,
@@ -257,6 +261,46 @@ async function getLexiconEntryLowLevel({
 }
 
 /**
+ * initialize Lexicon - make sure we have loaded the lexicon into local storage
+ * @param {string} languageId
+ * @param {string} server
+ * @param {string} owner
+ * @param {string} branch
+ * @param {function} setLexConfig - for saving the lexicon's configuration
+ * @param {boolean} isNt
+ * @return {Promise<{owner, server, resourceId: string, httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
+ */
+export async function initLexicon(languageId, server, owner, branch, setLexConfig, isNt) {
+  let lexConfig = await getLexicon(languageId, HTTP_CONFIG, server, owner, true)
+  const OrigLang = isNt ? 'Greek' : 'Hebrew'
+
+  if (lexConfig) {
+    const resourceId = getLexiconResourceID(isNt)
+    const repository = `${languageId}_${resourceId}`
+    setLexConfig && setLexConfig(lexConfig)
+
+    await delay(2000)
+    const success = await fetchRepositoryZipFile({
+      username: owner,
+      repository,
+      branch,
+      options: {},
+    })
+    console.log(`${OrigLang} Lexicon fetch success`, success)
+    // const data = await getLexiconEntry(lexConfig, 1)
+    // console.log(`${OrigLang} Lexicon data`, data)
+  } else {
+    console.error(`WorkspaceContainer - failure to find ${OrigLang} Lexicon in ${languageId}`)
+  }
+  return lexConfig
+}
+
+function getLexiconResourceID(isNt) {
+  const resourceId = isNt ? 'ugl' : 'uhl'
+  return resourceId
+}
+
+/**
  * get the lexicon repo
  * @param {string} languageId
  * @param {object} httpConfig
@@ -272,7 +316,7 @@ export async function getLexicon(languageId, httpConfig, server, owner, isNt) {
     ...httpConfig,
     noCache: true,
   }
-  const resourceId = isNt ? 'ugl' : 'uhl'
+  const resourceId = getLexiconResourceID(isNt)
   let results
 
   try {
