@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { AuthenticationContext } from 'gitea-react-toolkit'
 import Header from '@components/Header'
@@ -17,11 +17,25 @@ export default function Layout({
 }) {
   const router = useRouter()
   const mainScreenRef = useRef(null)
+  const [feedback, setFeedback_] = useState(null) // contains feedback data
   const {
     state: authentication,
     component: authenticationComponent,
   } = useContext(AuthenticationContext)
 
+  function setFeedback(enable) {
+    const feedbackDisplayed = !!feedback
+
+    if (enable !== feedbackDisplayed) {
+      if (enable) {
+        setFeedback_(storeContext?.state) // add state data to send as feedback
+      } else {
+        setFeedback_(null)
+      }
+    }
+  }
+
+  const storeContext = useContext(StoreContext)
   const {
     state: {
       showAccountSetup,
@@ -35,7 +49,7 @@ export default function Layout({
       setServer,
       setMainScreenRef,
     },
-  } = useContext(StoreContext)
+  } = storeContext
 
   useEffect(() => {
     setMainScreenRef(mainScreenRef)
@@ -68,6 +82,8 @@ export default function Layout({
         title={title}
         authentication={authentication || {}}
         resetResourceLayout={() => setCurrentLayout(null)}
+        feedback={feedback}
+        setFeedback={setFeedback}
       />
       <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
         {showChildren || (authentication && !showAccountSetup) ? (
