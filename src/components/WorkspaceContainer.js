@@ -48,6 +48,7 @@ import {
   HTTP_LONG_CONFIG,
 } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import useLexicon from '@hooks/useLexicon'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -120,6 +121,12 @@ function WorkspaceContainer() {
     languageId,
     onResourceError,
     httpConfig: HTTP_CONFIG,
+  })
+
+  const lexData = useLexicon({
+    bookId,
+    greekLexConfig,
+    hebrewLexConfig,
   })
 
   /**

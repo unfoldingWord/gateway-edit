@@ -1,9 +1,6 @@
 import { getResourceLink } from 'single-scripture-rcl'
 import { core } from 'scripture-resources-rcl'
-import { get, fetchRepositoryZipFile } from 'gitea-react-toolkit'
-// const GRT = require('gitea-react-toolkit')
-// console.log('GRT', GRT)
-
+import { get } from 'gitea-react-toolkit'
 import {
   HTTP_CONFIG,
   HTTP_GET_MAX_WAIT_TIME,
@@ -265,28 +262,29 @@ async function getLexiconEntryLowLevel({
  * @param {string} languageId
  * @param {string} server
  * @param {string} owner
- * @param {string} branch
+ * @param {string} ref
  * @param {function} setLexConfig - for saving the lexicon's configuration
  * @param {boolean} isNt
  * @return {Promise<{owner, server, resourceId: string, httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
  */
-export async function initLexicon(languageId, server, owner, branch, setLexConfig, isNt) {
-  let lexConfig = await getLexicon(languageId, HTTP_CONFIG, server, owner, true)
+export async function initLexicon(languageId, server, owner, ref, setLexConfig, isNt) {
+  let lexConfig = await getLexicon(languageId, HTTP_CONFIG, server, owner, ref, true)
   const OrigLang = isNt ? 'Greek' : 'Hebrew'
 
   if (lexConfig) {
     const resourceId = getLexiconResourceID(isNt)
     const repository = `${languageId}_${resourceId}`
     setLexConfig && setLexConfig(lexConfig)
+    console.log(`initLexicon() found ${OrigLang} Lexicon fetch success`, repository)
 
-    await delay(2000)
-    const success = await fetchRepositoryZipFile({
-      username: owner,
-      repository,
-      branch,
-      options: {},
-    })
-    console.log(`${OrigLang} Lexicon fetch success`, success)
+    // await delay(2000)
+    // const success = await fetchRepositoryZipFile({
+    //   username: owner,
+    //   repository,
+    //   branch: ref,
+    //   options: {},
+    // })
+    // console.log(`${OrigLang} Lexicon fetch success`, success)
     // const data = await getLexiconEntry(lexConfig, 1)
     // console.log(`${OrigLang} Lexicon data`, data)
   } else {
@@ -306,10 +304,11 @@ function getLexiconResourceID(isNt) {
  * @param {object} httpConfig
  * @param {string} server
  * @param {string} owner
+ * @param {string} ref - branch or tag
  * @param {boolean} isNt
  * @return {Promise<{owner, server, resourceId: (string), httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
  */
-export async function getLexicon(languageId, httpConfig, server, owner, isNt) {
+export async function getLexicon(languageId, httpConfig, server, owner, ref, isNt) {
   // TODO: add searching for best lexicon
   const config_ = {
     server,
@@ -326,6 +325,7 @@ export async function getLexicon(languageId, httpConfig, server, owner, isNt) {
       resourceId: resourceId,
       config: config_,
       fullResponse: true,
+      ref,
     })
   } catch (e) {
     console.log(`getLexicon failed ${languageId}_${resourceId}: `, e)
@@ -334,24 +334,28 @@ export async function getLexicon(languageId, httpConfig, server, owner, isNt) {
   console.log('manifest', results?.manifest)
 
   if (results?.manifest) {
-    const lexicon = results.manifest.projects.find(item => (item.identifier === resourceId))
-    console.log(lexicon)
-    let lexiconPath = lexicon?.path
+    const lexicon = results?.manifest?.projects?.find(item => (item.identifier === resourceId))
+    console.log('lexicon', lexicon)
 
-    if (lexiconPath) {
-      if (lexiconPath.substr(0,2) === './') {
-        lexiconPath = lexiconPath.substr(2)
+    if (lexicon) {
+      let lexiconPath = lexicon?.path
+
+      if (lexiconPath) {
+        if (lexiconPath.substr(0, 2) === './') {
+          lexiconPath = lexiconPath.substr(2)
+        }
+        results.lexiconPath = lexiconPath
+        const lexConfig = {
+          httpConfig: HTTP_LONG_CONFIG,
+          server,
+          owner,
+          languageId,
+          resourceId,
+          lexiconPath,
+          ref,
+        }
+        return lexConfig
       }
-      results.lexiconPath = lexiconPath
-      const lexConfig = {
-        httpConfig: HTTP_LONG_CONFIG,
-        server,
-        owner,
-        languageId,
-        resourceId,
-        lexiconPath,
-      }
-      return lexConfig
     }
   }
 
