@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useRepository } from 'gitea-react-toolkit'
 import { isNT } from '@common/BooksOfTheBible'
+import { delay } from '@utils/resources'
+import { initLexicon } from '@utils/lexiconHelpers'
 
 /**
  * manage state for feedbackCard
@@ -9,18 +11,25 @@ import { isNT } from '@common/BooksOfTheBible'
  */
 export default function useLexicon({
   bookId,
-  greekLexConfig,
-  hebrewLexConfig,
+  languageId,
+  server,
 }) {
   const [repository, setRepository] = useState(null)
   const [fetchingLex, setFetchingLex] = useState(false)
+  const [greekLexConfig, setGreekLexConfig] = useState(null)
+  const [hebrewLexConfig, setHebrewLexConfig] = useState(null)
 
-  const olLexConfig = isNT(bookId) ? greekLexConfig : hebrewLexConfig
-  const lexRepoFullName = olLexConfig ? `${olLexConfig.owner}/${olLexConfig.languageId}_${olLexConfig.resourceId}` : null
+  const isNT_ = isNT(bookId)
+  console.log(`StoreContext: useRepository isNT_`, isNT_)
+
+  const origlangLexConfig = isNT_ ? greekLexConfig : hebrewLexConfig
+  const lexRepoFullName = origlangLexConfig ?
+    `${origlangLexConfig.owner}/${origlangLexConfig.languageId}_${origlangLexConfig.resourceId}`
+    : null
   const lexRepoParams = {
     full_name: lexRepoFullName,
-    branch: olLexConfig?.ref,
-    config: olLexConfig,
+    branch: origlangLexConfig?.ref,
+    config: origlangLexConfig,
     repository,
     onRepository: onRepository,
   }
@@ -36,10 +45,15 @@ export default function useLexicon({
     }
   }
 
+  async function fetchLexiconFile(filename) {
+    const filePath = `${origlangLexConfig.lexiconPath}/${filename}`
+    const file = await results?.actions?.fileFromZip(filePath)
+    return file
+  }
+
   async function getLexiconEntry(strongs) {
     const filename = `${strongs}.json`
-    const filePath = `${olLexConfig.lexiconPath}/${filename}`
-    const file = await results?.actions?.fileFromZip(filePath)
+    const file = await fetchLexiconFile(filename);
     return file
   }
 
@@ -48,6 +62,21 @@ export default function useLexicon({
     const file = await getLexiconEntry(strongs)
     return !!file
   }
+
+  useEffect(() => {
+    async function getLexicons() {
+      if (languageId && server) {
+        const LexOwner = 'test_org'
+        const branch = 'master'
+        await delay(2000) // wait for other resources to load
+        await initLexicon(languageId, server, LexOwner, branch, setGreekLexConfig, true)
+        await delay(1000) // wait for other resources to load
+        await initLexicon(languageId, server, LexOwner, branch, setHebrewLexConfig, false)
+      }
+    }
+
+    getLexicons()
+  }, [languageId, server])
 
   useEffect(() => {
     const getLexZip = async () => {
@@ -63,7 +92,7 @@ export default function useLexicon({
           // verify that zip file is loaded
           repoReadable = await isLexiconCached()
 
-          if (repoReadable) {
+          if (!repoReadable) {
             console.warn(`useLexicon: could not load lexicon zip`)
           }
         }
@@ -76,7 +105,16 @@ export default function useLexicon({
   }, [repository])
 
   return {
-    state: { repository },
-    actions: { getLexiconEntry },
+    state: {
+      repository,
+      greekLexConfig,
+      hebrewLexConfig,
+      origlangLexConfig,
+    },
+    actions: {
+      getLexiconEntry,
+      setGreekLexConfig,
+      setHebrewLexConfig,
+    },
   }
 }

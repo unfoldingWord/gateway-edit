@@ -58,8 +58,6 @@ export default function StoreContextProvider(props) {
   const [hebrewRepoUrl, setHebrewRepoUrl] = useLocalStorage('hebrewRepoUrl', null)
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
   const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
-  const [greekLexConfig, setGreekLexConfig] = useState(null)
-  const [hebrewLexConfig, setHebrewLexConfig] = useState(null)
 
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)
@@ -106,8 +104,6 @@ export default function StoreContextProvider(props) {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
-      greekLexConfig,
-      hebrewLexConfig,
     },
     actions: {
       logout,
@@ -127,8 +123,6 @@ export default function StoreContextProvider(props) {
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setMainScreenRef,
-      setGreekLexConfig,
-      setHebrewLexConfig,
     },
   }
 

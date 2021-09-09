@@ -23,12 +23,8 @@ import {
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
 import {
-  delay,
   getLatestBibleRepo,
-  getLexicon,
-  getLexiconEntry,
   getResourceBibles,
-  initLexicon,
 } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { isNT } from '@common/BooksOfTheBible'
@@ -36,17 +32,12 @@ import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
   addNetworkDisconnectError,
-  doFetch,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import {
-  HTTP_CONFIG,
-  HTTP_GET_MAX_WAIT_TIME,
-  HTTP_LONG_CONFIG,
-} from '@common/constants'
+import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import useLexicon from '@hooks/useLexicon'
 
@@ -90,8 +81,6 @@ function WorkspaceContainer() {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
-      greekLexConfig,
-      hebrewLexConfig,
     },
     actions: {
       logout,
@@ -103,8 +92,6 @@ function WorkspaceContainer() {
       updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
-      setGreekLexConfig,
-      setHebrewLexConfig,
     },
   } = useContext(StoreContext)
 
@@ -125,8 +112,8 @@ function WorkspaceContainer() {
 
   const lexData = useLexicon({
     bookId,
-    greekLexConfig,
-    hebrewLexConfig,
+    languageId,
+    server,
   })
 
   /**
@@ -222,8 +209,6 @@ function WorkspaceContainer() {
     onResourceError,
     loggedInUser,
     authentication,
-    greekLexConfig,
-    hebrewLexConfig,
   }
 
   useEffect(() => {
@@ -257,19 +242,6 @@ function WorkspaceContainer() {
       })
     }// eslint-disable-next-line
   }, [owner, languageId, appRef, server, loggedInUser])
-
-  useEffect(() => {
-    async function getLexicons() {
-      const LexOwner = 'test_org'
-      const branch = 'master'
-      await delay(2000) // wait for other resources to load
-      await initLexicon(languageId, server, LexOwner, branch, setGreekLexConfig, true)
-      await delay(1000) // wait for other resources to load
-      await initLexicon(languageId, server, LexOwner, branch, setHebrewLexConfig, false)
-    }
-
-    getLexicons()
-  }, [])
 
   useEffect(() => {
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
