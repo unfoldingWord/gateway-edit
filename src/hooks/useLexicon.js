@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import * as isEqual from 'deep-equal';
+import * as isEqual from 'deep-equal'
 import { getFilesFromRepoZip, useRepository } from 'gitea-react-toolkit'
 import { isNT } from '@common/BooksOfTheBible'
 import { delay } from '@utils/resources'
@@ -8,21 +8,17 @@ import {
   getStrongsParts,
   getWords,
   initLexicon,
-  lexiconEntryIdFromStrongs,
+  lexiconEntryIdFromStrongs, lexiconIdFromStrongs,
   saveToLexiconStore,
 } from '@utils/lexiconHelpers'
 
-/**
- * manage state for feedbackCard
- * @param {boolean} open - true when card is displayed
- * @return {{state: {setEmailError: (value: unknown) => void, submitting: boolean, showError: boolean, emailError: unknown, showEmailError: boolean, name: string, category: string, message: string, networkError: unknown, showSuccess: boolean, email: string}, actions: {setName: (value: (((prevState: string) => string) | string)) => void, setSubmitting: (value: (((prevState: boolean) => boolean) | boolean)) => void, doUpdateBounds: doUpdateBounds, setEmail: (value: (((prevState: string) => string) | string)) => void, setCategory: (value: (((prevState: string) => string) | string)) => void, setShowError: (value: (((prevState: boolean) => boolean) | boolean)) => void, setShowSuccess: (value: (((prevState: boolean) => boolean) | boolean)) => void, setShowEmailError: (value: (((prevState: boolean) => boolean) | boolean)) => void, setMessage: (value: (((prevState: string) => string) | string)) => void, setNetworkError: (value: unknown) => void}}}
- */
 export default function useLexicon({
   bookId,
   languageId,
   server,
 }) {
   const [repository, setRepository] = useState(null)
+  const [lexCacheInit, setLexCacheInit] = useState(false)
   const [lexiconWords, setLexiconWords] = useState(null)
   const [fetchingLex, setFetchingLex] = useState(false)
   const [fetchingWords, setFetchingWords] = useState(false)
@@ -42,17 +38,23 @@ export default function useLexicon({
     repository,
     onRepository: onRepository,
   }
-  console.log(`StoreContext: useRepository parms`, lexRepoParams)
   const lexiconProps = useRepository(lexRepoParams)
+
+  useEffect(() => {
+    console.log(`useLexicon: bible ${bookId} changed testament ${isNT_}`)
+    setRepository(null) // clear lexicon repo so it's reloaded after testament change
+    setStrongsForVerse(null)
+    setLexiconWords(null)
+    setLexCacheInit(false)
+  }, [isNT_])
 
   /**
    * callback function for when useRepository has loaded repo
    * @param repo
    */
   function onRepository(repo) {
-    console.log(`useLexicon.onRepository():`, repo)
-
     if ( repo?.branch && (repo?.html_url !== repository?.html_url)) {
+      console.log(`useLexicon.onRepository():`, repo)
       setRepository(repo)
     }
   }
@@ -77,36 +79,46 @@ export default function useLexicon({
     await saveToLexiconStore(getLexiconCachePath(), newLexiconWords)
   }
 
-  async function fetchLexiconsForVerse(verseObjects, lexiconWords_ = lexiconWords) {
-    console.log(`fetchLexiconsForVerse`, verseObjects)
+  async function fetchLexiconsForVerse(verseObjects, languageId) {
+    if (origlangLexConfig?.origLangId !== languageId) {
+      return false
+    }
+    console.log(`fetchLexiconsForVerse; language ${languageId} same as ${origlangLexConfig?.origLangId}`, verseObjects)
 
-    if (verseObjects?.length) {
+    if (origlangLexConfig && verseObjects?.length && !fetchingWords) {
       const words = getWords(verseObjects)
 
       if (words?.length) {
-        const strongs = words.map(word => (word.strongs || word.strong))
-        await fetchLexiconsForStrongs(strongs, lexiconWords_)
+        const strongs = words.map(word => (word.strongs || word.strong)).filter(word => word)
+
+        if (strongs?.length && !isEqual(strongs, strongsForVerse)) {
+          if (lexiconWords && Object.keys(lexiconWords).length) {
+            console.log(`fetchLexiconsForVerse`, verseObjects)
+            await fetchLexiconsForStrongs(strongs)
+          } else { // lexicon words not loaded, save strongs list for later
+            setStrongsForVerse(strongs)
+          }
+        }
       }
     }
   }
 
   /**
    * used to preload lexicon data from list of strongs numbers (useful to do as verse is loaded)
-   * @param {array[string]} strongs
-   * @param {object} lexiconWords_
+   * @param {array} strongs
    * @return {Promise<void>}
    */
-  async function fetchLexiconsForStrongs(strongs, lexiconWords_ = lexiconWords) {
-    if (strongs && strongs.length && !fetchingWords && origlangLexConfig && !isEqual(strongs, strongsForVerse)) {
+  async function fetchLexiconsForStrongs(strongs) {
+    if (strongs?.length && !fetchingWords && origlangLexConfig) {
       setFetchingWords(true)
-      const newLexiconWords = { ...lexiconWords_ }
+      let newLexiconWords = await fetchFromLexiconStore(getLexiconCachePath())
+      newLexiconWords = newLexiconWords || {}
       const files = await getFilesFromRepoZip({
         owner: origlangLexConfig.owner,
         repo: lexRepoName,
         branch: origlangLexConfig.ref,
         config: { server: origlangLexConfig.server },
       })
-      console.log('files', files)
       const fileNames = Object.keys(files)
       let modified = false
 
@@ -120,15 +132,20 @@ export default function useLexicon({
           for (let i = 0, len = parts.length; i < len; i++) {
             const part = parts[i]
             const strong = lexiconEntryIdFromStrongs(part)
+            const lexiconId = lexiconIdFromStrongs(part)
 
-            if (!newLexiconWords[strong]) { // if not found, lookup
+            if ((lexiconId !== origlangLexConfig.resourceId)) { // ignore word not in this lexicon
+              console.log(`skipping ${part}`)
+            } else if (!newLexiconWords[strong]) { // if not found, lookup
               const fullPath = `${path}/${strong}.json`
               const fileObject = files[fullPath]
 
               if (fileObject) { // if strong number found
                 // eslint-disable-next-line no-await-in-loop
                 const fileData = await fileObject.async('string')
-                newLexiconWords[strong] = JSON.parse(fileData)
+                const lexicon = JSON.parse(fileData)
+                lexicon.repo = lexRepoName
+                newLexiconWords[strong] = lexicon
                 modified = true
               }
             }
@@ -138,8 +155,12 @@ export default function useLexicon({
 
       if (modified) {
         await updateLexiconWords(newLexiconWords)
+        console.log('fetchLexiconsForStrongs: lexicon words updated, length', Object.keys(newLexiconWords).length)
+      } else {
+        setLexiconWords(newLexiconWords)
       }
 
+      console.log('fetchLexiconsForStrongs: new word list length', strongs?.length)
       setStrongsForVerse(strongs)
       setFetchingWords(false)
     }
@@ -183,11 +204,6 @@ export default function useLexicon({
     getLexicons()
   }, [languageId, server])
 
-  useEffect(() => {
-    console.log(`useLexicon: bible ${bookId} changed testament ${isNT_}`)
-    setRepository(null) // clear lexicon repo so it's reloaded after testament change
-  }, [isNT_])
-
   function getLexiconCachePath() {
     const lexiconCachePath = `${origlangLexConfig.server}/${origlangLexConfig.owner}/${origlangLexConfig.languageId}_${origlangLexConfig.resourceId}/${origlangLexConfig.ref}`
     return lexiconCachePath
@@ -195,18 +211,19 @@ export default function useLexicon({
 
   useEffect(() => {
     const loadLexiconData = async () => {
-      if (!fetchingLex && repository && lexiconProps?.actions?.storeZip && origlangLexConfig) {
+      if (!fetchingLex && repository && lexiconProps?.actions?.storeZip) {
         setFetchingLex(true)
         let lexiconWords = await fetchFromLexiconStore(getLexiconCachePath())
 
         if (!lexiconWords) {
           lexiconWords = {}
         }
+        console.log(`useLexicon.loadLexiconData: ${getLexiconCachePath()} cached lexicon words length`, Object.keys(lexiconWords).length)
 
         let repoReadable = await isLexiconCached()
 
         if (repoReadable) {
-          console.log(`useLexicon: lexicon zip already loaded`)
+          console.log(`useLexicon.loadLexiconData: lexicon zip already loaded`)
         } else {
           // fetch repo zip file and store in index DB
           await lexiconProps?.actions?.storeZip()
@@ -214,17 +231,13 @@ export default function useLexicon({
           repoReadable = await isLexiconCached()
 
           if (!repoReadable) {
-            console.warn(`useLexicon: could not load lexicon zip`)
+            console.warn(`useLexicon.loadLexiconData: could not load lexicon zip`)
           }
         }
 
         if (repoReadable) {
-          if (strongsForVerse) {
-            await fetchLexiconsForStrongs(strongsForVerse, lexiconWords)
-          } else {
-            // await fetchLexiconsForStrongs(['G10', 'G20', 'G30'], lexiconWords) // TODO: remove
-            await updateLexiconWords(lexiconWords)
-          }
+          await updateLexiconWords(lexiconWords)
+          setLexCacheInit(true)
         }
 
         setFetchingLex(false)
@@ -233,6 +246,21 @@ export default function useLexicon({
 
     loadLexiconData()
   }, [repository])
+
+  useEffect(() => {
+    const updateWords = async () => {
+      if (lexCacheInit) {
+        console.log('init finished')
+
+        if (strongsForVerse) {
+          await fetchLexiconsForStrongs(strongsForVerse)
+        }
+      }
+    }
+
+    updateWords()
+  }, [lexCacheInit])
+
 
   return {
     state: {

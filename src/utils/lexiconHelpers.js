@@ -257,6 +257,7 @@ export async function getLexicon(languageId, httpConfig, server, owner, ref, isN
     ...httpConfig,
     noCache: true,
   }
+  const origLangId = isNt ? 'el-x-koine' : 'hbo'
   const resourceId = getLexiconResourceID(isNt)
   let results
 
@@ -295,6 +296,7 @@ export async function getLexicon(languageId, httpConfig, server, owner, ref, isN
           resourceId,
           lexiconPath,
           ref,
+          origLangId,
         }
         return lexConfig
       }
@@ -330,7 +332,7 @@ export const getWords = (verseObjects) => {
     if (verseObject.type === 'milestone') {
       if (verseObject.children) {
         // Handle children of type milestone
-        const subWords = (verseObject.children)
+        const subWords = getWords(verseObject.children)
         words = words.concat(subWords)
       }
     }
