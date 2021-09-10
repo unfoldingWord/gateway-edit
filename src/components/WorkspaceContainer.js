@@ -81,6 +81,7 @@ function WorkspaceContainer() {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
+      savedChanges,
     },
     actions: {
       logout,
@@ -92,6 +93,8 @@ function WorkspaceContainer() {
       updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
+      setSavedChanges,
+      showSaveChangesPrompt,
     },
   } = useContext(StoreContext)
 
@@ -470,6 +473,8 @@ function WorkspaceContainer() {
             updateTaDetails={updateTaDetails}
             loggedInUser={loggedInUser}
             authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationAcademy'
@@ -481,6 +486,8 @@ function WorkspaceContainer() {
             errorMessage={taArticle ? null : 'No article is specified in the current note.'}
             loggedInUser={loggedInUser}
             authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationWords List'
@@ -497,6 +504,8 @@ function WorkspaceContainer() {
             hideMarkdownToggle
             loggedInUser={loggedInUser}
             authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationWords Article'
@@ -511,6 +520,8 @@ function WorkspaceContainer() {
             disableFilters
             loggedInUser={loggedInUser}
             authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationQuestions'
@@ -523,6 +534,8 @@ function WorkspaceContainer() {
             disableFilters
             loggedInUser={loggedInUser}
             authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
         </Workspace>
       </SelectionsContextProvider>
