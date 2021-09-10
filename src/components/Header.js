@@ -10,6 +10,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@components/Drawer'
 import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
+import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
@@ -42,8 +43,8 @@ export default function Header({
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
-
   const { actions: { logout } } = useContext(AuthContext)
+  const { actions: { checkUnsavedChanges } } = useContext(StoreContext)
 
   const handleDrawerOpen = () => {
     if (!drawerOpen) {
@@ -115,10 +116,11 @@ export default function Header({
         open={drawerOpen}
         onOpen={handleDrawerOpen}
         onClose={handleDrawerClose}
+        checkUnsavedChanges={checkUnsavedChanges}
         resetResourceLayout={resetResourceLayout}
         showFeedback={doShowFeedback}
       />
-      { !!feedback ?
+      { feedback ?
         <FeedbackPopup
           open
           {...feedback}
@@ -136,4 +138,6 @@ Header.propTypes = {
   authentication: PropTypes.object,
   resetResourceLayout: PropTypes.func,
   storeContext: PropTypes.object,
+  feedback: PropTypes.bool,
+  setFeedback: PropTypes.func,
 }

@@ -962,10 +962,10 @@ base64-js@^1.0.2:
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
-bible-reference-rcl@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-0.5.0.tgz#1c03192ccd26da77c80d80d8348cb7574a7e8610"
-  integrity sha512-0orw9Xof6pbgOYigu9iZisPSa9t68har9PnFxXSh1MsyEZA/bNVFG/O5sHUh8sxpOpt+konc32CKNTKbaIJJPA==
+bible-reference-rcl@^1.0.0-alpha.2:
+  version "1.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.0.0-alpha.2.tgz#98e2bf3fde258ea7f869241878143ac8eeffeeb8"
+  integrity sha512-GYITJe+9e6MW8vfSlE2CSFvSACwn2KkCIFeusTrJf4u+F8esvrfk3d17pYhNjzvVklwK4WHoNdhygBdfBvWUzA==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"
@@ -5256,10 +5256,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^3.0.0-rc1:
-  version "3.0.0-rc1"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.0.0-rc1.tgz#ef637b65d4c6479f462eb45b89eb7b09badbdc41"
-  integrity sha512-RljHd5VCybb3G5u34Y/+7058npmByWbAY5ox1WihLpemsyc+/k5LjrQniH1Q3yDG+th0o7coxGiGKeB8IlH2NQ==
+translation-helps-rcl@^3.1.0-rc0:
+  version "3.1.0-rc1"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.1.0-rc1.tgz#589f613688903e193ee5b18dc678366c84c9af31"
+  integrity sha512-++1GoNoXrG6zXwVZNzqmWUrIqHelZZCh8wsW6Zlp6z8MRfmiHPZz/n7GftrQXTj/k3cYFJrBtwV0+HFsBlf3wg==
   dependencies:
     axios "^0.21.1"
     deep-equal "^2.0.5"
