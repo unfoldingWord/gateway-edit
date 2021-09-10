@@ -313,6 +313,32 @@ export async function fetchFromLexiconStore(lexiconCachePath) {
   return data
 }
 
+export const getWords = (verseObjects) => {
+  let words = []
+
+  if (! verseObjects || !verseObjects.length) {
+    return null
+  }
+
+  for (let i = 0, l = verseObjects.length; i < l; i++) {
+    const verseObject = verseObjects[i]
+
+    if (verseObject.type === 'word') {
+      words.push(verseObject)
+    }
+
+    if (verseObject.type === 'milestone') {
+      if (verseObject.children) {
+        // Handle children of type milestone
+        const subWords = (verseObject.children)
+        words = words.concat(subWords)
+      }
+    }
+  }
+
+  return words
+}
+
 export function delay(ms) {
   return new Promise((resolve) =>
     setTimeout(resolve, ms),

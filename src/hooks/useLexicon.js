@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import * as isEqual from 'deep-equal';
 import { getFilesFromRepoZip, useRepository } from 'gitea-react-toolkit'
 import { isNT } from '@common/BooksOfTheBible'
 import { delay } from '@utils/resources'
 import {
   fetchFromLexiconStore,
   getStrongsParts,
+  getWords,
   initLexicon,
   lexiconEntryIdFromStrongs,
   saveToLexiconStore,
@@ -23,6 +25,7 @@ export default function useLexicon({
   const [repository, setRepository] = useState(null)
   const [lexiconWords, setLexiconWords] = useState(null)
   const [fetchingLex, setFetchingLex] = useState(false)
+  const [fetchingWords, setFetchingWords] = useState(false)
   const [greekLexConfig, setGreekLexConfig] = useState(null)
   const [hebrewLexConfig, setHebrewLexConfig] = useState(null)
   const [strongsForVerse, setStrongsForVerse] = useState(null)
@@ -74,15 +77,29 @@ export default function useLexicon({
     await saveToLexiconStore(getLexiconCachePath(), newLexiconWords)
   }
 
+  async function fetchLexiconsForVerse(verseObjects, lexiconWords_ = lexiconWords) {
+    console.log(`fetchLexiconsForVerse`, verseObjects)
+
+    if (verseObjects?.length) {
+      const words = getWords(verseObjects)
+
+      if (words?.length) {
+        const strongs = words.map(word => (word.strongs || word.strong))
+        await fetchLexiconsForStrongs(strongs, lexiconWords_)
+      }
+    }
+  }
+
   /**
    * used to preload lexicon data from list of strongs numbers (useful to do as verse is loaded)
    * @param {array[string]} strongs
-   * @param {object} lexicon_
+   * @param {object} lexiconWords_
    * @return {Promise<void>}
    */
-  async function fetchLexiconsForStrongs(strongs, lexicon_ = lexiconWords) {
-    if (strongs && strongs.length) {
-      const newLexiconWords = { ...lexicon_ }
+  async function fetchLexiconsForStrongs(strongs, lexiconWords_ = lexiconWords) {
+    if (strongs && strongs.length && !fetchingWords && origlangLexConfig && !isEqual(strongs, strongsForVerse)) {
+      setFetchingWords(true)
+      const newLexiconWords = { ...lexiconWords_ }
       const files = await getFilesFromRepoZip({
         owner: origlangLexConfig.owner,
         repo: lexRepoName,
@@ -124,6 +141,7 @@ export default function useLexicon({
       }
 
       setStrongsForVerse(strongs)
+      setFetchingWords(false)
     }
   }
 
@@ -176,7 +194,7 @@ export default function useLexicon({
   }
 
   useEffect(() => {
-    const getLexZip = async () => {
+    const loadLexiconData = async () => {
       if (!fetchingLex && repository && lexiconProps?.actions?.storeZip && origlangLexConfig) {
         setFetchingLex(true)
         let lexiconWords = await fetchFromLexiconStore(getLexiconCachePath())
@@ -213,7 +231,7 @@ export default function useLexicon({
       }
     }
 
-    getLexZip()
+    loadLexiconData()
   }, [repository])
 
   return {
@@ -225,6 +243,7 @@ export default function useLexicon({
     },
     actions: {
       fetchLexiconsForStrongs,
+      fetchLexiconsForVerse,
       getLexiconData,
       setGreekLexConfig,
       setHebrewLexConfig,
