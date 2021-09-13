@@ -40,6 +40,7 @@ import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import useLexicon from '@hooks/useLexicon'
+import { translate } from '@utils/lexiconHelpers'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -197,6 +198,7 @@ function WorkspaceContainer() {
     hebrewRepoUrl,
     fetchLexiconsForVerse,
     getLexiconData,
+    translate,
   }
 
   const commonResourceCardConfigs = {

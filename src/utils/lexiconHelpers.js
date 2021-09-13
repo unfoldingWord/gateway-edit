@@ -1,202 +1,23 @@
 import localforage from 'localforage'
 import { core } from 'scripture-resources-rcl'
-import { get } from 'gitea-react-toolkit'
 import {
   HTTP_CONFIG,
   HTTP_LONG_CONFIG,
 } from '@common/constants'
-import { getResponseData } from 'scripture-resources-rcl/dist/core/resources'
 
-const ZERO_WIDTH_SPACE = '\u200B'
-const ZERO_WIDTH_JOINER = '\u2060'
+// TRICKY - importing from direct path gets around exported css styles which crash nextjs
+import {
+  getStrongsParts,
+  lexiconEntryIdFromStrongs,
+  lexiconIdFromStrongs,
+} from 'tc-ui-toolkit/lib/ScripturePane/helpers/lexiconHelpers'
+import translation from '../common/translation.json'
 
-// caches lexicons
+// caches lexicons in indexDB
 const lexiconStore = localforage.createInstance({
   driver: [localforage.INDEXEDDB],
   name: 'lexicon-store',
 })
-
-/**
- * splits a word by zero width spaces
- * @param {String} word - compound word to split
- * @return {Array} split parts
- */
-export const getWordParts = (word) => {
-  if (word) {
-    let wordParts = [word]
-
-    if (word.includes(ZERO_WIDTH_JOINER)) {
-      wordParts = word.split(ZERO_WIDTH_JOINER)
-    } else if (word.includes(ZERO_WIDTH_SPACE)) {
-      wordParts = word.split(ZERO_WIDTH_SPACE)
-    }
-    return wordParts
-  }
-  return []
-}
-
-/**
- * checks for formats such as `c:d:H0776` and splits into parts
- * @param {String} strong - the strong's number to get the entryIds from
- * @return {Array} - list of parts
- */
-export const getStrongsParts = (strong) => {
-  if (strong) {
-    const parts = strong.split(':')
-    return parts
-  }
-  return []
-}
-
-/**
- * searches through the parts to see if there is a valid strongs number
- * @param strong
- * @return {boolean}
- */
-export const containsValidStrongsNumber = (strong) => {
-  const parts = getStrongsParts(strong)
-
-  for (let i = 0, len = parts.length; i < len; i++) {
-    const entryId = lexiconEntryIdFromStrongs(parts[i])
-
-    if (entryId) {
-      return true
-    }
-  }
-  return false
-}
-
-/**
- * @description - Get the lexiconIds from the strong's number
- * @param {String} strong - the strong's number to get the entryIds from
- * @return {String} - the id of the lexicon
- */
-export const lexiconIdFromStrongs = (strong) => {
-  const lexiconId = (strong && strong.startsWith('G')) ? 'ugl': 'uhl'
-  return lexiconId
-}
-
-/**
- * @description - Get the lexicon entryIds from the strong's number
- * @param {String} strong - the strong's number to get the entryIds from
- * @return {int} - the number of the entry
- */
-export const lexiconEntryIdFromStrongs = (strong) => {
-  if (strong) {
-    let strongsCode = strong.replace(/\w/, '')
-
-    if (!strong.startsWith('H')) { // Greek has an extra 0 at end
-      strongsCode = strongsCode.slice(0, -1)
-    }
-
-    const entryId = (strongsCode && parseInt(strongsCode)) || 0
-    return entryId
-  }
-  return 0
-}
-
-/**
- * looks up the strongs numbers for each part of a multipart strongs
- * @param {String} strong
- * @param {Function} getLexiconData
- * @return {*}
- */
-export const lookupStrongsNumbers = (strong, getLexiconData) => {
-  let lexiconData = {}
-  const parts = getStrongsParts(strong)
-
-  for (let i = 0, len = parts.length; i < len; i++) {
-    const part = parts[i]
-    const entryId = lexiconEntryIdFromStrongs(part)
-
-    if (entryId) {
-      const lexiconId = lexiconIdFromStrongs(part)
-      const lexiconData_ = getLexiconData(lexiconId, entryId)
-
-      if (lexiconData_) {
-        if (lexiconData && lexiconData_[lexiconId] && lexiconData_[lexiconId][entryId]) { // if already exists combine data
-          if (!lexiconData[lexiconId]) {
-            lexiconData[lexiconId] = {}
-          }
-          lexiconData[lexiconId][entryId] = lexiconData_[lexiconId][entryId]
-        }
-      }
-    }
-  }
-  return lexiconData
-}
-
-/**
- * get Lexicon Entry
- * @param {object} lexConfig
- * @param {string|number} strongs - strong's number
- * @return {Promise<Object|null>}
- */
-export async function getLexiconEntry(lexConfig, strongs) {
-  const config = {
-    ...lexConfig,
-    strongs,
-  }
-  const results = await getLexiconEntryLowLevel(config)
-  return results
-}
-
-/**
- * get Lexicon Entry
- * @param httpConfig
- * @param {string} server
- * @param {string} owner
- * @param {string} languageId
- * @param {string} resourceId
- * @param {string} lexiconPath
- * @param {string|number} strongs - strong's number
- * @return {Promise<object|null>}
- */
-async function getLexiconEntryLowLevel({
-  httpConfig,
-  server,
-  owner,
-  languageId,
-  resourceId,
-  lexiconPath,
-  strongs,
-}) {
-  const filename = `${strongs}.json`
-  const ref = 'master'
-
-  const filePath = `${lexiconPath}/${filename}`
-  let url = `${server}/api/v1/repos/${owner}/${languageId}_${resourceId}/contents/${filePath}?ref=${ref}`
-  let json = null
-
-  try {
-    const result = await get({
-      url,
-      params: {},
-      config: httpConfig,
-      fullResponse: true,
-    }).then(response => {
-      const resourceDescr = `${languageId}_${resourceId}, ref '${ref}'`
-
-      if (response?.status !== 200) {
-        const message = `getLexiconEntryLowLevel: Error code ${response?.status} fetching '${url}' for '${resourceDescr}'`
-        console.log(`failure reading`, message)
-        return null
-      }
-      return response
-    })
-    json = getResponseData(result)
-    console.log('json', json)
-    const data = JSON.parse(json)
-    return data
-  } catch (e) {
-    const httpCode = e?.response?.status || 0
-
-    console.warn(
-      `getLexiconEntryLowLevel - httpCode ${httpCode}, article not found`, e
-    )
-  }
-  return null
-}
 
 /**
  * initialize Lexicon - make sure we have loaded the lexicon into local storage
@@ -214,7 +35,7 @@ export async function initLexicon(languageId, server, owner, ref, setLexConfig, 
   let lexConfig = await getLexicon(languageId, HTTP_CONFIG, server, owner, ref, isNt)
 
   if (lexConfig) {
-    const resourceId = getLexiconResourceID(isNt)
+    const resourceId = core.getLexiconResourceID(isNt)
     const repository = `${languageId}_${resourceId}`
     setLexConfig && setLexConfig(lexConfig)
     console.log(`initLexicon() found ${OrigLang} Lexicon fetch success`, repository)
@@ -235,13 +56,8 @@ export async function initLexicon(languageId, server, owner, ref, setLexConfig, 
   return lexConfig
 }
 
-function getLexiconResourceID(isNt) {
-  const resourceId = isNt ? 'ugl' : 'uhl'
-  return resourceId
-}
-
 /**
- * get the lexicon repo
+ * fetch the lexicon repo data
  * @param {string} languageId
  * @param {object} httpConfig
  * @param {string} server
@@ -258,7 +74,7 @@ export async function getLexicon(languageId, httpConfig, server, owner, ref, isN
     noCache: true,
   }
   const origLangId = isNt ? 'el-x-koine' : 'hbo'
-  const resourceId = getLexiconResourceID(isNt)
+  const resourceId = core.getLexiconResourceID(isNt)
   let results
 
   try {
@@ -315,34 +131,57 @@ export async function fetchFromLexiconStore(lexiconCachePath) {
   return data
 }
 
-export const getWords = (verseObjects) => {
-  let words = []
+/**
+ * iterate through strongs numbers and extract lexicon from repo zip file
+ * @param {string} lexRepoName - name of the current repo (e.g. 'en_ugl')
+ * @param {object} origlangLexConfig - config data for current original language lexicon
+ * @param {array} strongs - strongs numbers to look up
+ * @param {object} lexiconWords - unzipped lexicon data
+ * @param {object} files - zipped files containing lexicon data
+ * @return {Promise<boolean>}
+ */
+export async function extractLexiconsFromRepoZip(lexRepoName, origlangLexConfig, strongs, lexiconWords, files) {
+  const fileNames = Object.keys(files)
+  let modified = false
 
-  if (! verseObjects || !verseObjects.length) {
-    return null
-  }
+  if (fileNames && fileNames.length) {
+    const path = `${lexRepoName}/${origlangLexConfig?.lexiconPath}`
 
-  for (let i = 0, l = verseObjects.length; i < l; i++) {
-    const verseObject = verseObjects[i]
+    for (let i = 0, l = strongs.length; i < l; i++) {
+      const strongStr = strongs[i]
+      const parts = getStrongsParts(strongStr) // hebrew words can be compound, so fetch each part
 
-    if (verseObject.type === 'word') {
-      words.push(verseObject)
-    }
+      for (let i = 0, len = parts.length; i < len; i++) {
+        const part = parts[i]
+        const strong = lexiconEntryIdFromStrongs(part)
+        const lexiconId = lexiconIdFromStrongs(part)
 
-    if (verseObject.type === 'milestone') {
-      if (verseObject.children) {
-        // Handle children of type milestone
-        const subWords = getWords(verseObject.children)
-        words = words.concat(subWords)
+        if ((lexiconId === origlangLexConfig.resourceId) && // if word is in this lexicon
+          (!lexiconWords[strong])) { // if not found, lookup
+          const fullPath = `${path}/${strong}.json`
+          const fileObject = files[fullPath]
+
+          if (fileObject) { // if strong number found
+            // eslint-disable-next-line no-await-in-loop
+            const fileData = await fileObject.async('string')
+            const lexicon = JSON.parse(fileData)
+            lexicon.repo = lexRepoName
+            lexiconWords[strong] = lexicon
+            modified = true
+          }
+        }
       }
     }
   }
-
-  return words
+  return modified
 }
 
-export function delay(ms) {
-  return new Promise((resolve) =>
-    setTimeout(resolve, ms),
-  )
+export function translate(key) {
+  const text = translation[key]
+
+  if (text) {
+    return text
+  }
+  return key
 }
+

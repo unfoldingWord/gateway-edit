@@ -3267,10 +3267,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gitea-react-toolkit@1.9.3:
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.9.3.tgz#0f1467087fbb814aa68f6f6bc695407c76cd3966"
-  integrity sha512-JubGD8xmLFTSa4unszKIohVxq/6N04mISkA7XekyuPhH1Bm3GBBScETO5zUyZD2x7YeOnUyqCo4lBNKS/6HD9Q==
+gitea-react-toolkit@1.11.0-alpha:
+  version "1.11.0-alpha"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.11.0-alpha.tgz#63cf4d5d218ca40ce42dddb87b1dfcc6e2c00901"
+  integrity sha512-u0kIwBALggXUmWpHUMcK9yRTvv6Ycjw3eUJhYCejzD6rQ+nlQCOjL7kOi6ZRhXRwsjL2WKVU9cSt+rVrapWMUA==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -3283,8 +3283,10 @@ gitea-react-toolkit@1.9.3:
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
-"gitea-react-toolkit@file:.yalc/gitea-react-toolkit":
-  version "1.10.1"
+gitea-react-toolkit@1.9.3:
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.9.3.tgz#0f1467087fbb814aa68f6f6bc695407c76cd3966"
+  integrity sha512-JubGD8xmLFTSa4unszKIohVxq/6N04mISkA7XekyuPhH1Bm3GBBScETO5zUyZD2x7YeOnUyqCo4lBNKS/6HD9Q==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -6395,10 +6397,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.1.1.tgz#bca309526bf7b6abfd9966e3b9372c5c364f5941"
-  integrity sha512-BsDysI8l9e9tmtM7vqk2FhymhOI41yoBg3mexo6dGCN8C9ov3aC0wp9JvzWhw4tU5YhC1e0204uEoVZ8Sx7v6w==
+scripture-resources-rcl@5.2.0-alpha:
+  version "5.2.0-alpha"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.2.0-alpha.tgz#9cbadede5aa90c831636f7565a166cb86571cd9d"
+  integrity sha512-Ag7PBt6YtXYj5QzEribElaSrs1f9VGxS3+g42wO9UN3hZ1vnH8Va3zW0WUSfEHAUmxMeaJXr0p4MgnNxqHAttA==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.9.3"
@@ -6409,6 +6411,7 @@ scripture-resources-rcl@5.1.1:
     prop-types "^15.7.2"
     react-waypoint "^9.0.2"
     string-punctuation-tokenizer "2.1.2"
+    tc-ui-toolkit "5.3.3"
     use-deep-compare-effect "^1.3.1"
     usfm-js "^2.0.2"
 
@@ -6529,8 +6532,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-"single-scripture-rcl@file:.yalc/single-scripture-rcl":
-  version "3.0.1"
+single-scripture-rcl@3.1.0-alpha:
+  version "3.1.0-alpha"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.1.0-alpha.tgz#5a490636197860747faf076bf8820a5ca54fb18c"
+  integrity sha512-4OzRt9tWB/V3ZLhFLfte/KOTSKgZzVCqefa/eXGMzQMqBXW+0u+LpzxhnHKPG8bDXHujmPlViZo+7uEWcXELMg==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -6539,7 +6544,6 @@ simple-swizzle@^0.2.2:
     react-docgen-typescript "^1.20.5"
     source-map-loader "^1.1.3"
     styled-components "^5.2.1"
-    tc-ui-toolkit "5.3.3"
     ts-loader "^8.0.12"
     typescript "^4.1.3"
     word-aligner "^1.0.0"

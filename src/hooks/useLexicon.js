@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
 import * as isEqual from 'deep-equal'
 import { getFilesFromRepoZip, useRepository } from 'gitea-react-toolkit'
+import { core } from 'scripture-resources-rcl'
 import { isNT } from '@common/BooksOfTheBible'
 import { delay } from '@utils/resources'
 import {
+  extractLexiconsFromRepoZip,
   fetchFromLexiconStore,
-  getStrongsParts,
-  getWords,
   initLexicon,
-  lexiconEntryIdFromStrongs, lexiconIdFromStrongs,
   saveToLexiconStore,
 } from '@utils/lexiconHelpers'
 
@@ -61,12 +60,16 @@ export default function useLexicon({
 
   /**
    * external function to load lexicon from cached lexicon
-   * @param {string|number} lexiconId
+   * @param {string} lexiconId - lexicon to search (ugl or uhl)
+   * @param {string|number} entryId - numerical part of the strongs number (e.g. '00005')
    * @return {*}
    */
-  function getLexiconData(lexiconId) {
-    const lexicon = lexiconWords?.[lexiconId.toString()]
-    return lexicon
+  function getLexiconData(lexiconId, entryId) {
+    if (lexiconWords && entryId) {
+      const lexicon = lexiconWords[entryId.toString()]
+      return { [lexiconId]: { [entryId]: lexicon } }
+    }
+    return null
   }
 
   /**
@@ -79,21 +82,27 @@ export default function useLexicon({
     await saveToLexiconStore(getLexiconCachePath(), newLexiconWords)
   }
 
+  /**
+   * called to prefetch all the lexicon data for a verse
+   * @param {object[]} verseObjects
+   * @param {string} languageId
+   * @return {Promise}
+   */
   async function fetchLexiconsForVerse(verseObjects, languageId) {
     if (origlangLexConfig?.origLangId !== languageId) {
-      return false
+      return
     }
-    console.log(`fetchLexiconsForVerse; language ${languageId} same as ${origlangLexConfig?.origLangId}`, verseObjects)
 
     if (origlangLexConfig && verseObjects?.length && !fetchingWords) {
-      const words = getWords(verseObjects)
+      console.log(`fetchLexiconsForVerse; language ${languageId}, ${verseObjects?.length} verseObjects`)
+      const wordObjects = core.getWordObjects(verseObjects)
 
-      if (words?.length) {
-        const strongs = words.map(word => (word.strongs || word.strong)).filter(word => word)
+      if (wordObjects?.length) {
+        const strongs = core.getStrongsList(wordObjects)
 
         if (strongs?.length && !isEqual(strongs, strongsForVerse)) {
           if (lexiconWords && Object.keys(lexiconWords).length) {
-            console.log(`fetchLexiconsForVerse`, verseObjects)
+            console.log(`fetchLexiconsForVerse - loading strongs numbers`)
             await fetchLexiconsForStrongs(strongs)
           } else { // lexicon words not loaded, save strongs list for later
             setStrongsForVerse(strongs)
@@ -111,47 +120,15 @@ export default function useLexicon({
   async function fetchLexiconsForStrongs(strongs) {
     if (strongs?.length && !fetchingWords && origlangLexConfig) {
       setFetchingWords(true)
-      let newLexiconWords = await fetchFromLexiconStore(getLexiconCachePath())
-      newLexiconWords = newLexiconWords || {}
+      let newLexiconWords = (await fetchFromLexiconStore(getLexiconCachePath())) || {}
+      console.log(`fetchLexiconsForStrongs: extracting strongs list length ${strongs.length}, already extracted word length ${Object.keys(newLexiconWords).length}`)
       const files = await getFilesFromRepoZip({
         owner: origlangLexConfig.owner,
         repo: lexRepoName,
         branch: origlangLexConfig.ref,
         config: { server: origlangLexConfig.server },
       })
-      const fileNames = Object.keys(files)
-      let modified = false
-
-      if (fileNames && fileNames.length) {
-        const path = `${lexRepoName}/${origlangLexConfig?.lexiconPath}`
-
-        for (let i = 0, l = strongs.length; i < l; i++) {
-          const strongStr = strongs[i]
-          const parts = getStrongsParts(strongStr) // hebrew words can be compound, so fetch each part
-
-          for (let i = 0, len = parts.length; i < len; i++) {
-            const part = parts[i]
-            const strong = lexiconEntryIdFromStrongs(part)
-            const lexiconId = lexiconIdFromStrongs(part)
-
-            if ((lexiconId !== origlangLexConfig.resourceId)) { // ignore word not in this lexicon
-              console.log(`skipping ${part}`)
-            } else if (!newLexiconWords[strong]) { // if not found, lookup
-              const fullPath = `${path}/${strong}.json`
-              const fileObject = files[fullPath]
-
-              if (fileObject) { // if strong number found
-                // eslint-disable-next-line no-await-in-loop
-                const fileData = await fileObject.async('string')
-                const lexicon = JSON.parse(fileData)
-                lexicon.repo = lexRepoName
-                newLexiconWords[strong] = lexicon
-                modified = true
-              }
-            }
-          }
-        }
-      }
+      let modified = await extractLexiconsFromRepoZip(lexRepoName, origlangLexConfig, strongs, newLexiconWords, files)
 
       if (modified) {
         await updateLexiconWords(newLexiconWords)
@@ -210,7 +187,7 @@ export default function useLexicon({
   }
 
   useEffect(() => {
-    const loadLexiconData = async () => {
+    const loadLexiconDataForRepo = async () => {
       if (!fetchingLex && repository && lexiconProps?.actions?.storeZip) {
         setFetchingLex(true)
         let lexiconWords = await fetchFromLexiconStore(getLexiconCachePath())
@@ -244,15 +221,13 @@ export default function useLexicon({
       }
     }
 
-    loadLexiconData()
+    loadLexiconDataForRepo()
   }, [repository])
 
   useEffect(() => {
     const updateWords = async () => {
       if (lexCacheInit) {
-        console.log('init finished')
-
-        if (strongsForVerse) {
+        if (strongsForVerse) { // get Lexicons for current verse
           await fetchLexiconsForStrongs(strongsForVerse)
         }
       }
