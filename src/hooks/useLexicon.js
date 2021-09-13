@@ -65,9 +65,13 @@ export default function useLexicon({
    * @return {*}
    */
   function getLexiconData(lexiconId, entryId) {
-    if (lexiconWords && entryId) {
+    if (lexiconWords && Object.keys(lexiconWords).length && entryId) {
       const lexicon = lexiconWords[entryId.toString()]
       return { [lexiconId]: { [entryId]: lexicon } }
+    }
+
+    if (!lexiconWords || !Object.keys(lexiconWords).length) {
+      console.log(`getLexiconData: words not loaded, searching for ${entryId}`)
     }
     return null
   }
