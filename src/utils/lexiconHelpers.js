@@ -38,26 +38,48 @@ export async function initLexicon(
   isNt) {
   // TODO add checking in in unfoldingWord and current repo for languageId and fallback to en
   const OrigLang = isNt ? 'Greek' : 'Hebrew'
-  let lexConfig = await getLexiconData(languageId, HTTP_CONFIG, server, owner, ref, isNt)
+  const resourceId = core.getLexiconResourceID(isNt)
 
-  if (lexConfig) {
-    const resourceId = core.getLexiconResourceID(isNt)
-    const repository = `${languageId}_${resourceId}`
-    setLexConfig && setLexConfig(lexConfig)
-    console.log(`initLexicon() found ${OrigLang} Lexicon fetch success`, repository)
+  const searchOrder = [
+    {
+      owner,
+      languageId,
+    },
+    {
+      owner: 'unfoldingWord',
+      languageId,
+    },
+    // fall back to en as language
+    {
+      owner,
+      languageId: 'en',
+    },
+    {
+      owner: 'unfoldingWord',
+      languageId: 'en',
+    },
+  ]
 
-    // await delay(2000)
-    // const success = await fetchRepositoryZipFile({
-    //   username: owner,
-    //   repository,
-    //   branch: ref,
-    //   options: {},
-    // })
-    // console.log(`${OrigLang} Lexicon fetch success`, success)
-    // const data = await getLexiconEntry(lexConfig, 1)
-    // console.log(`${OrigLang} Lexicon data`, data)
-  } else {
-    console.error(`initLexicon() - failure to find ${OrigLang} Lexicon in ${languageId}`)
+  let lexConfig
+
+  for (let search of searchOrder) {
+    const searchLang = search.languageId
+    const searchOwner = search.owner
+    // eslint-disable-next-line no-await-in-loop
+    lexConfig = await getLexiconData(searchLang, HTTP_CONFIG, server, searchOwner, ref, isNt)
+
+    if (lexConfig) {
+      const repository = `${searchLang}_${resourceId}`
+      setLexConfig && setLexConfig(lexConfig)
+      console.log(`initLexicon() found ${OrigLang} Lexicon, ${searchOwner}/${searchLang}_${resourceId}\` success`, repository)
+      break
+    } else {
+      console.log(`initLexicon() - failure to find ${OrigLang} Lexicon in ${searchOwner}/${searchLang}_${resourceId}`)
+    }
+  }
+
+  if (!lexConfig) {
+    console.error(`initLexicon() - failure to find ${OrigLang} Lexicon`)
   }
   return lexConfig
 }
@@ -103,8 +125,7 @@ export async function getLexiconData(
   }
 
   if (results?.manifest) {
-    const lexicon = results?.manifest?.projects?.find(item => (item.identifier === resourceId))
-    console.log('lexicon', lexicon)
+    const lexicon = results?.manifest?.projects?.find(item => ((item.identifier === resourceId) && (item.format === 'json')))
 
     if (lexicon) {
       let lexiconPath = lexicon?.path
@@ -113,7 +134,7 @@ export async function getLexiconData(
         if (lexiconPath.substr(0, 2) === './') {
           lexiconPath = lexiconPath.substr(2)
         }
-        results.lexiconPath = lexiconPath
+
         const lexConfig = {
           httpConfig: HTTP_LONG_CONFIG,
           server,
