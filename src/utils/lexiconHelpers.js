@@ -11,12 +11,12 @@ import {
   lexiconEntryIdFromStrongs,
   lexiconIdFromStrongs,
 } from 'tc-ui-toolkit/lib/ScripturePane/helpers/lexiconHelpers'
-import translation from '../common/translation.json'
+import translations from '../common/translation.json'
 
 // caches lexicons in indexDB
-const lexiconStore = localforage.createInstance({
+const GlossesStore = localforage.createInstance({
   driver: [localforage.INDEXEDDB],
-  name: 'lexicon-store',
+  name: 'gloss-store',
 })
 
 /**
@@ -29,10 +29,16 @@ const lexiconStore = localforage.createInstance({
  * @param {boolean} isNt
  * @return {Promise<{owner, server, resourceId: string, httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
  */
-export async function initLexicon(languageId, server, owner, ref, setLexConfig, isNt) {
+export async function initLexicon(
+  languageId,
+  server,
+  owner,
+  ref,
+  setLexConfig,
+  isNt) {
   // TODO add checking in in unfoldingWord and current repo for languageId and fallback to en
   const OrigLang = isNt ? 'Greek' : 'Hebrew'
-  let lexConfig = await getLexicon(languageId, HTTP_CONFIG, server, owner, ref, isNt)
+  let lexConfig = await getLexiconData(languageId, HTTP_CONFIG, server, owner, ref, isNt)
 
   if (lexConfig) {
     const resourceId = core.getLexiconResourceID(isNt)
@@ -51,7 +57,7 @@ export async function initLexicon(languageId, server, owner, ref, setLexConfig, 
     // const data = await getLexiconEntry(lexConfig, 1)
     // console.log(`${OrigLang} Lexicon data`, data)
   } else {
-    console.error(`WorkspaceContainer - failure to find ${OrigLang} Lexicon in ${languageId}`)
+    console.error(`initLexicon() - failure to find ${OrigLang} Lexicon in ${languageId}`)
   }
   return lexConfig
 }
@@ -66,7 +72,13 @@ export async function initLexicon(languageId, server, owner, ref, setLexConfig, 
  * @param {boolean} isNt
  * @return {Promise<{owner, server, resourceId: (string), httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
  */
-export async function getLexicon(languageId, httpConfig, server, owner, ref, isNt) {
+export async function getLexiconData(
+  languageId,
+  httpConfig,
+  server,
+  owner,
+  ref,
+  isNt) {
   // TODO: add searching for best lexicon
   const config_ = {
     server,
@@ -87,10 +99,8 @@ export async function getLexicon(languageId, httpConfig, server, owner, ref, isN
       ref,
     })
   } catch (e) {
-    console.log(`getLexicon failed ${languageId}_${resourceId}: `, e)
+    console.log(`getLexiconData failed ${languageId}_${resourceId}: `, e)
   }
-
-  console.log('manifest', results?.manifest)
 
   if (results?.manifest) {
     const lexicon = results?.manifest?.projects?.find(item => (item.identifier === resourceId))
@@ -122,26 +132,31 @@ export async function getLexicon(languageId, httpConfig, server, owner, ref, isN
   return null
 }
 
-export async function saveToLexiconStore(lexiconCachePath, data) {
-  await lexiconStore.setItem(lexiconCachePath, data)
+export async function saveToGlossesStore(glossesCachePath, data) {
+  await GlossesStore.setItem(glossesCachePath, data)
 }
 
-export async function fetchFromLexiconStore(lexiconCachePath) {
-  const data = await lexiconStore.getItem(lexiconCachePath)
+export async function fetchFromGlossesStore(glossesCachePath) {
+  const data = await GlossesStore.getItem(glossesCachePath)
   return data
 }
 
 /**
- * iterate through strongs numbers and extract lexicon from repo zip file
+ * iterate through strongs numbers and extract glosses from lexicon repo zipped files
  * @param {string} lexRepoName - name of the current repo (e.g. 'en_ugl')
  * @param {object} origlangLexConfig - config data for current original language lexicon
  * @param {array} strongs - strongs numbers to look up
- * @param {object} lexiconWords - unzipped lexicon data
- * @param {object} files - zipped files containing lexicon data
+ * @param {object} lexiconGlosses - unzipped glosses
+ * @param {object} repoFiles - zipped files containing gloss data
  * @return {Promise<boolean>}
  */
-export async function extractLexiconsFromRepoZip(lexRepoName, origlangLexConfig, strongs, lexiconWords, files) {
-  const fileNames = Object.keys(files)
+export async function extractGlossesFromRepoZip(
+  lexRepoName,
+  origlangLexConfig,
+  strongs,
+  lexiconGlosses,
+  repoFiles) {
+  const fileNames = Object.keys(repoFiles)
   let modified = false
 
   if (fileNames && fileNames.length) {
@@ -154,19 +169,19 @@ export async function extractLexiconsFromRepoZip(lexRepoName, origlangLexConfig,
       for (let i = 0, len = parts.length; i < len; i++) {
         const part = parts[i]
         const strong = lexiconEntryIdFromStrongs(part)
-        const lexiconId = lexiconIdFromStrongs(part)
+        const glossID = lexiconIdFromStrongs(part)
 
-        if ((lexiconId === origlangLexConfig.resourceId) && // if word is in this lexicon
-          (!lexiconWords[strong])) { // if not found, lookup
+        if ((glossID === origlangLexConfig.resourceId) && // if word is in this lexicon
+          (!lexiconGlosses[strong])) { // if not found, lookup
           const fullPath = `${path}/${strong}.json`
-          const fileObject = files[fullPath]
+          const fileObject = repoFiles[fullPath]
 
           if (fileObject) { // if strong number found
             // eslint-disable-next-line no-await-in-loop
             const fileData = await fileObject.async('string')
-            const lexicon = JSON.parse(fileData)
-            lexicon.repo = lexRepoName
-            lexiconWords[strong] = lexicon
+            const gloss = JSON.parse(fileData)
+            gloss.repo = lexRepoName
+            lexiconGlosses[strong] = gloss
             modified = true
           }
         }
@@ -176,8 +191,13 @@ export async function extractLexiconsFromRepoZip(lexRepoName, origlangLexConfig,
   return modified
 }
 
+/**
+ * lookup key in translations, if not found returns key
+ * @param key
+ * @return {*}
+ */
 export function translate(key) {
-  const text = translation[key]
+  const text = translations?.[key]
 
   if (text) {
     return text

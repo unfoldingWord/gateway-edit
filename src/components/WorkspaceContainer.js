@@ -111,7 +111,7 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
   })
 
-  const { actions: { fetchLexiconsForVerse, getLexiconData } } = useLexicon({
+  const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
     bookId,
     languageId,
     server,
@@ -196,7 +196,7 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
     greekRepoUrl,
     hebrewRepoUrl,
-    fetchLexiconsForVerse,
+    fetchGlossesForVerse,
     getLexiconData,
     translate,
   }
