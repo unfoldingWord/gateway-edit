@@ -22,23 +22,23 @@ export function getOriginalLanguageStr(isNT) {
 }
 
 /**
- * initialize Lexicon - make sure we have loaded the lexicon into local storage
+ * Searches for best lexicon for languageId and then looks for en if lexicon not found for languageId.  Looks for
+ *    lexicons first in owner and then in unfoldingWord
  * @param {string} languageId
  * @param {string} server
  * @param {string} owner
  * @param {string} ref
- * @param {function} setLexConfig - for saving the lexicon's configuration
+ * @param {function} setLexConfig - for saving the found lexicon's configuration
  * @param {boolean} isNT
  * @return {Promise<{owner, server, resourceId: string, httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
  */
-export async function initLexicon(
+export async function findBestLexicon(
   languageId,
   server,
   owner,
   ref,
   setLexConfig,
   isNT) {
-  // TODO add checking in in unfoldingWord and current repo for languageId and fallback to en
   const OrigLang = getOriginalLanguageStr(isNT)
   const searchOrder = [
     {
@@ -59,7 +59,6 @@ export async function initLexicon(
       languageId: 'en',
     },
   ]
-
   let lexConfig
 
   for (let search of searchOrder) {
@@ -100,7 +99,6 @@ export async function getLexiconData(
   owner,
   ref,
   isNT) {
-  // TODO: add searching for best lexicon
   const config_ = {
     server,
     ...httpConfig,

@@ -8,7 +8,7 @@ import {
   extractGlossesFromRepoZip,
   fetchFromGlossesStore,
   getOriginalLanguageStr,
-  initLexicon,
+  findBestLexicon,
   saveToGlossesStore,
 } from '@utils/lexiconHelpers'
 
@@ -239,7 +239,7 @@ export default function useLexicon({
     const LexOwner = 'test_org'
     const branch = 'master'
     const setLexicon = isNT ? setGreekLexConfig : setHebrewLexConfig
-    const lexConfig = await initLexicon(languageId, server, LexOwner, branch, setLexicon, isNT)
+    const lexConfig = await findBestLexicon(languageId, server, LexOwner, branch, setLexicon, isNT)
 
     if (!lexConfig) {
       const OrigLang = getOriginalLanguageStr(isNT)
