@@ -7,6 +7,7 @@ import { delay } from '@utils/resources'
 import {
   extractGlossesFromRepoZip,
   fetchFromGlossesStore,
+  getOriginalLanguageStr,
   initLexicon,
   saveToGlossesStore,
 } from '@utils/lexiconHelpers'
@@ -16,6 +17,8 @@ export default function useLexicon({
   languageId,
   server,
 }) {
+  const [greekError, setGreekError] = useState(null)
+  const [hebrewError, setHebrewError] = useState(null)
   const [repository, setRepository] = useState(null)
   const [lexCacheInit, setLexCacheInit] = useState(false)
   const [lexiconGlosses, setLexiconGlosses] = useState(null)
@@ -27,7 +30,7 @@ export default function useLexicon({
 
   const isNT_ = isNT(bookId)
 
-  const origlangLexConfig = isNT_ ? greekLexConfig : hebrewLexConfig
+  const origlangLexConfig = getOriginalLanguageConfig()
   const lexRepoName = origlangLexConfig ? `${origlangLexConfig.languageId}_${origlangLexConfig.resourceId}` : null
   const lexRepoFullName = origlangLexConfig ? `${origlangLexConfig.owner}/${lexRepoName}` : null
   const lexRepoParams = {
@@ -38,6 +41,27 @@ export default function useLexicon({
     onRepository: onRepository,
   }
   const lexiconProps = useRepository(lexRepoParams)
+
+  function getOriginalLanguageConfig() {
+    const origlangLexConfig = isNT_ ? greekLexConfig : hebrewLexConfig
+    return origlangLexConfig
+  }
+
+  function setOrigLangError(error, isNT = isNT_) {
+    if (isNT) {
+      setGreekError(error)
+    } else {
+      setHebrewError(error)
+    }
+  }
+
+  function getOrigLangError() {
+    if (isNT_) {
+      return greekError
+    } else {
+      return hebrewError
+    }
+  }
 
   useEffect(() => {
     console.log(`useLexicon: bible ${bookId} changed testament ${isNT_}`)
@@ -59,19 +83,59 @@ export default function useLexicon({
   }
 
   /**
+   * convert status/error message to gloss format
+   * @param message
+   * @return {{brief, long}}
+   */
+  function messageToGloss(message) {
+    return {
+      brief: message,
+      long: message,
+    }
+  }
+
+  function getReasonForLexiconFailure(defaultMessage, entryId) {
+    const error = getOrigLangError()
+    let message = defaultMessage
+
+    if (error) {
+      message = `### ERROR: ${error}`
+    } else if (!getOriginalLanguageConfig()) {
+      message = `Not ready - searching for lexicon`
+    } else if (!repository) {
+      message = `Not ready - loading lexicon repo data`
+    } else if (fetchingLexicon) {
+      message = `Not ready - fetching lexicon repo`
+    } else if (!lexCacheInit || fetchingGlosses) {
+      message = `Not ready - initializing glosses`
+    }
+    console.log(`getLexiconData: gloss not loaded for ${entryId}`, message)
+    return message
+  }
+
+  /**
    * external function to load lexicon from cached lexicon
    * @param {string} lexiconId - lexicon to search (ugl or uhl)
    * @param {string|number} entryId - numerical part of the strongs number (e.g. '00005')
    * @return {*}
    */
   function getLexiconData(lexiconId, entryId) {
+    let gloss = null
+
     if (lexiconGlosses && Object.keys(lexiconGlosses).length && entryId) {
-      const lexicon = lexiconGlosses[entryId.toString()]
-      return { [lexiconId]: { [entryId]: lexicon } }
-    } else {
-      // console.log(`getLexiconData: gloss not loaded for ${entryId}`)
+      gloss = lexiconGlosses[entryId.toString()]
+
+      if (!gloss) { // show reason we can't find gloss
+        const defaultMessage = `### ERROR: Gloss not found`
+        const message = getReasonForLexiconFailure(defaultMessage, entryId)
+        gloss = messageToGloss(message)
+      }
+    } else { // show error or reason glosses are not loaded
+      const defaultMessage = `Not ready - glosses not yet available`
+      const message = getReasonForLexiconFailure(defaultMessage, entryId)
+      gloss = messageToGloss(message)
     }
-    return null
+    return { [lexiconId]: { [entryId]: gloss } }
   }
 
   /**
@@ -177,7 +241,12 @@ export default function useLexicon({
     const LexOwner = 'test_org'
     const branch = 'master'
     const setLexicon = isNT ? setGreekLexConfig : setHebrewLexConfig
-    await initLexicon(languageId, server, LexOwner, branch, setLexicon, isNT)
+    const lexConfig = await initLexicon(languageId, server, LexOwner, branch, setLexicon, isNT)
+
+    if (!lexConfig) {
+      const OrigLang = getOriginalLanguageStr(isNT)
+      setOrigLangError(`initLexicon() - failure to find ${OrigLang} Lexicon`, isNT)
+    }
   }
 
   useEffect(() => {
@@ -232,8 +301,11 @@ export default function useLexicon({
         if (lexiconRepoCached) {
           await updateLexiconGlosses(lexiconWords)
           setLexCacheInit(true)
+          setOrigLangError(null)
         } else {
-          console.warn(`useLexicon.loadLexiconDataForRepo: could not load lexicon repo zip: ${getGlossesCachePath()}`)
+          const originalLang = getOriginalLanguageStr(isNT_)
+          console.warn(`useLexicon.loadLexiconDataForRepo: could not load ${originalLang} lexicon repo zip: ${getGlossesCachePath()}`)
+          setOrigLangError(`Could not load ${originalLang} lexicon repo zip: ${getGlossesCachePath()}`)
         }
 
         setFetchingLexicon(false)

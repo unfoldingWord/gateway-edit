@@ -19,6 +19,11 @@ const GlossesStore = localforage.createInstance({
   name: 'gloss-store',
 })
 
+export function getOriginalLanguageStr(isNT) {
+  const OrigLang = isNT ? 'Greek' : 'Hebrew'
+  return OrigLang
+}
+
 /**
  * initialize Lexicon - make sure we have loaded the lexicon into local storage
  * @param {string} languageId
@@ -26,7 +31,7 @@ const GlossesStore = localforage.createInstance({
  * @param {string} owner
  * @param {string} ref
  * @param {function} setLexConfig - for saving the lexicon's configuration
- * @param {boolean} isNt
+ * @param {boolean} isNT
  * @return {Promise<{owner, server, resourceId: string, httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
  */
 export async function initLexicon(
@@ -35,10 +40,10 @@ export async function initLexicon(
   owner,
   ref,
   setLexConfig,
-  isNt) {
+  isNT) {
   // TODO add checking in in unfoldingWord and current repo for languageId and fallback to en
-  const OrigLang = isNt ? 'Greek' : 'Hebrew'
-  const resourceId = core.getLexiconResourceID(isNt)
+  const OrigLang = getOriginalLanguageStr(isNT)
+  const resourceId = core.getLexiconResourceID(isNT)
 
   const searchOrder = [
     {
@@ -66,7 +71,7 @@ export async function initLexicon(
     const searchLang = search.languageId
     const searchOwner = search.owner
     // eslint-disable-next-line no-await-in-loop
-    lexConfig = await getLexiconData(searchLang, HTTP_CONFIG, server, searchOwner, ref, isNt)
+    lexConfig = await getLexiconData(searchLang, HTTP_CONFIG, server, searchOwner, ref, isNT)
 
     if (lexConfig) {
       const repository = `${searchLang}_${resourceId}`
@@ -91,7 +96,7 @@ export async function initLexicon(
  * @param {string} server
  * @param {string} owner
  * @param {string} ref - branch or tag
- * @param {boolean} isNt
+ * @param {boolean} isNT
  * @return {Promise<{owner, server, resourceId: (string), httpConfig: {cache: {maxAge: number}, timeout: number}, lexiconPath: *, languageId}|null>}
  */
 export async function getLexiconData(
@@ -100,15 +105,15 @@ export async function getLexiconData(
   server,
   owner,
   ref,
-  isNt) {
+  isNT) {
   // TODO: add searching for best lexicon
   const config_ = {
     server,
     ...httpConfig,
     noCache: true,
   }
-  const origLangId = isNt ? 'el-x-koine' : 'hbo'
-  const resourceId = core.getLexiconResourceID(isNt)
+  const origLangId = isNT ? 'el-x-koine' : 'hbo'
+  const resourceId = core.getLexiconResourceID(isNT)
   let results
 
   try {
