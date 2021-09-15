@@ -1,9 +1,6 @@
 import localforage from 'localforage'
 import { core } from 'scripture-resources-rcl'
-import {
-  HTTP_CONFIG,
-  HTTP_LONG_CONFIG,
-} from '@common/constants'
+import { HTTP_CONFIG } from '@common/constants'
 
 // TRICKY - importing from direct path gets around exported css styles which crash nextjs
 import {
@@ -43,8 +40,6 @@ export async function initLexicon(
   isNT) {
   // TODO add checking in in unfoldingWord and current repo for languageId and fallback to en
   const OrigLang = getOriginalLanguageStr(isNT)
-  const resourceId = core.getLexiconResourceID(isNT)
-
   const searchOrder = [
     {
       owner,
@@ -74,12 +69,11 @@ export async function initLexicon(
     lexConfig = await getLexiconData(searchLang, HTTP_CONFIG, server, searchOwner, ref, isNT)
 
     if (lexConfig) {
-      const repository = `${searchLang}_${resourceId}`
       setLexConfig && setLexConfig(lexConfig)
-      console.log(`initLexicon() found ${OrigLang} Lexicon, ${searchOwner}/${searchLang}_${resourceId}\` success`, repository)
+      // console.log(`initLexicon() found ${OrigLang} Lexicon, ${searchOwner}/${searchLang}_${resourceId}\` success`, repository)
       break
     } else {
-      console.log(`initLexicon() - failure to find ${OrigLang} Lexicon in ${searchOwner}/${searchLang}_${resourceId}`)
+      // console.log(`initLexicon() - failure to find ${OrigLang} Lexicon in ${searchOwner}/${searchLang}_${resourceId}`)
     }
   }
 
@@ -126,7 +120,7 @@ export async function getLexiconData(
       ref,
     })
   } catch (e) {
-    console.log(`getLexiconData failed ${languageId}_${resourceId}: `, e)
+    console.warn(`getLexiconData failed ${languageId}_${resourceId}: `, e)
   }
 
   if (results?.manifest) {
@@ -141,7 +135,7 @@ export async function getLexiconData(
         }
 
         const lexConfig = {
-          httpConfig: HTTP_LONG_CONFIG,
+          httpConfig: HTTP_CONFIG,
           server,
           owner,
           languageId,

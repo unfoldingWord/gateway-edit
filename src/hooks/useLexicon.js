@@ -33,14 +33,13 @@ export default function useLexicon({
   const origlangLexConfig = getOriginalLanguageConfig()
   const lexRepoName = origlangLexConfig ? `${origlangLexConfig.languageId}_${origlangLexConfig.resourceId}` : null
   const lexRepoFullName = origlangLexConfig ? `${origlangLexConfig.owner}/${lexRepoName}` : null
-  const lexRepoParams = {
+  const lexiconProps = useRepository({
     full_name: lexRepoFullName,
     branch: origlangLexConfig?.ref,
     config: origlangLexConfig,
     repository,
-    onRepository: onRepository,
-  }
-  const lexiconProps = useRepository(lexRepoParams)
+    onRepository,
+  })
 
   function getOriginalLanguageConfig() {
     const origlangLexConfig = isNT_ ? greekLexConfig : hebrewLexConfig
@@ -64,7 +63,7 @@ export default function useLexicon({
   }
 
   useEffect(() => {
-    console.log(`useLexicon: bible ${bookId} changed testament ${isNT_}`)
+    // console.log(`useLexicon: bible ${bookId} changed testament ${isNT_}`)
     setRepository(null) // clear lexicon repo so it's reloaded after testament change
     setStrongsNumbersInVerse(null)
     setLexiconGlosses(null)
@@ -77,7 +76,7 @@ export default function useLexicon({
    */
   function onRepository(repo) {
     if ( repo?.branch && (repo?.html_url !== repository?.html_url)) {
-      console.log(`useLexicon.onRepository():`, repo)
+      // console.log(`useLexicon.onRepository():`, repo)
       setRepository(repo)
     }
   }
@@ -109,7 +108,7 @@ export default function useLexicon({
     } else if (!lexCacheInit || fetchingGlosses) {
       message = `Not ready - initializing glosses`
     }
-    console.log(`getLexiconData: gloss not loaded for ${entryId}`, message)
+    // console.log(`getLexiconData: gloss not loaded for ${entryId}`, message)
     return message
   }
 
@@ -160,7 +159,7 @@ export default function useLexicon({
     }
 
     if (origlangLexConfig && verseObjects?.length && !fetchingGlosses) {
-      console.log(`fetchGlossesForVerse - language ${languageId}, ${verseObjects?.length} verseObjects`)
+      // console.log(`fetchGlossesForVerse - language ${languageId}, ${verseObjects?.length} verseObjects`)
       const wordObjects = core.getWordObjects(verseObjects)
 
       if (wordObjects?.length) {
@@ -168,7 +167,7 @@ export default function useLexicon({
 
         if (strongs?.length && !isEqual(strongs, strongsNumbersInVerse)) {
           if (lexiconGlosses && Object.keys(lexiconGlosses).length) {
-            console.log(`fetchGlossesForVerse - loading strongs numbers`)
+            // console.log(`fetchGlossesForVerse - loading strongs numbers`)
             await fetchGlossesForStrongsNumbers(strongs)
           } else { // lexicon words not loaded, save strongs list for later
             setStrongsNumbersInVerse(strongs)
@@ -197,18 +196,18 @@ export default function useLexicon({
     if (strongs?.length && !fetchingGlosses && origlangLexConfig) {
       setFetchingGlosses(true)
       let newLexiconWords = (await fetchFromGlossesStore(getGlossesCachePath())) || {}
-      console.log(`fetchGlossesForStrongsNumber: extracting strongs list length ${strongs.length}, already extracted word length ${Object.keys(newLexiconWords).length}`)
+      // console.log(`fetchGlossesForStrongsNumber: extracting strongs list length ${strongs.length}, already extracted word length ${Object.keys(newLexiconWords).length}`)
       const files = await getFilesFromCachedLexicon()
       let modified = await extractGlossesFromRepoZip(lexRepoName, origlangLexConfig, strongs, newLexiconWords, files)
 
       if (modified) {
         await updateLexiconGlosses(newLexiconWords)
-        console.log('fetchGlossesForStrongsNumbers: lexicon words updated, length', Object.keys(newLexiconWords).length)
+        // console.log('fetchGlossesForStrongsNumbers: lexicon words updated, length', Object.keys(newLexiconWords).length)
       } else {
         setLexiconGlosses(newLexiconWords)
       }
 
-      console.log('fetchGlossesForStrongsNumbers: new word list length', strongs?.length)
+      // console.log('fetchGlossesForStrongsNumbers: new word list length', strongs?.length)
       setStrongsNumbersInVerse(strongs)
       setFetchingGlosses(false)
     }
@@ -227,8 +226,7 @@ export default function useLexicon({
   }
 
   async function isLexiconRepoCached() {
-    const strongs = 1
-    const file = await getGlossFromCachedLexicon(strongs)
+    const file = await getGlossFromCachedLexicon(1)
     return !!file
   }
 
@@ -284,13 +282,13 @@ export default function useLexicon({
         if (!lexiconWords) {
           lexiconWords = {}
         } else {
-          console.log(`useLexicon.loadLexiconDataForRepo: ${getGlossesCachePath()} cached lexicon words length`, Object.keys(lexiconWords).length)
+          // console.log(`useLexicon.loadLexiconDataForRepo: ${getGlossesCachePath()} cached lexicon words length`, Object.keys(lexiconWords).length)
         }
 
         let lexiconRepoCached = await isLexiconRepoCached()
 
         if (lexiconRepoCached) {
-          console.log(`useLexicon.loadLexiconDataForRepo: lexicon zip already loaded`)
+          // console.log(`useLexicon.loadLexiconDataForRepo: lexicon zip already loaded`)
         } else {
           // fetch repo zip file and store in index DB
           await lexiconProps?.actions?.storeZip()

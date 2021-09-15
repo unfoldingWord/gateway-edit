@@ -1423,10 +1423,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bible-reference-rcl@1.1.0-alpha:
-  version "1.1.0-alpha"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.1.0-alpha.tgz#3d48ebed80e8fb4c697c2c0a82584b1be301c67e"
-  integrity sha512-yRyblWfKzjsLTUVoQ1Dr0t+MKSaP9j/uSReQeKemq5HgUux/eBJSGsTDh4xYOjl0AJrFpAnMcnYfUlaqJ+jt1w==
+bible-reference-rcl@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.1.0.tgz#0e9f33effeaabf6bfed53b897ad8e99033502911"
+  integrity sha512-kUrJrTaPmzU7ih8pOjXdOKjBZngVE+NiDnS9SxtSRnpJbKGZqtsmstk3Ld4wIQZvmWfedlbGVx5/R7lG4DeVgw==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"
@@ -6397,10 +6397,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.2.0-alpha.5:
-  version "5.2.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.2.0-alpha.5.tgz#a7aac6ca274c477aae892481e580be7fe9851941"
-  integrity sha512-lznJF8P6AguprBuAq/INMm5FC9NpOAz1rLTtr7/ouu0RkUoMG1oRn1PlWqaU89BP9vkpBjm2/JxYdS8ojsZTuw==
+scripture-resources-rcl@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.2.0.tgz#28813922ef038b8c748067baab0b1507126e9d99"
+  integrity sha512-26kRyCsFO5uDx0iDiStwniRrQna3f1uuRHZ9CaY8zYPG+JWioMNElUP8ms2i+d8tRGN/tE2NN99y2CIcJQldAQ==
   dependencies:
     deep-freeze "^0.0.1"
     gitea-react-toolkit "1.9.3"
@@ -6411,7 +6411,6 @@ scripture-resources-rcl@5.2.0-alpha.5:
     prop-types "^15.7.2"
     react-waypoint "^9.0.2"
     string-punctuation-tokenizer "2.1.2"
-    tc-ui-toolkit "5.3.3"
     use-deep-compare-effect "^1.3.1"
     usfm-js "^2.0.2"
 
@@ -6532,10 +6531,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.1.0-alpha.2:
-  version "3.1.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.1.0-alpha.2.tgz#175a4d35d043d9a5611c60cf0f448c402b782059"
-  integrity sha512-U+M2wuiQmMjEQzlRVmHLLZArxoPWJdZ8nX8HmDw+Ow81zV8JFlLcbogOb5rpgQyMKtmlLsRccnmAKS1XKKRcKA==
+single-scripture-rcl@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.1.0.tgz#4deba7cdb1fa187591d1c95a17df553cf78f06e3"
+  integrity sha512-fKytahfznu4104BTGKhmfEboataVkWQywlnZS0uW3wMtDLm1kPuCgnV3DyophREAlxgmkBe7JNlMivGmaKyyxQ==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
