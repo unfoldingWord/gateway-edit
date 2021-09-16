@@ -219,3 +219,7 @@ export const TN_FILENAMES = {
   jud: '_tn_66-JUD',
   rev: '_tn_67-REV',
 }
+
+export function isNT(bookId) {
+  return NT_BOOKS.includes(bookId)
+}

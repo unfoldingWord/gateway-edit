@@ -22,24 +22,25 @@ import {
 } from 'single-scripture-rcl'
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
-import { getResourceBibles } from '@utils/resources'
+import {
+  getLatestBibleRepo,
+  getResourceBibles,
+} from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
-import { NT_BOOKS } from '@common/BooksOfTheBible'
+import { isNT } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
   addNetworkDisconnectError,
-  doFetch,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import {
-  HTTP_CONFIG,
-  HTTP_GET_MAX_WAIT_TIME,
-} from '@common/constants'
+import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import useLexicon from '@hooks/useLexicon'
+import { translate } from '@utils/lexiconHelpers'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -113,9 +114,11 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
   })
 
-  function isNT(bookId) {
-    return NT_BOOKS.includes(bookId)
-  }
+  const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
+    bookId,
+    languageId,
+    server,
+  })
 
   /**
    * in the case of a network error, process and display error dialog
@@ -196,6 +199,9 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
     greekRepoUrl,
     hebrewRepoUrl,
+    fetchGlossesForVerse,
+    getLexiconData,
+    translate,
   }
 
   const commonResourceCardConfigs = {
@@ -244,38 +250,6 @@ function WorkspaceContainer() {
     }// eslint-disable-next-line
   }, [owner, languageId, appRef, server, loggedInUser])
 
-  /**
-   * find the latest version for published bible
-   * @param org
-   * @param lang
-   * @param bible
-   * @return {Promise<*>}
-   */
-  async function getLatestBibleRepo(org, lang, bible) {
-    const url = `${server}/api/catalog/v5/search/${org}/${lang}_${bible}`
-    const results = await doFetch(url, {}, HTTP_GET_MAX_WAIT_TIME)
-      .then(response => {
-        if (response?.status !== 200) {
-          const errorCode = response?.status
-          console.warn(`WorkSpace - error getting latest original lang from ${url}, ${errorCode}`)
-          processError(null, errorCode)
-          return null
-        }
-        return response?.data
-      })
-    const foundItem = results?.data?.[0]
-    let repo = foundItem?.url
-
-    if (foundItem?.metadata_api_contents_url) {
-      // "metadata_api_contents_url": "https://qa.door43.org/api/v1/repos/unfoldingWord/el-x-koine_ugnt/contents/manifest.yaml?ref=v0.9"
-      let parts = foundItem?.metadata_api_contents_url.split('?')
-      let pathParts = parts[0].split('/')
-      pathParts = pathParts.slice(0, -1)
-      repo = pathParts.join('/') + '?' + parts[1]
-    }
-    return repo
-  }
-
   useEffect(() => {
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
 
@@ -284,8 +258,8 @@ function WorkspaceContainer() {
       console.log(`WorkspaceContainer - waiting on latest original bible repos`)
     }
 
-    const hebrewPromise = getLatestBibleRepo('unfoldingWord', 'hbo', 'uhb')
-    const greekPromise = getLatestBibleRepo('unfoldingWord', 'el-x-koine', 'ugnt')
+    const hebrewPromise = getLatestBibleRepo(server, 'unfoldingWord', 'hbo', 'uhb', processError)
+    const greekPromise = getLatestBibleRepo(server, 'unfoldingWord', 'el-x-koine', 'ugnt', processError)
 
     Promise.all([hebrewPromise, greekPromise]).then( (results) => {
       const [repoHebrew, repoGreek] = results
