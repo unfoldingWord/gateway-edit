@@ -259,15 +259,15 @@ export default function ResourceCard({
         editable={editable}
         viewMode={viewMode}
         fontSize={fontSize}
-        markdown={markdown}
         setQuote={setQuote}
-        onEdit={updateTempContent}
         onTsvEdit={onTsvEdit}
         languageId={languageId}
+        onEdit={updateTempContent}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
         updateTaDetails={updateTaDetails}
         errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        markdown={cardResourceId == 'ta' && content.length > 0 ? content : markdown}
       />
     </Card>
   )
