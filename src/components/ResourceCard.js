@@ -266,6 +266,7 @@ export default function ResourceCard({
         languageId={languageId}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        updateTaDetails={updateTaDetails}
         errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
       />
     </Card>
