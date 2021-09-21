@@ -267,7 +267,7 @@ export default function ResourceCard({
         selectedQuote={selectedQuote}
         updateTaDetails={updateTaDetails}
         errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
-        markdown={cardResourceId == 'ta' || cardResourceId == 'tw' && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
+        markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
       />
     </Card>
   )
