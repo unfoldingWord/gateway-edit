@@ -66,7 +66,7 @@ export default function ResourceCard({
   useEffect(() => {
     setContent('')
     setSaved(true)
-  }, [chapter, verse])
+  }, [chapter, verse, filePath, selectedQuote])
 
   const {
     state: {
@@ -262,10 +262,12 @@ export default function ResourceCard({
         setQuote={setQuote}
         onTsvEdit={onTsvEdit}
         languageId={languageId}
+        setContent={setContent}
         onEdit={updateTempContent}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
         updateTaDetails={updateTaDetails}
+        showSaveChangesPrompt={showSaveChangesPrompt}
         errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
         markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
       />

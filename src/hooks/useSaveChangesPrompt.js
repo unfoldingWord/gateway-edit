@@ -27,15 +27,24 @@ export default function useSaveChangesPrompt() {
     }
   }
 
-  const showSaveChangesPrompt = (resourceId, setContent) => new Promise((resolve, reject) => {
+  const showSaveChangesPrompt = (resourceId, setContent, options) => new Promise((resolve, reject) => {
+    const { sameSupportReference = null } = options || {}
+
     if (savedChanges) {
       resolve()
     } else {
-      if (unsavedResources.includes(resourceId)) {
+      if (unsavedResources.includes(resourceId) || (unsavedResources.includes('ta') && resourceId == 'tn' && !sameSupportReference) || (unsavedResources.includes('tw') && resourceId == 'twl' && !sameSupportReference)) {
         if (window.confirm(promptText)) {
           setUnsavedResources(prevState => {
             let newUnsavedResources = [...prevState]
             newUnsavedResources = newUnsavedResources.filter(r => r !== resourceId)
+
+            // ta/tw article edits could be lost when navigating to new items on the tn/twl card thus we should check for changes before navigating to new items on tn or twl
+            if (unsavedResources.includes('ta') && sameSupportReference == false && resourceId == 'tn' || (unsavedResources.includes('tw') && sameSupportReference == false && resourceId == 'twl')) {
+              const resourceIdToExclude = resourceId == 'tn' ? 'ta' : 'tw'
+
+              newUnsavedResources = newUnsavedResources.filter(r => r !== resourceIdToExclude)
+            }
 
             return newUnsavedResources
           })
