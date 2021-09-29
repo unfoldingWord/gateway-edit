@@ -66,7 +66,14 @@ export default function ResourceCard({
   useEffect(() => {
     setContent('')
     setSaved(true)
-  }, [chapter, verse, filePath, selectedQuote])
+  }, [chapter, verse, filePath])
+
+  // Useful to clear content when selectedQuote.quote and selectedQuote.occurrence change, so that tw clears the content value on selection.
+  useEffect(() => {
+    if (cardResourceId == 'tw') {
+      setContent('')
+    }
+  }, [cardResourceId, selectedQuote?.quote, selectedQuote?.occurrence])
 
   const {
     state: {
@@ -266,6 +273,7 @@ export default function ResourceCard({
         onEdit={updateTempContent}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        cardResourceId={cardResourceId}
         updateTaDetails={updateTaDetails}
         showSaveChangesPrompt={showSaveChangesPrompt}
         errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
