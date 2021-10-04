@@ -16,6 +16,7 @@ import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
+
 export default function ResourceCard({
   id,
   title,
