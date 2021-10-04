@@ -140,6 +140,7 @@ export default function ResourceCard({
     projectId,
     selectedQuote,
     useUserLocalStorage,
+    resourceId: cardResourceId,
   })
 
   const sha = getSha({
