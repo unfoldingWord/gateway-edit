@@ -1,4 +1,3 @@
-import path from 'path'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
@@ -7,6 +6,7 @@ import {
   CardContent,
   ERROR_STATE,
   useCardState,
+  useTsvMerger,
   useUserBranch,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
@@ -14,6 +14,8 @@ import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
+import generateEditFilePath from '@utils/generateEditFilePath'
+import getSha from '@utils/getSha'
 
 export default function ResourceCard({
   id,
@@ -31,19 +33,26 @@ export default function ResourceCard({
   languageId,
   resourceId,
   errorMessage,
+  loggedInUser,
   selectedQuote,
   disableFilters,
+  authentication,
   updateTaDetails,
+  onResourceError,
+  setSavedChanges,
   disableNavigation,
   hideMarkdownToggle,
   useUserLocalStorage,
-  onResourceError,
-  authentication,
-  loggedInUser,
+  showSaveChangesPrompt,
 }) {
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+
+  function updateTempContent(c) {
+    setContent(c)
+    setSavedChanges(cardResourceId, false)
+  }
 
   // If content changes then set whether it's saved or not.
   useEffect(() => {
@@ -53,6 +62,19 @@ export default function ResourceCard({
       setSaved(true)
     }
   }, [content])
+
+  // Useful to clear content and saved state when chapter and verse changes.
+  useEffect(() => {
+    setContent('')
+    setSaved(true)
+  }, [chapter, verse, filePath])
+
+  // Useful to clear content when selectedQuote.quote and selectedQuote.occurrence change, so that tw clears the content value on selection.
+  useEffect(() => {
+    if (cardResourceId == 'tw') {
+      setContent('')
+    }
+  }, [cardResourceId, selectedQuote?.quote, selectedQuote?.occurrence])
 
   const {
     state: {
@@ -76,8 +98,10 @@ export default function ResourceCard({
   })
 
   const {
+    tsvs,
     items,
     markdown,
+    resource,
     fetchResponse,
     resourceStatus,
     reloadResource,
@@ -116,10 +140,19 @@ export default function ResourceCard({
     projectId,
     selectedQuote,
     useUserLocalStorage,
+    resourceId: cardResourceId,
   })
 
-  // Each item in the items array may has a unique fetchResponse.
-  const sha = item?.fetchResponse?.data?.sha || fetchResponse?.data?.sha || null
+  const sha = getSha({
+    item, fetchResponse, cardResourceId,
+  })
+  const editFilePath = generateEditFilePath({
+    item,
+    resource,
+    filePath,
+    projectId,
+    cardResourceId,
+  })
 
   const {
     isEditing,
@@ -137,13 +170,29 @@ export default function ResourceCard({
     author: loggedInUser,
     token: authentication?.token,
     branch: workingResourceBranch,
-    filepath: item?.filePath || (projectId && filePath ? path.join(projectId, filePath) : null),
+    filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
+  })
+
+  const { onTsvEdit } = useTsvMerger({
+    tsvs,
+    verse,
+    chapter,
+    itemIndex,
+    setContent: updateTempContent,
   })
 
   useEffect(() => {
     if (updateTaDetails) {
-      updateTaDetails(item?.SupportReference || null)
+      const {
+        Quote, OrigQuote, Occurrence, SupportReference = null,
+      } = item || {}
+      updateTaDetails(SupportReference)
+      setQuote({
+        quote: Quote || OrigQuote,
+        occurrence: Occurrence,
+        SupportReference,
+      })
     }
   }, [item])
 
@@ -160,15 +209,16 @@ export default function ResourceCard({
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
   async function handleSaveEdit() {
-    /**
-     * Save edit, if succesful trigger resource reload and set saved to true.
-     * @param {String} branch
-     */
+    // Save edit, if succesful trigger resource reload and set saved to true.
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {
+          console.info('Reloading resource')
           reloadResource()
           setSaved(true)
+          setSavedChanges(cardResourceId, true)
+        } else {
+          setSavedChanges(cardResourceId, false)
         }
       })
     }
@@ -181,8 +231,9 @@ export default function ResourceCard({
     }
   }
 
-  // TODO: Only markdown content (tw & ta) is editable for now.
-  const editable = cardResourceId == 'tw' || cardResourceId == 'ta'
+  // Add/Remove resources to/from the array to enable or disable edit mode.
+  const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
+  const editable = editableResources.includes(cardResourceId)
 
   return (
     <Card
@@ -196,15 +247,18 @@ export default function ResourceCard({
       fontSize={fontSize}
       itemIndex={itemIndex}
       setFilters={setFilters}
+      setContent={setContent}
       setFontSize={setFontSize}
       saved={saved || isEditing}
       onSaveEdit={handleSaveEdit}
       setItemIndex={setItemIndex}
       markdownView={markdownView}
       disableFilters={disableFilters}
+      cardResourceId={cardResourceId}
       setMarkdownView={setMarkdownView}
       disableNavigation={disableNavigation}
       hideMarkdownToggle={hideMarkdownToggle}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
         id={`${id}_content`}
@@ -214,13 +268,18 @@ export default function ResourceCard({
         editable={editable}
         viewMode={viewMode}
         fontSize={fontSize}
-        markdown={markdown}
         setQuote={setQuote}
-        onEdit={setContent}
+        onTsvEdit={onTsvEdit}
         languageId={languageId}
+        setContent={setContent}
+        onEdit={updateTempContent}
         markdownView={markdownView}
         selectedQuote={selectedQuote}
+        cardResourceId={cardResourceId}
+        updateTaDetails={updateTaDetails}
+        showSaveChangesPrompt={showSaveChangesPrompt}
         errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
       />
     </Card>
   )
@@ -264,4 +323,8 @@ ResourceCard.propTypes = {
   loggedInUser: PropTypes.string,
   /** user authentication object */
   authentication: PropTypes.object,
+  /** Set whether changes are saved or not so that the saved changes prompts opens when necessary. */
+  setSavedChanges: PropTypes.func,
+  /** Shows a unsaved changes prompt if there's any. */
+  showSaveChangesPrompt: PropTypes.func,
 }
