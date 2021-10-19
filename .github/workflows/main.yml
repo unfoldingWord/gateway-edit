@@ -25,7 +25,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          record: true
           headless: true
           browser: chrome
           group: "Integration tests"
