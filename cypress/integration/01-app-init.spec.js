@@ -5,6 +5,9 @@ describe('Login', () => {
 
   it('Should log in successfully', () => {
     cy.get('h1').contains('Login').should('be.visible')
+
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000)
     cy.get('input[name="username"]').type(Cypress.env('TEST_USERNAME'))
     cy.get('input[type="password"]').type(Cypress.env('TEST_PASSWORD'))
     cy.get('[data-test="submit-button"]').click()
