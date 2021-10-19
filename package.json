@@ -9,7 +9,9 @@
     "postinstall": "husky install",
     "increment-build": "bash scripts/increment-build.sh && git add -A",
     "cypress": "cypress open",
-    "cypress:headless": "cypress run"
+    "cypress:headless": "cypress run",
+    "test": "start-server-and-test dev http://localhost:3000 cypress",
+    "test:headless": "start-server-and-test dev http://localhost:3000 cypress:headless"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
@@ -54,6 +56,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^5.2.0",
     "prettier": "^2.2.1",
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "start-server-and-test": "^1.14.0"
   }
 }
