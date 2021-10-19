@@ -10,8 +10,14 @@ env:
   TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 jobs:
   cypress-run:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [10.15.1]
     steps:
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: Checkout
         uses: actions/checkout@v2
       # Install NPM dependencies, cache them correctly
@@ -19,7 +25,17 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
+          record: true
+          headless: true
+          browser: chrome
+          group: "Integration tests"
           build: yarn build
           start: yarn start
           wait-on: "http://localhost:3000"
           wait-on-timeout: 360
+      - name: Archive test screenshots
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: screenshots
+          path: cypress/screenshots
+        if: ${{ failure() }}
