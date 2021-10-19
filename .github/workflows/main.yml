@@ -6,8 +6,8 @@ env:
   CHILD_CONCURRENCY: 1
   NODE_ENV: test
   COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-  CYPRESS_TEST_USERNAME: ${{ secrets.CYPRESS_TEST_USERNAME }}
-  CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
+  TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+  TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
