@@ -7,7 +7,9 @@
     "start": "bash -c \"source ./scripts/set-env.sh && next start\"",
     "export": "next export",
     "postinstall": "husky install",
-    "increment-build": "bash scripts/increment-build.sh && git add -A"
+    "increment-build": "bash scripts/increment-build.sh && git add -A",
+    "cypress": "cypress open",
+    "cypress:headless": "cypress run"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
@@ -37,9 +39,11 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
+    "cypress": "^8.6.0",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.3",

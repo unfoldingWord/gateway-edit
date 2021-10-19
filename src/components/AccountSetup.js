@@ -38,6 +38,7 @@ function AccountSetup({ authentication }) {
             onClick={handleSubmit}
             startIcon={<SaveIcon />}
             disabled={disabledButton}
+            data-cy='app-setup-save-and-continue'
           >
             Save and Continue
           </Button>
