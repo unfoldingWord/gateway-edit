@@ -33,9 +33,3 @@ jobs:
           start: yarn start
           wait-on: "http://localhost:3000"
           wait-on-timeout: 360
-      - name: Archive test screenshots
-        uses: actions/upload-artifact@v2.2.2
-        with:
-          name: screenshots
-          path: cypress/screenshots
-        if: ${{ failure() }}
