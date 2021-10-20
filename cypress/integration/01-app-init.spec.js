@@ -11,7 +11,7 @@ describe('App login & initial setup', () => {
     cy.get('input[type="password"]').should('be.visible').type(Cypress.env('TEST_PASSWORD'))
     cy.get('[data-test="submit-button"]').click()
 
-    cy.wait(2000)
+    cy.wait(3000)
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
     cy.get('[data-cy="account-setup-description"]').contains('Choose your Organization and Primary Language').should('be.visible')
 
