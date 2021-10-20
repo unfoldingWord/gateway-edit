@@ -5,9 +5,8 @@ on: [push, pull_request]
 env:
   CHILD_CONCURRENCY: 1
   NODE_ENV: test
-  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-  TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
-  TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+  CYPRESS_TEST_USERNAME: ${{ secrets.CYPRESS_TEST_USERNAME }}
+  CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
 jobs:
   cypress-run:
     runs-on: macos-latest
