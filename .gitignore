@@ -19,10 +19,15 @@ yalc.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-cypress.env.json
 
 # IntelliJ config
 /.idea/
 
 # VS Code
 .vscode
+
+# Integration testing
+
+cypress.env.json
+cypress/screenshots/
+cypress/videos/
