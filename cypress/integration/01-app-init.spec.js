@@ -34,6 +34,7 @@ describe('App login & initial setup', () => {
     cy.get('[data-cy="app-setup-save-and-continue"]').contains('Save and Continue').should('be.visible').click()
 
     // Test translationNotes card is found on the screen
+    cy.wait(1000)
     cy.get('[id="resource_card_tn"]').should('be.visible')
   })
 })
