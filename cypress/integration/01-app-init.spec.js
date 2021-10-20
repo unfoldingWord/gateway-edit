@@ -17,18 +17,17 @@ describe('App login & initial setup', () => {
 
     // This is necessary to make sure the "Account Setup" screen is loaded on the page
     cy.wait(['@getUser', '@getToken', '@getOrgs'])
-    cy.wait(2000)
 
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
     cy.get('[data-cy="account-setup-description"]').contains('Choose your Organization and Primary Language').should('be.visible')
 
     // Select organization
     cy.get('[id="organization-select-outlined"]').should('be.visible').click()
-    cy.contains('test_org').click()
+    cy.get('[data-value="test_org"]').should('be.visible').click()
 
-    // Select organization
+    // Select language
     cy.get('[id="primary-language-select-outlined"]').should('be.visible').click()
-    cy.contains('en - English - English').should('be.visible').click()
+    cy.get('[data-value="en"]').should('be.visible').click()
 
     // Save selection and continue
     cy.get('[data-cy="app-setup-save-and-continue"]').contains('Save and Continue').should('be.visible').click()
