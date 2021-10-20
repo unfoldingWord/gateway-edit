@@ -1,10 +1,10 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
-describe('Login', () => {
+describe('App login & initial setup', () => {
   beforeEach(() => {
     cy.visit('/')
   })
 
-  it('Should log in successfully', () => {
+  it('Should log in & get to the resource workspace screen successfully', () => {
     cy.get('h1').contains('Login').should('be.visible')
 
     cy.get('input[name="username"]').should('be.visible').type(Cypress.env('TEST_USERNAME'))
