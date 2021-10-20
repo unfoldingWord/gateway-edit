@@ -17,7 +17,7 @@ describe('App login & initial setup', () => {
 
     // This is necessary to make sure the "Account Setup" screen is loaded on the page
     cy.wait(['@getUser', '@getToken', '@getOrgs'])
-    cy.wait(1000)
+    cy.wait(2000)
 
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
     cy.get('[data-cy="account-setup-description"]').contains('Choose your Organization and Primary Language').should('be.visible')
