@@ -23,12 +23,12 @@ describe('App login & initial setup', () => {
 
     // Select organization
     cy.wait(6000)
-    cy.get('[id="organization-select-outlined"]').should('be.visible').click()
+    cy.get('[id="organization-select-outlined"]').click()
     cy.wait(1000)
     cy.get('[data-value="test_org"]').should('be.visible').click()
 
     // Select language
-    cy.get('[id="primary-language-select-outlined"]').should('be.visible').click()
+    cy.get('[id="primary-language-select-outlined"]').click()
     cy.wait(1000)
     cy.get('[data-value="en"]').should('be.visible').click()
 
