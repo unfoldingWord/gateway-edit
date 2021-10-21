@@ -25,12 +25,12 @@ describe('App login & initial setup', () => {
     cy.wait(6000)
     cy.get('[id="organization-select-outlined"]').click()
     cy.wait(1000)
-    cy.get('[data-value="test_org"]').click()
+    cy.get('[data-value="test_org"]').should('have.text', 'test_org').click()
 
     // Select language
     cy.get('[id="primary-language-select-outlined"]').click()
     cy.wait(1000)
-    cy.get('[data-value="en"]').click()
+    cy.get('[data-value="en"]').should('have.text', 'en - English - English').click()
 
     // Save selection and continue
     cy.get('[data-cy="app-setup-save-and-continue"]').contains('Save and Continue').should('be.visible').click()
