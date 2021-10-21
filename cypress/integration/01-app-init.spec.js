@@ -22,6 +22,7 @@ describe('App login & initial setup', () => {
     cy.get('[data-cy="account-setup-description"]').contains('Choose your Organization and Primary Language').should('be.visible')
 
     // Select organization
+    cy.wait(5000)
     cy.get('[id="organization-select-outlined"]').should('be.visible').click()
     cy.get('[data-value="test_org"]').should('be.visible').click()
 
