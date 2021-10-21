@@ -12,6 +12,7 @@ yalc.lock
 /build
 /dist
 /.next
+public/build_number
 
 # misc
 .DS_Store
