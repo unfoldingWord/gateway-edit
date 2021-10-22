@@ -12,6 +12,7 @@ yalc.lock
 /build
 /dist
 /.next
+public/build_number
 
 # misc
 .DS_Store
@@ -25,3 +26,9 @@ yarn-error.log*
 
 # VS Code
 .vscode
+
+# Integration testing
+
+cypress.env.json
+cypress/screenshots/
+cypress/videos/
