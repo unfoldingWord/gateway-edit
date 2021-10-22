@@ -1,6 +1,6 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 describe('App login & initial setup', () => {
-  beforeEach(() => {
+  before(() => {
     cy.visit('/')
   })
 
@@ -11,11 +11,12 @@ describe('App login & initial setup', () => {
     cy.get('input[type="password"]').should('be.visible').type(Cypress.env('TEST_PASSWORD'))
     cy.get('[data-test="submit-button"]').click()
 
-    cy.intercept('GET', 'https://git.door43.org/api/v1/users/test_user01?noCache=**').as('getUser')
+    cy.intercept('https://git.door43.org/api/v1/users/test_user01?noCache=**').as('getUser')
     cy.intercept('https://git.door43.org/api/v1/users/test_user01/tokens?noCache=**').as('getToken')
     cy.intercept('https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
 
     // This is necessary to make sure the "Account Setup" screen is loaded on the page
+    cy.wait(1000)
     cy.wait(['@getUser', '@getToken', '@getOrgs'])
 
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
