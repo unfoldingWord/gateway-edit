@@ -7,12 +7,15 @@ describe('App login & initial setup', () => {
   it('Should log in & get to the resource workspace screen successfully', () => {
     cy.get('h1').contains('Login').should('be.visible')
 
-    cy.get('input[name="username"]').should('be.visible').type(Cypress.env('TEST_USERNAME'))
-    cy.get('input[type="password"]').should('be.visible').type(Cypress.env('TEST_PASSWORD'))
+    const USERNAME = Cypress.env('TEST_USERNAME')
+    const PASSWORD = Cypress.env('TEST_PASSWORD')
+
+    cy.get('input[name="username"]').should('be.visible').type(USERNAME)
+    cy.get('input[type="password"]').should('be.visible').type(PASSWORD)
     cy.get('[data-test="submit-button"]').click()
 
-    cy.intercept('https://git.door43.org/api/v1/users/test_user01?noCache=**').as('getUser')
-    cy.intercept('https://git.door43.org/api/v1/users/test_user01/tokens?noCache=**').as('getToken')
+    cy.intercept(`https://git.door43.org/api/v1/users/${USERNAME}?noCache=**`).as('getUser')
+    cy.intercept(`https://git.door43.org/api/v1/users/${USERNAME}/tokens?noCache=**`).as('getToken')
     cy.intercept('https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
 
     // This is necessary to make sure the "Account Setup" screen is loaded on the page
