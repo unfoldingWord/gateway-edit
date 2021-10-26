@@ -11,4 +11,10 @@ if [[ -z "${COVERALLS_REPO_TOKEN}" ]]; then
   echo "COVERALLS_REPO_TOKEN could not be found"
 fi
 
+if [[ -z "${CYPRESS_TEST_USERNAME}" ]]; then
+  echo "CYPRESS_TEST_USERNAME found: ${CYPRESS_TEST_USERNAME}"
+fi
+
+
+
 yarn upload
