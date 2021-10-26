@@ -15,6 +15,12 @@ if [[ -z "${CYPRESS_TEST_USERNAME}" ]]; then
   echo "CYPRESS_TEST_USERNAME found: ${CYPRESS_TEST_USERNAME}"
 fi
 
+if [[ -z "${env.CYPRESS_TEST_USERNAME}" ]]; then
+  echo "env.CYPRESS_TEST_USERNAME found: ${CYPRESS_TEST_USERNAME}"
+fi
 
+if [[ -z "${secret.CYPRESS_TEST_USERNAME}" ]]; then
+  echo "secret.CYPRESS_TEST_USERNAME found: ${CYPRESS_TEST_USERNAME}"
+fi
 
 yarn upload
