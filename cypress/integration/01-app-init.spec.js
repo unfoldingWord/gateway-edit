@@ -3,7 +3,6 @@ describe('App login & initial setup', () => {
   before(() => {
     console.log(`Before visit`)
     cy.visit('/')
-    console.log(`After visit`)
   })
 
   it('Should log in & get to the resource workspace screen successfully', () => {
