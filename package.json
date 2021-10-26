@@ -8,10 +8,10 @@
     "export": "next export",
     "postinstall": "husky install",
     "increment-build": "bash scripts/increment-build.sh && git add -A",
-    "cypress": "cypress open",
-    "cypress:headless": "cypress run",
-    "test": "start-server-and-test dev http://localhost:3000 cypress",
-    "test:headless": "start-server-and-test dev http://localhost:3000 cypress:headless"
+    "cypress": "NODE_ENV=test cypress open",
+    "cypress:headless": "NODE_ENV=test cypress run",
+    "test": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress",
+    "test:headless": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress:headless"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
