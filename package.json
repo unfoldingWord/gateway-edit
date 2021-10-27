@@ -13,7 +13,7 @@
     "test": "start-server-and-test dev http://localhost:3000 cypress",
     "test:headless": "start-server-and-test dev http://localhost:3000 cypress:headless",
     "test:unit": "NODE_ENV='test' jest --coverage __tests__ && bash ./scripts/upload-coveralls.sh",
-    "upload": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "coveralls:upload": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:jest": "NODE_ENV='test' jest"
   },
   "dependencies": {

@@ -1,13 +1,14 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 describe('App login & initial setup', () => {
-  before(() => {
-    console.log(`Before visit`)
-    const USERNAME = Cypress.env('TEST_USERNAME')
-    console.log(`TEST_USERNAME: ${USERNAME}`)
-    cy.visit('/')
-  })
+  // before(() => {
+  //   console.log(`Before visit`)
+  //   cy.visit('/')
+  // })
 
   it('Should log in & get to the resource workspace screen successfully', () => {
+    console.log(`Before visit`)
+    cy.visit('/')
+    cy.wait(1000)
     console.log(`starting test`)
     cy.get('h1').contains('Login').should('be.visible')
 
