@@ -9,6 +9,7 @@ describe('App login & initial setup', () => {
 
     const USERNAME = Cypress.env('TEST_USERNAME')
     console.log(`USERNAME: ${USERNAME}`)
+
     const PASSWORD = Cypress.env('TEST_PASSWORD')
 
     cy.get('input[name="username"]').should('be.visible').type(USERNAME)
