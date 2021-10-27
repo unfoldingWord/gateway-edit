@@ -2,6 +2,8 @@
 describe('App login & initial setup', () => {
   before(() => {
     console.log(`Before visit`)
+    const USERNAME = Cypress.env('TEST_USERNAME')
+    console.log(`TEST_USERNAME: ${USERNAME}`)
     cy.visit('/')
   })
 
