@@ -7,6 +7,7 @@ env:
   NODE_ENV: test
   CYPRESS_TEST_USERNAME: ${{ secrets.CYPRESS_TEST_USERNAME }}
   CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
+  CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 jobs:
   cypress-run:
     runs-on: macos-latest
@@ -31,7 +32,7 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 360
         env:
-          CYPRESS_RECORD_KEY: ${{ env.CYPRESS_RECORD_KEY }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       - name: Save Cypress Videos
         if: always()
         uses: actions/upload-artifact@v2
