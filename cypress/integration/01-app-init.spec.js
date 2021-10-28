@@ -9,7 +9,6 @@ describe('App login & initial setup', () => {
 
     const USERNAME = Cypress.env('TEST_USERNAME')
     console.log(`USERNAME: ${USERNAME}`)
-
     const PASSWORD = Cypress.env('TEST_PASSWORD')
 
     cy.get('input[name="username"]').should('be.visible').type(USERNAME)
@@ -21,8 +20,8 @@ describe('App login & initial setup', () => {
     cy.intercept('https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
 
     // This is necessary to make sure the "Account Setup" screen is loaded on the page
-    cy.wait(1000)
-    cy.wait(['@getUser', '@getToken', '@getOrgs'])
+    cy.wait(['@getUser', '@getToken'])
+    cy.wait(['@getOrgs'])
 
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
     cy.get('[data-cy="account-setup-description"]').contains('Choose your Organization and Primary Language').should('be.visible')
