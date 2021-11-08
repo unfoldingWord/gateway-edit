@@ -1,32 +1,29 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 describe('App login & initial setup', () => {
-  // before(() => {
-  //   console.log(`Before visit`)
-  //   cy.visit('/')
-  // })
+  before(() => {
+    cy.visit('/')
+  })
 
   it('Should log in & get to the resource workspace screen successfully', () => {
-    console.log(`Before visit`)
-    cy.visit('/')
-    cy.wait(1000)
-    console.log(`starting test`)
     cy.get('h1').contains('Login').should('be.visible')
 
     const USERNAME = Cypress.env('TEST_USERNAME')
-    console.log(`TEST_USERNAME: ${USERNAME}`)
     const PASSWORD = Cypress.env('TEST_PASSWORD')
 
     cy.get('input[name="username"]').should('be.visible').type(USERNAME)
     cy.get('input[type="password"]').should('be.visible').type(PASSWORD)
-    cy.get('[data-test="submit-button"]').click()
 
+    // need to set up intercepts before final click, or sometimes had race condition that request was sent before had set up the intercept
     cy.intercept(`https://git.door43.org/api/v1/users/${USERNAME}?noCache=**`).as('getUser')
     cy.intercept(`https://git.door43.org/api/v1/users/${USERNAME}/tokens?noCache=**`).as('getToken')
     cy.intercept('https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
 
+    cy.get('[data-test="submit-button"]').click()
+
     // This is necessary to make sure the "Account Setup" screen is loaded on the page
+    cy.wait(['@getUser', '@getToken'])
     cy.wait(1000)
-    cy.wait(['@getUser', '@getToken', '@getOrgs'])
+    cy.wait(['@getOrgs'])
 
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
     cy.get('[data-cy="account-setup-description"]').contains('Choose your Organization and Primary Language').should('be.visible')
