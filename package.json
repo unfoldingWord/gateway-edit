@@ -13,8 +13,8 @@
     "test": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress",
     "test:headless": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress:headless",
     "test:unit": "NODE_ENV='test' jest --coverage __tests__ && bash ./scripts/upload-coveralls.sh",
-    "coveralls:upload": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "test:jest": "NODE_ENV='test' jest"
+    "test:unit-nocov": "NODE_ENV='test' jest",
+    "coveralls:upload": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
