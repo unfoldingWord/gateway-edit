@@ -11,10 +11,10 @@
     "cypress": "NODE_ENV=test cypress open",
     "cypress:headless": "NODE_ENV=test cypress run",
     "test": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress",
-    "test:headless": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress:headless",
-    "test:unit": "NODE_ENV='test' jest --coverage __tests__ && bash ./scripts/upload-coveralls.sh",
+    "test:headless": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress:headless && yarn nyc report --reporter=text-summary",
+    "test:unit": "NODE_ENV='test' jest --coverage __tests__",
+    "test:unit-upload": "NODE_ENV='test' jest --coverage __tests__ && bash ./scripts/upload-coveralls.sh",
     "test:unit-nocov": "NODE_ENV='test' jest",
-    "coverage-summary": "yarn nyc report --reporter=text-summary",
     "coveralls:upload": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
