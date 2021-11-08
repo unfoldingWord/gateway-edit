@@ -40,6 +40,8 @@ jobs:
         with:
           name: Cypress Videos
           path: ./cypress/videos/
+      - name: Cypress Coverage Summary
+        run: yarn coverage-summary
       # run unit tests
       - name: Unit tests
         run: yarn test:unit
