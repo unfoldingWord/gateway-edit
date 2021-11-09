@@ -24,7 +24,7 @@ module.exports = {
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
   },
   'collectCoverageFrom': [
-    '*/src/**.{js,jsx,ts}',
+    './src/**.{js,jsx,ts}',
     '!**/node_modules/**',
     '!**/vendor/**',
   ],

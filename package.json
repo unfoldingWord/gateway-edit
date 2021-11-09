@@ -11,10 +11,11 @@
     "cypress": "NODE_ENV=test cypress open",
     "cypress:headless": "NODE_ENV=test cypress run",
     "test": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress",
-    "test:headless": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress:headless && yarn nyc report --reporter=text-summary",
+    "test:headless": "NODE_ENV=test start-server-and-test dev http://localhost:3000 cypress:headless",
     "test:unit": "NODE_ENV='test' jest --coverage __tests__",
     "test:unit-upload": "NODE_ENV='test' jest --coverage __tests__ && bash ./scripts/upload-coveralls.sh",
     "test:unit-nocov": "NODE_ENV='test' jest",
+    "coverage-summary": "yarn nyc report --reporter=text-summary",
     "coveralls:upload": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
@@ -53,6 +54,7 @@
     "@types/jest": "^27.0.2",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.3.1",
+    "babel-plugin-istanbul": "^6.1.1",
     "coveralls": "^3.1.1",
     "cypress": "^8.6.0",
     "eslint": "^7.16.0",
