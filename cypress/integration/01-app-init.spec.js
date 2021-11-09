@@ -7,17 +7,20 @@ describe('App login & initial setup', () => {
   it('Should log in & get to the resource workspace screen successfully', () => {
     cy.get('h1').contains('Login').should('be.visible')
 
-    cy.get('input[name="username"]').should('be.visible').type(Cypress.env('TEST_USERNAME'))
-    cy.get('input[type="password"]').should('be.visible').type(Cypress.env('TEST_PASSWORD'))
+    const USERNAME = Cypress.env('TEST_USERNAME')
+    const PASSWORD = Cypress.env('TEST_PASSWORD')
+
+    cy.get('input[name="username"]').should('be.visible').type(USERNAME)
+    cy.get('input[type="password"]').should('be.visible').type(PASSWORD)
     cy.get('[data-test="submit-button"]').click()
 
-    cy.intercept('https://git.door43.org/api/v1/users/test_user01?noCache=**').as('getUser')
-    cy.intercept('https://git.door43.org/api/v1/users/test_user01/tokens?noCache=**').as('getToken')
-    cy.intercept('https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
+    cy.intercept('GET', `https://git.door43.org/api/v1/users/${USERNAME}?noCache=**`).as('getUser')
+    cy.intercept('GET', `https://git.door43.org/api/v1/users/${USERNAME}/tokens?noCache=**`).as('getToken')
+    cy.intercept('GET', 'https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
 
-    // This is necessary to make sure the "Account Setup" screen is loaded on the page
-    cy.wait(1000)
-    cy.wait(['@getUser', '@getToken', '@getOrgs'])
+    cy.wait('@getUser', { requestTimeout: 15000 })
+    cy.wait('@getToken', { requestTimeout: 15000 })
+    cy.wait('@getOrgs', { requestTimeout: 15000 })
 
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
     cy.get('[data-cy="account-setup-description"]').contains('Choose your Organization and Primary Language').should('be.visible')
