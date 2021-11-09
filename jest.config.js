@@ -7,11 +7,13 @@ module.exports = {
   ],
   'coveragePathIgnorePatterns': [
     '/node_modules/',
+    '/.yalc/',
   ],
   'testPathIgnorePatterns': [
     '/node_modules/',
     'components',
     'cypress',
+    '/.yalc/',
   ],
   'testMatch': [
     '**/?(*.)+(spec|test).[jt]s?(x)',
@@ -29,4 +31,4 @@ module.exports = {
     '!**/vendor/**',
   ],
   'coverageDirectory': './coverage/',
-};
+}
