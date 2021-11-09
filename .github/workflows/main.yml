@@ -43,5 +43,5 @@ jobs:
       - name: Cypress Coverage Summary
         run: yarn coverage-summary
       # run unit tests
-      - name: Unit tests
+      - name: Run Jest Unit Tests
         run: yarn test:unit
