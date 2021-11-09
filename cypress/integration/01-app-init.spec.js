@@ -15,8 +15,10 @@ describe('App login & initial setup', () => {
     cy.get('[data-test="submit-button"]').click()
 
     cy.intercept(`https://git.door43.org/api/v1/users/${USERNAME}?noCache=**`).as('getUser')
+    cy.wait(['@getUser'])
+
     cy.intercept(`https://git.door43.org/api/v1/users/${USERNAME}/tokens?noCache=**`).as('getToken')
-    cy.wait(['@getUser', '@getToken'])
+    cy.wait(['@getToken'])
 
     cy.intercept('https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
     cy.wait(['@getOrgs'])
