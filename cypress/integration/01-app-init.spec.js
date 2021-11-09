@@ -14,13 +14,12 @@ describe('App login & initial setup', () => {
     cy.get('input[type="password"]').should('be.visible').type(PASSWORD)
     cy.get('[data-test="submit-button"]').click()
 
-    cy.intercept(`https://git.door43.org/api/v1/users/${USERNAME}?noCache=**`).as('getUser')
+    cy.intercept('GET', `https://git.door43.org/api/v1/users/${USERNAME}?noCache=**`).as('getUser')
+    cy.intercept('GET', `https://git.door43.org/api/v1/users/${USERNAME}/tokens?noCache=**`).as('getToken')
+    cy.intercept('GET', 'https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
+
     cy.wait('@getUser', { requestTimeout: 15000 })
-
-    cy.intercept(`https://git.door43.org/api/v1/users/${USERNAME}/tokens?noCache=**`).as('getToken')
     cy.wait('@getToken', { requestTimeout: 15000 })
-
-    cy.intercept('https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
     cy.wait('@getOrgs', { requestTimeout: 15000 })
 
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
