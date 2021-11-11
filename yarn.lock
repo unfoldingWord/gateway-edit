@@ -10572,10 +10572,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^3.1.6-rc0:
-  version "3.1.6-rc0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.1.6-rc0.tgz#d7b088bb5c5e3a8e337681f2625a616b3f66fb7d"
-  integrity sha512-woKQnS7SijJ1iLE/mmIRTD8lp9hRpEfGi96VuAKVPL0LPf1UzF7wpsfRiIcSR+yAwTWtPlFjTstZifzHNxfibw==
+translation-helps-rcl@3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.1.7.tgz#a93db4fb4251df3efc866452a84c444082c8099a"
+  integrity sha512-+HijXJHESP4Tq1vCvlwAEa3P6NJUSqZ5A76UyQMhev1T8EHGeoGoTaHxgzev/opxoTYOrADM+HZvyvb9itGSCw==
   dependencies:
     axios "^0.21.1"
     deep-equal "^2.0.5"
