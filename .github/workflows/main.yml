@@ -10,7 +10,7 @@ env:
   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 jobs:
   tests-run:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         node-version: [12.13.0]
@@ -54,7 +54,7 @@ jobs:
 
   upload-to-codecov:
     needs: [tests-run]
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -62,5 +62,5 @@ jobs:
         uses: actions/download-artifact@v2
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2.1.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+        # with:
+        #   token: ${{ secrets.CODECOV_TOKEN }}
