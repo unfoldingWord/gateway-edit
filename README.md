@@ -3,6 +3,7 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/58e59c6e-0cea-43cd-b535-86d3495ce3c9/deploy-status)](https://app.netlify.com/sites/gateway-edit/deploys)
 [![CI Status](https://github.com/unfoldingWord/gateway-edit/workflows/Run%20Cypress%20and%20Jest%20Tests/badge.svg)](https://github.com/unfoldingWord/gateway-edit/actions)
 [![Current Verison](https://img.shields.io/github/tag/unfoldingWord/gateway-edit.svg)](https://github.com/unfoldingWord/gateway-edit/tags)
+
 Main:
 [![Coverage Status](https://coveralls.io/repos/github/unfoldingWord/gateway-edit/badge.svg?branch=main)](https://coveralls.io/github/unfoldingWord/gateway-edit?branch=main)
 Develop:
