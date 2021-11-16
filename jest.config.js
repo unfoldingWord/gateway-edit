@@ -30,5 +30,5 @@ module.exports = {
     '!**/node_modules/**',
     '!**/vendor/**',
   ],
-  'coverageDirectory': './coverage/',
+  'coverageDirectory': 'jest-coverage',
 }
