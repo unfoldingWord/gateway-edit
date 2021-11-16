@@ -16,7 +16,14 @@
     "test:unit-upload": "NODE_ENV='test' jest --coverage __tests__ && bash ./scripts/upload-coveralls.sh",
     "test:unit-nocov": "NODE_ENV='test' jest",
     "coverage-summary": "yarn nyc report --reporter=text-summary",
-    "coveralls:upload": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "coveralls:upload": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "mkdir:reports": "mkdir reports || true",
+    "precopy:reports": "yarn mkdir:reports",
+    "copy:reports": "cp cypress-coverage/coverage-final.json reports/from-cypress.json && cp jest-coverage/coverage-final.json reports/from-jest.json",
+    "precombine:reports": "yarn copy:reports && mkdir .nyc_output || true",
+    "combine:reports": "npx nyc merge reports && mv coverage.json .nyc_output/out.json",
+    "prereport:combined": "yarn combine:reports",
+    "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
@@ -75,5 +82,8 @@
     "prettier": "^2.2.1",
     "prop-types": "^15.7.2",
     "start-server-and-test": "^1.14.0"
+  },
+  "nyc": {
+    "report-dir": "cypress-coverage"
   }
 }
