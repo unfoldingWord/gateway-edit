@@ -8,7 +8,6 @@ env:
   CYPRESS_TEST_USERNAME: ${{ secrets.CYPRESS_TEST_USERNAME }}
   CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 jobs:
   tests-run:
     runs-on: macos-latest
@@ -48,6 +47,20 @@ jobs:
       # Combine test coverage reports
       - name: Combine Cypress & Jest coverage reports
         run: yarn report:combined
-      # Upload combined test coverage report to Coveralls
-      - name: Upload Combined coverage report to Coveralls
-        run: yarn coveralls:upload
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: ./coverage/lcov.info
+
+  upload-to-codecov:
+    needs: [tests-run]
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

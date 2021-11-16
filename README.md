@@ -5,9 +5,9 @@
 [![Current Verison](https://img.shields.io/github/tag/unfoldingWord/gateway-edit.svg)](https://github.com/unfoldingWord/gateway-edit/tags)
 
 Main:
-[![Coverage Status](https://coveralls.io/repos/github/unfoldingWord/gateway-edit/badge.svg?branch=main)](https://coveralls.io/github/unfoldingWord/gateway-edit?branch=main)
+[![codecov](https://codecov.io/gh/unfoldingWord/gateway-edit/branch/main/graph/badge.svg)](https://codecov.io/gh/unfoldingWord/gateway-edit)
 Develop:
-[![Coverage Status](https://coveralls.io/repos/github/unfoldingWord/gateway-edit/badge.svg?branch=develop)](https://coveralls.io/github/unfoldingWord/gateway-edit?branch=develop)
+[![codecov](https://codecov.io/gh/unfoldingWord/gateway-edit/branch/develop/graph/badge.svg)](https://codecov.io/gh/unfoldingWord/gateway-edit)
 
 Book Package harmonized view.
 
