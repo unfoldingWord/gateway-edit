@@ -8,12 +8,15 @@ module.exports = {
   'coveragePathIgnorePatterns': [
     '/node_modules/',
     '/.yalc/',
+    'scripts',
+    'cypress',
   ],
   'testPathIgnorePatterns': [
     '/node_modules/',
     'components',
     'cypress',
     '/.yalc/',
+    'scripts',
   ],
   'testMatch': [
     '**/?(*.)+(spec|test).[jt]s?(x)',
