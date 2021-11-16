@@ -48,3 +48,6 @@ jobs:
       # Combine test coverage reports
       - name: Combine Cypress & Jest coverage reports
         run: yarn report:combined
+      # Upload combined test coverage report to Coveralls
+      - name: Upload Combined coverage report to Coveralls
+        run: yarn coveralls:upload
