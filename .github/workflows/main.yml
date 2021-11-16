@@ -45,3 +45,6 @@ jobs:
       # run unit tests
       - name: Run Jest Unit Tests
         run: yarn test:unit
+      # Combine test coverage reports
+      - name: Combine Cypress & Jest coverage reports
+        run: yarn report:combined
