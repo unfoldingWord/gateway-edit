@@ -6,8 +6,12 @@ yalc.lock
 /node_modules
 
 # testing
-/coverage
-/.nyc_output/out.json
+coverage
+.nyc_output
+.nyc_output/out.json
+jest-coverage
+cypress-coverage
+reports
 
 # production
 /build
