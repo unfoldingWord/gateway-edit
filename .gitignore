@@ -1,17 +1,19 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 yalc.lock
 .yalc
-.env.local
+.env.local*
 # dependencies
 /node_modules
 
 # testing
 /coverage
+/.nyc_output/out.json
 
 # production
 /build
 /dist
 /.next
+public/build_number
 
 # misc
 .DS_Store
@@ -22,3 +24,12 @@ yarn-error.log*
 
 # IntelliJ config
 /.idea/
+
+# VS Code
+.vscode
+
+# Integration testing
+
+cypress.env.json
+cypress/screenshots/
+cypress/videos/

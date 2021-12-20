@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import useEffect from 'use-deep-compare-effect'
 import BibleReference, { useBibleReference } from 'bible-reference-rcl'
-import { StoreContext } from '@context/StoreContext'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import { StoreContext } from '@context/StoreContext'
 
 const useStyles = makeStyles((theme) => ({
   underline: {
@@ -21,7 +21,7 @@ function BibleReferenceComponent(props) {
       },
       supportedBibles,
     },
-    actions: { onReferenceChange },
+    actions: { onReferenceChange, checkUnsavedChanges },
   } = useContext(StoreContext)
 
   const { state, actions } = useBibleReference({
@@ -29,6 +29,7 @@ function BibleReferenceComponent(props) {
     initialChapter: chapter,
     initialVerse: verse,
     onChange: onReferenceChange,
+    onPreChange: () => checkUnsavedChanges(),
   })
 
   useEffect(() => {
@@ -36,7 +37,9 @@ function BibleReferenceComponent(props) {
       // update reference if external change (such as user log in causing saved reference to be loaded)
       actions.goToBookChapterVerse(bookId, chapter, verse)
     }
-  }, [{bookId, chapter, verse}])
+  }, [{
+    bookId, chapter, verse,
+  }])
 
   useEffect(() => {
     if (supportedBibles?.length) {

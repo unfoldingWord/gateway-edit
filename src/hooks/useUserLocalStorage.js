@@ -65,8 +65,7 @@ export function setUserItem(key, currentValue, setState, newValue, username) {
   // Allow value to be a function so we have same API as useState
   const valueToStore =
     newValue instanceof Function ? newValue(currentValue) : newValue
-  const valueToStoreStr = JSON.stringify(valueToStore)
-  localStorage.setItem(key_, valueToStoreStr)
+  setLocalStorageValue(key_, valueToStore)
   setState && setState(valueToStore)
 }
 
@@ -81,7 +80,7 @@ export function setUserItem(key, currentValue, setState, newValue, username) {
  */
 export function readUserItem(key, currentValue, setState, initialValue, username) {
   const key_ = getUserKey(username, key)
-  let savedValue = getUserItem(key_)
+  let savedValue = getLocalStorageItem(key_)
 
   if (savedValue === null) {
     savedValue = initialValue
@@ -102,17 +101,32 @@ export function readUserItem(key, currentValue, setState, initialValue, username
  * @param {string} key - key for item
  * @return {any}
  */
-export function getUserItem(key) {
-  let savedValue = localStorage.getItem(key)
+export function getLocalStorageItem(key) {
+  if (typeof window !== 'undefined') {
+    let savedValue = localStorage.getItem(key)
 
-  if (savedValue !== null) {
-    try {
-      savedValue = JSON.parse(savedValue)
-    } catch {
-      savedValue = null // if not parsable
+    if (savedValue !== null) {
+      try {
+        savedValue = JSON.parse(savedValue)
+      } catch {
+        savedValue = null // if not parsable
+      }
     }
+    return savedValue
   }
-  return savedValue
+  return null
+}
+
+/**
+ * saves item to local storage
+ * @param {string} key - key for item
+ * @param {any} value - value to save
+ */
+export function setLocalStorageValue(key, value) {
+  if (typeof window !== 'undefined') {
+    const valueToStoreStr = JSON.stringify(value)
+    localStorage.setItem(key, valueToStoreStr)
+  }
 }
 
 export default useUserLocalStorage

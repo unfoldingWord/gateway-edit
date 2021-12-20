@@ -19,6 +19,8 @@ export default function ErrorPopup(
     actionButton2Default,
     closeButtonStr,
     closeButtonDefault,
+    hideClose,
+    dimBackground,
   }) {
   function getActionButtons() {
     return <>
@@ -61,6 +63,7 @@ export default function ErrorPopup(
     <div className='flex-col'>
       <div className='h2 flex text-lg my-3 wrap-anywhere'> {message} </div>
       <div className='flex justify-end space-x-4'>
+        { !hideClose &&
         <Button
           size='large'
           color={closeButtonDefault ? 'primary' : 'default'}
@@ -70,6 +73,7 @@ export default function ErrorPopup(
         >
           {closeButtonStr}
         </Button>
+        }
         {getActionButtons()}
       </div>
     </div>
@@ -80,6 +84,7 @@ export default function ErrorPopup(
       title={title_}
       content={content}
       showRawContent={true}
+      dimBackground={dimBackground}
       id={id}
       onClose={onClose}
     />
@@ -93,6 +98,8 @@ ErrorPopup.defaultProps = {
   actionButton2Str: '',
   closeButtonStr: CANCEL,
   closeButtonDefault: true,
+  hideClose: false,
+  dimBackground: true,
 }
 
 ErrorPopup.propTypes = {
@@ -122,4 +129,8 @@ ErrorPopup.propTypes = {
   closeButtonStr: PropTypes.string,
   /** if true then make close button the default */
   closeButtonDefault: PropTypes.bool,
+  /** if true, don't show close button */
+  hideClose: PropTypes.bool,
+  /** turn off or on background dimming, default is on */
+  dimBackground: PropTypes.bool,
 }

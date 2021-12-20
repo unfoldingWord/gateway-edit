@@ -9,5 +9,9 @@
       "@common/*": ["src/common/*"],
       "@utils/*": ["src/utils/*"]
     }
-  }
+  },
+  "include": [
+    "./node_modules/cypress",
+    "cypress/**/*.js"
+  ]
 }

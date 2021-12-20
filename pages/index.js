@@ -7,7 +7,7 @@ const WorkspaceContainer = dynamic(
   {
     ssr: false,
     loading: () => <CircularProgress size={180} />,
-  }
+  },
 )
 
 const Home = () => (

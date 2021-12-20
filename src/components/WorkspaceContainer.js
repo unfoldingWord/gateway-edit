@@ -1,29 +1,33 @@
 import {
-  useState,
-  useEffect,
   useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from 'react'
 import * as isEqual from 'deep-equal'
 import { Workspace } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
-  OT_ORIG_LANG,
   NT_ORIG_LANG,
-  useScripture,
-  ScriptureCard,
-  TARGET_LITERAL,
-  ORIGINAL_SOURCE,
-  TARGET_SIMPLIFIED,
   NT_ORIG_LANG_BIBLE,
+  ORIGINAL_SOURCE,
+  OT_ORIG_LANG,
   OT_ORIG_LANG_BIBLE,
+  ScriptureCard,
+  splitUrl,
+  TARGET_LITERAL,
+  TARGET_SIMPLIFIED,
+  useScripture,
 } from 'single-scripture-rcl'
-import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
-import useResourceClickListener from 'translation-helps-rcl/dist/hooks/useResourceClickListener'
+import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
-import { getResourceBibles } from '@utils/resources'
+import {
+  getLatestBibleRepo,
+  getResourceBibles,
+} from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
-import { NT_BOOKS } from '@common/BooksOfTheBible'
+import { isNT } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
@@ -33,8 +37,10 @@ import {
   reloadApp,
 } from '@utils/network'
 import { useRouter } from 'next/router'
-import { MANIFEST_INVALID_ERROR } from '@common/constants'
+import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import useLexicon from '@hooks/useLexicon'
+import { translate } from '@utils/lexiconHelpers'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,7 +65,7 @@ function WorkspaceContainer() {
     state: {
       owner,
       server,
-      branch,
+      appRef,
       taArticle,
       languageId,
       selectedQuote,
@@ -71,7 +77,12 @@ function WorkspaceContainer() {
       currentLayout,
       useUserLocalStorage,
       loggedInUser,
+      authentication,
       tokenNetworkError,
+      greekRepoUrl,
+      hebrewRepoUrl,
+      mainScreenRef,
+      savedChanges,
     },
     actions: {
       logout,
@@ -81,6 +92,10 @@ function WorkspaceContainer() {
       setTokenNetworkError,
       setLastError,
       updateTaDetails,
+      setGreekRepoUrl,
+      setHebrewRepoUrl,
+      setSavedChanges,
+      showSaveChangesPrompt,
     },
   } = useContext(StoreContext)
 
@@ -92,15 +107,18 @@ function WorkspaceContainer() {
   ] = useResourceClickListener({
     owner,
     server,
-    branch,
+    ref: appRef,
     taArticle,
     languageId,
     onResourceError,
+    httpConfig: HTTP_CONFIG,
   })
 
-  function isNT(bookId) {
-    return NT_BOOKS.includes(bookId)
-  }
+  const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
+    bookId,
+    languageId,
+    server,
+  })
 
   /**
    * in the case of a network error, process and display error dialog
@@ -127,6 +145,7 @@ function WorkspaceContainer() {
             setTokenNetworkError(error)
             setNetworkError(null) // clear this flag in case it was also set
           }}
+          hideClose={true}
           onRetry={reloadApp}
         />
       )
@@ -136,6 +155,7 @@ function WorkspaceContainer() {
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
+          hideClose={true}
           /* show reload if send feedback not enabled */
           onRetry={!networkError.actionButtonText ? reloadApp : null}
         />
@@ -144,22 +164,44 @@ function WorkspaceContainer() {
     return null
   }
 
-  function onResourceError(message, isAccessError) {
-    if (!networkError && // only show if another error not already showing
-        isAccessError) { // we only show popup for access errors
-      addNetworkDisconnectError(message, 0, logout, router, setNetworkError, setLastError )
+  /**
+   * process error and determine if there is a problem with connection to server
+   *  if showAnyError is true we display an error popup
+   *    the process then is to check if this is server connection problem - if so we display that message, if not we display the error returned
+   *  if showAnyError is false (default) we only display an error popup if there is a problem connecting to server
+   * @param {string} message - the error message we received fetching a resource
+   * @param {boolean} isAccessError - if false then the error type is not one that would be caused by server connection problems
+   * @param {number} resourceStatus - status code returned fetching resource
+   * @param {object} error - error object for detected error, could be a parsing error, etc.  This will take precedence over message
+   * @param {boolean} showAllErrors - if true then always show a popup error message, otherwise just show server error message if we can't talk to server
+   */
+  function onResourceError(message, isAccessError, resourceStatus, error, showAllErrors = false) {
+    if (!networkError ) { // only show if another error not already showing
+      if (showAllErrors) {
+        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
+      } else {
+        if (isAccessError) { // we only show popup for access errors
+          addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError)
+        }
+      }
     }
   }
 
   const commonScriptureCardConfigs = {
     isNT,
     server,
-    branch,
+    appRef,
     classes,
     getLanguage,
     useUserLocalStorage,
     originalLanguageOwner: scriptureOwner,
     onResourceError,
+    httpConfig: HTTP_CONFIG,
+    greekRepoUrl,
+    hebrewRepoUrl,
+    fetchGlossesForVerse,
+    getLexiconData,
+    translate,
   }
 
   const commonResourceCardConfigs = {
@@ -168,16 +210,18 @@ function WorkspaceContainer() {
     verse,
     server,
     owner,
-    branch,
+    appRef,
     languageId,
     useUserLocalStorage,
     onResourceError,
+    loggedInUser,
+    authentication,
   }
 
   useEffect(() => {
     setWorkspaceReady(false)
 
-    if (owner && languageId && branch && server && loggedInUser) {
+    if (owner && languageId && appRef && server && loggedInUser) {
       getResourceBibles({
         bookId,
         chapter,
@@ -185,12 +229,10 @@ function WorkspaceContainer() {
         resourceId: languageId === 'en' ? 'ult' : 'glt',
         owner,
         languageId,
-        branch,
+        ref: appRef,
         server,
       }).then(results => {
-        const {
-          bibles, httpCode, resourceLink,
-        } = results
+        const { bibles, resourceLink } = results
 
         if (bibles?.length) {
           if (!isEqual(bibles, supportedBibles)) {
@@ -198,7 +240,6 @@ function WorkspaceContainer() {
             setSupportedBibles(bibles) // TODO blm: update bible refs
           }
         } else {
-          processError(`${MANIFEST_INVALID_ERROR} ${resourceLink}`, httpCode)
           console.warn(`no bibles found for ${resourceLink}`)
         }
         setWorkspaceReady(true)
@@ -207,8 +248,47 @@ function WorkspaceContainer() {
         processError(e.toString())
       })
     }// eslint-disable-next-line
-  }, [owner, languageId, branch, server, loggedInUser])
+  }, [owner, languageId, appRef, server, loggedInUser])
 
+  useEffect(() => {
+    const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
+
+    if (missingOrignalBibles) { // if we don't have a path
+      setWorkspaceReady(false)
+      console.log(`WorkspaceContainer - waiting on latest original bible repos`)
+    }
+
+    const hebrewPromise = getLatestBibleRepo(server, 'unfoldingWord', 'hbo', 'uhb', processError)
+    const greekPromise = getLatestBibleRepo(server, 'unfoldingWord', 'el-x-koine', 'ugnt', processError)
+
+    Promise.all([hebrewPromise, greekPromise]).then( (results) => {
+      const [repoHebrew, repoGreek] = results
+      let changed = false
+
+      if (repoHebrew && (repoHebrew !== hebrewRepoUrl)) {
+        setHebrewRepoUrl(repoHebrew)
+        changed = true
+      }
+
+      if (repoGreek && (repoGreek !== greekRepoUrl)) {
+        setGreekRepoUrl(repoGreek)
+        changed = true
+      }
+
+      if (missingOrignalBibles && repoHebrew && repoGreek) {
+        console.log(`WorkspaceContainer - found original bible repos`)
+        setWorkspaceReady(true)
+      } else if (changed) { // force redraw
+        console.log(`WorkspaceContainer - original bible repos changed, force reload`)
+        setWorkspaceReady(false)
+        setTimeout(() => {
+          setWorkspaceReady(true)
+        }, 500)
+      }
+    })
+  }, [])
+
+  const isNewTestament = isNT(bookId)
   const originalScripture = {
     reference: {
       projectId: bookId,
@@ -219,26 +299,32 @@ function WorkspaceContainer() {
     resource: {
       owner: 'unfoldingWord',
       originalLanguageOwner: 'unfoldingWord',
-      languageId: isNT(bookId) ? NT_ORIG_LANG : OT_ORIG_LANG,
+      languageId: isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG,
       resourceId: ORIGINAL_SOURCE,
     },
-    getLanguage: () => ({ direction: isNT(bookId) ? 'ltr' : 'rtl' }),
+    getLanguage: () => ({ direction: isNewTestament ? 'ltr' : 'rtl' }),
   }
 
   const config = {
     server,
-    branch,
-    cache: { maxAge: 1 * 1 * 1 * 60 * 1000 },
+    ...HTTP_CONFIG,
   }
+
+  const { server: origServer, resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
 
   const originalScriptureConfig = useScripture({
     ...originalScripture,
     resource: {
       ...originalScripture.resource,
-      resourceId: isNT(bookId) ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
-      projectId: isNT(bookId) ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      resourceId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      projectId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      ref: appRef,
     },
-    config,
+    resourceLink: origResourceLink,
+    config: {
+      ...config,
+      server: origServer,
+    },
   })
 
   return (
@@ -252,7 +338,7 @@ function WorkspaceContainer() {
         selections={selections}
         onSelections={setSelections}
         quote={selectedQuote?.quote}
-        occurrence={selectedQuote?.occurrence}
+        occurrence={selectedQuote?.occurrence?.toString()}
         verseObjects={originalScriptureConfig.verseObjects || []}
       >
         {loading || content || error ?
@@ -263,6 +349,7 @@ function WorkspaceContainer() {
             loading={loading}
             content={content}
             onClose={() => clearContent()}
+            workspaceRef={mainScreenRef}
           />
           :
           null
@@ -358,6 +445,10 @@ function WorkspaceContainer() {
             setQuote={setQuote}
             selectedQuote={selectedQuote}
             updateTaDetails={updateTaDetails}
+            loggedInUser={loggedInUser}
+            authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationAcademy'
@@ -367,6 +458,10 @@ function WorkspaceContainer() {
             projectId={taArticle?.projectId}
             filePath={taArticle?.filePath}
             errorMessage={taArticle ? null : 'No article is specified in the current note.'}
+            loggedInUser={loggedInUser}
+            authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationWords List'
@@ -381,6 +476,10 @@ function WorkspaceContainer() {
             disableFilters
             disableNavigation
             hideMarkdownToggle
+            loggedInUser={loggedInUser}
+            authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationWords Article'
@@ -393,6 +492,10 @@ function WorkspaceContainer() {
             setQuote={setQuote}
             selectedQuote={selectedQuote}
             disableFilters
+            loggedInUser={loggedInUser}
+            authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
           <ResourceCard
             title='translationQuestions'
@@ -403,6 +506,10 @@ function WorkspaceContainer() {
             filePath={null}
             viewMode='question'
             disableFilters
+            loggedInUser={loggedInUser}
+            authentication={authentication}
+            setSavedChanges={setSavedChanges}
+            showSaveChangesPrompt={showSaveChangesPrompt}
           />
         </Workspace>
       </SelectionsContextProvider>
