@@ -44,7 +44,7 @@ yarn run test:unit
 #### Running Cypress tests Interactively
 - in first terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
 ```
-yarn start
+yarn dev
 ```
 - then in second terminal, to run cypress interactively do:
 ```
