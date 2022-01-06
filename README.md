@@ -22,3 +22,37 @@ Book Package harmonized view.
 ## Scripts
 
 - "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
+
+### Running tests
+- Before running any tests, make sure initialized by doing:
+```
+yarn
+```
+- also before running cypress tests, you must create a file `cypress.env.json` with contents such as (of course replace text in `<< >>` with you user login credentials):
+```
+{
+  "TEST_USERNAME": <<my user name>>,
+  "TEST_PASSWORD": <<my user password>>
+}
+```
+
+#### Running Jest Unit Tests
+```
+yarn run test:unit
+```
+
+#### Running Cypress tests Interactively
+- in first terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
+```
+yarn dev
+```
+- then in second terminal, to run cypress interactively do:
+```
+yarn run cypress
+```
+
+#### Running Cypress tests headless
+- in terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
+```
+yarn test:headless
+```
