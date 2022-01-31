@@ -17,6 +17,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import MailIcon from '@material-ui/icons/Mail'
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined'
+import CropLandscapeIcon from '@material-ui/icons/CropLandscape'
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -53,43 +54,48 @@ export default function MinimizedCards({ minimizedCards = [{ title: 'translation
 
   console.log({ showDrawer })
 
-  return (
-    <div>
-      <Fab
-        // variant="extended"
-        // size="small"
-        color="primary"
-        className={classes.fab}
-        aria-label="minimized cards"
-        onClick={() => toggleDrawer(true)}
-      >
-        <Badge badgeContent={badgeContent} max={999} color='secondary' showZero>
-          <MinimizeIcon className={classes.icon} />
-        </Badge>
-      </Fab>
-      <Drawer anchor='bottom' open={showDrawer} onClose={() => toggleDrawer(false)}>
-        <List>
-          <ListItem key='Recent minimized cards'>
-            <ListItemIcon>
-              <MinimizeIcon />
-            </ListItemIcon>
-            <ListItemText primary='Recent minimized cards' />
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          {minimizedCards.map(({ title, id }, index) => (
-            <ListItem button key={title} onClick={() => onMaximizeCard(id, title)}>
+  if (badgeContent && badgeContent > 0) {
+    return (
+      <div>
+        <Fab
+          variant="extended"
+          // size="small"
+          color="primary"
+          className={classes.fab}
+          aria-label="minimized cards"
+          onClick={() => toggleDrawer(true)}
+        >
+          <Badge badgeContent={badgeContent} max={999} color='secondary' showZero>
+            <CropLandscapeIcon className={classes.icon} />
+          Recent cards&nbsp;&nbsp;
+          </Badge>
+        </Fab>
+        <Drawer anchor='bottom' open={showDrawer} onClose={() => toggleDrawer(false)}>
+          <List>
+            <ListItem key='Recent minimized cards'>
               <ListItemIcon>
-                <DashboardOutlinedIcon/>
+                <MinimizeIcon />
               </ListItemIcon>
-              <ListItemText primary={title} />
+              <ListItemText primary='Recent minimized cards' />
             </ListItem>
-          ))}
-        </List>
-      </Drawer>
-    </div>
-  )
+          </List>
+          <Divider />
+          <List>
+            {minimizedCards.map(({ title, id }, index) => (
+              <ListItem button key={title} onClick={() => onMaximizeCard(id, title)}>
+                <ListItemIcon>
+                  <DashboardOutlinedIcon/>
+                </ListItemIcon>
+                <ListItemText primary={title} />
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </div>
+    )
+  } else {
+    return <div/>
+  }
 }
 
 MinimizedCards.propTypes = {
