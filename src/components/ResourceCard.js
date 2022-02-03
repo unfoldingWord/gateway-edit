@@ -32,6 +32,7 @@ export default function ResourceCard({
   projectId,
   languageId,
   resourceId,
+  onMinimize,
   errorMessage,
   loggedInUser,
   selectedQuote,
@@ -248,6 +249,7 @@ export default function ResourceCard({
       itemIndex={itemIndex}
       setFilters={setFilters}
       setContent={setContent}
+      onMinimize={() => onMinimize(id)}
       setFontSize={setFontSize}
       saved={saved || isEditing}
       onSaveEdit={handleSaveEdit}
@@ -327,4 +329,6 @@ ResourceCard.propTypes = {
   setSavedChanges: PropTypes.func,
   /** Shows a unsaved changes prompt if there's any. */
   showSaveChangesPrompt: PropTypes.func,
+  /** function to minimize the card (optional) */
+  onMinimize: PropTypes.func,
 }
