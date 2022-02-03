@@ -249,7 +249,6 @@ export default function ResourceCard({
       itemIndex={itemIndex}
       setFilters={setFilters}
       setContent={setContent}
-      onMinimize={() => onMinimize(id)}
       setFontSize={setFontSize}
       saved={saved || isEditing}
       onSaveEdit={handleSaveEdit}
@@ -261,6 +260,7 @@ export default function ResourceCard({
       disableNavigation={disableNavigation}
       hideMarkdownToggle={hideMarkdownToggle}
       showSaveChangesPrompt={showSaveChangesPrompt}
+      onMinimize={onMinimize ? () => onMinimize(id) : null}
     >
       <CardContent
         id={`${id}_content`}

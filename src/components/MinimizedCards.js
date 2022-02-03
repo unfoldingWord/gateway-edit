@@ -64,34 +64,41 @@ export default function MinimizedCards({ minimizedCards = [], maximizeCard }) {
   if (badgeContent && badgeContent > 0) {
     return (
       <div>
-        <div className={classes.items}>
-          {showFabList && minimizedCards.length > 0 && minimizedCards.map(({ title, id }, index) => (
-            <div key={`${index}_${title}_fab`} className={classes.item} onClick={() => onMaximizeCard(id)}>
-              <Card className={classes.card}>
-                <CardContent>
-                  <b>{title}</b>
-                </CardContent>
-              </Card>
-              <Fab
-                className={classes.itemFab}
-                aria-label={title}
-                variant="round"
-                color="primary"
-              >
-                <CropLandscapeIcon/>
-              </Fab>
-            </div>
-          ))}
-        </div>
+        {showFabList &&
+          <div className={classes.items}>
+            {minimizedCards.length > 0 && minimizedCards.map(({ title, id }, index) => {
+              const titleMessage = `Restore ${title} card.`
+
+              return (
+                <div key={`${index}_${title}_fab`} className={classes.item} onClick={() => onMaximizeCard(id)}>
+                  <Card className={classes.card} title={titleMessage}>
+                    <CardContent>
+                      <b>{title}</b>
+                    </CardContent>
+                  </Card>
+                  <Fab
+                    color="primary"
+                    variant="circular"
+                    title={titleMessage}
+                    aria-label={titleMessage}
+                    className={classes.itemFab}
+                  >
+                    <CropLandscapeIcon/>
+                  </Fab>
+                </div>
+              )
+            })}
+          </div>
+        }
         <Fab
+          color='inherit'
           className={classes.fab}
           aria-label='minimized cards'
-          variant={showFabList ? 'round' : 'extended'}
-          color='inherit'
           onClick={() => toggleDrawer(!showFabList)}
+          variant={showFabList ? 'circular' : 'extended'}
         >
           {showFabList ?
-            <CloseIcon />
+            <CloseIcon title='Close'/>
             :
             <Badge badgeContent={badgeContent} max={999} color='secondary'>
               <CropLandscapeIcon className={classes.icon} />

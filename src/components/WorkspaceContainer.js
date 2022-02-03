@@ -41,6 +41,9 @@ import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import useLexicon from '@hooks/useLexicon'
 import { translate } from '@utils/lexiconHelpers'
+import useMinimizedCardState from '@hooks/useMinimizedCardState'
+import MinimizedCards from '@components/MinimizedCards'
+import _ from 'lodash'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -82,7 +85,6 @@ function WorkspaceContainer() {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
-      savedChanges,
     },
     actions: {
       logout,
@@ -288,6 +290,154 @@ function WorkspaceContainer() {
     })
   }, [])
 
+
+  const cards = [
+    {
+      title: 'Literal Translation',
+      type: 'scripture_card',
+      id: 'scripture_card_Literal_Translation',
+      cardNum: 0,
+      reference: {
+        chapter,
+        verse,
+        bookId,
+        projectId: bookId,
+      },
+      resource: {
+        owner,
+        languageId,
+        resourceId: TARGET_LITERAL,
+        originalLanguageOwner: scriptureOwner,
+      },
+      ...commonScriptureCardConfigs,
+    },
+    {
+      title: 'Original Source',
+      type: 'scripture_card',
+      id: 'scripture_card_Original_Source',
+      cardNum: 1,
+      reference: {
+        chapter,
+        verse,
+        bookId,
+        projectId: bookId,
+      },
+      resource: {
+        owner,
+        languageId,
+        resourceId: ORIGINAL_SOURCE,
+        originalLanguageOwner: scriptureOwner,
+      },
+      ...commonScriptureCardConfigs,
+    },
+    {
+      title: 'Simplified Translation',
+      type: 'scripture_card',
+      id: 'scripture_card_Simplified_Translation',
+      cardNum: 2,
+      reference: {
+        chapter,
+        verse,
+        bookId,
+        projectId: bookId,
+      },
+      resource: {
+        owner,
+        languageId,
+        resourceId: TARGET_SIMPLIFIED,
+        originalLanguageOwner: scriptureOwner,
+      },
+      ...commonScriptureCardConfigs,
+    },
+    {
+      title: 'translationNotes',
+      type: 'resource_card',
+      id: 'resource_card_tn',
+      filePath: null,
+      resourceId: 'tn',
+      projectId: bookId,
+      setQuote: setQuote,
+      selectedQuote: selectedQuote,
+      updateTaDetails: updateTaDetails,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+    {
+      title: 'translationAcademy',
+      type: 'resource_card',
+      id: 'resource_card_ta',
+      resourceId: 'ta',
+      projectId: taArticle?.projectId,
+      filePath: taArticle?.filePath,
+      errorMessage: taArticle ? null : 'No article is specified in the current note.',
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+    {
+      title: 'translationWords List',
+      type: 'resource_card',
+      id: 'resource_card_twl',
+      viewMode: 'list',
+      resourceId: 'twl',
+      projectId: bookId,
+      filePath: null,
+      setQuote: setQuote,
+      selectedQuote: selectedQuote,
+      disableFilters: true,
+      disableNavigation: true,
+      hideMarkdownToggle: true,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+    {
+      title: 'translationWords Article',
+      type: 'resource_card',
+      id: 'resource_card_twa',
+      viewMode: 'markdown',
+      resourceId: 'twl',
+      projectId: bookId,
+      filePath: null,
+      setQuote: setQuote,
+      selectedQuote: selectedQuote,
+      disableFilters: true,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+    {
+      title: 'translationQuestions',
+      type: 'resource_card',
+      id: 'resource_card_tq',
+      resourceId: 'tq',
+      projectId: bookId,
+      filePath: null,
+      viewMode: 'question',
+      disableFilters: true,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+  ]
+
+  const {
+    visibleCards, minimizedCards, maximizeCard,
+  } = useMinimizedCardState({
+    cards, setCurrentLayout, currentLayout, useUserLocalStorage,
+  })
+
   const isNewTestament = isNT(bookId)
   const originalScripture = {
     reference: {
@@ -341,6 +491,7 @@ function WorkspaceContainer() {
         occurrence={selectedQuote?.occurrence?.toString()}
         verseObjects={originalScriptureConfig.verseObjects || []}
       >
+        {minimizedCards.length > 0 && <MinimizedCards minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>}
         {loading || content || error ?
           <DraggableCard
             open
@@ -381,137 +532,15 @@ function WorkspaceContainer() {
             xs: 3,
           }}
         >
-          <ScriptureCard
-            cardNum={0}
-            title='Literal Translation'
-            reference={{
-              chapter,
-              verse,
-              bookId,
-              projectId: bookId,
-            }}
-            resource={{
-              owner,
-              languageId,
-              resourceId: TARGET_LITERAL,
-              originalLanguageOwner: scriptureOwner,
-            }}
-            {...commonScriptureCardConfigs}
-          />
-
-          <ScriptureCard
-            cardNum={1}
-            title='Original Source'
-            reference={{
-              chapter,
-              verse,
-              bookId,
-              projectId: bookId,
-            }}
-            resource={{
-              owner,
-              languageId,
-              resourceId: ORIGINAL_SOURCE,
-              originalLanguageOwner: scriptureOwner,
-            }}
-            {...commonScriptureCardConfigs}
-          />
-
-          <ScriptureCard
-            cardNum={2}
-            title='Simplified Translation'
-            reference={{
-              chapter,
-              verse,
-              bookId,
-              projectId: bookId,
-            }}
-            resource={{
-              owner,
-              languageId,
-              resourceId: TARGET_SIMPLIFIED,
-              originalLanguageOwner: scriptureOwner,
-            }}
-            {...commonScriptureCardConfigs}
-          />
-
-          <ResourceCard
-            title='translationNotes'
-            id='resource_card_tn'
-            {...commonResourceCardConfigs}
-            filePath={null}
-            resourceId={'tn'}
-            projectId={bookId}
-            setQuote={setQuote}
-            selectedQuote={selectedQuote}
-            updateTaDetails={updateTaDetails}
-            loggedInUser={loggedInUser}
-            authentication={authentication}
-            setSavedChanges={setSavedChanges}
-            showSaveChangesPrompt={showSaveChangesPrompt}
-          />
-          <ResourceCard
-            title='translationAcademy'
-            id='resource_card_ta'
-            {...commonResourceCardConfigs}
-            resourceId={'ta'}
-            projectId={taArticle?.projectId}
-            filePath={taArticle?.filePath}
-            errorMessage={taArticle ? null : 'No article is specified in the current note.'}
-            loggedInUser={loggedInUser}
-            authentication={authentication}
-            setSavedChanges={setSavedChanges}
-            showSaveChangesPrompt={showSaveChangesPrompt}
-          />
-          <ResourceCard
-            title='translationWords List'
-            id='resource_card_twl'
-            {...commonResourceCardConfigs}
-            viewMode={'list'}
-            resourceId={'twl'}
-            projectId={bookId}
-            filePath={null}
-            setQuote={setQuote}
-            selectedQuote={selectedQuote}
-            disableFilters
-            disableNavigation
-            hideMarkdownToggle
-            loggedInUser={loggedInUser}
-            authentication={authentication}
-            setSavedChanges={setSavedChanges}
-            showSaveChangesPrompt={showSaveChangesPrompt}
-          />
-          <ResourceCard
-            title='translationWords Article'
-            id='resource_card_twa'
-            {...commonResourceCardConfigs}
-            viewMode={'markdown'}
-            resourceId={'twl'}
-            projectId={bookId}
-            filePath={null}
-            setQuote={setQuote}
-            selectedQuote={selectedQuote}
-            disableFilters
-            loggedInUser={loggedInUser}
-            authentication={authentication}
-            setSavedChanges={setSavedChanges}
-            showSaveChangesPrompt={showSaveChangesPrompt}
-          />
-          <ResourceCard
-            title='translationQuestions'
-            id='resource_card_tq'
-            {...commonResourceCardConfigs}
-            resourceId={'tq'}
-            projectId={bookId}
-            filePath={null}
-            viewMode='question'
-            disableFilters
-            loggedInUser={loggedInUser}
-            authentication={authentication}
-            setSavedChanges={setSavedChanges}
-            showSaveChangesPrompt={showSaveChangesPrompt}
-          />
-        </Workspace>
+          {
+            _.map(visibleCards, (cardProps, i) =>
+              cardProps.type === 'scripture_card' ?
+                <ScriptureCard key={cardProps.title} {...cardProps} />
+                :
+                <ResourceCard key={cardProps.title} {...cardProps} />,
+            )
+          }
+        </Workspace>yal
       </SelectionsContextProvider>
   )
 }
