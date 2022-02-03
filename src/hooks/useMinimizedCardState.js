@@ -1,37 +1,24 @@
-import { useEffect , useState } from 'react'
+import { useState } from 'react'
 
 export default function useMinimizedCardState({
   currentLayout,
   setCurrentLayout,
-  cards: initialCards,
+  useUserLocalStorage,
+  cards: initialCards = [],
 }) {
   const [cards] = useState(initialCards)
-  const [minimizedCardIds, setMinimizedCardId] = useState([])
-  const [oldCurrentLayout, setOldCurrentLayout] = useState(null)
-  // const [minimizedCards, setMinimizedCards] = useState([])
+  const [minimizedCardIds, setMinimizedCardId] = useUserLocalStorage('minimizedCardIds', [])
+  // The oldCurrentLayout is the initial layout when the last card was minimized. This is useful when restoring the card so that it retores to its initial layout.
+  const [oldCurrentLayout, setOldCurrentLayout] = useUserLocalStorage('oldCurrentLayout', null)
   const minimizedCards = cards.filter((card) => minimizedCardIds.includes(card.id))
   // Filter out the minimized cards which are included in the minimizedCardIds array
-  let visibleCards = cards.filter((card) => !minimizedCardIds.includes(card.id))
-
-  // Reset resource card layout on unmount.
-  // useEffect(() => function cleanup() {
-  //   if (minimizedCardIds.length > 0) {
-  //     console.info('On unmount')
-  //     setCurrentLayout(null)
-  //   }
-  // })
-
-  // useEffect(() => {
-  //   const newMinimizedCards = cards.filter((card) => minimizedCardIds.includes(card.id))
-  //   setMinimizedCards(newMinimizedCards)
-  // }, [minimizedCardIds, cards])
+  const visibleCards = cards.filter((card) => !minimizedCardIds.includes(card.id))
 
   /**
    * Minimizes the card for the given card id.
    * @param {string} id - Id title of the card to be minimized.
    */
   const minimizeCard = (id) => {
-    console.log({ id })
     const updatedLayout = Object.assign({}, currentLayout)
     setOldCurrentLayout(Object.assign(updatedLayout, oldCurrentLayout))
 
@@ -47,33 +34,22 @@ export default function useMinimizedCardState({
    * @param {string} id - Id title of the card to be minimized.
    */
   const maximizeCard = (id) => {
-    console.log({ id })
-
     if (minimizedCardIds.includes(id)) {
-      console.log('inside')
       const newMinimizedCardIds = minimizedCardIds.filter(minimizedCardId => minimizedCardId !== id)
-      console.log({ newMinimizedCardIds })
       setMinimizedCardId(newMinimizedCardIds)
       // setCurrentLayout(null)
     }
 
-    // TODO: mAYBE? IT WOKRED FOR NOW
     setCurrentLayout(oldCurrentLayout)
   }
 
-  // Add the minimizeCard method to each visible card object
-  visibleCards = visibleCards.map((card) => {
-    card.onMinimize = minimizeCard
-
-    return card
-  })
-
-  console.log({
-    oldCurrentLayout, currentLayout, minimizedCardIds, visibleCards,
-  })
-
   return {
-    visibleCards,
+    // Adding the minimizeCard methos to each visible card
+    visibleCards: visibleCards.map((card) => {
+      card.onMinimize = minimizeCard
+
+      return card
+    }),
     minimizeCard,
     maximizeCard,
     minimizedCards,
