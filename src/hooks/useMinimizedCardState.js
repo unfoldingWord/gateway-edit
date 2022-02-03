@@ -8,7 +8,7 @@ export default function useMinimizedCardState({
 }) {
   const [cards] = useState(initialCards)
   const [minimizedCardIds, setMinimizedCardId] = useUserLocalStorage('minimizedCardIds', [])
-  // The oldCurrentLayout is the initial layout when the last card was minimized. This is useful when restoring the card so that it retores to its initial layout.
+  // The oldCurrentLayout is the initial layout when the last card was minimized. This is useful to gracefully restore the card to its initial layout.
   const [oldCurrentLayout, setOldCurrentLayout] = useUserLocalStorage('oldCurrentLayout', null)
   const minimizedCards = cards.filter((card) => minimizedCardIds.includes(card.id))
   // Filter out the minimized cards which are included in the minimizedCardIds array
@@ -44,7 +44,7 @@ export default function useMinimizedCardState({
   }
 
   return {
-    // Adding the minimizeCard methos to each visible card
+    // Adding the minimizeCard method to each visible card
     visibleCards: visibleCards.map((card) => {
       card.onMinimize = minimizeCard
 
