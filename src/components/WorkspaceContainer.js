@@ -540,7 +540,7 @@ function WorkspaceContainer() {
                 <ResourceCard key={cardProps.title} {...cardProps} />,
             )
           }
-        </Workspace>yal
+        </Workspace>
       </SelectionsContextProvider>
   )
 }
