@@ -2,27 +2,39 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Fab from '@material-ui/core/Fab'
-import IconButton from '@material-ui/core/IconButton'
-import NavigationIcon from '@material-ui/icons/Navigation'
-import MaximizeIcon from '@material-ui/icons/Maximize'
-import ListIcon from '@material-ui/icons/List'
-import MinimizeIcon from '@material-ui/icons/Minimize'
 import Badge from '@material-ui/core/Badge'
-import Drawer from '@material-ui/core/Drawer'
-import List from '@material-ui/core/List'
-import Divider from '@material-ui/core/Divider'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
-import MailIcon from '@material-ui/icons/Mail'
-import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined'
 import CropLandscapeIcon from '@material-ui/icons/CropLandscape'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CloseIcon from '@material-ui/icons/Close'
 
 const useStyles = makeStyles((theme) => ({
-  fab: {
+  items: {
+    display: 'flex',
+    flexDirection: 'column',
     position: 'fixed',
     bottom: '85px',
+    right: '0%',
+    margin: '0px 15px',
+    marginLeft: '-50px',
+    zIndex: 2,
+    cursor: 'pointer',
+    textAlign: 'center',
+  },
+  item: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '5px 0px',
+  },
+  card: { width: '100%' },
+  itemFab: {
+    marginLeft: '5px',
+    minWidth: '56px',
+    minHeight: '56px',
+  },
+  fab: {
+    position: 'fixed',
+    bottom: '15px',
     right: '0%',
     margin: '0px 15px',
     marginLeft: '-50px',
@@ -35,62 +47,58 @@ const useStyles = makeStyles((theme) => ({
   fullList: { width: 'auto' },
 }))
 
-export default function MinimizedCards({ minimizedCards = [{ title: 'translationWords List' }, { title: 'translationNotes' }], maximizeCard }) {
-  const [showDrawer, setShowDrawer] = useState(false)
+export default function MinimizedCards({ minimizedCards = [], maximizeCard }) {
+  const [showFabList, setShowFabList] = useState(false)
   const classes = useStyles()
   const badgeContent = minimizedCards.length
 
   const toggleDrawer = (open) => {
-    console.log('toggleDrawer')
-
-    setShowDrawer(open)
+    setShowFabList(open)
   }
 
   const onMaximizeCard = (id, title) => {
-    console.log({ id, title })
     toggleDrawer(false)
     maximizeCard(id)
   }
 
-  console.log({ showDrawer })
-
   if (badgeContent && badgeContent > 0) {
     return (
       <div>
+        <div className={classes.items}>
+          {showFabList && minimizedCards.length > 0 && minimizedCards.map(({ title, id }, index) => (
+            <div key={`${index}_${title}_fab`} className={classes.item} onClick={() => onMaximizeCard(id, title)}>
+              <Card className={classes.card}>
+                <CardContent>
+                  <b>{title}</b>
+                </CardContent>
+              </Card>
+              <Fab
+                className={classes.itemFab}
+                aria-label={title}
+                variant="round"
+                color="primary"
+              >
+                <CropLandscapeIcon/>
+              </Fab>
+            </div>
+          ))}
+        </div>
         <Fab
-          variant="extended"
-          // size="small"
-          color="primary"
           className={classes.fab}
-          aria-label="minimized cards"
-          onClick={() => toggleDrawer(true)}
+          aria-label='minimized cards'
+          variant={showFabList ? 'round' : 'extended'}
+          color='inherit'
+          onClick={() => toggleDrawer(!showFabList)}
         >
-          <Badge badgeContent={badgeContent} max={999} color='secondary' showZero>
-            <CropLandscapeIcon className={classes.icon} />
-          Recent cards&nbsp;&nbsp;
-          </Badge>
+          {showFabList ?
+            <CloseIcon />
+            :
+            <Badge badgeContent={badgeContent} max={999} color='secondary'>
+              <CropLandscapeIcon className={classes.icon} />
+              Recent cards&nbsp;&nbsp;
+            </Badge>
+          }
         </Fab>
-        <Drawer anchor='bottom' open={showDrawer} onClose={() => toggleDrawer(false)}>
-          <List>
-            <ListItem key='Recent minimized cards'>
-              <ListItemIcon>
-                <MinimizeIcon />
-              </ListItemIcon>
-              <ListItemText primary='Recent minimized cards' />
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            {minimizedCards.map(({ title, id }, index) => (
-              <ListItem button key={title} onClick={() => onMaximizeCard(id, title)}>
-                <ListItemIcon>
-                  <DashboardOutlinedIcon/>
-                </ListItemIcon>
-                <ListItemText primary={title} />
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
       </div>
     )
   } else {
