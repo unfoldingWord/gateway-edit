@@ -9365,7 +9365,7 @@ resolve@^2.0.0-next.3:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
-resource-workspace-rcl@^2.1.0-rc.0:
+resource-workspace-rcl@2.1.0-rc.0:
   version "2.1.0-rc.0"
   resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.0-rc.0.tgz#6a6f7b516484d009887433fb0290f301debcd689"
   integrity sha512-zyA4LdLYHSb3lf0hcGblQUg0SCqUSdj+QlXpevVcG8B7czCa20PQGF8mxkgDA4cJ8TFP6Y9ZLr6HTYs6mzI2Ew==
@@ -9673,7 +9673,7 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@^3.2.0-rc.0:
+single-scripture-rcl@3.2.0-rc.0:
   version "3.2.0-rc.0"
   resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.2.0-rc.0.tgz#5dfc037acfb3d5ee9770681057d7930474c40eef"
   integrity sha512-I9VuJNUIcBB67+tBvL9cZFZgjaMBAeO5okqCxdupuSQIcOn2LYMwbG638HaPMWOEilPDlAijPNdCBF0AUWS3Fw==
@@ -10526,7 +10526,7 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@^3.2.0-rc.0:
+translation-helps-rcl@3.2.0-rc.0:
   version "3.2.0-rc.0"
   resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.2.0-rc.0.tgz#c0d9593ab0438f5e0c41db596f6ca094b71ab980"
   integrity sha512-se1LBBlZg/59gG0shlPS+u9Rl8v3WHCH98UY5iLgJ5Pm6kLzDpTLZkeHSGxd7LaysDZ1PWgEH0LdGHYGUmsuiA==
