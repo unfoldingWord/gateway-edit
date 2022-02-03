@@ -56,7 +56,7 @@ export default function MinimizedCards({ minimizedCards = [], maximizeCard }) {
     setShowFabList(open)
   }
 
-  const onMaximizeCard = (id, title) => {
+  const onMaximizeCard = (id) => {
     toggleDrawer(false)
     maximizeCard(id)
   }
@@ -66,7 +66,7 @@ export default function MinimizedCards({ minimizedCards = [], maximizeCard }) {
       <div>
         <div className={classes.items}>
           {showFabList && minimizedCards.length > 0 && minimizedCards.map(({ title, id }, index) => (
-            <div key={`${index}_${title}_fab`} className={classes.item} onClick={() => onMaximizeCard(id, title)}>
+            <div key={`${index}_${title}_fab`} className={classes.item} onClick={() => onMaximizeCard(id)}>
               <Card className={classes.card}>
                 <CardContent>
                   <b>{title}</b>
