@@ -5,7 +5,9 @@ import {
   useState,
 } from 'react'
 import * as isEqual from 'deep-equal'
-import { Workspace } from 'resource-workspace-rcl'
+import {
+  Workspace, MinimizedCardsListUI, useMinimizedCardsState,
+} from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
@@ -41,8 +43,6 @@ import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import useLexicon from '@hooks/useLexicon'
 import { translate } from '@utils/lexiconHelpers'
-import useMinimizedCardState from '@hooks/useMinimizedCardState'
-import MinimizedCards from '@components/MinimizedCards'
 import _ from 'lodash'
 
 const useStyles = makeStyles(() => ({
@@ -434,7 +434,7 @@ function WorkspaceContainer() {
 
   const {
     visibleCards, minimizedCards, maximizeCard,
-  } = useMinimizedCardState({
+  } = useMinimizedCardsState({
     cards, setCurrentLayout, currentLayout, useUserLocalStorage,
   })
 
@@ -491,7 +491,7 @@ function WorkspaceContainer() {
         occurrence={selectedQuote?.occurrence?.toString()}
         verseObjects={originalScriptureConfig.verseObjects || []}
       >
-        {minimizedCards.length > 0 && <MinimizedCards minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>}
+        <MinimizedCardsListUI minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>
         {loading || content || error ?
           <DraggableCard
             open

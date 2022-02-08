@@ -9365,10 +9365,10 @@ resolve@^2.0.0-next.3:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
-resource-workspace-rcl@2.1.0-rc.0:
-  version "2.1.0-rc.0"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.0-rc.0.tgz#6a6f7b516484d009887433fb0290f301debcd689"
-  integrity sha512-zyA4LdLYHSb3lf0hcGblQUg0SCqUSdj+QlXpevVcG8B7czCa20PQGF8mxkgDA4cJ8TFP6Y9ZLr6HTYs6mzI2Ew==
+resource-workspace-rcl@^2.1.0-rc.2:
+  version "2.1.0-rc.2"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.0-rc.2.tgz#7ab02ac5df3c2faea5d541fc38396122056af69a"
+  integrity sha512-syt7ItfezX1bNxGSW9qQvGnclg91HTrhpVvZ/s5Y5mFDXKHXhTO5dvHXxUfqXWM7YcOlCRzhbx8pLYG+BSGSvQ==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
