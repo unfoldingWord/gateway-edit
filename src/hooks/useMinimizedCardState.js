@@ -8,8 +8,8 @@ export default function useMinimizedCardState({
 }) {
   const [cards] = useState(initialCards)
   const [minimizedCardIds, setMinimizedCardId] = useUserLocalStorage('minimizedCardIds', [])
-  // The oldCurrentLayout is the initial layout when the last card was minimized. This is useful to gracefully restore the card to its initial layout.
-  const [oldCurrentLayout, setOldCurrentLayout] = useUserLocalStorage('oldCurrentLayout', null)
+  // The preCurrentLayout is the initial layout when the last card was minimized. This is useful to gracefully restore the card to its initial layout.
+  const [preCurrentLayout, setPreCurrentLayout] = useUserLocalStorage('preCurrentLayout', null)
   const minimizedCards = cards.filter((card) => minimizedCardIds.includes(card.id))
   // Filter out the minimized cards which are included in the minimizedCardIds array
   const visibleCards = cards.filter((card) => !minimizedCardIds.includes(card.id))
@@ -20,12 +20,11 @@ export default function useMinimizedCardState({
    */
   const minimizeCard = (id) => {
     const updatedLayout = Object.assign({}, currentLayout)
-    setOldCurrentLayout(Object.assign(updatedLayout, oldCurrentLayout))
+    setPreCurrentLayout(Object.assign(updatedLayout, preCurrentLayout))
 
     if (!minimizedCardIds.includes(id)) {
       console.log([...minimizedCardIds, id])
       setMinimizedCardId([...minimizedCardIds, id])
-      // setCurrentLayout(null)
     }
   }
 
@@ -37,10 +36,9 @@ export default function useMinimizedCardState({
     if (minimizedCardIds.includes(id)) {
       const newMinimizedCardIds = minimizedCardIds.filter(minimizedCardId => minimizedCardId !== id)
       setMinimizedCardId(newMinimizedCardIds)
-      // setCurrentLayout(null)
     }
 
-    setCurrentLayout(oldCurrentLayout)
+    setCurrentLayout(preCurrentLayout)
   }
 
   return {
