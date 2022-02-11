@@ -9330,10 +9330,10 @@ resolve@^2.0.0-next.3:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
-resource-workspace-rcl@^2.1.0-rc.3:
-  version "2.1.0-rc.3"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.0-rc.3.tgz#171074eb19215d1cdea287904d158ef378dc5489"
-  integrity sha512-PdhixLGEHRZcvKYfNWLhkD4pZPAfsdf5zpzcgec8yP0LOI+1Z08NELxy+BV2gmh+e4iFSsfRPOVRyqgAkbAyfg==
+resource-workspace-rcl@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.0.tgz#ce86d674f7aa2147edd260a46c522799a06dede6"
+  integrity sha512-4ThBZ3ZqXLfG+dx5a2rS92fZ+hhwCB2EHL/UtFIj6hlbdlxemVLmjQ170T675M20NUny062TreZ9I1sRhVHrHg==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
@@ -9638,10 +9638,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.2.0-rc.0:
-  version "3.2.0-rc.0"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.2.0-rc.0.tgz#5dfc037acfb3d5ee9770681057d7930474c40eef"
-  integrity sha512-I9VuJNUIcBB67+tBvL9cZFZgjaMBAeO5okqCxdupuSQIcOn2LYMwbG638HaPMWOEilPDlAijPNdCBF0AUWS3Fw==
+single-scripture-rcl@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.2.0.tgz#e0a6cc2125504e7ea0225568572f3e4e561a5591"
+  integrity sha512-I150ZGb1mqBpsRVLpvSuXq0DlNgefM9hllTBboNaDby91mRhhCMSL0RAfPHGyDHhoHoRJGFGgVYllr06ATeDGw==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -10483,10 +10483,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@3.2.0-rc.0:
-  version "3.2.0-rc.0"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.2.0-rc.0.tgz#c0d9593ab0438f5e0c41db596f6ca094b71ab980"
-  integrity sha512-se1LBBlZg/59gG0shlPS+u9Rl8v3WHCH98UY5iLgJ5Pm6kLzDpTLZkeHSGxd7LaysDZ1PWgEH0LdGHYGUmsuiA==
+translation-helps-rcl@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.2.0.tgz#3ee1738bd6167bab318c8f2c1d9c2ded539ecb5d"
+  integrity sha512-tET3t0jFNdzuM2V0VhGlD5POYGBRZ8cYYmAR0gI3NlK0a4vUJZvX/8afN3uWXMGVoIcqNhqlB0yUaGn1nWogmA==
   dependencies:
     axios "^0.21.1"
     deep-equal "^2.0.5"
