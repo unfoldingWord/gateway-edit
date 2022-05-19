@@ -56,3 +56,60 @@ yarn run cypress
 ```
 yarn test:headless
 ```
+
+## UI Design
+
+Application (in pages/_app.js)  contains:
+* AuthContext context
+* StoreContext context:
+
+Home (in pages/index.js) contains:
+<Layout>
+  <WorkspaceContainer />
+</Layout>
+
+WorkspaceContainer component manages the Resource workspace
+* Contains Workspace component (resource workspace rcl) that contains several:
+    * ScriptureCard components
+    * ResourceCard components
+
+Layout component:
+* accesses authentication context and store context
+* Manages server selection through url variables
+* Displays Onboarding component if login is required
+* Contains the header and footer
+
+BibleReference component:
+* Uses bible Reference RCL
+* Updates reference store context
+
+Onboarding component
+* Displays the AccountSetup component when login is required
+
+Header component:
+* Contains BibleReference component
+
+Footer component:
+* Shows app version/build
+
+Drawer component (hamburger menu):
+* Shows
+
+TranslationSettings component:
+* Prompts for organization and language
+
+ResourceCard component:
+* Card that displays translationHelps content
+
+ScriptureCard component:
+* Card that displays scripture content
+
+AuthContext context:
+* Initializes the authentication context (defined in gitea-react-toolkit)
+
+StoreContext context:
+* Manages and persists application state data into local storage
+
+useLocalStorage - custom hook that persists generic application data  into local storage
+
+useUserLocalStorage - custom hook that application data for logged in user into local storage
