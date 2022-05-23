@@ -58,6 +58,7 @@ yarn test:headless
 ```
 
 ## UI Design
+- Structure of the React components in this app
 
 Application (in pages/_app.js)  contains:
 * AuthContext context
