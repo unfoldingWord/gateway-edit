@@ -1,8 +1,8 @@
-import { version } from '../../package.json'
+import * as packageInfo from '../../package.json'
 
 export function getBuildId() {
   const hash = getCommitHash()
-  const buildId = { version, hash }
+  const buildId = { version: packageInfo.version, hash }
   return buildId
 }
 

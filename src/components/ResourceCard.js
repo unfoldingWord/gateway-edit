@@ -13,7 +13,10 @@ import {
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
-import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
+import {
+  RESOURCE_HTTP_CONFIG,
+  SERVER_MAX_WAIT_TIME_RETRY,
+} from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 
@@ -48,7 +51,8 @@ export default function ResourceCard({
 }) {
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
-  const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+  const cardResourceId =
+    resourceId === 'twl' && viewMode === 'markdown' ? 'tw' : resourceId
 
   function updateTempContent(c) {
     setContent(c)
@@ -78,12 +82,7 @@ export default function ResourceCard({
   }, [cardResourceId, selectedQuote?.quote, selectedQuote?.occurrence])
 
   const {
-    state: {
-      listRef,
-      contentRef,
-      usingUserBranch,
-      workingResourceBranch,
-    },
+    state: { listRef, contentRef, usingUserBranch, workingResourceBranch },
     actions: { startEdit },
   } = useUserBranch({
     owner,
@@ -126,12 +125,8 @@ export default function ResourceCard({
   })
 
   const {
-    state: {
-      item, headers, filters, fontSize, itemIndex, markdownView,
-    },
-    actions: {
-      setFilters, setFontSize, setItemIndex, setMarkdownView,
-    },
+    state: { item, headers, filters, fontSize, itemIndex, markdownView },
+    actions: { setFilters, setFontSize, setItemIndex, setMarkdownView },
   } = useCardState({
     id,
     items,
@@ -145,7 +140,9 @@ export default function ResourceCard({
   })
 
   const sha = getSha({
-    item, fetchResponse, cardResourceId,
+    item,
+    fetchResponse,
+    cardResourceId,
   })
   const editFilePath = generateEditFilePath({
     item,
@@ -155,10 +152,7 @@ export default function ResourceCard({
     cardResourceId,
   })
 
-  const {
-    isEditing,
-    onSaveEdit,
-  } = useEdit({
+  const { isEditing, onSaveEdit } = useEdit({
     sha,
     owner,
     content,
@@ -186,7 +180,10 @@ export default function ResourceCard({
   useEffect(() => {
     if (updateTaDetails) {
       const {
-        Quote, OrigQuote, Occurrence, SupportReference = null,
+        Quote,
+        OrigQuote,
+        Occurrence,
+        SupportReference = null,
       } = item || {}
       updateTaDetails(SupportReference)
       setQuote({
@@ -200,19 +197,29 @@ export default function ResourceCard({
   useEffect(() => {
     const error = resourceStatus?.[ERROR_STATE]
 
-    if (error) { // if error was found do callback
-      const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
+    if (error) {
+      // if error was found do callback
+      const message =
+        getResourceErrorMessage(resourceStatus) +
+        ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
       const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
       onResourceError && onResourceError(message, isAccessError, resourceStatus)
     }
   }, [resourceStatus?.[ERROR_STATE]])
 
-  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
+  const message = getResourceMessage(
+    resourceStatus,
+    owner,
+    languageId,
+    resourceId,
+    server,
+    workingResourceBranch
+  )
 
   async function handleSaveEdit() {
     // Save edit, if succesful trigger resource reload and set saved to true.
-    const saveEdit = async (branch) => {
-      await onSaveEdit(branch).then((success) => {
+    const saveEdit = async branch => {
+      await onSaveEdit(branch).then(success => {
         if (success) {
           console.info('Reloading resource')
           reloadResource()
@@ -226,8 +233,9 @@ export default function ResourceCard({
 
     // If not using user branch create it then save the edit.
     if (!usingUserBranch) {
-      await startEdit().then((branch) => saveEdit(branch))
-    } else {// Else just save the edit.
+      await startEdit().then(branch => saveEdit(branch))
+    } else {
+      // Else just save the edit.
       await saveEdit()
     }
   }
@@ -280,8 +288,15 @@ export default function ResourceCard({
         cardResourceId={cardResourceId}
         updateTaDetails={updateTaDetails}
         showSaveChangesPrompt={showSaveChangesPrompt}
-        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
-        markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
+        errorMessage={
+          isEditing ? 'Saving Resource...' : message || errorMessage
+        }
+        markdown={
+          (cardResourceId == 'ta' || cardResourceId == 'tw') &&
+          content.length > 0
+            ? content
+            : markdown
+        } // Adding content value to maintain edit changes even when switching between markdown and html views on tA.
       />
     </Card>
   )
