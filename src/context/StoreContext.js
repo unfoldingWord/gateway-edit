@@ -67,13 +67,14 @@ export default function StoreContextProvider(props) {
     showSaveChangesPrompt,
   } = useSaveChangesPrompt()
 
-  function onReferenceChange(bookId, chapter, verse) {
+  function onReferenceChange(bookId, chapter, verse, bcvQuery) {
     setQuote(null)
     setBibleReference(prevState => ({
       ...prevState,
       bookId,
       chapter,
       verse,
+      bcvQuery,
     }))
   }
 

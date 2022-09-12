@@ -16,6 +16,36 @@ import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
+import { parseReferenceToList } from 'bible-reference-range'
+
+const createBcvQueryBasedOnChunks = (rootStruct, bookId, chunks) => {
+  let bookObj = {}
+
+  if (bookId) {
+    bookObj = { [bookId]: { ch: {} } }
+    chunks.forEach(chunk => {
+      // Skip verse ranges across chapters -> not yet implemented
+      if (!chunk.endChapter || chunk.endChapter === chunk.chapter) {
+        const chNum = chunk.chapter
+
+        if (chNum) {
+          if (!bookObj[bookId].ch[chNum]) {
+            bookObj[bookId].ch[chNum] = { v: {} }
+          }
+
+          if (chunk.endVerse) {
+            for (let i = chunk.verse; i <= chunk.endVerse; i++) {
+              bookObj[bookId].ch[chNum].v[i] = { verseObjects: [] }
+            }
+          } else if (chunk.verse) {
+            bookObj[bookId].ch[chNum].v[chunk.verse] = { verseObjects: [] }
+          }
+        }
+      }
+    })
+  }
+  return { book: bookObj, ...rootStruct }
+}
 
 export default function ResourceCard({
   id,
@@ -42,6 +72,7 @@ export default function ResourceCard({
   onResourceError,
   setSavedChanges,
   disableNavigation,
+  onReferenceChange,
   hideMarkdownToggle,
   useUserLocalStorage,
   showSaveChangesPrompt,
@@ -49,6 +80,32 @@ export default function ResourceCard({
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+
+  const getRefFromNewQuote = (qObj,items) => {
+    const newQ = items.find(item => item.OrigWords === qObj.quote)
+    const ref = newQ.Reference
+
+    if (ref && (ref.includes('-') || ref.includes(',') || ref.includes(';'))) {
+      const rootStruct = {
+        languageId,
+        server,
+      }
+
+      const referenceChunks = parseReferenceToList(ref)
+
+      const bcvQuery = createBcvQueryBasedOnChunks(
+        rootStruct,
+        newQ.Book,
+        referenceChunks,
+      )
+
+      console.log('getRefFromNewQuote - ResourceCard')
+      console.log(newQ)
+      console.log(qObj)
+      onReferenceChange(newQ.Book,newQ.Chapter.toString(),newQ.Verse.toString(),bcvQuery)
+    }
+    setQuote(qObj)
+  }
 
   function updateTempContent(c) {
     setContent(c)
@@ -137,7 +194,7 @@ export default function ResourceCard({
     items,
     verse,
     chapter,
-    setQuote,
+    setQuote: (props) => getRefFromNewQuote(props,items),
     projectId,
     selectedQuote,
     useUserLocalStorage,
@@ -205,7 +262,7 @@ export default function ResourceCard({
       const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
       onResourceError && onResourceError(message, isAccessError, resourceStatus)
     }
-  }, [resourceStatus?.[ERROR_STATE]])
+  }, [languageId, onResourceError, owner, projectId, resourceStatus, resourceStatus.ERROR_STATE, workingResourceBranch])
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
@@ -270,7 +327,7 @@ export default function ResourceCard({
         editable={editable}
         viewMode={viewMode}
         fontSize={fontSize}
-        setQuote={setQuote}
+        setQuote={(props) => getRefFromNewQuote(props,items)}
         onTsvEdit={onTsvEdit}
         languageId={languageId}
         setContent={setContent}
@@ -305,6 +362,7 @@ ResourceCard.propTypes = {
   resourceId: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
   updateTaDetails: PropTypes.func,
+  onReferenceChange: PropTypes.func,
   setQuote: PropTypes.func,
   filePath: PropTypes.string,
   disableFilters: PropTypes.bool,

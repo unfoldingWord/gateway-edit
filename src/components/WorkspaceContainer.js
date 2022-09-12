@@ -63,6 +63,7 @@ function WorkspaceContainer() {
   const classes = useStyles()
   const [workspaceReady, setWorkspaceReady] = useState(false)
   const [selections, setSelections] = useState([])
+  const [bcvQuery, setBcvQuery] = useState(undefined)
   const [networkError, setNetworkError] = useState(null)
   const {
     state: {
@@ -74,7 +75,7 @@ function WorkspaceContainer() {
       selectedQuote,
       scriptureOwner,
       bibleReference: {
-        bookId, chapter, verse,
+        bookId, chapter, verse, bcvQuery: _bcvQuery,
       },
       supportedBibles,
       currentLayout,
@@ -88,6 +89,7 @@ function WorkspaceContainer() {
     },
     actions: {
       logout,
+      onReferenceChange,
       setQuote,
       setSupportedBibles,
       setCurrentLayout,
@@ -121,15 +123,6 @@ function WorkspaceContainer() {
     languageId,
     server,
   })
-
-  /**
-   * in the case of a network error, process and display error dialog
-   * @param {string} errorMessage - optional error message returned
-   * @param {number} httpCode - http code returned
-   */
-  function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
-  }
 
   /**
    * show either tokenNetworkError or NetworkError for workspace
@@ -216,9 +209,15 @@ function WorkspaceContainer() {
     languageId,
     useUserLocalStorage,
     onResourceError,
+    onReferenceChange,
     loggedInUser,
     authentication,
   }
+
+  useEffect(() => {
+    console.log(_bcvQuery)
+    setBcvQuery(_bcvQuery)
+  }, [_bcvQuery])
 
   useEffect(() => {
     setWorkspaceReady(false)
@@ -247,7 +246,7 @@ function WorkspaceContainer() {
         setWorkspaceReady(true)
       }).catch((e) => {
         setWorkspaceReady(true)
-        processError(e.toString())
+        processNetworkError(e.toString(), 0, logout, router, setNetworkError, setLastError )
       })
     }// eslint-disable-next-line
   }, [owner, languageId, appRef, server, loggedInUser])
@@ -258,6 +257,15 @@ function WorkspaceContainer() {
     if (missingOrignalBibles) { // if we don't have a path
       setWorkspaceReady(false)
       console.log(`WorkspaceContainer - waiting on latest original bible repos`)
+    }
+
+    /**
+     * in the case of a network error, process and display error dialog
+     * @param {string} errorMessage - optional error message returned
+     * @param {number} httpCode - http code returned
+     */
+    function processError(errorMessage, httpCode=0) {
+      processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
     }
 
     const hebrewPromise = getLatestBibleRepo(server, 'unfoldingWord', 'hbo', 'uhb', processError)
@@ -288,8 +296,7 @@ function WorkspaceContainer() {
         }, 500)
       }
     })
-  }, [])
-
+  }, [greekRepoUrl, hebrewRepoUrl, logout, router, server, setGreekRepoUrl, setHebrewRepoUrl, setLastError])
 
   const cards = [
     {
@@ -303,6 +310,7 @@ function WorkspaceContainer() {
         bookId,
         projectId: bookId,
       },
+      bcvQuery,
       resource: {
         owner,
         languageId,
@@ -322,6 +330,7 @@ function WorkspaceContainer() {
         bookId,
         projectId: bookId,
       },
+      bcvQuery,
       resource: {
         owner,
         languageId,
@@ -341,6 +350,7 @@ function WorkspaceContainer() {
         bookId,
         projectId: bookId,
       },
+      bcvQuery,
       resource: {
         owner,
         languageId,
@@ -470,6 +480,7 @@ function WorkspaceContainer() {
       projectId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
       ref: appRef,
     },
+    bcvQuery,
     resourceLink: origResourceLink,
     config: {
       ...config,
