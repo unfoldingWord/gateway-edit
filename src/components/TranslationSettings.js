@@ -27,6 +27,7 @@ import {
 import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import CircularProgress from './CircularProgress'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -142,50 +143,57 @@ export default function TranslationSettings({ authentication }) {
           onRetry={networkError?.authenticationError ? null : reloadApp}
         />
       }
-      <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
-        <h5>Translation Settings</h5>
-        <div className='flex flex-col justify-between my-4'>
-          <FormControl variant='outlined' className={classes.formControl} error={!!orgErrorMessage}>
-            <InputLabel id='demo-simple-select-outlined-label'>
-              Organization
-            </InputLabel>
-            <Select
-              labelId='organization-select-outlined-label'
-              id='organization-select-outlined'
-              value={organization}
-              onChange={handleOrgChange}
-              label='Organization'
-            >
-              {organizations.map((org, i) => (
-                <MenuItem key={`${org}-${i}`} value={org}>
-                  {org}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText id='organization-select-message'>{orgErrorMessage}</FormHelperText>
-          </FormControl>
-          <FormControl variant='outlined' className={classes.formControl}>
-            <InputLabel id='demo-simple-select-outlined-label'>
-              Primary Translating Language
-            </InputLabel>
-            <Select
-              labelId='primary-language-select-outlined-label'
-              id='primary-language-select-outlined'
-              value={languageId}
-              onChange={handleLanguageChange}
-              label='Primary Translating Language'
-            >
-              {languages.map(({
-                languageId, languageName, localized,
-              }, i) => (
-                <MenuItem key={`${languageId}-${i}`} value={languageId}>
-                  {`${languageId} - ${languageName} - ${localized}`}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-      </Paper>
+      {
+        organizations.length > 0
+          ?
+          <Paper className='flex flex-col h-80 w-full p-6 pt-3 my-2'>
+            <h5>Translation Settings</h5>
+            <div className='flex flex-col justify-between my-4'>
+              <FormControl variant='outlined' className={classes.formControl} error={!!orgErrorMessage}>
+                <InputLabel id='demo-simple-select-outlined-label'>
+                  Organization
+                </InputLabel>
+                <Select
+                  labelId='organization-select-outlined-label'
+                  id='organization-select-outlined'
+                  value={organization}
+                  onChange={handleOrgChange}
+                  label='Organization'
+                >
+                  {organizations.map((org, i) => (
+                    <MenuItem key={`${org}-${i}`} value={org}>
+                      {org}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText id='organization-select-message'>{orgErrorMessage}</FormHelperText>
+              </FormControl>
+              <FormControl variant='outlined' className={classes.formControl}>
+                <InputLabel id='demo-simple-select-outlined-label'>
+                  Primary Translating Language
+                </InputLabel>
+                <Select
+                  labelId='primary-language-select-outlined-label'
+                  id='primary-language-select-outlined'
+                  value={languageId}
+                  onChange={handleLanguageChange}
+                  label='Primary Translating Language'
+                >
+                  {languages.map(({
+                    languageId, languageName, localized,
+                  }, i) => (
+                    <MenuItem key={`${languageId}-${i}`} value={languageId}>
+                      {`${languageId} - ${languageName} - ${localized}`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          </Paper>
+          :
+          <CircularProgress />
+      }
+
     </>
   )
 }
