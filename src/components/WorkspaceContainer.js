@@ -204,6 +204,8 @@ function WorkspaceContainer() {
     fetchGlossesForVerse,
     getLexiconData,
     translate,
+    loggedInUser,
+    authentication,
   }
 
   const commonResourceCardConfigs = {
