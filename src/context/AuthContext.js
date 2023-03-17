@@ -25,7 +25,7 @@ export default function AuthContextProvider(props) {
 
   /**
    * in the case of a network error, process and display error dialog
-   * @param {string|Error} error - initial error message message or object
+   * @param {string|Error} error - initial error message or object
    * @param {number} httpCode - http code returned
    */
   function processError(error, httpCode=0) {
