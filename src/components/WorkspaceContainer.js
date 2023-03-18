@@ -44,6 +44,7 @@ import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import useLexicon from '@hooks/useLexicon'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
+import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -207,6 +208,7 @@ function WorkspaceContainer() {
     loggedInUser,
     authentication,
     setSavedChanges,
+    bookIndex: BIBLES_ABBRV_INDEX[bookId],
   }
 
   const commonResourceCardConfigs = {

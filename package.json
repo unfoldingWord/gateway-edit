@@ -48,7 +48,7 @@
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "2.1.0",
     "scripture-resources-rcl": "5.2.2",
-    "single-scripture-rcl": "/Users/blm/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.2.1-alpha.31.tgz",
+    "single-scripture-rcl": "/Users/blm/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.2.1-alpha.33.tgz",
     "tailwindcss": "^2.0.4",
     "tc-ui-toolkit": "5.3.3",
     "translation-helps-rcl": "/Users/blm/Development/RCL/translation-helps-rcl/translation-helps-rcl-v3.3.6-alpha.9.tgz",
