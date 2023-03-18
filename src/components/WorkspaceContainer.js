@@ -44,8 +44,6 @@ import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import useLexicon from '@hooks/useLexicon'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
-import getSha from '../utils/getSha'
-import generateEditFilePath from '../utils/generateEditFilePath'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -223,8 +221,6 @@ function WorkspaceContainer() {
     onResourceError,
     loggedInUser,
     authentication,
-    getSha,
-    generateEditFilePath,
   }
 
   useEffect(() => {
