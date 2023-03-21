@@ -11,11 +11,14 @@ import {
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
+import { MdUpdate } from 'react-icons/md'
+import { FiShare } from 'react-icons/fi'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
+import { IconButton } from '@mui/material'
 
 export default function ResourceCard({
   id,
@@ -236,6 +239,42 @@ export default function ResourceCard({
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
+  // TODO: hook these up to API
+  const needToMergeFromMaster = true
+  const mergeFromMasterHasConflicts = false
+  const mergeToMasterHasConflicts = true
+
+  // eslint-disable-next-line no-nested-ternary
+  const mergeFromMasterTitle = mergeFromMasterHasConflicts ? 'Merge Conflicts for update from master' : (needToMergeFromMaster ? 'Update from master' : 'No merge conflicts for update with master')
+  // eslint-disable-next-line no-nested-ternary
+  const mergeFromMasterColor = mergeFromMasterHasConflicts ? 'red' : (needToMergeFromMaster ? 'orange' : 'lightgray')
+  const mergeToMasterTitle = mergeToMasterHasConflicts ? 'Merge Conflicts for share with master' : 'No merge conflicts for share with master'
+  const mergeToMasterColor = mergeToMasterHasConflicts ? 'red' : 'black'
+
+  const onRenderToolbar = ({ items }) => [
+    ...items,
+    <IconButton
+      className={classes.margin}
+      key='update-from-master'
+      onClick={() => { }}
+      title={mergeFromMasterTitle}
+      aria-label={mergeFromMasterTitle}
+      style={{ cursor: 'pointer' }}
+    >
+      <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
+    </IconButton>,
+    <IconButton
+      className={classes.margin}
+      key='share-to-master'
+      onClick={() => { }}
+      title={mergeToMasterTitle}
+      aria-label={mergeToMasterTitle}
+      style={{ cursor: 'pointer' }}
+    >
+      <FiShare id='share-to-master-icon' color={mergeToMasterColor} />
+    </IconButton>,
+  ]
+
   return (
     <Card
       id={id}
@@ -261,6 +300,7 @@ export default function ResourceCard({
       hideMarkdownToggle={hideMarkdownToggle}
       showSaveChangesPrompt={showSaveChangesPrompt}
       onMinimize={onMinimize ? () => onMinimize(id) : null}
+      onRenderToolbar={onRenderToolbar}
     >
       <CardContent
         id={`${id}_content`}
