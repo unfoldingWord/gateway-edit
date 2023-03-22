@@ -1088,13 +1088,6 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.20.6":
-  version "7.20.7"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.7.tgz#fcb41a5a70550e04a7b708037c7c32f7f356d8fd"
-  integrity sha512-UF0tvkUtxwAgZ5W/KrkHf0Rn0fdnLDU9ScxBrEVNUprE/MzirjK4MJUX1/BVDv00Sv8cljtukVK1aky++X1SjQ==
-  dependencies:
-    regenerator-runtime "^0.13.11"
-
 "@babel/template@^7.16.0", "@babel/template@^7.3.3", "@babel/template@^7.4.0", "@babel/template@^7.4.4":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.16.0.tgz#d16a35ebf4cd74e202083356fab21dd89363ddd6"
@@ -1382,10 +1375,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@gwdevs/extensible-rcl@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@gwdevs/extensible-rcl/-/extensible-rcl-1.0.0.tgz#daecfb5c16828c58411546a8aaaa1e552028883e"
-  integrity sha512-SryCMnRaviW0CKJpGkFF5acS/B8zsf1kwVYzeLu0+NGooNVFe1oCIVCtOgt6A7nYINGM9qOnWrxFlUe0O8FTww==
+"@gwdevs/extensible-rcl@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@gwdevs/extensible-rcl/-/extensible-rcl-1.0.1.tgz#0f0f7a9342e9c4268f3b308e11a613bcbc959718"
+  integrity sha512-bvRUJFbf8Z96Y9vWqasYMFNvo2+DiMOFBnXHSAK8UKM5kYXb/QVyHhNPn4GwRHnet2iJ7Yf+o9CVvj0wBZYGpg==
 
 "@hapi/accept@5.0.1":
   version "5.0.1"
@@ -1856,12 +1849,11 @@
     csstype "^3.1.0"
     prop-types "^15.8.1"
 
-"@mui/styled-engine@npm:@mui/styled-engine-sc@latest":
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-5.11.0.tgz#b8e01f45d466145a6b9688a325497c722e7f84f3"
-  integrity sha512-U8cA7DHB3fnLpDVM5qd/9FGnw5y+LrmwIXQ9Lzk3HYkF903tSMx9jXIbiz1vltpOfZTKX/Rn02m/nkH4OF6Pcg==
+"@mui/styled-engine@npm:@mui/styled-engine-sc@5.8.0":
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-5.8.0.tgz#20bc536dce25739e38fcd2586f100e70fbf02065"
+  integrity sha512-46eRLWxjTF0d50Q1Q9tj96cgF41r7lesbXAy6kKocCdUfJ8rbIo36C4Ws8Pd7nfVsvaitTb7tmCbVQzDT3niJQ==
   dependencies:
-    "@babel/runtime" "^7.20.6"
     prop-types "^15.8.1"
 
 "@mui/styles@^5.8.7":
@@ -9583,11 +9575,6 @@ regenerator-runtime@^0.12.0:
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
   integrity sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
 
-regenerator-runtime@^0.13.11:
-  version "0.13.11"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
-  integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
-
 regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.7:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
@@ -10995,13 +10982,26 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@3.3.5:
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.5.tgz#182f70ea817b36f0f07294f76ad33f9375788d98"
-  integrity sha512-8rCU4g77yPHsaGgVYzmaXN3Ngbvd5AKANjCgXZOM4YfZuV/SFexabFmgqQg263Ok1kBmuQyA8yYieZD+vpFT9Q==
+translation-helps-rcl@/Users/blm/Development/RCL/translation-helps-rcl/translation-helps-rcl-v3.3.7-alpha.1.tgz:
+  version "3.3.7-alpha.1"
+  uid a75264e8efb5290ca66f4840073371790a0c278f
+  resolved "/Users/blm/Development/RCL/translation-helps-rcl/translation-helps-rcl-v3.3.7-alpha.1.tgz#a75264e8efb5290ca66f4840073371790a0c278f"
   dependencies:
-    "@gwdevs/extensible-rcl" "^1.0.0"
-    "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
+    "@gwdevs/extensible-rcl" "^1.0.1"
+    "@mui/styled-engine" "npm:@mui/styled-engine-sc@5.8.0"
+    axios "^0.27.2"
+    deep-equal "^2.0.5"
+    react-draggable "^4.4.3"
+    styled-components "^5.2.1"
+    tsv "^0.2.0"
+    use-deep-compare-effect "^1.6.1"
+
+"translation-helps-rcl@file:../translation-helps-rcl/translation-helps-rcl-v3.3.7-alpha.1.tgz":
+  version "3.3.7-alpha.1"
+  resolved "file:../translation-helps-rcl/translation-helps-rcl-v3.3.7-alpha.1.tgz#a75264e8efb5290ca66f4840073371790a0c278f"
+  dependencies:
+    "@gwdevs/extensible-rcl" "^1.0.1"
+    "@mui/styled-engine" "npm:@mui/styled-engine-sc@5.8.0"
     axios "^0.27.2"
     deep-equal "^2.0.5"
     react-draggable "^4.4.3"
