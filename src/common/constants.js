@@ -16,6 +16,7 @@ export const HTTP_GET_CACHE_TIME = 60 * 60 * 1000 // in milliseconds, cache for 
 export const HTTP_CONFIG = {
   cache: { maxAge: HTTP_GET_CACHE_TIME },
   timeout: HTTP_GET_MAX_WAIT_TIME,
+  serverTimeOut: SERVER_MAX_WAIT_TIME_RETRY,
 }
 // Necessary for edit mode.
 export const RESOURCE_HTTP_CONFIG = {
