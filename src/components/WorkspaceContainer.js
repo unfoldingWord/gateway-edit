@@ -89,7 +89,7 @@ function WorkspaceContainer() {
     },
     actions: {
       logout,
-      setQuote,
+      setQuote: _setQuote,
       setSupportedBibles,
       setCurrentLayout,
       setTokenNetworkError,
@@ -122,6 +122,18 @@ function WorkspaceContainer() {
     languageId,
     server,
   })
+
+  /**
+   * clean up quote before applying
+   * @param quote
+   */
+  function setQuote(quote) {
+    const _quote = quote ? {
+      ...quote,
+      occurrence: fixOccurrence(quote.occurrence),
+    } : {}
+    _setQuote(_quote)
+  }
 
   /**
    * in the case of a network error, process and display error dialog
