@@ -44,6 +44,7 @@ import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import useLexicon from '@hooks/useLexicon'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
+import { cleanupVerseObjects, fixOccurrence } from '../utils/resources'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -477,6 +478,13 @@ function WorkspaceContainer() {
     },
   })
 
+  const verseObjectsMap = useMemo(() => {
+    const _map = new Map()
+    const verseObjects = cleanupVerseObjects(originalScriptureConfig?.verseObjects)
+    _map.set(`${chapter}:${verse}`, verseObjects)
+    return _map
+  }, [originalScriptureConfig.verseObjects, chapter, verse])
+
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
@@ -488,8 +496,8 @@ function WorkspaceContainer() {
         selections={selections}
         onSelections={setSelections}
         quote={selectedQuote?.quote}
-        occurrence={selectedQuote?.occurrence?.toString()}
-        verseObjects={originalScriptureConfig.verseObjects || []}
+        occurrence={fixOccurrence(selectedQuote?.occurrence)}
+        verseObjectsMap={verseObjectsMap}
       >
         <MinimizedCardsListUI minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>
         {loading || content || error ?
