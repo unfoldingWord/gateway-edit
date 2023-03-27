@@ -12,6 +12,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
+  cleanupVerseObjects,
+  fixOccurrence,
   NT_ORIG_LANG,
   NT_ORIG_LANG_BIBLE,
   ORIGINAL_SOURCE,
@@ -46,7 +48,6 @@ import useLexicon from '@hooks/useLexicon'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
 import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
-import { cleanupVerseObjects, fixOccurrence } from '../utils/resources'
 
 const useStyles = makeStyles(() => ({
   root: {
