@@ -3054,7 +3054,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
+bible-reference-range@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
@@ -5377,14 +5377,6 @@ file-entry-cache@^6.0.1:
   integrity sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==
   dependencies:
     flat-cache "^3.0.4"
-
-file-loader@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-6.2.0.tgz#baef7cf8e1840df325e4390b4484879480eebe4d"
-  integrity sha512-qo3glqyTa61Ytg4u73GultjHGjdRyig3tG6lPtyX/jOEJvHif9uB0/OCI2Kif6ctF3caQTW2G5gym21oAsI4pw==
-  dependencies:
-    loader-utils "^2.0.0"
-    schema-utils "^3.0.0"
 
 file-uri-to-path@1.0.0:
   version "1.0.0"
@@ -9398,11 +9390,6 @@ react-headroom@^3.1.0:
     raf "^3.3.0"
     shallowequal "^1.1.0"
 
-react-icons@^4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.8.0.tgz#621e900caa23b912f737e41be57f27f6b2bff445"
-  integrity sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==
-
 react-is@16.13.1, react-is@^16.13.1, react-is@^16.3.2, react-is@^16.6.3, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -10229,22 +10216,21 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.2.4:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.2.4.tgz#8f8c3941738c20bfe58df92fe419ce2878246458"
-  integrity sha512-GWjQDJVIADCKKWwx2bPLTMAShugYC4sTU03spip0VvXoOGs+QG9pcx2OK/Kkrd7YOzYi8vA8FzWNxUuusst+eg==
+single-scripture-rcl@3.2.6:
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.2.6.tgz#19ba3a3d66bdf537bc9fac87d777c670c64bad1a"
+  integrity sha512-YhbgobBpt8s2dSHQd019GVRby77e+/tM73feVD2tMdcdyjZgBQtfseyIvwKKXmNpGZDwPiBk6hQEEVl+5ON/kw==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
     deep-equal "^2.0.5"
     lodash "^4.17.21"
     react-docgen-typescript "^1.20.5"
-    react-icons "^4.8.0"
     source-map-loader "^1.1.3"
     styled-components "^5.2.1"
     ts-loader "^8.0.12"
     typescript "^4.1.3"
-    word-aligner-rcl "0.9.2"
+    word-aligner "^1.0.0"
 
 sisteransi@^1.0.5:
   version "1.0.5"
@@ -10618,13 +10604,6 @@ string-punctuation-tokenizer@2.1.2:
   dependencies:
     xregexp "^4.1.1"
 
-string-punctuation-tokenizer@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/string-punctuation-tokenizer/-/string-punctuation-tokenizer-2.2.0.tgz#058465f994e29bfb93eaf4a9a2503d3ab6a50a18"
-  integrity sha512-QOTErphviG7wtzhM6A0tVZugwPtfHFNySboO0SEkruFwW/d2HHalSHWri4230HG/F6egvJx76kZdtYY359+rrA==
-  dependencies:
-    xregexp "^4.1.1"
-
 string-width@^3.0.0, string-width@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-3.1.0.tgz#22767be21b62af1081574306f69ac51b62203961"
@@ -10908,25 +10887,6 @@ tc-ui-toolkit@5.3.3, tc-ui-toolkit@^5.3.3:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/tc-ui-toolkit/-/tc-ui-toolkit-5.3.3.tgz#67d5fd6cb6b165a124c0f1490fad7c963fcaf043"
   integrity sha512-Op9iUXXqyd1gJIimgS80quXDEYa9SGxJDPJSGBmKKx3XahqPMDSZdgyuJM9Lvhi6B6bAeiT4iLED3JZY4fQZoQ==
-  dependencies:
-    "@material-ui/core" "^4.10.2"
-    "@material-ui/icons" "^3.0.2"
-    deep-equal "^1.1.1"
-    jest-environment-jsdom "^24.9.0"
-    lodash "^4.17.15"
-    marked "^0.6.3"
-    memoize-one "^5.1.1"
-    prop-types "^15.7.2"
-    react-bootstrap "^0.32.1"
-    react-container-dimensions "^1.3.3"
-    react-draggable "^3.3.2"
-    react-remarkable "^1.1.3"
-    react-tooltip "^3.11.6"
-
-tc-ui-toolkit@6.2.6:
-  version "6.2.6"
-  resolved "https://registry.yarnpkg.com/tc-ui-toolkit/-/tc-ui-toolkit-6.2.6.tgz#e548a434f9b5ef9f547d1091d9f695f44bae9841"
-  integrity sha512-69aY7VmmpYzG/efbuMjbGS2vhEqqvDK41hcNfXeyOj0XygOW9xa/W6C/GH4teLFVWFeHQiJIrwDCAC7fpfrBow==
   dependencies:
     "@material-ui/core" "^4.10.2"
     "@material-ui/icons" "^3.0.2"
@@ -11497,13 +11457,6 @@ usfm-js@3.4.0:
   dependencies:
     lodash.clonedeep "^4.5.0"
 
-usfm-js@3.4.2:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/usfm-js/-/usfm-js-3.4.2.tgz#a4232cffe38c9f521246b007a4045648cbcf419a"
-  integrity sha512-i5nGxGwFhkOWd7xgfVWQ6GTkCpksfy5AUIwNJcwanTn3ua5J1nwl3pjApCDA6x1B++8ICkcQMUt0FB/bkKdE2g==
-  dependencies:
-    lodash.clonedeep "^4.5.0"
-
 utf8@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/utf8/-/utf8-3.0.0.tgz#f052eed1364d696e769ef058b183df88c87f69d1"
@@ -11816,34 +11769,6 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-0.9.2.tgz#eed6d7f3eb1e704bff780bc16a35836ae4db32f6"
-  integrity sha512-DgKJsLSDtvm7ow7Cf1TlEIdOg/FewUtVdlznhWF5afz/C3kAbrshvEfdzGpEsrpPhNExk2zGsjQwcqv3lyUFvQ==
-  dependencies:
-    bible-reference-range "^1.1.0"
-    file-loader "^6.2.0"
-    lodash "^4.17.21"
-    string-punctuation-tokenizer "2.2.0"
-    tc-ui-toolkit "6.2.6"
-    usfm-js "3.4.2"
-    word-aligner "1.0.1"
-    wordmap-lexer "^0.3.6"
-
-word-aligner@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/word-aligner/-/word-aligner-1.0.1.tgz#97c9f25ff2bb9a0fb5a58fcd6bc9e5080b0e6a02"
-  integrity sha512-LVTzXmRA46dz66HPN2H4ReI4rYmAUW/RKdFxHe25vwhPFXl2ieHXNAxghygpGJpvy8oB39scIGu5WRVgdArAKg==
-  dependencies:
-    babel-runtime "^6.26.0"
-    fs-extra "6.0.1"
-    lodash "^4.17.11"
-    path "0.12.7"
-    path-extra "^4.2.1"
-    rimraf "^2.6.2"
-    string-punctuation-tokenizer "2.0.0"
-    transform-runtime "0.0.0"
-
 word-aligner@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/word-aligner/-/word-aligner-1.0.0.tgz#eee4be21b2550f80e5af8df419427cb4272c36cc"
@@ -11862,13 +11787,6 @@ word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
-
-wordmap-lexer@^0.3.6:
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/wordmap-lexer/-/wordmap-lexer-0.3.6.tgz#69b474c2bb58e6ecc36f9533efb24b512d198f40"
-  integrity sha512-7yyNIW6E4ea5vgaqvgcXihjZlVrlEg4KUuHdkmSC3O73yyTZs8YUY7ipGpHI2zWwgErTwfWCLXZ49s8eJoVn8g==
-  dependencies:
-    string-punctuation-tokenizer "2.0.0"
 
 wrap-ansi@^5.1.0:
   version "5.1.0"
