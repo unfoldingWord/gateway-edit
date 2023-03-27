@@ -210,7 +210,7 @@ export default function ResourceCard({
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
   async function handleSaveEdit() {
-    // Save edit, if succesful trigger resource reload and set saved to true.
+    // Save edit, if successful trigger resource reload and set saved to true.
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {

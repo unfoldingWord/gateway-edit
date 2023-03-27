@@ -45,6 +45,7 @@ import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import useLexicon from '@hooks/useLexicon'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
+import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
 import { cleanupVerseObjects, fixOccurrence } from '../utils/resources'
 
 const useStyles = makeStyles(() => ({
@@ -271,6 +272,10 @@ function WorkspaceContainer() {
     fetchGlossesForVerse,
     getLexiconData,
     translate,
+    loggedInUser,
+    authentication,
+    setSavedChanges,
+    bookIndex: BIBLES_ABBRV_INDEX[bookId],
     addVerseRange,
   }
 
