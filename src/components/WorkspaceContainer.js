@@ -4,6 +4,7 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect'
 import * as isEqual from 'deep-equal'
 import {
   Workspace, MinimizedCardsListUI, useMinimizedCardsState,
@@ -63,8 +64,10 @@ function WorkspaceContainer() {
   const router = useRouter()
   const classes = useStyles()
   const [workspaceReady, setWorkspaceReady] = useState(false)
-  const [selections, setSelections] = useState([])
+  const [selections, _setSelections] = useState(new Map())
   const [networkError, setNetworkError] = useState(null)
+  const [currentVerseSpans, setCurrentVerseSpans] = useState([])
+  const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
   const {
     state: {
       owner,
@@ -125,14 +128,39 @@ function WorkspaceContainer() {
 
   /**
    * clean up quote before applying
-   * @param quote
+   * @param {object} newQuote
    */
-  function setQuote(quote) {
-    const _quote = quote ? {
-      ...quote,
-      occurrence: fixOccurrence(quote.occurrence),
+  function setQuote(newQuote) {
+    const _quote = newQuote ? {
+      ...newQuote,
+      occurrence: fixOccurrence(newQuote.occurrence),
     } : {}
-    _setQuote(_quote)
+
+    if (!isEqual(selectedQuote, _quote)) {
+      _setQuote(_quote)
+    }
+  }
+
+  /**
+   * update selectrions if changed
+   * @param {Map} newSelections
+   */
+  function setSelections(newSelections) {
+    let _newSelections = newSelections
+
+    if (newSelections?.size && currentVerseSpans?.length) { // add support for verse range
+      _newSelections = new Map(newSelections) // shallow copy
+      let primaryReference = `${chapter}:${verse}`
+      const _selections = _newSelections.get(primaryReference)
+
+      for (const verseSpan of currentVerseSpans) {
+        _newSelections.set(verseSpan, _selections)
+      }
+    }
+
+    if (!isEqual(selections, _newSelections)) {
+      _setSelections(_newSelections)
+    }
   }
 
   /**
@@ -202,6 +230,32 @@ function WorkspaceContainer() {
     }
   }
 
+  /**
+   * add a verse range to list of verse ranges displayed in the scripture panes.  This is so we can remap selections to also include the verse ranges
+   * @param {string} range - such as 1:1-2
+   */
+  function addVerseRange(range) {
+    const _currentVerseSpans = currentVerseSpans || []
+
+    if (_currentVerseSpans.indexOf(range) < 0) { // only add to list if new
+      const newVerseSpans = [..._currentVerseSpans]
+      newVerseSpans.push(range)
+
+      if (!isEqual(newVerseSpans, _currentVerseSpans)) {
+        setCurrentVerseSpans(newVerseSpans)
+      }
+    }
+  }
+
+  useEffect(() => { // on verse navigation, clear verse spans and selections
+    if (currentVerseSpans?.length) {
+      setCurrentVerseSpans([])
+    }
+
+    // clear selections
+    setSelections(new Map())
+  }, [chapter, verse, bookId])
+
   const commonScriptureCardConfigs = {
     isNT,
     server,
@@ -217,6 +271,7 @@ function WorkspaceContainer() {
     fetchGlossesForVerse,
     getLexiconData,
     translate,
+    addVerseRange,
   }
 
   const commonResourceCardConfigs = {
@@ -302,7 +357,6 @@ function WorkspaceContainer() {
       }
     })
   }, [])
-
 
   const cards = [
     {
@@ -490,12 +544,21 @@ function WorkspaceContainer() {
     },
   })
 
-  const verseObjectsMap = useMemo(() => {
+  useDeepCompareEffectNoCheck(() => { // see if we need to update map of original verse objects
     const _map = new Map()
     const verseObjects = cleanupVerseObjects(originalScriptureConfig?.verseObjects)
     _map.set(`${chapter}:${verse}`, verseObjects)
-    return _map
-  }, [originalScriptureConfig.verseObjects, chapter, verse])
+
+    if (currentVerseSpans?.length) { // add support for verse ranges
+      for (const verseSpan of currentVerseSpans) {
+        _map.set(verseSpan, verseObjects)
+      }
+    }
+
+    if (!isEqual(verseObjectsMap, _map)) {
+      setVerseObjectsMap(_map)
+    }
+  }, [originalScriptureConfig.verseObjects, chapter, verse, currentVerseSpans])
 
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
