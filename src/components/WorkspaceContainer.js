@@ -44,7 +44,9 @@ import {
 import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
+import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
 import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
@@ -61,6 +63,8 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
+const wordAlignmentScreenRatio = 0.7
+const wordAlignmentMaxHeightPx = 1000
 
 function WorkspaceContainer() {
   const router = useRouter()
@@ -70,6 +74,19 @@ function WorkspaceContainer() {
   const [networkError, setNetworkError] = useState(null)
   const [currentVerseSpans, setCurrentVerseSpans] = useState([])
   const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
+  const [wordAlignerStatus, _setWordAlignerStatus] = useState(null)
+  const { height } = useWindowDimensions()
+
+  const wordAlignerHeight = useMemo(() => {
+    let _height = wordAlignmentScreenRatio * height
+
+    if (_height > wordAlignmentMaxHeightPx) {
+      _height = wordAlignmentMaxHeightPx
+    }
+
+    return _height
+  }, [height])
+
   const {
     state: {
       owner,
@@ -143,8 +160,24 @@ function WorkspaceContainer() {
     }
   }
 
+  function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
+    // TODO: make show popover pretty
+    console.log(`showPopover`, rawData)
+    window.prompt(`User clicked on ${JSON.stringify(rawData.token)}`)
+  }
+
   /**
-   * update selectrions if changed
+   * update word aligner status
+   * @param newWordAlignmentStatus
+   */
+  function setWordAlignerStatus(newWordAlignmentStatus) {
+    if (!isEqual(wordAlignerStatus, newWordAlignmentStatus)) {
+      _setWordAlignerStatus(newWordAlignmentStatus)
+    }
+  }
+
+  /**
+   * update selections if changed
    * @param {Map} newSelections
    */
   function setSelections(newSelections) {
@@ -256,6 +289,8 @@ function WorkspaceContainer() {
 
     // clear selections
     setSelections(new Map())
+    // clear alignments
+    setWordAlignerStatus(null)
   }, [chapter, verse, bookId])
 
   const commonScriptureCardConfigs = {
@@ -278,6 +313,7 @@ function WorkspaceContainer() {
     setSavedChanges,
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
     addVerseRange,
+    setWordAlignerStatus,
   }
 
   const commonResourceCardConfigs = {
@@ -630,8 +666,16 @@ function WorkspaceContainer() {
             )
           }
         </Workspace>
+        <WordAlignerDialog
+          alignerStatus={wordAlignerStatus}
+          height={wordAlignerHeight}
+          translate={translate}
+          showPopover={showPopover}
+          getLexiconData={getLexiconData}
+        />
       </SelectionsContextProvider>
   )
 }
 
 export default WorkspaceContainer
+
