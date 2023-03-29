@@ -6,8 +6,9 @@ import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import { WordAligner } from 'word-aligner-rcl'
 import Button from '@mui/material/Button'
 
-const alignmentIconStyle = { marginLeft:'50px' };
+const alignmentIconStyle = { marginLeft:'50px' }
 
+// popup dialog for user to align verse
 export default function WordAlignerDialog({
   alignerStatus,
   height,
@@ -18,6 +19,11 @@ export default function WordAlignerDialog({
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
 
+  /**
+   * called on every alignment change.  We save this new alignment state so that it can be applied if user clicks accept.
+   *   We also update the aligned status so that the UI can be updated dynamically
+   * @param {object} results
+   */
   function onAlignmentChange(results) {
     const alignmentComplete = alignerStatus?.actions?.onAlignmentsChange(results)
     setAlignmentChange(results) // save the most recent change
@@ -26,7 +32,7 @@ export default function WordAlignerDialog({
 
   const alignerData = alignerStatus?.state?.alignerData
 
-  useEffect(() => {
+  useEffect(() => { // set initial aligned state
     if (alignerData) {
       setAligned(!!alignerStatus?.state?.aligned)
     }
@@ -74,7 +80,6 @@ export default function WordAlignerDialog({
         </Button>
       </span>
     </Dialog>
-
   )
 }
 
