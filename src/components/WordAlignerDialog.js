@@ -38,6 +38,13 @@ export default function WordAlignerDialog({
     }
   }, [alignerData, alignerStatus])
 
+  const {
+    projectId,
+    chapter,
+    verse,
+  } = alignerStatus?.state?.currentVerseRef || {}
+  const title = `${projectId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
+
   return (
     <Dialog
       fullWidth={true}
@@ -47,7 +54,7 @@ export default function WordAlignerDialog({
     >
       <DialogTitle>
         <span>
-          {`Aligning: ${alignerStatus?.state?.title}`}
+          {`Aligning: ${title}`}
           {aligned? (
             <RxLink2 style={alignmentIconStyle} id='valid_icon' color='#BBB' />
           ) : (
