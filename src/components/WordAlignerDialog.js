@@ -7,8 +7,21 @@ import { CgCloseR } from 'react-icons/cg'
 import { WordAligner } from 'word-aligner-rcl'
 import Button from '@mui/material/Button'
 import { IconButton } from '@mui/material'
+import Paper from '@mui/material/Paper'
+import Draggable from 'react-draggable'
 
 const alignmentIconStyle = { marginLeft:'50px' }
+
+function PaperComponent(props) {
+  return (
+    <Draggable
+      handle="#draggable-aligner-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
+      <Paper {...props} />
+    </Draggable>
+  )
+}
 
 // popup dialog for user to align verse
 export default function WordAlignerDialog({
@@ -35,7 +48,12 @@ export default function WordAlignerDialog({
   function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
     // TODO: make show popover pretty and fix positioning
     console.log(`showPopover`, rawData)
-    setLexiconData({PopoverTitle, wordDetails, positionCoord, rawData})
+    setLexiconData({
+      PopoverTitle,
+      wordDetails,
+      positionCoord,
+      rawData,
+    })
   }
 
   const alignerData = alignerStatus?.state?.alignerData
@@ -60,8 +78,10 @@ export default function WordAlignerDialog({
         maxWidth={'lg'}
         onClose={() => {}}
         open={alignerData}
+        PaperComponent={PaperComponent}
+        aria-labelledby="draggable-aligner-dialog-title"
       >
-        <DialogTitle>
+        <DialogTitle style={{ cursor: 'move' }} id="draggable-aligner-dialog-title" >
           <span>
             {`Aligning: ${title}`}
             {aligned? (
