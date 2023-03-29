@@ -160,12 +160,6 @@ function WorkspaceContainer() {
     }
   }
 
-  function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
-    // TODO: make show popover pretty
-    console.log(`showPopover`, rawData)
-    window.prompt(`User clicked on ${JSON.stringify(rawData.token)}`)
-  }
-
   /**
    * update word aligner status
    * @param newWordAlignmentStatus
@@ -670,7 +664,6 @@ function WorkspaceContainer() {
           alignerStatus={wordAlignerStatus}
           height={wordAlignerHeight}
           translate={translate}
-          showPopover={showPopover}
           getLexiconData={getLexiconData}
         />
       </SelectionsContextProvider>
