@@ -74,6 +74,7 @@ function WorkspaceContainer() {
   const [networkError, setNetworkError] = useState(null)
   const [currentVerseSpans, setCurrentVerseSpans] = useState([])
   const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
+  const [currentVerseReference, setCurrentVerseReference] = useState(null)
   const [wordAlignerStatus, _setWordAlignerStatus] = useState(null)
   const { height } = useWindowDimensions()
 
@@ -149,7 +150,8 @@ function WorkspaceContainer() {
    * clean up quote before applying
    * @param {object} newQuote
    */
-  function setQuote(newQuote) {
+  function setCurrentCheck(newQuote) {
+    console.log("newQuote", newQuote)
     const _quote = newQuote ? {
       ...newQuote,
       occurrence: fixOccurrence(newQuote.occurrence),
@@ -157,6 +159,9 @@ function WorkspaceContainer() {
 
     if (!isEqual(selectedQuote, _quote)) {
       _setQuote(_quote)
+    }
+    if (!isEqual(newQuote.reference, currentVerseReference)){
+      setCurrentVerseReference(newQuote.reference)
     }
   }
 
@@ -283,6 +288,8 @@ function WorkspaceContainer() {
 
     // clear selections
     setSelections(new Map())
+    // clear current verse reference
+    setCurrentVerseReference(null)
     // clear alignments
     setWordAlignerStatus(null)
   }, [chapter, verse, bookId])
@@ -308,6 +315,7 @@ function WorkspaceContainer() {
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
     addVerseRange,
     setWordAlignerStatus,
+    currentVerseReference,
   }
 
   const commonResourceCardConfigs = {
@@ -459,7 +467,7 @@ function WorkspaceContainer() {
       filePath: null,
       resourceId: 'tn',
       projectId: bookId,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       updateTaDetails: updateTaDetails,
       loggedInUser: loggedInUser,
@@ -490,7 +498,7 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       disableFilters: true,
       disableNavigation: true,
@@ -509,7 +517,7 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       disableFilters: true,
       loggedInUser: loggedInUser,
@@ -671,4 +679,3 @@ function WorkspaceContainer() {
 }
 
 export default WorkspaceContainer
-
