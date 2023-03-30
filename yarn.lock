@@ -8870,7 +8870,7 @@ react-draggable@^3.3.2:
     classnames "^2.2.5"
     prop-types "^15.6.0"
 
-react-draggable@^4.0.0, react-draggable@^4.0.3, react-draggable@^4.4.3:
+react-draggable@^4.0.0, react-draggable@^4.0.3, react-draggable@^4.4.3, react-draggable@^4.4.5:
   version "4.4.5"
   resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-4.4.5.tgz#9e37fe7ce1a4cf843030f521a0a4cc41886d7e7c"
   integrity sha512-OMHzJdyJbYTZo4uQE393fHcqqPYsEtkjfMgvCHr6rejT+Ezn4OZbNyGH50vv+SunC1RMvwOTSWkEODQLzw1M9g==
@@ -10489,10 +10489,9 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.8-beta:
-  version "3.3.8-beta"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.8-beta.tgz#dac7a5a75a5b3aac4d2a5f444063e386841fd5a7"
-  integrity sha512-7AwOadTz0y5TjnJed3AeYsadH8V3WLousmCmYe83Yl0wql1T//wbG7mzHO3/KE4jLkA+W2eM/bIWh0iKwjC/BQ==
+translation-helps-rcl@/Users/blm/Development/RCL/translation-helps-rcl/translation-helps-rcl-v3.3.8-alpha.2.tgz:
+  version "3.3.8-alpha.2"
+  resolved "/Users/blm/Development/RCL/translation-helps-rcl/translation-helps-rcl-v3.3.8-alpha.2.tgz#b5e0d9d798d6a01150c3d01f33bb07ce23c48d13"
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"

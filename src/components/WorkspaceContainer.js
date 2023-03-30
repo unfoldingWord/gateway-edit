@@ -75,6 +75,7 @@ function WorkspaceContainer() {
   const [currentVerseSpans, setCurrentVerseSpans] = useState([])
   const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
   const [currentVerseReference, setCurrentVerseReference] = useState(null)
+  const [scriptureReference, setScriptureReference] = useState({})
   const [wordAlignerStatus, _setWordAlignerStatus] = useState(null)
   const { height } = useWindowDimensions()
 
@@ -151,7 +152,7 @@ function WorkspaceContainer() {
    * @param {object} newQuote
    */
   function setCurrentCheck(newQuote) {
-    console.log("newQuote", newQuote)
+    console.log('newQuote', newQuote)
     const _quote = newQuote ? {
       ...newQuote,
       occurrence: fixOccurrence(newQuote.occurrence),
@@ -160,6 +161,7 @@ function WorkspaceContainer() {
     if (!isEqual(selectedQuote, _quote)) {
       _setQuote(_quote)
     }
+
     if (!isEqual(newQuote.reference, currentVerseReference)){
       setCurrentVerseReference(newQuote.reference)
     }
@@ -294,6 +296,30 @@ function WorkspaceContainer() {
     setWordAlignerStatus(null)
   }, [chapter, verse, bookId])
 
+  useEffect(() => { // determine reference to use for scriptures
+    const reference = {
+      chapter,
+      verse,
+      bookId,
+      projectId: bookId,
+    }
+
+    if (currentVerseReference) { // if current check is overriding reference
+      const pos = currentVerseReference.indexOf(':')
+
+      if (pos >= 0) {
+        const chapter = currentVerseReference.substring(0, pos)
+        const verse = currentVerseReference.substring(pos + 1)
+        reference.chapter = chapter
+        reference.verse = verse
+      }
+    }
+
+    if (!isEqual(reference, scriptureReference)) {
+      setScriptureReference(reference)
+    }
+  }, [currentVerseReference, chapter, verse, bookId])
+
   const commonScriptureCardConfigs = {
     isNT,
     server,
@@ -315,7 +341,7 @@ function WorkspaceContainer() {
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
     addVerseRange,
     setWordAlignerStatus,
-    currentVerseReference,
+    reference: scriptureReference,
   }
 
   const commonResourceCardConfigs = {
@@ -408,12 +434,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Literal_Translation',
       cardNum: 0,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -427,12 +447,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Original_Source',
       cardNum: 1,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -446,12 +460,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Simplified_Translation',
       cardNum: 2,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
