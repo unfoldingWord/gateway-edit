@@ -27,7 +27,7 @@ export default function ResourceCard({
   chapter,
   classes,
   filePath,
-  setQuote,
+  setCurrentCheck,
   viewMode,
   projectId,
   languageId,
@@ -137,7 +137,7 @@ export default function ResourceCard({
     items,
     verse,
     chapter,
-    setQuote,
+    setCurrentCheck,
     projectId,
     selectedQuote,
     useUserLocalStorage,
@@ -189,7 +189,7 @@ export default function ResourceCard({
         Quote, OrigQuote, Occurrence, SupportReference = null,
       } = item || {}
       updateTaDetails(SupportReference)
-      setQuote({
+      setCurrentCheck({
         quote: Quote || OrigQuote,
         occurrence: Occurrence,
         SupportReference,
@@ -270,7 +270,7 @@ export default function ResourceCard({
         editable={editable}
         viewMode={viewMode}
         fontSize={fontSize}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         onTsvEdit={onTsvEdit}
         languageId={languageId}
         setContent={setContent}
@@ -305,7 +305,7 @@ ResourceCard.propTypes = {
   resourceId: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
   updateTaDetails: PropTypes.func,
-  setQuote: PropTypes.func,
+  setCurrentCheck: PropTypes.func,
   filePath: PropTypes.string,
   disableFilters: PropTypes.bool,
   disableNavigation: PropTypes.bool,

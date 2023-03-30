@@ -70,6 +70,7 @@ function WorkspaceContainer() {
   const [networkError, setNetworkError] = useState(null)
   const [currentVerseSpans, setCurrentVerseSpans] = useState([])
   const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
+  const [currentVerseReference, setCurrentVerseReference] = useState(null)
   const {
     state: {
       owner,
@@ -132,7 +133,8 @@ function WorkspaceContainer() {
    * clean up quote before applying
    * @param {object} newQuote
    */
-  function setQuote(newQuote) {
+  function setCurrentCheck(newQuote) {
+    console.log("newQuote", newQuote)
     const _quote = newQuote ? {
       ...newQuote,
       occurrence: fixOccurrence(newQuote.occurrence),
@@ -140,6 +142,9 @@ function WorkspaceContainer() {
 
     if (!isEqual(selectedQuote, _quote)) {
       _setQuote(_quote)
+    }
+    if (!isEqual(newQuote.reference, currentVerseReference)){
+      setCurrentVerseReference(newQuote.reference)
     }
   }
 
@@ -256,6 +261,8 @@ function WorkspaceContainer() {
 
     // clear selections
     setSelections(new Map())
+
+    setCurrentVerseReference(null)
   }, [chapter, verse, bookId])
 
   const commonScriptureCardConfigs = {
@@ -278,6 +285,7 @@ function WorkspaceContainer() {
     setSavedChanges,
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
     addVerseRange,
+    currentVerseReference,
   }
 
   const commonResourceCardConfigs = {
@@ -429,7 +437,7 @@ function WorkspaceContainer() {
       filePath: null,
       resourceId: 'tn',
       projectId: bookId,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       updateTaDetails: updateTaDetails,
       loggedInUser: loggedInUser,
@@ -460,7 +468,7 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       disableFilters: true,
       disableNavigation: true,
@@ -479,7 +487,7 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       disableFilters: true,
       loggedInUser: loggedInUser,
