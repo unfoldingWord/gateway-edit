@@ -71,6 +71,8 @@ function WorkspaceContainer() {
   const [currentVerseSpans, setCurrentVerseSpans] = useState([])
   const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
   const [currentVerseReference, setCurrentVerseReference] = useState(null)
+  const [scriptureReference, setScriptureReference] = useState({})
+
   const {
     state: {
       owner,
@@ -147,6 +149,29 @@ function WorkspaceContainer() {
       setCurrentVerseReference(newQuote.reference)
     }
   }
+
+  useEffect(()=>{
+    const reference = {
+      chapter,
+      verse,
+      bookId,
+      projectId: bookId,
+    }
+
+    if(currentVerseReference){
+      const index = currentVerseReference.indexOf(':')
+      if(index >= 0){
+        const chapter = currentVerseReference.substring(0,index)
+        const verse = currentVerseReference.substring(index + 1)
+        reference.chapter = chapter
+        reference.verse = verse
+      }
+    }
+    if(!isEqual(reference, scriptureReference)){
+      setScriptureReference(reference)
+    }
+
+  },[chapter, verse, bookId, currentVerseReference])
 
   /**
    * update selectrions if changed
@@ -285,7 +310,7 @@ function WorkspaceContainer() {
     setSavedChanges,
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
     addVerseRange,
-    currentVerseReference,
+    reference: scriptureReference,
   }
 
   const commonResourceCardConfigs = {
@@ -378,12 +403,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Literal_Translation',
       cardNum: 0,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -397,12 +416,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Original_Source',
       cardNum: 1,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -416,12 +429,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Simplified_Translation',
       cardNum: 2,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
