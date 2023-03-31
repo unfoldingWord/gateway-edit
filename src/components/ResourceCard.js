@@ -186,13 +186,14 @@ export default function ResourceCard({
   useEffect(() => {
     if (updateTaDetails) {
       const {
-        Quote, OrigQuote, Occurrence, SupportReference = null,
+        Quote, OrigQuote, Occurrence, Reference, SupportReference = null,
       } = item || {}
       updateTaDetails(SupportReference)
       setCurrentCheck({
         quote: Quote || OrigQuote,
         occurrence: Occurrence,
         SupportReference,
+        reference: Reference,
       })
     }
   }, [item])
