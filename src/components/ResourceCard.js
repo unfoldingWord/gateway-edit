@@ -32,6 +32,7 @@ export default function ResourceCard({
   projectId,
   languageId,
   resourceId,
+  onMinimize,
   errorMessage,
   loggedInUser,
   selectedQuote,
@@ -259,6 +260,7 @@ export default function ResourceCard({
       disableNavigation={disableNavigation}
       hideMarkdownToggle={hideMarkdownToggle}
       showSaveChangesPrompt={showSaveChangesPrompt}
+      onMinimize={onMinimize ? () => onMinimize(id) : null}
     >
       <CardContent
         id={`${id}_content`}
@@ -327,4 +329,6 @@ ResourceCard.propTypes = {
   setSavedChanges: PropTypes.func,
   /** Shows a unsaved changes prompt if there's any. */
   showSaveChangesPrompt: PropTypes.func,
+  /** function to minimize the card (optional) */
+  onMinimize: PropTypes.func,
 }
