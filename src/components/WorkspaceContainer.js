@@ -177,6 +177,29 @@ function WorkspaceContainer() {
     }
   }
 
+  useEffect(()=>{
+    const reference = {
+      chapter,
+      verse,
+      bookId,
+      projectId: bookId,
+    }
+
+    if(currentVerseReference){
+      const index = currentVerseReference.indexOf(':')
+      if(index >= 0){
+        const chapter = currentVerseReference.substring(0,index)
+        const verse = currentVerseReference.substring(index + 1)
+        reference.chapter = chapter
+        reference.verse = verse
+      }
+    }
+    if(!isEqual(reference, scriptureReference)){
+      setScriptureReference(reference)
+    }
+
+  },[chapter, verse, bookId, currentVerseReference])
+
   /**
    * update selections if changed
    * @param {Map} newSelections
@@ -296,30 +319,6 @@ function WorkspaceContainer() {
     setWordAlignerStatus(null)
   }, [chapter, verse, bookId])
 
-  useEffect(() => { // determine reference to use for scriptures
-    const reference = {
-      chapter,
-      verse,
-      bookId,
-      projectId: bookId,
-    }
-
-    if (currentVerseReference) { // if current check is overriding reference
-      const pos = currentVerseReference.indexOf(':')
-
-      if (pos >= 0) {
-        const chapter = currentVerseReference.substring(0, pos)
-        const verse = currentVerseReference.substring(pos + 1)
-        reference.chapter = chapter
-        reference.verse = verse
-      }
-    }
-
-    if (!isEqual(reference, scriptureReference)) {
-      setScriptureReference(reference)
-    }
-  }, [currentVerseReference, chapter, verse, bookId])
-
   const commonScriptureCardConfigs = {
     isNT,
     server,
@@ -340,8 +339,8 @@ function WorkspaceContainer() {
     setSavedChanges,
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
     addVerseRange,
-    setWordAlignerStatus,
     reference: scriptureReference,
+    setWordAlignerStatus,
   }
 
   const commonResourceCardConfigs = {
