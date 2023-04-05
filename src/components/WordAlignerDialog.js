@@ -40,7 +40,8 @@ export default function WordAlignerDialog({
    * @param {object} results
    */
   function onAlignmentChange(results) {
-    const alignmentComplete = alignerStatus?.actions?.onAlignmentsChange(results)
+    const onAlignmentsChange = alignerStatus?.actions?.onAlignmentsChange;
+    const alignmentComplete = onAlignmentsChange?.(results)
     setAlignmentChange(results) // save the most recent change
     setAligned(alignmentComplete) // update alignment complete status
   }
@@ -68,8 +69,18 @@ export default function WordAlignerDialog({
     projectId,
     chapter,
     verse,
-  } = alignerStatus?.state?.currentVerseRef || {}
+  } = alignerStatus?.state?.reference || {}
   const title = `${projectId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
+
+  function cancelAlignment() {
+    const cancelAlignment = alignerStatus?.actions?.cancelAlignment
+    cancelAlignment?.()
+  }
+
+  function saveAlignment() {
+    const saveAlignment = alignerStatus?.actions?.saveAlignment
+    saveAlignment?.(alignmentChange)
+  }
 
   return (
     <>
@@ -108,14 +119,16 @@ export default function WordAlignerDialog({
           />
         </div>
         <span style={{ width : `95%`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={() => alignerStatus?.actions?.cancelAlignment()}>
+          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={cancelAlignment}>
             Cancel
           </Button>
-          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={() => alignerStatus?.actions?.saveAlignment(alignmentChange)}>
+          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
             Accept
           </Button>
         </span>
       </Dialog>
+
+      {/** Lexicon Popup dialog */}
       <Dialog
         onClose={() => setLexiconData(null)}
         open={lexiconData}
