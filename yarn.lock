@@ -9648,23 +9648,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@/Users/blm/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.3.2-alpha.13.tgz:
-  version "3.3.2-alpha.13"
-  resolved "/Users/blm/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.3.2-alpha.13.tgz#5afb19e79b06dd00a787600db0fa7e8641688878"
-  dependencies:
-    "@types/react" "^17.0.0"
-    "@types/react-dom" "^17.0.0"
-    deep-equal "^2.0.5"
-    lodash "^4.17.21"
-    react-docgen-typescript "^1.20.5"
-    source-map-loader "^1.1.3"
-    styled-components "^5.2.1"
-    ts-loader "^8.0.12"
-    typescript "^4.1.3"
-
-"single-scripture-rcl@file:../single-scripture-rcl/single-scripture-rcl-v3.3.2-alpha.12.tgz":
-  version "3.3.2-alpha.12"
-  resolved "file:../single-scripture-rcl/single-scripture-rcl-v3.3.2-alpha.12.tgz#865be016346385ddf8e1354dc8b3695a4c6e0aa9"
+single-scripture-rcl@3.3.2-beta:
+  version "3.3.2-beta"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.2-beta.tgz#677de29bc8da37da3878e454ddf4777a3de2ec0e"
+  integrity sha512-jkjdh2tyibC6s9ZMJdjeH2tRP5/NOlIjMiA+/9hTc9BrzmwD7TfzEve9wN+px3p273r3TrBmfZIXsnbXrTUHyQ==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
