@@ -165,6 +165,7 @@ export default function useLexicon({
       if (wordObjects?.length) {
         const strongs = core.getStrongsList(wordObjects)
 
+        // check if already prefetching this list
         if (strongs?.length && !isEqual(strongs, strongsNumbersInVerse)) {
           if (lexiconGlosses && Object.keys(lexiconGlosses).length) {
             // console.log(`fetchGlossesForVerse - loading strongs numbers`)
