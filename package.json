@@ -56,7 +56,7 @@
     "translation-helps-rcl": "3.3.9",
     "use-deep-compare-effect": "^1.3.1",
     "word-aligner": "^1.0.0",
-    "word-aligner-rcl": "^0.9.3-beta"
+    "word-aligner-rcl": "^0.9.3"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
