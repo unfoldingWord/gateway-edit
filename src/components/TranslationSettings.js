@@ -37,9 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function TranslationSettings({ authentication }) {
   const router = useRouter()
-  const {
-    actions: { logout },
-  } = useContext(AuthContext)
+  const { actions: { logout } } = useContext(AuthContext)
   const classes = useStyles()
   const [organizations, setOrganizations] = useState([])
   const [orgErrorMessage, setOrgErrorMessage] = useState(null)
@@ -47,8 +45,16 @@ export default function TranslationSettings({ authentication }) {
   const [networkError, setNetworkError] = useState(null)
   const [haveOrgsFetched, setHaveOrgsFetched] = useState(false)
   const {
-    state: { owner: organization, languageId, server },
-    actions: { setOwner: setOrganization, setLanguageId, setLastError },
+    state: {
+      owner: organization,
+      languageId,
+      server,
+    },
+    actions: {
+      setOwner: setOrganization,
+      setLanguageId,
+      setLastError,
+    },
   } = useContext(StoreContext)
 
   /**
