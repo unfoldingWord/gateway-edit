@@ -9648,10 +9648,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.2.tgz#150c29a28272398ee317754ca0933140113f6357"
-  integrity sha512-gO5JdPPYNHumrnWH8DfjiCZs1xft70nXEHe+FqTSWlzt7Otpsz0y/Cy1IsJvkqZFCL3XcQFli2jGOIcQqsdLvA==
+single-scripture-rcl@3.3.3-beta:
+  version "3.3.3-beta"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.tgz#6f2c69723d2d63e09e01173bc7fbc5f60ab45799"
+  integrity sha512-x0YMivvxw8QSkomRCxwm8am1dCcifn9+sCZ/FFlM2W2kS7rkI/fowt9KYWtmIFX3d/2JwNhxmhtgNXw2sbPhoA==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -11180,10 +11180,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-0.9.2.tgz#eed6d7f3eb1e704bff780bc16a35836ae4db32f6"
-  integrity sha512-DgKJsLSDtvm7ow7Cf1TlEIdOg/FewUtVdlznhWF5afz/C3kAbrshvEfdzGpEsrpPhNExk2zGsjQwcqv3lyUFvQ==
+word-aligner-rcl@0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-0.9.3.tgz#76e6bba0a5896001b3b6e7356f2ae1f7cd3b544a"
+  integrity sha512-H//0EGsos+szqkkp9TiHscjeespi2hih1OJ7CxxDONqOuZ1IajHX/HGHnPnjgDl6DR/o0vTcdETNEKF0vDvALA==
   dependencies:
     bible-reference-range "^1.1.0"
     file-loader "^6.2.0"
