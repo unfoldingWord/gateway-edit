@@ -4,6 +4,7 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect'
 import * as isEqual from 'deep-equal'
 import {
   Workspace, MinimizedCardsListUI, useMinimizedCardsState,
@@ -11,6 +12,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
+  cleanupVerseObjects,
+  fixOccurrence,
   NT_ORIG_LANG,
   NT_ORIG_LANG_BIBLE,
   ORIGINAL_SOURCE,
@@ -41,9 +44,12 @@ import {
 import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
+import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
+import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -57,13 +63,32 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
+const wordAlignmentScreenRatio = 0.7
+const wordAlignmentMaxHeightPx = 1000
 
 function WorkspaceContainer() {
   const router = useRouter()
   const classes = useStyles()
   const [workspaceReady, setWorkspaceReady] = useState(false)
-  const [selections, setSelections] = useState([])
+  const [selections, _setSelections] = useState(new Map())
   const [networkError, setNetworkError] = useState(null)
+  const [currentVerseSpans, setCurrentVerseSpans] = useState([])
+  const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
+  const [currentVerseReference, setCurrentVerseReference] = useState(null)
+  const [scriptureReference, setScriptureReference] = useState({})
+  const [wordAlignerStatus, _setWordAlignerStatus] = useState(null)
+  const { height } = useWindowDimensions()
+
+  const wordAlignerHeight = useMemo(() => {
+    let _height = wordAlignmentScreenRatio * height
+
+    if (_height > wordAlignmentMaxHeightPx) {
+      _height = wordAlignmentMaxHeightPx
+    }
+
+    return _height
+  }, [height])
+
   const {
     state: {
       owner,
@@ -88,7 +113,7 @@ function WorkspaceContainer() {
     },
     actions: {
       logout,
-      setQuote,
+      setQuote: _setQuote,
       setSupportedBibles,
       setCurrentLayout,
       setTokenNetworkError,
@@ -121,6 +146,81 @@ function WorkspaceContainer() {
     languageId,
     server,
   })
+
+  /**
+   * clean up quote before applying
+   * @param {object} newQuote
+   */
+  function setCurrentCheck(newQuote) {
+    console.log('newQuote', newQuote)
+    const _quote = newQuote ? {
+      ...newQuote,
+      occurrence: fixOccurrence(newQuote.occurrence),
+    } : {}
+
+    if (!isEqual(selectedQuote, _quote)) {
+      _setQuote(_quote)
+    }
+
+    if (!isEqual(newQuote.reference, currentVerseReference)){
+      setCurrentVerseReference(newQuote.reference)
+    }
+  }
+
+  /**
+   * update word aligner status
+   * @param newWordAlignmentStatus
+   */
+  function setWordAlignerStatus(newWordAlignmentStatus) {
+    if (!isEqual(wordAlignerStatus, newWordAlignmentStatus)) {
+      _setWordAlignerStatus(newWordAlignmentStatus)
+    }
+  }
+
+  useEffect(()=>{
+    const reference = {
+      chapter,
+      verse,
+      bookId,
+      projectId: bookId,
+    }
+
+    if(currentVerseReference){
+      const index = currentVerseReference.indexOf(':')
+      if(index >= 0){
+        const chapter = currentVerseReference.substring(0,index)
+        const verse = currentVerseReference.substring(index + 1)
+        reference.chapter = chapter
+        reference.verse = verse
+      }
+    }
+    if(!isEqual(reference, scriptureReference)){
+      setScriptureReference(reference)
+    }
+
+  },[chapter, verse, bookId, currentVerseReference])
+
+  /**
+   * update selections if changed
+   * @param {Map} newSelections
+   */
+  function setSelections(newSelections) {
+    let _newSelections = newSelections
+
+    if (newSelections?.size && currentVerseSpans?.length) { // add support for verse range
+      _newSelections = new Map(newSelections) // shallow copy
+      let primaryReference = `${chapter}:${verse}`
+      const _selections = _newSelections.get(primaryReference)
+
+      for (const verseSpan of currentVerseSpans) {
+        _newSelections.set(verseSpan, _selections)
+      }
+    }
+
+    if (!isEqual(selections, _newSelections)) {
+      _setSelections(_newSelections)
+    }
+  }
 
   /**
    * in the case of a network error, process and display error dialog
@@ -189,6 +289,36 @@ function WorkspaceContainer() {
     }
   }
 
+  /**
+   * add a verse range to list of verse ranges displayed in the scripture panes.  This is so we can remap selections to also include the verse ranges
+   * @param {string} range - such as 1:1-2
+   */
+  function addVerseRange(range) {
+    const _currentVerseSpans = currentVerseSpans || []
+
+    if (_currentVerseSpans.indexOf(range) < 0) { // only add to list if new
+      const newVerseSpans = [..._currentVerseSpans]
+      newVerseSpans.push(range)
+
+      if (!isEqual(newVerseSpans, _currentVerseSpans)) {
+        setCurrentVerseSpans(newVerseSpans)
+      }
+    }
+  }
+
+  useEffect(() => { // on verse navigation, clear verse spans and selections
+    if (currentVerseSpans?.length) {
+      setCurrentVerseSpans([])
+    }
+
+    // clear selections
+    setSelections(new Map())
+    // clear current verse reference
+    setCurrentVerseReference(null)
+    // clear alignments
+    setWordAlignerStatus(null)
+  }, [chapter, verse, bookId])
+
   const commonScriptureCardConfigs = {
     isNT,
     server,
@@ -204,6 +334,13 @@ function WorkspaceContainer() {
     fetchGlossesForVerse,
     getLexiconData,
     translate,
+    loggedInUser,
+    authentication,
+    setSavedChanges,
+    bookIndex: BIBLES_ABBRV_INDEX[bookId],
+    addVerseRange,
+    reference: scriptureReference,
+    setWordAlignerStatus,
   }
 
   const commonResourceCardConfigs = {
@@ -290,19 +427,12 @@ function WorkspaceContainer() {
     })
   }, [])
 
-
   const cards = [
     {
       title: 'Literal Translation',
       type: 'scripture_card',
       id: 'scripture_card_Literal_Translation',
       cardNum: 0,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -316,12 +446,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Original_Source',
       cardNum: 1,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -335,12 +459,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Simplified_Translation',
       cardNum: 2,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -356,7 +474,7 @@ function WorkspaceContainer() {
       filePath: null,
       resourceId: 'tn',
       projectId: bookId,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       updateTaDetails: updateTaDetails,
       loggedInUser: loggedInUser,
@@ -387,7 +505,7 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       disableFilters: true,
       disableNavigation: true,
@@ -406,7 +524,7 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       disableFilters: true,
       loggedInUser: loggedInUser,
@@ -477,6 +595,22 @@ function WorkspaceContainer() {
     },
   })
 
+  useDeepCompareEffectNoCheck(() => { // see if we need to update map of original verse objects
+    const _map = new Map()
+    const verseObjects = cleanupVerseObjects(originalScriptureConfig?.verseObjects)
+    _map.set(`${chapter}:${verse}`, verseObjects)
+
+    if (currentVerseSpans?.length) { // add support for verse ranges
+      for (const verseSpan of currentVerseSpans) {
+        _map.set(verseSpan, verseObjects)
+      }
+    }
+
+    if (!isEqual(verseObjectsMap, _map)) {
+      setVerseObjectsMap(_map)
+    }
+  }, [originalScriptureConfig.verseObjects, chapter, verse, currentVerseSpans])
+
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
@@ -488,8 +622,8 @@ function WorkspaceContainer() {
         selections={selections}
         onSelections={setSelections}
         quote={selectedQuote?.quote}
-        occurrence={selectedQuote?.occurrence?.toString()}
-        verseObjects={originalScriptureConfig.verseObjects || []}
+        occurrence={fixOccurrence(selectedQuote?.occurrence)}
+        verseObjectsMap={verseObjectsMap}
       >
         <MinimizedCardsListUI minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>
         {loading || content || error ?
@@ -541,6 +675,12 @@ function WorkspaceContainer() {
             )
           }
         </Workspace>
+        <WordAlignerDialog
+          alignerStatus={wordAlignerStatus}
+          height={wordAlignerHeight}
+          translate={translate}
+          getLexiconData={getLexiconData}
+        />
       </SelectionsContextProvider>
   )
 }
