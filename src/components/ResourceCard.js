@@ -11,7 +11,7 @@ import {
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
-import { MdUpdate, MdUpdateDisabled } from 'react-icons/md'
+import { MdUpdate } from 'react-icons/md'
 import { FiShare } from 'react-icons/fi'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
@@ -84,16 +84,10 @@ export default function ResourceCard({
     state: {
       contentRef,
       listRef,
-      mergeFromMaster,
-      mergeToMaster,
       usingUserBranch,
       workingResourceBranch,
     },
-    actions: {
-      startEdit,
-      mergeFromMasterIntoUserBranch,
-      mergeToMasterFromUserBranch,
-    },
+    actions: { startEdit },
   } = useUserBranch({
     owner,
     server,
@@ -247,16 +241,16 @@ export default function ResourceCard({
   const editable = editableResources.includes(cardResourceId)
 
   // TODO: hook these up to API
-  const needToMergeFromMaster = mergeFromMaster?.mergeNeeded
-  const mergeFromMasterHasConflicts = mergeFromMaster?.conflict
-  const mergeToMasterHasConflicts = mergeToMaster?.conflict
+  const needToMergeFromMaster = true
+  const mergeFromMasterHasConflicts = false
+  const mergeToMasterHasConflicts = true
 
   // eslint-disable-next-line no-nested-ternary
   const mergeFromMasterTitle = mergeFromMasterHasConflicts ? 'Merge Conflicts for update from master' : (needToMergeFromMaster ? 'Update from master' : 'No merge conflicts for update with master')
   // eslint-disable-next-line no-nested-ternary
-  const mergeFromMasterColor = mergeFromMasterHasConflicts ? 'lightgray' : (needToMergeFromMaster ? 'black' : 'lightgray')
+  const mergeFromMasterColor = mergeFromMasterHasConflicts ? 'red' : (needToMergeFromMaster ? 'orange' : 'lightgray')
   const mergeToMasterTitle = mergeToMasterHasConflicts ? 'Merge Conflicts for share with master' : 'No merge conflicts for share with master'
-  const mergeToMasterColor = mergeToMasterHasConflicts ? 'lightgray' : 'black'
+  const mergeToMasterColor = mergeToMasterHasConflicts ? 'red' : 'black'
 
   const onRenderToolbar = ({ items }) => [
     ...items,
@@ -268,11 +262,7 @@ export default function ResourceCard({
       aria-label={mergeFromMasterTitle}
       style={{ cursor: 'pointer' }}
     >
-      {mergeFromMasterHasConflicts ?
-        <MdUpdateDisabled id='update-from-master-icon' color={mergeFromMasterColor} />
-        :
-        <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
-      }
+      <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
     </IconButton>,
     <IconButton
       className={classes.margin}
@@ -282,11 +272,7 @@ export default function ResourceCard({
       aria-label={mergeToMasterTitle}
       style={{ cursor: 'pointer' }}
     >
-      {mergeToMasterHasConflicts ?
-        <MdUpdateDisabled id='update-from-master-icon' color={mergeFromMasterColor} />
-        :
-        <FiShare id='share-to-master-icon' color={mergeToMasterColor} />
-      }
+      <FiShare id='share-to-master-icon' color={mergeToMasterColor} />
     </IconButton>,
   ]
 
