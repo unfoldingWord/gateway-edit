@@ -1382,10 +1382,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@gwdevs/extensible-rcl@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@gwdevs/extensible-rcl/-/extensible-rcl-1.0.0.tgz#daecfb5c16828c58411546a8aaaa1e552028883e"
-  integrity sha512-SryCMnRaviW0CKJpGkFF5acS/B8zsf1kwVYzeLu0+NGooNVFe1oCIVCtOgt6A7nYINGM9qOnWrxFlUe0O8FTww==
+"@gwdevs/extensible-rcl@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@gwdevs/extensible-rcl/-/extensible-rcl-1.0.1.tgz#0f0f7a9342e9c4268f3b308e11a613bcbc959718"
+  integrity sha512-bvRUJFbf8Z96Y9vWqasYMFNvo2+DiMOFBnXHSAK8UKM5kYXb/QVyHhNPn4GwRHnet2iJ7Yf+o9CVvj0wBZYGpg==
 
 "@hapi/accept@5.0.1":
   version "5.0.1"
@@ -3040,6 +3040,11 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bible-reference-range@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
+  integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
+
 bible-reference-rcl@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.1.0.tgz#0e9f33effeaabf6bfed53b897ad8e99033502911"
@@ -4275,6 +4280,13 @@ dayjs@1.10.7, dayjs@^1.10.4:
   version "1.10.7"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
   integrity sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==
+
+dcs-branch-merger@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/dcs-branch-merger/-/dcs-branch-merger-1.0.1.tgz#83dc29d44d64fdb1afbbdeabecdb249a8844a63a"
+  integrity sha512-iTOYHtQkMwSFcLkvqHBPO07rbIvRMfe3sDF+xvofGYrotjqV0zjdKK3cO8RSgSQ+eBMQhJ3t9k7hOiLsfo/+9w==
+  dependencies:
+    path "0.12.7"
 
 debounce-promise@^3.1.0:
   version "3.1.2"
@@ -11000,14 +11012,14 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha1-5xTZtpIR3ZU3k51Q46pXiMRCuFw=
 
-translation-helps-rcl@3.3.5:
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.5.tgz#182f70ea817b36f0f07294f76ad33f9375788d98"
-  integrity sha512-8rCU4g77yPHsaGgVYzmaXN3Ngbvd5AKANjCgXZOM4YfZuV/SFexabFmgqQg263Ok1kBmuQyA8yYieZD+vpFT9Q==
+"translation-helps-rcl@file:.yalc/translation-helps-rcl":
+  version "3.3.10-beta"
   dependencies:
-    "@gwdevs/extensible-rcl" "^1.0.0"
+    "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
     axios "^0.27.2"
+    bible-reference-range "^1.1.0"
+    dcs-branch-merger "^1.0.1"
     deep-equal "^2.0.5"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
