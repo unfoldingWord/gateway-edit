@@ -126,7 +126,6 @@ export default function WordAlignerDialog({
           </Button>
         </span>
       </Dialog>
-      // TODO: Switch this to the tCore Popover to display on click.
       {/** Lexicon Popup dialog */}
       <PopoverComponent
         popoverVisibility={lexiconData}
