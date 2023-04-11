@@ -3,10 +3,8 @@ import PropTypes from 'prop-types'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
-import { CgCloseR } from 'react-icons/cg'
 import { WordAligner } from 'word-aligner-rcl'
 import Button from '@mui/material/Button'
-import { IconButton } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import PopoverComponent from './PopoverComponent'
@@ -134,7 +132,7 @@ export default function WordAlignerDialog({
         popoverVisibility={lexiconData}
         title={lexiconData?.PopoverTitle || ''}
         bodyText={lexiconData?.wordDetails || ''}
-        positionCoord={[]}
+        positionCoord={lexiconData?.positionCoord}
         onClosePopover={() => setLexiconData(null)}
       />
     </>

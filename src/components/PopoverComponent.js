@@ -1,10 +1,19 @@
 
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles'
 import Popover from '@mui/material/Popover';
 import Divider from '@mui/material/Divider';
 import { Glyphicon } from 'react-bootstrap';
 import useWindowEvent from '../hooks/useWindowEvent';
+
+const useStyles = makeStyles(() => ({
+  popover: {
+    padding: '0.75em',
+    maxWidth: '400px',
+    backgroundColor: 'var(--background-color-light)',
+  }
+}))
 
 const PopoverComponent = ({
   popoverVisibility,
@@ -13,6 +22,7 @@ const PopoverComponent = ({
   positionCoord,
   onClosePopover,
 }) => {
+  const classes = useStyles();
   const onEscapeKeyPressed = useCallback((e) => {
     if (e.key === 'Escape' || e.keyCode === 27) {
       onClosePopover();
@@ -24,10 +34,7 @@ const PopoverComponent = ({
   return (
     <div>
       <Popover
-        className='popover-root'
-        style={{
-          padding: '0.75em', maxWidth: '400px', backgroundColor: 'var(--background-color-light)',
-        }}
+        classes={{paper: classes.popover}}
         open={popoverVisibility}
         anchorEl={positionCoord}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
