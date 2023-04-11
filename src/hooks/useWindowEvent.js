@@ -14,14 +14,6 @@ const useWindowEvent = ({type, callback}) => {
       window.removeEventListener(type, callback);
     };
   }, [type, callback]);
-
-  window.addEventListener('keydown', onEscapeKeyPressed);
-
-  const onEscapeKeyPressed = (e) => {
-    if (e.key === 'Escape' || e.keyCode === 27) {
-      this.props.onClosePopover();
-    }
-  }
 }
 
 useWindowEvent.propTypes = {
