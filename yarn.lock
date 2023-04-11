@@ -2151,9 +2151,9 @@
     csstype "^3.0.2"
 
 "@types/react@^17.0.0":
-  version "17.0.56"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.56.tgz#16f54a0b0a4820065b8296f1dd6da80791fcf964"
-  integrity sha512-Z13f9Qz7Hg8f2g2NsBjiJSVWmON2b3K8RIqFK8mMKCIgvD0CD0ZChTukz87H3lI28X3ukXoNFGzo3ZW1ICTtPA==
+  version "17.0.57"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.57.tgz#341152f222222075caf020ae6e0e68b9b835404c"
+  integrity sha512-e4msYpu5QDxzNrXDHunU/VPyv2M1XemGG/p7kfCjUiPtlLDCWLGQfgAMng6YyisWYxZ09mYdQlmMnyS0NfZdEg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -7607,10 +7607,10 @@ markdown-translatable@1.3.1-rc.1:
     turndown "^7.0.0"
     turndown-plugin-gfm "^1.0.2"
 
-markdown-translatable@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.1.tgz#da5f0d6b42e73eada0314300362bb5818ecd5cb8"
-  integrity sha512-HYcHo76ooko6Z9bxaLERS6g/B9LXqnIP6kPyMGE3LwPOD/Nk60Q05mec+Zim8k5JswFvXsSOOJXt14jQXKb/3w==
+markdown-translatable@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.0.3.tgz#b0c0d7303c5ba9c15626f23176e5714e618e702f"
+  integrity sha512-69X13JknDY3t+afHEpvmXebAQ1bf3LiumoF9L/9gzrwX21skVYCS7e1z2yNrQdWTT0+zEBLecyxxRU1wNR766Q==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
@@ -7621,10 +7621,10 @@ markdown-translatable@2.1.1:
     turndown "^7.0.0"
     turndown-plugin-gfm "^1.0.2"
 
-markdown-translatable@^2.0.3:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.4.tgz#e96b0acda9cdafc7ec5393a40fba60b98224f055"
-  integrity sha512-XBnhCY7pmAt4tj6TPtT9V73I4hK/bi+D2utN878kuxdb6010/zd4Z3Ws0q6A+el2s8mj4r3h0sdo31AaRqz+uw==
+markdown-translatable@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.1.tgz#da5f0d6b42e73eada0314300362bb5818ecd5cb8"
+  integrity sha512-HYcHo76ooko6Z9bxaLERS6g/B9LXqnIP6kPyMGE3LwPOD/Nk60Q05mec+Zim8k5JswFvXsSOOJXt14jQXKb/3w==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
@@ -9648,10 +9648,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.2.tgz#150c29a28272398ee317754ca0933140113f6357"
-  integrity sha512-gO5JdPPYNHumrnWH8DfjiCZs1xft70nXEHe+FqTSWlzt7Otpsz0y/Cy1IsJvkqZFCL3XcQFli2jGOIcQqsdLvA==
+single-scripture-rcl@3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3.tgz#530d18a69452a352f123a376df7b0c89bf567b5b"
+  integrity sha512-6j9UVrKs+71ksUmX8wcIfTA0jUImq67kM2UqHC4yVZ21FG0Gr47XENjgRsp+amrDj11DBEx0sShccyVUGgZDXQ==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -11180,7 +11180,7 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@^0.9.3:
+word-aligner-rcl@0.9.3:
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-0.9.3.tgz#76e6bba0a5896001b3b6e7356f2ae1f7cd3b544a"
   integrity sha512-H//0EGsos+szqkkp9TiHscjeespi2hih1OJ7CxxDONqOuZ1IajHX/HGHnPnjgDl6DR/o0vTcdETNEKF0vDvALA==
