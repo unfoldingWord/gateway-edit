@@ -7607,10 +7607,10 @@ markdown-translatable@1.3.1-rc.1:
     turndown "^7.0.0"
     turndown-plugin-gfm "^1.0.2"
 
-markdown-translatable@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.1.tgz#da5f0d6b42e73eada0314300362bb5818ecd5cb8"
-  integrity sha512-HYcHo76ooko6Z9bxaLERS6g/B9LXqnIP6kPyMGE3LwPOD/Nk60Q05mec+Zim8k5JswFvXsSOOJXt14jQXKb/3w==
+markdown-translatable@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.0.3.tgz#b0c0d7303c5ba9c15626f23176e5714e618e702f"
+  integrity sha512-69X13JknDY3t+afHEpvmXebAQ1bf3LiumoF9L/9gzrwX21skVYCS7e1z2yNrQdWTT0+zEBLecyxxRU1wNR766Q==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
@@ -7621,10 +7621,10 @@ markdown-translatable@2.1.1:
     turndown "^7.0.0"
     turndown-plugin-gfm "^1.0.2"
 
-markdown-translatable@^2.0.3:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.4.tgz#e96b0acda9cdafc7ec5393a40fba60b98224f055"
-  integrity sha512-XBnhCY7pmAt4tj6TPtT9V73I4hK/bi+D2utN878kuxdb6010/zd4Z3Ws0q6A+el2s8mj4r3h0sdo31AaRqz+uw==
+markdown-translatable@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.1.tgz#da5f0d6b42e73eada0314300362bb5818ecd5cb8"
+  integrity sha512-HYcHo76ooko6Z9bxaLERS6g/B9LXqnIP6kPyMGE3LwPOD/Nk60Q05mec+Zim8k5JswFvXsSOOJXt14jQXKb/3w==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
