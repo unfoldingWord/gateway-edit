@@ -2154,6 +2154,9 @@
   version "17.0.57"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.57.tgz#341152f222222075caf020ae6e0e68b9b835404c"
   integrity sha512-e4msYpu5QDxzNrXDHunU/VPyv2M1XemGG/p7kfCjUiPtlLDCWLGQfgAMng6YyisWYxZ09mYdQlmMnyS0NfZdEg==
+  version "17.0.57"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.57.tgz#341152f222222075caf020ae6e0e68b9b835404c"
+  integrity sha512-e4msYpu5QDxzNrXDHunU/VPyv2M1XemGG/p7kfCjUiPtlLDCWLGQfgAMng6YyisWYxZ09mYdQlmMnyS0NfZdEg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -11188,7 +11191,7 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@^0.9.3:
+word-aligner-rcl@0.9.3:
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-0.9.3.tgz#76e6bba0a5896001b3b6e7356f2ae1f7cd3b544a"
   integrity sha512-H//0EGsos+szqkkp9TiHscjeespi2hih1OJ7CxxDONqOuZ1IajHX/HGHnPnjgDl6DR/o0vTcdETNEKF0vDvALA==
