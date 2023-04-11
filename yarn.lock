@@ -2151,9 +2151,9 @@
     csstype "^3.0.2"
 
 "@types/react@^17.0.0":
-  version "17.0.56"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.56.tgz#16f54a0b0a4820065b8296f1dd6da80791fcf964"
-  integrity sha512-Z13f9Qz7Hg8f2g2NsBjiJSVWmON2b3K8RIqFK8mMKCIgvD0CD0ZChTukz87H3lI28X3ukXoNFGzo3ZW1ICTtPA==
+  version "17.0.57"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.57.tgz#341152f222222075caf020ae6e0e68b9b835404c"
+  integrity sha512-e4msYpu5QDxzNrXDHunU/VPyv2M1XemGG/p7kfCjUiPtlLDCWLGQfgAMng6YyisWYxZ09mYdQlmMnyS0NfZdEg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -3939,6 +3939,13 @@ dayjs@^1.10.4:
   version "1.11.7"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
   integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
+
+dcs-branch-merger@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/dcs-branch-merger/-/dcs-branch-merger-1.0.1.tgz#83dc29d44d64fdb1afbbdeabecdb249a8844a63a"
+  integrity sha512-iTOYHtQkMwSFcLkvqHBPO07rbIvRMfe3sDF+xvofGYrotjqV0zjdKK3cO8RSgSQ+eBMQhJ3t9k7hOiLsfo/+9w==
+  dependencies:
+    path "0.12.7"
 
 debounce-promise@^3.1.0:
   version "3.1.2"
@@ -7607,10 +7614,10 @@ markdown-translatable@1.3.1-rc.1:
     turndown "^7.0.0"
     turndown-plugin-gfm "^1.0.2"
 
-markdown-translatable@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.1.tgz#da5f0d6b42e73eada0314300362bb5818ecd5cb8"
-  integrity sha512-HYcHo76ooko6Z9bxaLERS6g/B9LXqnIP6kPyMGE3LwPOD/Nk60Q05mec+Zim8k5JswFvXsSOOJXt14jQXKb/3w==
+markdown-translatable@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.0.3.tgz#b0c0d7303c5ba9c15626f23176e5714e618e702f"
+  integrity sha512-69X13JknDY3t+afHEpvmXebAQ1bf3LiumoF9L/9gzrwX21skVYCS7e1z2yNrQdWTT0+zEBLecyxxRU1wNR766Q==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
@@ -7621,10 +7628,10 @@ markdown-translatable@2.1.1:
     turndown "^7.0.0"
     turndown-plugin-gfm "^1.0.2"
 
-markdown-translatable@^2.0.3:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.4.tgz#e96b0acda9cdafc7ec5393a40fba60b98224f055"
-  integrity sha512-XBnhCY7pmAt4tj6TPtT9V73I4hK/bi+D2utN878kuxdb6010/zd4Z3Ws0q6A+el2s8mj4r3h0sdo31AaRqz+uw==
+markdown-translatable@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-2.1.1.tgz#da5f0d6b42e73eada0314300362bb5818ecd5cb8"
+  integrity sha512-HYcHo76ooko6Z9bxaLERS6g/B9LXqnIP6kPyMGE3LwPOD/Nk60Q05mec+Zim8k5JswFvXsSOOJXt14jQXKb/3w==
   dependencies:
     deep-freeze "^0.0.1"
     md5 "^2.2.1"
@@ -9648,10 +9655,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.2.tgz#150c29a28272398ee317754ca0933140113f6357"
-  integrity sha512-gO5JdPPYNHumrnWH8DfjiCZs1xft70nXEHe+FqTSWlzt7Otpsz0y/Cy1IsJvkqZFCL3XcQFli2jGOIcQqsdLvA==
+single-scripture-rcl@^3.3.5-beta:
+  version "3.3.5-beta"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.5-beta.tgz#9ac2b335edae3bd866ee274d4d32fb53e19797ac"
+  integrity sha512-+tmzPbn1wBrTdqe1uMZc4w4gB508zOcj2fK98gX0tN4XdXMUDUzprrdGZY1YNpvrL0lcbxij4DUDKrGp5IAF5g==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -10489,15 +10496,16 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.9:
-  version "3.3.9"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9.tgz#1d9b5832d9d4c41bf9e1e9b2e3b8430b58035550"
-  integrity sha512-WulLZVAGexhSHo/j97vx3tkmKrD5usNaCHhlEW1lMPXugxGcYCw83dh3Mih2IMJkIZ2vPcx6SUwHLqWsjxArbA==
+translation-helps-rcl@3.3.10-beta:
+  version "3.3.10-beta"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.10-beta.tgz#29b40955a7e6ed9aa7cbcd18fc1af5a1879cb509"
+  integrity sha512-9qZ0eiHVCDqdHxH41XFwcUzxB6E8XjW+fK0SOr5B756TgTBe6Dl4AvBvEgVHyRKoXMIVk9sLogylz7Y5G0/y5w==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
     axios "^0.27.2"
     bible-reference-range "^1.1.0"
+    dcs-branch-merger "^1.0.1"
     deep-equal "^2.0.5"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
