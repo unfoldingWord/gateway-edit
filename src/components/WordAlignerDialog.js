@@ -3,12 +3,11 @@ import PropTypes from 'prop-types'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
-import { CgCloseR } from 'react-icons/cg'
 import { WordAligner } from 'word-aligner-rcl'
 import Button from '@mui/material/Button'
-import { IconButton } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
+import PopoverComponent from './PopoverComponent'
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
@@ -127,31 +126,14 @@ export default function WordAlignerDialog({
           </Button>
         </span>
       </Dialog>
-
       {/** Lexicon Popup dialog */}
-      <Dialog
-        onClose={() => setLexiconData(null)}
-        open={lexiconData}
-      >
-        <DialogTitle>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            {lexiconData?.PopoverTitle || ''}
-            <IconButton
-              key='lexicon-close-button'
-              onClick={() => setLexiconData(null)}
-              title={'Close Lexicon'}
-              aria-label={'Close Lexicon'}
-              style={{ cursor: 'pointer' }}
-            >
-              <CgCloseR id='lexicon-close-icon' color='black' />
-            </IconButton>
-          </div>
-        </DialogTitle>
-        <hr style={{ borderWidth: 'thin', borderColor: 'lightgray', width: '94%' }} />
-        <div style={{ margin: '10px', marginTop: '0' }}>
-          {lexiconData?.wordDetails || ''}
-        </div>
-      </Dialog>
+      <PopoverComponent
+        popoverVisibility={lexiconData}
+        title={lexiconData?.PopoverTitle || ''}
+        bodyText={lexiconData?.wordDetails || ''}
+        positionCoord={lexiconData?.positionCoord}
+        onClosePopover={() => setLexiconData(null)}
+      />
     </>
   )
 }
