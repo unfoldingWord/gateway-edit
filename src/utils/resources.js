@@ -192,6 +192,7 @@ export function delay(ms) {
   )
 }
 
+<<<<<<< HEAD
 export function fixOccurrence(occurrence) {
   if (typeof occurrence === 'string') {
     return parseInt(occurrence)
@@ -227,3 +228,5 @@ export function cleanupVerseObjects(verseObjects) {
   return []
 }
 
+=======
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8

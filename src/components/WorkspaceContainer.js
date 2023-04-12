@@ -12,6 +12,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
+  cleanupVerseObjects,
+  fixOccurrence,
   NT_ORIG_LANG,
   NT_ORIG_LANG_BIBLE,
   ORIGINAL_SOURCE,
@@ -42,10 +44,16 @@ import {
 import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
+import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
+<<<<<<< HEAD
 import { cleanupVerseObjects, fixOccurrence } from '../utils/resources'
+=======
+import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,6 +67,8 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
+const wordAlignmentScreenRatio = 0.7
+const wordAlignmentMaxHeightPx = 1000
 
 function WorkspaceContainer() {
   const router = useRouter()
@@ -68,6 +78,24 @@ function WorkspaceContainer() {
   const [networkError, setNetworkError] = useState(null)
   const [currentVerseSpans, setCurrentVerseSpans] = useState([])
   const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
+<<<<<<< HEAD
+=======
+  const [currentVerseReference, setCurrentVerseReference] = useState(null)
+  const [scriptureReference, setScriptureReference] = useState({})
+  const [wordAlignerStatus, _setWordAlignerStatus] = useState(null)
+  const { height } = useWindowDimensions()
+
+  const wordAlignerHeight = useMemo(() => {
+    let _height = wordAlignmentScreenRatio * height
+
+    if (_height > wordAlignmentMaxHeightPx) {
+      _height = wordAlignmentMaxHeightPx
+    }
+
+    return _height
+  }, [height])
+
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
   const {
     state: {
       owner,
@@ -130,7 +158,12 @@ function WorkspaceContainer() {
    * clean up quote before applying
    * @param {object} newQuote
    */
+<<<<<<< HEAD
   function setQuote(newQuote) {
+=======
+  function setCurrentCheck(newQuote) {
+    console.log('newQuote', newQuote)
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
     const _quote = newQuote ? {
       ...newQuote,
       occurrence: fixOccurrence(newQuote.occurrence),
@@ -139,10 +172,54 @@ function WorkspaceContainer() {
     if (!isEqual(selectedQuote, _quote)) {
       _setQuote(_quote)
     }
+<<<<<<< HEAD
   }
 
   /**
    * update selectrions if changed
+=======
+
+    if (!isEqual(newQuote.reference, currentVerseReference)){
+      setCurrentVerseReference(newQuote.reference)
+    }
+  }
+
+  /**
+   * update word aligner status
+   * @param newWordAlignmentStatus
+   */
+  function setWordAlignerStatus(newWordAlignmentStatus) {
+    if (!isEqual(wordAlignerStatus, newWordAlignmentStatus)) {
+      _setWordAlignerStatus(newWordAlignmentStatus)
+    }
+  }
+
+  useEffect(()=>{
+    const reference = {
+      chapter,
+      verse,
+      bookId,
+      projectId: bookId,
+    }
+
+    if(currentVerseReference){
+      const index = currentVerseReference.indexOf(':')
+      if(index >= 0){
+        const chapter = currentVerseReference.substring(0,index)
+        const verse = currentVerseReference.substring(index + 1)
+        reference.chapter = chapter
+        reference.verse = verse
+      }
+    }
+    if(!isEqual(reference, scriptureReference)){
+      setScriptureReference(reference)
+    }
+
+  },[chapter, verse, bookId, currentVerseReference])
+
+  /**
+   * update selections if changed
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
    * @param {Map} newSelections
    */
   function setSelections(newSelections) {
@@ -254,6 +331,13 @@ function WorkspaceContainer() {
 
     // clear selections
     setSelections(new Map())
+<<<<<<< HEAD
+=======
+    // clear current verse reference
+    setCurrentVerseReference(null)
+    // clear alignments
+    setWordAlignerStatus(null)
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
   }, [chapter, verse, bookId])
 
   const commonScriptureCardConfigs = {
@@ -271,7 +355,17 @@ function WorkspaceContainer() {
     fetchGlossesForVerse,
     getLexiconData,
     translate,
+<<<<<<< HEAD
     addVerseRange,
+=======
+    loggedInUser,
+    authentication,
+    setSavedChanges,
+    bookIndex: BIBLES_ABBRV_INDEX[bookId],
+    addVerseRange,
+    reference: scriptureReference,
+    setWordAlignerStatus,
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
   }
 
   const commonResourceCardConfigs = {
@@ -364,12 +458,15 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Literal_Translation',
       cardNum: 0,
+<<<<<<< HEAD
       reference: {
         chapter,
         verse,
         bookId,
         projectId: bookId,
       },
+=======
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
       resource: {
         owner,
         languageId,
@@ -383,12 +480,15 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Original_Source',
       cardNum: 1,
+<<<<<<< HEAD
       reference: {
         chapter,
         verse,
         bookId,
         projectId: bookId,
       },
+=======
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
       resource: {
         owner,
         languageId,
@@ -402,12 +502,15 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Simplified_Translation',
       cardNum: 2,
+<<<<<<< HEAD
       reference: {
         chapter,
         verse,
         bookId,
         projectId: bookId,
       },
+=======
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
       resource: {
         owner,
         languageId,
@@ -423,7 +526,11 @@ function WorkspaceContainer() {
       filePath: null,
       resourceId: 'tn',
       projectId: bookId,
+<<<<<<< HEAD
       setQuote: setQuote,
+=======
+      setCurrentCheck: setCurrentCheck,
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
       selectedQuote: selectedQuote,
       updateTaDetails: updateTaDetails,
       loggedInUser: loggedInUser,
@@ -454,7 +561,11 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
+<<<<<<< HEAD
       setQuote: setQuote,
+=======
+      setCurrentCheck: setCurrentCheck,
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
       selectedQuote: selectedQuote,
       disableFilters: true,
       disableNavigation: true,
@@ -473,7 +584,11 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
+<<<<<<< HEAD
       setQuote: setQuote,
+=======
+      setCurrentCheck: setCurrentCheck,
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
       selectedQuote: selectedQuote,
       disableFilters: true,
       loggedInUser: loggedInUser,
@@ -624,6 +739,12 @@ function WorkspaceContainer() {
             )
           }
         </Workspace>
+        <WordAlignerDialog
+          alignerStatus={wordAlignerStatus}
+          height={wordAlignerHeight}
+          translate={translate}
+          getLexiconData={getLexiconData}
+        />
       </SelectionsContextProvider>
   )
 }

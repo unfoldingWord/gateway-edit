@@ -11,11 +11,14 @@ import {
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
+import { MdUpdate, MdUpdateDisabled } from 'react-icons/md'
+import { FiShare } from 'react-icons/fi'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
+import { IconButton } from '@mui/material'
 
 export default function ResourceCard({
   id,
@@ -27,7 +30,7 @@ export default function ResourceCard({
   chapter,
   classes,
   filePath,
-  setQuote,
+  setCurrentCheck,
   viewMode,
   projectId,
   languageId,
@@ -79,12 +82,18 @@ export default function ResourceCard({
 
   const {
     state: {
-      listRef,
       contentRef,
+      listRef,
       usingUserBranch,
       workingResourceBranch,
+      mergeFromMaster,
+      mergeToMaster,
     },
-    actions: { startEdit },
+    actions: {
+      startEdit,
+      mergeFromMasterIntoUserBranch,
+      mergeToMasterFromUserBranch
+    },
   } = useUserBranch({
     owner,
     server,
@@ -137,7 +146,7 @@ export default function ResourceCard({
     items,
     verse,
     chapter,
-    setQuote,
+    setCurrentCheck,
     projectId,
     selectedQuote,
     useUserLocalStorage,
@@ -186,13 +195,14 @@ export default function ResourceCard({
   useEffect(() => {
     if (updateTaDetails) {
       const {
-        Quote, OrigQuote, Occurrence, SupportReference = null,
+        Quote, OrigQuote, Occurrence, Reference, SupportReference = null,
       } = item || {}
       updateTaDetails(SupportReference)
-      setQuote({
+      setCurrentCheck({
         quote: Quote || OrigQuote,
         occurrence: Occurrence,
         SupportReference,
+        reference: Reference,
       })
     }
   }, [item])
@@ -210,7 +220,7 @@ export default function ResourceCard({
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
   async function handleSaveEdit() {
-    // Save edit, if succesful trigger resource reload and set saved to true.
+    // Save edit, if successful trigger resource reload and set saved to true.
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {
@@ -235,6 +245,61 @@ export default function ResourceCard({
   // Add/Remove resources to/from the array to enable or disable edit mode.
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
+
+  const needToMergeFromMaster = mergeFromMaster?.mergeNeeded
+  const mergeFromMasterHasConflicts = mergeFromMaster?.conflict
+  const mergeToMasterHasConflicts = mergeToMaster?.conflict
+
+  // eslint-disable-next-line no-nested-ternary
+  const mergeFromMasterTitle = mergeFromMasterHasConflicts ? 'Merge Conflicts for update from master' : (needToMergeFromMaster ? 'Update from master' : 'No merge conflicts for update with master')
+  // eslint-disable-next-line no-nested-ternary
+  const mergeFromMasterColor = mergeFromMasterHasConflicts ? 'black' : (needToMergeFromMaster ? 'black' : 'lightgray')
+  const mergeToMasterTitle = mergeToMasterHasConflicts ? 'Merge Conflicts for share with master' : 'No merge conflicts for share with master'
+  const mergeToMasterColor = mergeToMasterHasConflicts ? 'black' : 'black'
+
+  const onRenderToolbar = ({ items }) => {
+    const newItems = [...items]
+
+    if (mergeFromMaster) {
+      newItems.push(
+        <IconButton
+          className={classes.margin}
+          key='update-from-master'
+          onClick={mergeFromMasterIntoUserBranch}
+          title={mergeFromMasterTitle}
+          aria-label={mergeFromMasterTitle}
+          style={{ cursor: 'pointer' }}
+        >
+          {mergeFromMasterHasConflicts ?
+            <MdUpdateDisabled id='update-from-master-icon' color={mergeFromMasterColor} />
+            :
+            <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
+          }
+        </IconButton>
+      )
+    }
+
+    if (mergeToMaster) {
+      newItems.push(
+        <IconButton
+          className={classes.margin}
+          key='share-to-master'
+          onClick={mergeToMasterFromUserBranch}
+          title={mergeToMasterTitle}
+          aria-label={mergeToMasterTitle}
+          style={{ cursor: 'pointer' }}
+        >
+          {mergeToMasterHasConflicts ?
+            <MdUpdateDisabled id='share-to-master-icon' color={mergeToMasterColor} />
+            :
+            <FiShare id='share-to-master-icon' color={mergeToMasterColor} />
+          }
+        </IconButton>
+      )
+    }
+    return newItems
+  }
+
 
   return (
     <Card
@@ -261,6 +326,10 @@ export default function ResourceCard({
       hideMarkdownToggle={hideMarkdownToggle}
       showSaveChangesPrompt={showSaveChangesPrompt}
       onMinimize={onMinimize ? () => onMinimize(id) : null}
+<<<<<<< HEAD
+=======
+      onRenderToolbar={onRenderToolbar}
+>>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
     >
       <CardContent
         id={`${id}_content`}
@@ -270,7 +339,7 @@ export default function ResourceCard({
         editable={editable}
         viewMode={viewMode}
         fontSize={fontSize}
-        setQuote={setQuote}
+        setCurrentCheck={setCurrentCheck}
         onTsvEdit={onTsvEdit}
         languageId={languageId}
         setContent={setContent}
@@ -305,7 +374,7 @@ ResourceCard.propTypes = {
   resourceId: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
   updateTaDetails: PropTypes.func,
-  setQuote: PropTypes.func,
+  setCurrentCheck: PropTypes.func,
   filePath: PropTypes.string,
   disableFilters: PropTypes.bool,
   disableNavigation: PropTypes.bool,
