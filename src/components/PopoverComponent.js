@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles'
 import Popover from '@mui/material/Popover';
 import Divider from '@mui/material/Divider';
-import { Glyphicon } from 'react-bootstrap';
+import { IconButton } from '@mui/material'
+import { CgClose } from 'react-icons/cg'
 import useWindowEvent from '../hooks/useWindowEvent';
 
 const useStyles = makeStyles(() => ({
   popover: {
     padding: '0.75em',
     maxWidth: '400px',
-    backgroundColor: 'var(--background-color-light)',
   }
 }))
 
@@ -49,15 +49,20 @@ const PopoverComponent = ({
           }}>
             {title}
           </span>
-          <Glyphicon glyph={'remove'}
+          <IconButton
+            key='lexicon-close-button'
+            onClick={onClosePopover}
+            title={'Close Lexicon'}
+            aria-label={'Close Lexicon'}
             style={{
-              paddingTop: '5px',
-              color: 'var(--text-color-light)',
+              paddingTop: '0px',
               cursor: 'pointer',
               alignItems: 'top',
               marginLeft: 'auto', marginRight: 5,
             }}
-            onClick={onClosePopover} />
+          >
+            <CgClose id='lexicon-close-icon' color='black' />
+          </IconButton>
         </div>
         <Divider />
         <span style={{ padding: '10px 0 15px 0' }}>
