@@ -2154,9 +2154,6 @@
   version "17.0.57"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.57.tgz#341152f222222075caf020ae6e0e68b9b835404c"
   integrity sha512-e4msYpu5QDxzNrXDHunU/VPyv2M1XemGG/p7kfCjUiPtlLDCWLGQfgAMng6YyisWYxZ09mYdQlmMnyS0NfZdEg==
-  version "17.0.57"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.57.tgz#341152f222222075caf020ae6e0e68b9b835404c"
-  integrity sha512-e4msYpu5QDxzNrXDHunU/VPyv2M1XemGG/p7kfCjUiPtlLDCWLGQfgAMng6YyisWYxZ09mYdQlmMnyS0NfZdEg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -10499,10 +10496,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.10-beta:
-  version "3.3.10-beta"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.10-beta.tgz#29b40955a7e6ed9aa7cbcd18fc1af5a1879cb509"
-  integrity sha512-9qZ0eiHVCDqdHxH41XFwcUzxB6E8XjW+fK0SOr5B756TgTBe6Dl4AvBvEgVHyRKoXMIVk9sLogylz7Y5G0/y5w==
+translation-helps-rcl@3.3.10-beta.3:
+  version "3.3.10-beta.3"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.10-beta.3.tgz#5b7d3554a5c216eb0371430edf6ccfa4f955c683"
+  integrity sha512-XXYa/apBDdyz8Sk4TDOTlImgP6/AsdwEHh2/Vg+DYuzSXXiMpwcMVZyRCLTXm19K37jZMyIlkeN+IL1sVgdnMg==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"

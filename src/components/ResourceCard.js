@@ -257,37 +257,49 @@ export default function ResourceCard({
   const mergeToMasterTitle = mergeToMasterHasConflicts ? 'Merge Conflicts for share with master' : 'No merge conflicts for share with master'
   const mergeToMasterColor = mergeToMasterHasConflicts ? 'black' : 'black'
 
-  const onRenderToolbar = ({ items }) => [
-    ...items,
-    <IconButton
-      className={classes.margin}
-      key='update-from-master'
-      onClick={mergeFromMasterIntoUserBranch}
-      title={mergeFromMasterTitle}
-      aria-label={mergeFromMasterTitle}
-      style={{ cursor: 'pointer' }}
-    >
-      {mergeFromMasterHasConflicts ?
-        <MdUpdateDisabled id='update-from-master-icon' color={mergeFromMasterColor} />
-        :
-        <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
-      }
-    </IconButton>,
-    <IconButton
-      className={classes.margin}
-      key='share-to-master'
-      onClick={mergeToMasterFromUserBranch}
-      title={mergeToMasterTitle}
-      aria-label={mergeToMasterTitle}
-      style={{ cursor: 'pointer' }}
-    >
-      {mergeToMasterHasConflicts ?
-        <MdUpdateDisabled id='share-to-master-icon' color={mergeToMasterColor} />
-        :
-        <FiShare id='share-to-master-icon' color={mergeToMasterColor} />
-      }
-    </IconButton>,
-  ]
+  const onRenderToolbar = ({ items }) => {
+    const newItems = [...items]
+
+    if (mergeFromMaster) {
+      newItems.push(
+        <IconButton
+          className={classes.margin}
+          key='update-from-master'
+          onClick={mergeFromMasterIntoUserBranch}
+          title={mergeFromMasterTitle}
+          aria-label={mergeFromMasterTitle}
+          style={{ cursor: 'pointer' }}
+        >
+          {mergeFromMasterHasConflicts ?
+            <MdUpdateDisabled id='update-from-master-icon' color={mergeFromMasterColor} />
+            :
+            <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
+          }
+        </IconButton>
+      )
+    }
+
+    if (mergeToMaster) {
+      newItems.push(
+        <IconButton
+          className={classes.margin}
+          key='share-to-master'
+          onClick={mergeToMasterFromUserBranch}
+          title={mergeToMasterTitle}
+          aria-label={mergeToMasterTitle}
+          style={{ cursor: 'pointer' }}
+        >
+          {mergeToMasterHasConflicts ?
+            <MdUpdateDisabled id='share-to-master-icon' color={mergeToMasterColor} />
+            :
+            <FiShare id='share-to-master-icon' color={mergeToMasterColor} />
+          }
+        </IconButton>
+      )
+    }
+    return newItems
+  }
+
 
   return (
     <Card
