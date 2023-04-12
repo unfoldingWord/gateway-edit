@@ -1,0 +1,155 @@
+
+/* use Scheherazade - Regular in .woff format */
+@font-face {
+  font-family: ScheherazadeNewW;
+  src: url(ScheherazadeNew/ScheherazadeNew-Regular.woff2);
+}
+@font-face {
+  font-family: ScheherazadeNewW;
+  font-weight: bold;
+  src: url(ScheherazadeNew/ScheherazadeNew-Bold.woff2);
+}
+
+/* use Charis SIL - Regular in .woff2 format */
+@font-face {
+  font-family: CharisSILW;
+  src: url(CharisSIL/CharisSIL-Regular.woff2);
+}
+/* use Charis SIL - Italic in .woff2 format */
+@font-face {
+  font-family: CharisSILW;
+  font-style: italic;
+  src: url(CharisSIL/CharisSIL-Italic.woff2);
+}
+/* use Charis SIL - Bold in .woff2 format */
+@font-face {
+	font-family: CharisSILW;
+	font-weight: bold;
+	src: url(CharisSIL/CharisSIL-Bold.woff2);
+}
+/* use Charis SIL - Bold Italic in .woff2 format */
+@font-face {
+	font-family: CharisSILW;
+	font-weight: bold;
+	font-style: italic;
+	src: url(CharisSIL/CharisSIL-BoldItalic.woff2);
+}
+
+@font-face {
+  font-family: AbyssinicaSILW;
+  src: url(AbyssinicaSIL/AbyssinicaSIL-Regular.woff2);
+}
+@font-face {
+  font-family: AndikaW;
+  src: url(Andika/Andika-Regular.woff2);
+}
+/* use Andika - Italic in .woff2 format */
+@font-face {
+  font-family: AndikaW;
+  font-style: italic;
+  src: url(Andika/Andika-Italic.woff2);
+}
+/* use Andika - Bold in .woff2 format */
+@font-face {
+	font-family: AndikaW;
+	font-weight: bold;
+	src: url(Andika/Andika-Bold.woff2);
+}
+/* use Andika - Bold Italic in .woff2 format */
+@font-face {
+	font-family: AndikaW;
+	font-weight: bold;
+	font-style: italic;
+	src: url(Andika/Andika-BoldItalic.woff2);
+}
+
+/* use Annapurna SIL - Regular in .woff format */
+@font-face {
+  font-family: AnnapurnaSILW;
+  src: url(AnnapurnaSIL/AnnapurnaSIL-Regular.woff);
+}
+
+@font-face {
+    font-family: AnnapurnaSILW;
+    font-weight: bold;
+    src: url(AnnapurnaSIL/AnnapurnaSIL-Bold.woff);
+}
+
+@font-face {
+  font-family: AwamiNastaliqW;
+  src: url(AwamiNastaliq/AwamiNastaliq-Regular.woff2);
+}
+@font-face {
+  font-family: AwamiNastaliqW;
+  font-weight: bold;
+  src: url(AwamiNastaliq/AwamiNastaliq-Bold.woff2);
+}
+@font-face {
+  font-family: DoulosSILW;
+  src: url(DouloSIL/DoulosSIL-Regular.woff2);
+}
+@font-face {
+  font-family: EzraSILRegular;
+  src: url(EzraSIL/SILEOT.woff);
+}
+
+@font-face {
+  font-family: EzraSILSRRegular;
+  src: url(EzraSIL/SILEOTSR.woff);
+}
+
+/* use Gentium Plus - Regular in .woff format */
+@font-face {
+  font-family: GentiumPlusW;
+  src: url(GentiumBookPlus/GentiumPlus-Regular.woff2);
+}
+/* use Gentium Plus - Italic in .woff2 format */
+@font-face {
+  font-family: GentiumPlusW;
+  font-style: italic;
+  src: url(GentiumBookPlus/GentiumPlus-Italic.woff2);
+}
+/* use Gentium Plus - Bold in .woff2 format */
+@font-face {
+	font-family: "Gentium Plus";
+	font-weight: bold;
+	src: url(GentiumBookPlus/GentiumPlus-Bold.woff2);
+}
+/* use Gentium Plus - Bold Italic in .woff2 format */
+@font-face {
+	font-family: GentiumPlusW;
+	font-weight: bold;
+	font-style: italic;
+	src: url(GentiumBookPlus/GentiumPlus-BoldItalic.woff2);
+}
+
+@font-face {
+    font-family: HarmattanW;
+    src: url(Harmattan/Harmattan-Regular.woff);
+}
+
+@font-face {
+  font-family: LateefW;
+  src: url(Lateef/Lateef-Regular.woff2);
+}
+@font-face {
+  font-family: LateefW;
+  font-weight: bold;
+  src: url(Lateef/Lateef-Bold.woff2);
+}
+
+@font-face {
+    font-family: PadaukW;
+    src: url(Padauk/Padauk-Regular.woff2);
+}
+
+@font-face {
+    font-family: PadaukW;
+    font-weight: bold;
+    src: url(Padauk/Padauk-Bold.woff2);
+}
+
+@font-face {
+    font-family: NotoW;
+    src: url(Noto/GoNotoCurrent.woff2);
+}
