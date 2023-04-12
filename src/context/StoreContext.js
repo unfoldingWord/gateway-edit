@@ -62,6 +62,7 @@ export default function StoreContextProvider(props) {
   const [mergeStatusForCards, setMergeStatusForCards] = useState({})
 
   function updateMergeState(cardId, mergeFromMaster, mergeToMaster) {
+    console.log('updateMergeState',{cardId, mergeFromMaster, mergeToMaster})
     const newMergeStatus = {
       ...mergeStatusForCards,
       [cardId]: {

@@ -18,6 +18,7 @@ import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
+import { StoreContext } from '@context/StoreContext'
 import { IconButton } from '@mui/material'
 
 export default function ResourceCard({
@@ -107,6 +108,12 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
+  useEffect(() => {
+    if(cardResourceId) {
+      updateMergeState(cardResourceId, mergeFromMaster, mergeToMaster)
+    }
+  },[cardResourceId, mergeFromMaster, mergeToMaster])
+
   const {
     tsvs,
     items,
@@ -191,6 +198,12 @@ export default function ResourceCard({
     itemIndex,
     setContent: updateTempContent,
   })
+
+  const {
+    actions: {
+      updateMergeState,
+    },
+  } = useContext(StoreContext)
 
   useEffect(() => {
     if (updateTaDetails) {
@@ -326,10 +339,7 @@ export default function ResourceCard({
       hideMarkdownToggle={hideMarkdownToggle}
       showSaveChangesPrompt={showSaveChangesPrompt}
       onMinimize={onMinimize ? () => onMinimize(id) : null}
-<<<<<<< HEAD
-=======
       onRenderToolbar={onRenderToolbar}
->>>>>>> ac64e0ccb5749849beaba065cd95fdbb76dcbde8
     >
       <CardContent
         id={`${id}_content`}
