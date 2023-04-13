@@ -89,11 +89,12 @@ export default function ResourceCard({
       workingResourceBranch,
       mergeFromMaster,
       mergeToMaster,
+      merging,
     },
     actions: {
       startEdit,
       mergeFromMasterIntoUserBranch,
-      mergeToMasterFromUserBranch
+      mergeToMasterFromUserBranch,
     },
   } = useUserBranch({
     owner,
@@ -205,11 +206,7 @@ export default function ResourceCard({
     setContent: updateTempContent,
   })
 
-  const {
-    actions: {
-      updateMergeState,
-    },
-  } = useContext(StoreContext)
+  const { actions: { updateMergeState } } = useContext(StoreContext)
 
   useEffect(() => {
     if (updateTaDetails) {
@@ -319,6 +316,11 @@ export default function ResourceCard({
     return newItems
   }
 
+  let _message = isEditing ? 'Saving Resource...' : message || errorMessage
+
+  if (merging) {
+    _message = 'Merging Resource...'
+  }
 
   return (
     <Card
@@ -365,7 +367,7 @@ export default function ResourceCard({
         cardResourceId={cardResourceId}
         updateTaDetails={updateTaDetails}
         showSaveChangesPrompt={showSaveChangesPrompt}
-        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        errorMessage={_message}
         markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
       />
     </Card>
