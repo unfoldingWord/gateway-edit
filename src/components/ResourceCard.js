@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
@@ -24,6 +24,7 @@ import {
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { delay } from '../utils/resources'
+import { StoreContext } from '@context/StoreContext'
 import { IconButton } from '@mui/material'
 
 export default function ResourceCard({
@@ -105,11 +106,12 @@ export default function ResourceCard({
       workingResourceBranch,
       mergeFromMaster,
       mergeToMaster,
+      merging,
     },
     actions: {
       startEdit,
       mergeFromMasterIntoUserBranch,
-      mergeToMasterFromUserBranch
+      mergeToMasterFromUserBranch,
     },
   } = useUserBranch({
     owner,
@@ -124,13 +126,35 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
+  useEffect(() => {
+    if (cardResourceId) {
+      updateMergeState(
+        cardResourceId,
+        mergeFromMaster,
+        mergeToMaster,
+        mergeFromMasterIntoUserBranch,
+        mergeToMasterFromUserBranch,
+      )
+    }
+  },[cardResourceId, mergeFromMaster, mergeToMaster])
+
+  useEffect(() => {
+    if (cardResourceId) {
+      updateMergeState(
+        cardResourceId,
+        mergeFromMaster,
+        mergeToMaster,
+        mergeFromMasterIntoUserBranch,
+        mergeToMasterFromUserBranch,
+      )
+    }
+  },[cardResourceId, mergeFromMaster, mergeToMaster])
+
   // update fetch configuration if changed
   useEffect(() => {
     const config = usingUserBranch ? RESOURCE_HTTP_CONFIG : HTTP_CONFIG
 
-    if (usingUserBranch) {
-      config.noCache = true // force no caching
-    }
+    config.noCache = true // force no caching
 
     const newFetchConfig = {
       reference: basicReference,
@@ -249,6 +273,8 @@ export default function ResourceCard({
   //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
   // }, [chapter, verse, projectId])
 
+  const { actions: { updateMergeState } } = useContext(StoreContext)
+
   useEffect(() => {
     if (updateTaDetails) {
       const {
@@ -365,6 +391,11 @@ export default function ResourceCard({
     return newItems
   }
 
+  let _message = isEditing ? 'Saving Resource...' : message || errorMessage
+
+  if (merging) {
+    _message = 'Merging Resource...'
+  }
 
   return (
     <Card
@@ -414,6 +445,8 @@ export default function ResourceCard({
         updateTaDetails={updateTaDetails}
         viewMode={viewMode}
         showSaveChangesPrompt={showSaveChangesPrompt}
+        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
       />
     </Card>
   )
