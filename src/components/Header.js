@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
@@ -12,6 +12,7 @@ import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
 import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
+import { MdUpdate, MdUpdateDisabled } from 'react-icons/md'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -39,12 +40,23 @@ export default function Header({
   authentication: { user },
   feedback,
   setFeedback,
+  mergeStatusForCards,
 }) {
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
   const { actions: { logout } } = useContext(AuthContext)
-  const { actions: { checkUnsavedChanges } } = useContext(StoreContext)
+  const {
+    actions: {
+      checkUnsavedChanges,
+      getMergeFromMasterStatus,
+      callMergeFromMasterForCards,
+    }
+  } = useContext(StoreContext)
+
+  const mergeStatus = useMemo(() =>
+    getMergeFromMasterStatus(mergeStatusForCards)
+  ,[mergeStatusForCards])
 
   const handleDrawerOpen = () => {
     if (!drawerOpen) {
@@ -65,6 +77,13 @@ export default function Header({
   const doHideFeedback = () => {
     setFeedback && setFeedback(false)
   }
+
+  const needToMergeFromMaster = mergeStatus?.mergeNeeded
+  const mergeFromMasterHasConflicts = mergeStatus?.mergeConflict
+  // eslint-disable-next-line no-nested-ternary
+  const mergeFromMasterTitle = mergeFromMasterHasConflicts ? 'Merge Conflicts for update from master' : (needToMergeFromMaster ? 'Update from master' : 'No merge conflicts for update with master')
+  // eslint-disable-next-line no-nested-ternary
+  const mergeFromMasterColor = mergeFromMasterHasConflicts ? 'black' : (needToMergeFromMaster ? 'black' : 'lightgray')
 
   return (
     <header>
@@ -91,6 +110,22 @@ export default function Header({
           <div className='flex flex-1 justify-center items-center'>
             <BibleReference />
           </div>
+          {mergeStatus?.foundMergeStatusCard &&
+          <IconButton
+            className={classes.margin}
+            key='app-update-from-master'
+            onClick={() => callMergeFromMasterForCards(mergeStatusForCards)}
+            title={mergeFromMasterTitle}
+            aria-label={mergeFromMasterTitle}
+            style={{ cursor: 'pointer' }}
+          >
+            {mergeStatus?.mergeConflict ?
+              <MdUpdateDisabled id='update-from-master-icon' color={mergeFromMasterColor} />
+              :
+              <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
+            }
+          </IconButton>
+          }
           <div className='flex flex-1 justify-end'>
             {/* <Button
               className={classes.button}
@@ -140,4 +175,5 @@ Header.propTypes = {
   storeContext: PropTypes.object,
   feedback: PropTypes.bool,
   setFeedback: PropTypes.func,
+  mergeStatusForCards: PropTypes.object,
 }

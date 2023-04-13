@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
@@ -18,6 +18,7 @@ import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
+import { StoreContext } from '@context/StoreContext'
 import { IconButton } from '@mui/material'
 
 export default function ResourceCard({
@@ -88,11 +89,12 @@ export default function ResourceCard({
       workingResourceBranch,
       mergeFromMaster,
       mergeToMaster,
+      merging,
     },
     actions: {
       startEdit,
       mergeFromMasterIntoUserBranch,
-      mergeToMasterFromUserBranch
+      mergeToMasterFromUserBranch,
     },
   } = useUserBranch({
     owner,
@@ -106,6 +108,18 @@ export default function ResourceCard({
     onResourceError,
     useUserLocalStorage,
   })
+
+  useEffect(() => {
+    if (cardResourceId) {
+      updateMergeState(
+        cardResourceId,
+        mergeFromMaster,
+        mergeToMaster,
+        mergeFromMasterIntoUserBranch,
+        mergeToMasterFromUserBranch,
+      )
+    }
+  },[cardResourceId, mergeFromMaster, mergeToMaster])
 
   const {
     tsvs,
@@ -191,6 +205,8 @@ export default function ResourceCard({
     itemIndex,
     setContent: updateTempContent,
   })
+
+  const { actions: { updateMergeState } } = useContext(StoreContext)
 
   useEffect(() => {
     if (updateTaDetails) {
@@ -300,6 +316,11 @@ export default function ResourceCard({
     return newItems
   }
 
+  let _message = isEditing ? 'Saving Resource...' : message || errorMessage
+
+  if (merging) {
+    _message = 'Merging Resource...'
+  }
 
   return (
     <Card
@@ -346,7 +367,7 @@ export default function ResourceCard({
         cardResourceId={cardResourceId}
         updateTaDetails={updateTaDetails}
         showSaveChangesPrompt={showSaveChangesPrompt}
-        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        errorMessage={_message}
         markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
       />
     </Card>

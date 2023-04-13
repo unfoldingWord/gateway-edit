@@ -122,6 +122,7 @@ function WorkspaceContainer() {
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setSavedChanges,
+      updateMergeState,
       showSaveChangesPrompt,
     },
   } = useContext(StoreContext)
@@ -341,6 +342,7 @@ function WorkspaceContainer() {
     addVerseRange,
     reference: scriptureReference,
     setWordAlignerStatus,
+    updateMergeState,
   }
 
   const commonResourceCardConfigs = {
