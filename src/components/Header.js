@@ -113,7 +113,7 @@ export default function Header({
           {mergeStatus?.foundMergeStatusCard &&
           <IconButton
             className={classes.margin}
-            key='update-from-master'
+            key='app-update-from-master'
             onClick={() => callMergeFromMasterForCards(mergeStatusForCards)}
             title={mergeFromMasterTitle}
             aria-label={mergeFromMasterTitle}
