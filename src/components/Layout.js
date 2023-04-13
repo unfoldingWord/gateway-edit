@@ -42,6 +42,7 @@ export default function Layout({
       languageId,
       owner,
       server,
+      mergeStatusForCards,
     },
     actions: {
       setCurrentLayout,
@@ -84,6 +85,7 @@ export default function Layout({
         resetResourceLayout={() => setCurrentLayout(null)}
         feedback={feedback}
         setFeedback={setFeedback}
+        mergeStatusForCards={mergeStatusForCards}
       />
       <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
         {showChildren || (authentication && !showAccountSetup) ? (

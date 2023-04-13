@@ -40,13 +40,13 @@ export default function Header({
   authentication: { user },
   feedback,
   setFeedback,
+  mergeStatusForCards,
 }) {
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
   const { actions: { logout } } = useContext(AuthContext)
   const {
-    state:{ mergeStatusForCards },
     actions: {
       checkUnsavedChanges,
       getMergeFromMasterStatus,
@@ -114,7 +114,7 @@ export default function Header({
           <IconButton
             className={classes.margin}
             key='update-from-master'
-            onClick={callMergeFromMasterForCards}
+            onClick={() => callMergeFromMasterForCards(mergeStatusForCards)}
             title={mergeFromMasterTitle}
             aria-label={mergeFromMasterTitle}
             style={{ cursor: 'pointer' }}
@@ -175,4 +175,5 @@ Header.propTypes = {
   storeContext: PropTypes.object,
   feedback: PropTypes.bool,
   setFeedback: PropTypes.func,
+  mergeStatusForCards: PropTypes.object,
 }

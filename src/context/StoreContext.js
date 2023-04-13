@@ -103,11 +103,11 @@ export default function StoreContextProvider(props) {
     }
   }
 
-  function callMergeFromMasterForCards(){
-    const cardIds = Object.keys(mergeStatusForCards)
+  function callMergeFromMasterForCards(_mergeStatusForCards = mergeStatusForCards){
+    const cardIds = Object.keys(_mergeStatusForCards)
 
     for (const cardId of cardIds){
-      const { mergeFromMasterIntoUserBranch } = mergeStatusForCards[cardId]
+      const { mergeFromMasterIntoUserBranch } = _mergeStatusForCards[cardId]
       mergeFromMasterIntoUserBranch && mergeFromMasterIntoUserBranch()
     }
   }
@@ -165,6 +165,7 @@ export default function StoreContextProvider(props) {
       hebrewRepoUrl,
       mainScreenRef,
       savedChanges,
+      mergeStatusForCards,
     },
     actions: {
       logout,
