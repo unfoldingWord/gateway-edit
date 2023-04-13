@@ -44,6 +44,7 @@
     "next": "10.2.0",
     "postcss": "^8.2.1",
     "react": "^17.0.2",
+    "react-bootstrap": "0.32.4",
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.5",
     "react-icons": "^4.8.0",
