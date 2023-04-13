@@ -109,8 +109,14 @@ export default function ResourceCard({
   })
 
   useEffect(() => {
-    if(cardResourceId) {
-      updateMergeState(cardResourceId, mergeFromMaster, mergeToMaster)
+    if (cardResourceId) {
+      updateMergeState(
+        cardResourceId,
+        mergeFromMaster,
+        mergeToMaster,
+        mergeFromMasterIntoUserBranch,
+        mergeToMasterFromUserBranch,
+      )
     }
   },[cardResourceId, mergeFromMaster, mergeToMaster])
 
