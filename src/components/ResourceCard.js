@@ -86,16 +86,15 @@ export default function ResourceCard({
     },
     actions: { startEdit },
   } = useUserBranch({
-    appRef,
-    authentication,
-    cardId: id,
-    cardResourceId,
-    disableMerging: true, //TODO: when we merge into develop branch - this will need to be removed
-    languageId,
-    loggedInUser,
     owner,
-    onResourceError,
     server,
+    appRef,
+    languageId,
+    cardId: id,
+    loggedInUser,
+    authentication,
+    cardResourceId,
+    onResourceError,
     useUserLocalStorage,
   })
 
