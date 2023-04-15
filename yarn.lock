@@ -10489,10 +10489,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.9-beta.4:
-  version "3.3.9-beta.4"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.4.tgz#e7cd2d8dce87e9f0b29bdbff5bee73594ab49cb4"
-  integrity sha512-B6I+j0bvP5f4+AovCyBiXb/bo39kIegfoQ5XWXgR4TTmoNMBdAi4xgXmuZQ42AxBAgtjIGCofv4kkmoxi+Pp1w==
+translation-helps-rcl@3.3.9-beta.5:
+  version "3.3.9-beta.5"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.5.tgz#7a48a6e745cf27613c91bc2596868fbb94710713"
+  integrity sha512-JM/JbzNFMcuBjzlTFYSGsNcrGhHIraKH8v9zfkZKEdo0CyxOeFgOcVtnDX0cfmRgwbGzJU9lLicxhR1UuP/v4w==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
