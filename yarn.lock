@@ -9648,10 +9648,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.3-beta.5:
-  version "3.3.3-beta.5"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.5.tgz#93f94cb0761bc4d04fdd3f4931a616467bbff501"
-  integrity sha512-k32BOhPTi/Fd+UnmKSkFeukIsPooDrrPoUoWctQXAQwA2l22rx5Un+OYMSvDzZFldX1IrFVzKRRcnkU4D/x0Zg==
+single-scripture-rcl@3.3.3-beta.7:
+  version "3.3.3-beta.7"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.7.tgz#529468d4b1d152908bf5ef5ca1e802d986229cf1"
+  integrity sha512-L4uVB/dQAdL3dzHnFtlqmYKZBBSjkesvQQJyHL/hFdXY8+bIRIm4o+7E6BkFXQCg1YZCwd44pAM39yRTSxqx6A==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -10489,10 +10489,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.9-beta.5:
-  version "3.3.9-beta.5"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.5.tgz#7a48a6e745cf27613c91bc2596868fbb94710713"
-  integrity sha512-JM/JbzNFMcuBjzlTFYSGsNcrGhHIraKH8v9zfkZKEdo0CyxOeFgOcVtnDX0cfmRgwbGzJU9lLicxhR1UuP/v4w==
+translation-helps-rcl@3.3.9-beta.6:
+  version "3.3.9-beta.6"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.6.tgz#30b22e5644fc1c5a70ea79e39402632206529adf"
+  integrity sha512-2U2BT3tlNIjzt4uiZrwGKK++hHt7k74fyXrQf40eAjx4+7Jq+rSqjX1QMO9hvetK5TV5i8c2XHKfjliLuQYQEw==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
