@@ -3940,13 +3940,6 @@ dayjs@^1.10.4:
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
   integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
 
-dcs-branch-merger@^1.0.1:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/dcs-branch-merger/-/dcs-branch-merger-1.2.0.tgz#23411a6961994c68cc07970c8f7ecb410466de52"
-  integrity sha512-SKlbrGG+u+IPZ2Jr9rLZKD8tTOTaWlYDyqU9tQkRBOFMcq05tOivEx+Cga1YDQ8UdyzIg2s0ZPL7C79N4MddlQ==
-  dependencies:
-    path "0.12.7"
-
 debounce-promise@^3.1.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/debounce-promise/-/debounce-promise-3.1.2.tgz#320fb8c7d15a344455cd33cee5ab63530b6dc7c5"
@@ -10496,14 +10489,15 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-"translation-helps-rcl@file:.yalc/translation-helps-rcl":
-  version "3.3.10-beta"
+translation-helps-rcl@3.3.9-beta.10:
+  version "3.3.9-beta.10"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.10.tgz#2b7367a78c989d5146b2090ee7ea6aa2c8416f1e"
+  integrity sha512-r6jBNnJE6BNeW6Ln5+0CQvpt+ObkB7zqU5TYF79b1gwPthS1gOVP+JIpkoEX4iAnx1ZnopAKZp7+IreTVoDvNA==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
     axios "^0.27.2"
     bible-reference-range "^1.1.0"
-    dcs-branch-merger "^1.0.1"
     deep-equal "^2.0.5"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
