@@ -290,6 +290,7 @@ function WorkspaceContainer() {
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
     reference: scriptureReference,
     setWordAlignerStatus,
+    selectedQuote,
   }
 
   const commonResourceCardConfigs = {
@@ -504,28 +505,6 @@ function WorkspaceContainer() {
   } = useMinimizedCardsState({
     cards, setCurrentLayout, currentLayout, useUserLocalStorage,
   })
-
-  const isNewTestament = isNT(bookId)
-  const originalScripture = {
-    reference: {
-      projectId: bookId,
-      chapter,
-      verse,
-    },
-    isNT: () => isNT(bookId),
-    resource: {
-      owner: 'unfoldingWord',
-      originalLanguageOwner: 'unfoldingWord',
-      languageId: isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG,
-      resourceId: ORIGINAL_SOURCE,
-    },
-    getLanguage: () => ({ direction: isNewTestament ? 'ltr' : 'rtl' }),
-  }
-
-  const config = {
-    server,
-    ...HTTP_CONFIG,
-  }
 
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
