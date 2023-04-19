@@ -4,15 +4,12 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect'
 import * as isEqual from 'deep-equal'
 import {
   Workspace, MinimizedCardsListUI, useMinimizedCardsState,
 } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
-import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
-  cleanupVerseObjects,
   fixOccurrence,
   NT_ORIG_LANG,
   NT_ORIG_LANG_BIBLE,
@@ -70,10 +67,7 @@ function WorkspaceContainer() {
   const router = useRouter()
   const classes = useStyles()
   const [workspaceReady, setWorkspaceReady] = useState(false)
-  const [selections, _setSelections] = useState(new Map())
   const [networkError, setNetworkError] = useState(null)
-  const [currentVerseSpans, setCurrentVerseSpans] = useState([])
-  const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
   const [currentVerseReference, setCurrentVerseReference] = useState(null)
   const [scriptureReference, setScriptureReference] = useState({})
   const [wordAlignerStatus, _setWordAlignerStatus] = useState(null)
@@ -185,42 +179,21 @@ function WorkspaceContainer() {
       projectId: bookId,
     }
 
-    if(currentVerseReference){
+    if (currentVerseReference){
       const index = currentVerseReference.indexOf(':')
-      if(index >= 0){
+
+      if (index >= 0){
         const chapter = currentVerseReference.substring(0,index)
         const verse = currentVerseReference.substring(index + 1)
         reference.chapter = chapter
         reference.verse = verse
       }
     }
-    if(!isEqual(reference, scriptureReference)){
+
+    if (!isEqual(reference, scriptureReference)){
       setScriptureReference(reference)
     }
-
   },[chapter, verse, bookId, currentVerseReference])
-
-  /**
-   * update selections if changed
-   * @param {Map} newSelections
-   */
-  function setSelections(newSelections) {
-    let _newSelections = newSelections
-
-    if (newSelections?.size && currentVerseSpans?.length) { // add support for verse range
-      _newSelections = new Map(newSelections) // shallow copy
-      let primaryReference = `${chapter}:${verse}`
-      const _selections = _newSelections.get(primaryReference)
-
-      for (const verseSpan of currentVerseSpans) {
-        _newSelections.set(verseSpan, _selections)
-      }
-    }
-
-    if (!isEqual(selections, _newSelections)) {
-      _setSelections(_newSelections)
-    }
-  }
 
   /**
    * in the case of a network error, process and display error dialog
@@ -289,30 +262,7 @@ function WorkspaceContainer() {
     }
   }
 
-  /**
-   * add a verse range to list of verse ranges displayed in the scripture panes.  This is so we can remap selections to also include the verse ranges
-   * @param {string} range - such as 1:1-2
-   */
-  function addVerseRange(range) {
-    const _currentVerseSpans = currentVerseSpans || []
-
-    if (_currentVerseSpans.indexOf(range) < 0) { // only add to list if new
-      const newVerseSpans = [..._currentVerseSpans]
-      newVerseSpans.push(range)
-
-      if (!isEqual(newVerseSpans, _currentVerseSpans)) {
-        setCurrentVerseSpans(newVerseSpans)
-      }
-    }
-  }
-
   useEffect(() => { // on verse navigation, clear verse spans and selections
-    if (currentVerseSpans?.length) {
-      setCurrentVerseSpans([])
-    }
-
-    // clear selections
-    setSelections(new Map())
     // clear current verse reference
     setCurrentVerseReference(null)
     // clear alignments
@@ -338,7 +288,6 @@ function WorkspaceContainer() {
     authentication,
     setSavedChanges,
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
-    addVerseRange,
     reference: scriptureReference,
     setWordAlignerStatus,
   }
@@ -578,39 +527,6 @@ function WorkspaceContainer() {
     ...HTTP_CONFIG,
   }
 
-  const { server: origServer, resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
-
-  const originalScriptureConfig = useScripture({
-    ...originalScripture,
-    resource: {
-      ...originalScripture.resource,
-      resourceId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
-      projectId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
-      ref: appRef,
-    },
-    resourceLink: origResourceLink,
-    config: {
-      ...config,
-      server: origServer,
-    },
-  })
-
-  useDeepCompareEffectNoCheck(() => { // see if we need to update map of original verse objects
-    const _map = new Map()
-    const verseObjects = cleanupVerseObjects(originalScriptureConfig?.verseObjects)
-    _map.set(`${chapter}:${verse}`, verseObjects)
-
-    if (currentVerseSpans?.length) { // add support for verse ranges
-      for (const verseSpan of currentVerseSpans) {
-        _map.set(verseSpan, verseObjects)
-      }
-    }
-
-    if (!isEqual(verseObjectsMap, _map)) {
-      setVerseObjectsMap(_map)
-    }
-  }, [originalScriptureConfig.verseObjects, chapter, verse, currentVerseSpans])
-
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
@@ -618,13 +534,7 @@ function WorkspaceContainer() {
         <CircularProgress size={180} />
       </>
       :
-      <SelectionsContextProvider
-        selections={selections}
-        onSelections={setSelections}
-        quote={selectedQuote?.quote}
-        occurrence={fixOccurrence(selectedQuote?.occurrence)}
-        verseObjectsMap={verseObjectsMap}
-      >
+      <>
         <MinimizedCardsListUI minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>
         {loading || content || error ?
           <DraggableCard
@@ -681,7 +591,7 @@ function WorkspaceContainer() {
           translate={translate}
           getLexiconData={getLexiconData}
         />
-      </SelectionsContextProvider>
+      </>
   )
 }
 
