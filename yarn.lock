@@ -9357,10 +9357,10 @@ resolve@^2.0.0-next.4:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
-resource-workspace-rcl@2.1.1-beta:
-  version "2.1.1-beta"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.1-beta.tgz#e467ed1b4e26cdb60b6fa0f9a4574e7eaaa53918"
-  integrity sha512-pv//4u6GrAfHfbWaNGob5EsyylKNv6QCs0bM4/w5eIKSahnrgh7eY4T7O0XpWTDcPK6CCN1+uU2Kd6ty0p05Mg==
+resource-workspace-rcl@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.2.tgz#551242cd5e74cde549cd97b82cdf67dd12fe1814"
+  integrity sha512-rYUndXsMZarHM9Vmles3XeFdYjIfHJX/Di9tQYZSubAW1J60RxClXn9urxtVZ6GCeQ6g2RuwTKl2G7gXOrx8Jw==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
@@ -10489,10 +10489,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.9-beta.20:
-  version "3.3.9-beta.20"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.20.tgz#1600d5b38a56e34b303eaba0ff17a490fc67d22e"
-  integrity sha512-zNITtwSeLlqYLB6OvhA79JM6LMeHu78AjRJCsNttqzNdC9lP588hk+CPVkhur+pT/9ttT/oTBEZy8pMQ6mN7rA==
+translation-helps-rcl@3.3.9-patch.1:
+  version "3.3.9-patch.1"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-patch.1.tgz#acd7f8c1f512c42c153d6ac299f3f705f31c26e3"
+  integrity sha512-RC41StDuuL6qE7spQY487Da+bADyzKdCZP3JtWCaDVVFKMmPsftca9MAlNsiId3oQcU+GOb4vNy6QpQ7A5Kbfg==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
