@@ -2151,9 +2151,9 @@
     csstype "^3.0.2"
 
 "@types/react@^17.0.0":
-  version "17.0.57"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.57.tgz#341152f222222075caf020ae6e0e68b9b835404c"
-  integrity sha512-e4msYpu5QDxzNrXDHunU/VPyv2M1XemGG/p7kfCjUiPtlLDCWLGQfgAMng6YyisWYxZ09mYdQlmMnyS0NfZdEg==
+  version "17.0.58"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.58.tgz#c8bbc82114e5c29001548ebe8ed6c4ba4d3c9fb0"
+  integrity sha512-c1GzVY97P0fGxwGxhYq989j4XwlcHQoto6wQISOC2v6wm3h0PORRWJFHlkRjfGsiG3y1609WdQ+J+tKxvrEd6A==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -9657,10 +9657,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.3-beta.31:
-  version "3.3.3-beta.31"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.31.tgz#052f1078b3fb7d02501c779fb79fd5f8b6703cee"
-  integrity sha512-Yc5f30cMMzvaRegkcvUOlvZAlu+ywT6Djx3EZE+PuNbcZluzVHVH/od9EEBbqZfSGqAaQO0CgbQBBT3imLckOw==
+single-scripture-rcl@3.3.3-beta.41:
+  version "3.3.3-beta.41"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.41.tgz#3d3eee861d320b4c84fe629781fa95b576376299"
+  integrity sha512-fLCe/H1eUR5DFzsFAtvpZ6mvPofKs4gZD5j9rFJPSZ7f7KUk9PTuTYk0B+F/PebgeLe+QYBegC2qul1aYLFWRg==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -9671,6 +9671,7 @@ single-scripture-rcl@3.3.3-beta.31:
     styled-components "^5.2.1"
     ts-loader "^8.0.12"
     typescript "^4.1.3"
+    uw-quote-helpers "0.0.1-beta.15"
 
 sisteransi@^1.0.5:
   version "1.0.5"
@@ -10984,10 +10985,10 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-uw-quote-helpers@^0.0.1-beta.6:
-  version "0.0.1-beta.6"
-  resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-0.0.1-beta.6.tgz#580124f9030b858f65383ba1b06f616147b14185"
-  integrity sha512-AygfFecn9xi7Nh2ZEDheHG/Om/C8FfdBqyvEyyhGp7AaNZl0FQSa1KQbFTIG4Z4UXWkPscvWVrS4yZ+OiGG2fw==
+uw-quote-helpers@0.0.1-beta.15:
+  version "0.0.1-beta.15"
+  resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-0.0.1-beta.15.tgz#55f62791ededc71108cb84ab4387118c01fd0d64"
+  integrity sha512-2SF0ynJbrFs8BorkEkfNgv2ew+bp9Zs2SasRYSe/vUQt+6vP1m/c9UaBOze7giasJ3TtLDVOD4p5KwWYSrytzA==
   dependencies:
     bible-reference-range "^1.1.0"
     string-punctuation-tokenizer "^2.2.0"
