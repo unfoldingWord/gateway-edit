@@ -9524,10 +9524,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.4.0-beta.2:
-  version "5.4.0-beta.2"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.0-beta.2.tgz#dd661c694d11ae2165a7bc534b244509f9320969"
-  integrity sha512-7JRh1GvjWY3rDoAXmp0M8rILIrhLha1her1RCjnYUvRqWtmw+2YS+W3wPR3uTTlPSdpAwGW2By/45V10ZA2ndw==
+scripture-resources-rcl@5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.0.tgz#2d670b1c3a204462c1604eb039e3a525ccc8ffe2"
+  integrity sha512-SaVdCDHS1l4GS/a0eHIyxggW6twk70OiR+269R6z/Q0DauRPMk8LfMLp/joIQZXzI2o5mHqk4zt1dJBd9KHFCA==
   dependencies:
     bible-reference-range "^1.0.1"
     deep-freeze "^0.0.1"
@@ -9657,10 +9657,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.3-beta.57:
-  version "3.3.3-beta.57"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.57.tgz#116b9fd37adb483fbe27b3941e205ca7453b0a05"
-  integrity sha512-wuD2m3eC6vdpeQigzvFhagWRiLqDbcL6Ddr44KkbW0crhxOyQGhvu6oSfysQL+AMZf+AC4XIHc++cDco0WajqA==
+single-scripture-rcl@3.3.3-patch.2:
+  version "3.3.3-patch.2"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-patch.2.tgz#4a11d7af93d04abda75ba6b39a66a61725314e5b"
+  integrity sha512-1gUlMm69FaeA+0W6fjbh1gUE0V7kOm/BwXY3Ir1R2KrXEUaI9t4KnI8yErYrcMEDUTFf6UB0DxMGicy0kWFpLg==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
