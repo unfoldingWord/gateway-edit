@@ -2151,9 +2151,9 @@
     csstype "^3.0.2"
 
 "@types/react@^17.0.0":
-  version "17.0.57"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.57.tgz#341152f222222075caf020ae6e0e68b9b835404c"
-  integrity sha512-e4msYpu5QDxzNrXDHunU/VPyv2M1XemGG/p7kfCjUiPtlLDCWLGQfgAMng6YyisWYxZ09mYdQlmMnyS0NfZdEg==
+  version "17.0.58"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.58.tgz#c8bbc82114e5c29001548ebe8ed6c4ba4d3c9fb0"
+  integrity sha512-c1GzVY97P0fGxwGxhYq989j4XwlcHQoto6wQISOC2v6wm3h0PORRWJFHlkRjfGsiG3y1609WdQ+J+tKxvrEd6A==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -9524,10 +9524,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.3.9:
-  version "5.3.9"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.3.9.tgz#be100b829f1ec3c848145afe9ccc528da9011137"
-  integrity sha512-49+VzLNuFEvQKDQegljyIiB9ta3HyTCQKcuzLil8JsWcpQ4H38C5EmMiAd2CEyAieJhX+4gLPC9G1YoOrqCnzg==
+scripture-resources-rcl@5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.0.tgz#2d670b1c3a204462c1604eb039e3a525ccc8ffe2"
+  integrity sha512-SaVdCDHS1l4GS/a0eHIyxggW6twk70OiR+269R6z/Q0DauRPMk8LfMLp/joIQZXzI2o5mHqk4zt1dJBd9KHFCA==
   dependencies:
     bible-reference-range "^1.0.1"
     deep-freeze "^0.0.1"
