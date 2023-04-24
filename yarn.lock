@@ -910,7 +910,7 @@
     core-js "^2.6.12"
     regenerator-runtime "^0.13.11"
 
-"@babel/runtime-corejs3@^7.12.1":
+"@babel/runtime-corejs3@^7.12.1", "@babel/runtime-corejs3@^7.16.5":
   version "7.21.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.21.0.tgz#6e4939d9d9789ff63e2dc58e88f13a3913a24eba"
   integrity sha512-TDD4UJzos3JJtM+tHX+w2Uc+KWj7GV+VKKFdMVd2Rx8sdA19hcc3P3AHFYd5LVOw+pYuSd5lICC3gm52B6Rwxw==
@@ -5234,6 +5234,15 @@ fs-extra@^10.0.0:
     jsonfile "^6.0.1"
     universalify "^2.0.0"
 
+fs-extra@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.1.tgz#4f189c44aa123b895f722804f55ea23eadc348e9"
+  integrity sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==
+  dependencies:
+    graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
+
 fs-extra@^9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-9.1.0.tgz#5954460c764a8da2094ba3554bf839e6b9a7c86d"
@@ -8368,7 +8377,7 @@ path-exists@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-4.0.0.tgz#513bdbe2d3b95d7762e8c1137efa195c6c61b5b3"
   integrity sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==
 
-path-extra@^4.2.1:
+path-extra@^4.2.1, path-extra@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/path-extra/-/path-extra-4.3.0.tgz#480cae968c698f779c4db939442fb2b871e89385"
   integrity sha512-ZzYeovxrO9rxKHJ27kFjF8oKnN4U7y463Y4WH7PC3wH5GzEPVdX32Z2ayy3lwMIM2iGKkq6XuufeSRblgHNnhQ==
@@ -9515,10 +9524,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.3.9:
-  version "5.3.9"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.3.9.tgz#be100b829f1ec3c848145afe9ccc528da9011137"
-  integrity sha512-49+VzLNuFEvQKDQegljyIiB9ta3HyTCQKcuzLil8JsWcpQ4H38C5EmMiAd2CEyAieJhX+4gLPC9G1YoOrqCnzg==
+scripture-resources-rcl@5.4.1-beta.2:
+  version "5.4.1-beta.2"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.1-beta.2.tgz#187fd36467493c3ca53f0b68fef5e5758e65cafd"
+  integrity sha512-wYgCLxUj/Zgss9gQS1mpZTXkNzpVevLHUUSZMrp0bjj3gMMNQduc+ugzIHHdBU92jlQEVD8g3lh1lPH+xYX6gw==
   dependencies:
     bible-reference-range "^1.0.1"
     deep-freeze "^0.0.1"
@@ -9648,9 +9657,9 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@/Users/blm/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.3.3-23.tgz:
-  version "3.3.3-23"
-  resolved "/Users/blm/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.3.3-23.tgz#d41aaa8b33a464d452cdda9ce7c94a2e73b2876d"
+"single-scripture-rcl@file:../single-scripture-rcl/single-scripture-rcl-v3.3.3-7.tgz":
+  version "3.3.3-7"
+  resolved "file:../single-scripture-rcl/single-scripture-rcl-v3.3.3-7.tgz#a643de83339959b1cdc983025f85d37a98017fec"
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -9661,21 +9670,7 @@ single-scripture-rcl@/Users/blm/Development/RCL/single-scripture-rcl/single-scri
     styled-components "^5.2.1"
     ts-loader "^8.0.12"
     typescript "^4.1.3"
-
-single-scripture-rcl@3.3.3-beta.7:
-  version "3.3.3-beta.7"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.7.tgz#529468d4b1d152908bf5ef5ca1e802d986229cf1"
-  integrity sha512-L4uVB/dQAdL3dzHnFtlqmYKZBBSjkesvQQJyHL/hFdXY8+bIRIm4o+7E6BkFXQCg1YZCwd44pAM39yRTSxqx6A==
-  dependencies:
-    "@types/react" "^17.0.0"
-    "@types/react-dom" "^17.0.0"
-    deep-equal "^2.0.5"
-    lodash "^4.17.21"
-    react-docgen-typescript "^1.20.5"
-    source-map-loader "^1.1.3"
-    styled-components "^5.2.1"
-    ts-loader "^8.0.12"
-    typescript "^4.1.3"
+    uw-quote-helpers "0.0.1-beta.15"
 
 sisteransi@^1.0.5:
   version "1.0.5"
@@ -10028,7 +10023,7 @@ string-punctuation-tokenizer@2.1.2:
   dependencies:
     xregexp "^4.1.1"
 
-string-punctuation-tokenizer@2.2.0:
+string-punctuation-tokenizer@2.2.0, string-punctuation-tokenizer@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/string-punctuation-tokenizer/-/string-punctuation-tokenizer-2.2.0.tgz#058465f994e29bfb93eaf4a9a2503d3ab6a50a18"
   integrity sha512-QOTErphviG7wtzhM6A0tVZugwPtfHFNySboO0SEkruFwW/d2HHalSHWri4230HG/F6egvJx76kZdtYY359+rrA==
@@ -10503,10 +10498,8 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.9-beta.10:
-  version "3.3.9-beta.10"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.10.tgz#2b7367a78c989d5146b2090ee7ea6aa2c8416f1e"
-  integrity sha512-r6jBNnJE6BNeW6Ln5+0CQvpt+ObkB7zqU5TYF79b1gwPthS1gOVP+JIpkoEX4iAnx1ZnopAKZp7+IreTVoDvNA==
+"translation-helps-rcl@file:.yalc/translation-helps-rcl":
+  version "3.3.9-beta.14"
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
@@ -10576,10 +10569,28 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
+tsv-groupdata-parser@1.1.0-beta.4:
+  version "1.1.0-beta.4"
+  resolved "https://registry.yarnpkg.com/tsv-groupdata-parser/-/tsv-groupdata-parser-1.1.0-beta.4.tgz#4f3df012262b85d2109f44e088bd797738fe14cc"
+  integrity sha512-nHALVtH9Nss+XrqMPHpaWkhE01sqs/VPf5O/LBOHW69lxqH0ZMMdZIA1gASmU4R8WPiCIXpIN4pgQo2PaaOnJQ==
+  dependencies:
+    bible-reference-range "^1.0.1"
+    fs-extra "^7.0.1"
+    ospath "^1.2.2"
+    path-extra "^4.3.0"
+    semver "^6.1.1"
+    tsvtojson "^1.0.1"
+    uw-tsv-parser "1.0.3"
+
 tsv@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/tsv/-/tsv-0.2.0.tgz#92869a3cb5f50332f3dc90fca82be667db6f72d6"
   integrity sha512-GG6xbOP85giXXom0dS6z9uyDsxktznjpa1AuDlPrIXDqDnbhjr9Vk6Us8iz6U1nENL4CPS2jZDvIjEdaZsmc4Q==
+
+tsvtojson@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/tsvtojson/-/tsvtojson-1.0.1.tgz#b2cc04812e2b8f5e6ad4d537b99d8c24b0109bd3"
+  integrity sha512-tcmQHJvwroh4EqkDoUan1UsYo0S5lTLjVc865zYxZ+hwfkDBr0Ljnqr4CywNqgsoS8313zoZ938uHyQEdBHY6A==
 
 tty-browserify@0.0.0:
   version "0.0.0"
@@ -10971,6 +10982,21 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
+uw-quote-helpers@0.0.1-beta.15:
+  version "0.0.1-beta.15"
+  resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-0.0.1-beta.15.tgz#55f62791ededc71108cb84ab4387118c01fd0d64"
+  integrity sha512-2SF0ynJbrFs8BorkEkfNgv2ew+bp9Zs2SasRYSe/vUQt+6vP1m/c9UaBOze7giasJ3TtLDVOD4p5KwWYSrytzA==
+  dependencies:
+    bible-reference-range "^1.1.0"
+    string-punctuation-tokenizer "^2.2.0"
+    tsv-groupdata-parser "1.1.0-beta.4"
+    xregexp "^5.1.1"
+
+uw-tsv-parser@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/uw-tsv-parser/-/uw-tsv-parser-1.0.3.tgz#5009a3710d985e1d86a08bbb58a736a9be0c55d5"
+  integrity sha512-BqDEayQWdGGsINZlYMzn1+4dAyVtG9zEmNnIv51H/7DquEODEO8hOI1mpNpLlNqGCcXySgTSj2nGhiODefZ4VA==
+
 v8-compile-cache@^2.0.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
@@ -11332,6 +11358,13 @@ xregexp@^4.1.1:
   integrity sha512-2u9HwfadaJaY9zHtRRnH6BY6CQVNQKkYm3oLtC9gJXXzfsbACg5X5e4EZZGVAH+YIfa+QA9lsFQTTe3HURF3ag==
   dependencies:
     "@babel/runtime-corejs3" "^7.12.1"
+
+xregexp@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/xregexp/-/xregexp-5.1.1.tgz#6d3fe18819e3143aaf52f9284d34f49a59583ebb"
+  integrity sha512-fKXeVorD+CzWvFs7VBuKTYIW63YD1e1osxwQ8caZ6o1jg6pDAbABDG54LCIq0j5cy7PjRvGIq6sef9DYPXpncg==
+  dependencies:
+    "@babel/runtime-corejs3" "^7.16.5"
 
 xtend@^4.0.0, xtend@^4.0.1, xtend@^4.0.2, xtend@~4.0.1:
   version "4.0.2"
