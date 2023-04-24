@@ -147,10 +147,14 @@ function WorkspaceContainer() {
    */
   function setCurrentCheck(newQuote) {
     console.log('newQuote', newQuote)
-    const _quote = newQuote ? {
+    let _quote = newQuote ? {
       ...newQuote,
       occurrence: fixOccurrence(newQuote.occurrence),
     } : {}
+
+    if (newQuote && !newQuote.reference) {
+      _quote.reference= `${chapter}:${verse}`
+    }
 
     if (!isEqual(selectedQuote, _quote)) {
       _setQuote(_quote)
