@@ -110,6 +110,7 @@ export default function Header({
           <div className='flex flex-1 justify-center items-center'>
             <BibleReference />
           </div>
+          {/* TODO 399: Incorporate message so we can always show this */}
           {mergeStatus?.foundMergeStatusCard &&
           <IconButton
             className={classes.margin}

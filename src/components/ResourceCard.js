@@ -89,7 +89,8 @@ export default function ResourceCard({
       workingResourceBranch,
       mergeFromMaster,
       mergeToMaster,
-      merging,
+      loadingMergeFromMaster,
+      loadingMergeToMaster,
     },
     actions: {
       startEdit,
@@ -276,6 +277,7 @@ export default function ResourceCard({
   const onRenderToolbar = ({ items }) => {
     const newItems = [...items]
 
+    // TODO 399: Remove these checks since we will always display button.
     if (mergeFromMaster) {
       newItems.push(
         <IconButton
@@ -318,7 +320,7 @@ export default function ResourceCard({
 
   let _message = isEditing ? 'Saving Resource...' : message || errorMessage
 
-  if (merging) {
+  if (loadingMergeFromMaster || loadingMergeToMaster) {
     _message = 'Merging Resource...'
   }
 
