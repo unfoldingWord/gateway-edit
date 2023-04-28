@@ -59,6 +59,10 @@ export default function Layout({
   useEffect(() => {
     const params = router?.query
 
+    if ( window.location.href.includes('localhost') || window.location.href.includes('develop') ) {
+      setServer(QA_BASE_URL) // let this be the default
+    }
+
     if (typeof params?.server === 'string') { // if URL param given
       const serverID_ = params.server.toUpperCase() === QA ? QA : PROD
       const server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
