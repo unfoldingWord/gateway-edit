@@ -1,4 +1,6 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useContext, useEffect, useMemo, useRef, useState,
+} from 'react'
 import PropTypes from 'prop-types'
 import { AuthenticationContext } from 'gitea-react-toolkit'
 import Header from '@components/Header'
@@ -6,7 +8,9 @@ import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
-import { APP_NAME, BASE_URL, PROD, QA, QA_BASE_URL } from '@common/constants'
+import {
+  APP_NAME, BASE_URL, PROD, QA, QA_BASE_URL,
+} from '@common/constants'
 import useValidateAccountSettings from '@hooks/useValidateAccountSettings'
 import { useRouter } from 'next/router'
 
@@ -59,18 +63,25 @@ export default function Layout({
   useEffect(() => {
     const params = router?.query
 
-    if ( window.location.href.includes('localhost') || window.location.href.includes('develop') ) {
-      setServer(QA_BASE_URL) // let this be the default
-    }
-
     if (typeof params?.server === 'string') { // if URL param given
       const serverID_ = params.server.toUpperCase() === QA ? QA : PROD
+      console.log('Server specified:',params.server)
       const server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
 
       if (server !== server_) {
         console.log(`_app.js - On init switching server to: ${serverID_}, url server param '${params.server}', old server ${server}, reloading page`)
         setServer(server_) // persist server selection in localstorage
         router.push(`/?server=${serverID_}`) // reload page
+      }
+    } else {
+      console.log('No server parameter provided, set defaults')
+
+      if ( window.location.href.includes('localhost')
+      || window.location.href.includes('develop')
+      || window.location.href.includes('deploy-preview')
+      ) {
+        console.log('local or develop or preview, defaulting to ',QA_BASE_URL)
+        setServer(QA_BASE_URL) // let this be the default
       }
     }
   }, [router?.query]) // TRICKY query property not loaded on first pass, so watch for change
