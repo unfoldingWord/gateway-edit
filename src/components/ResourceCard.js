@@ -8,6 +8,7 @@ import {
   useCardState,
   useTsvMerger,
   useUserBranch,
+  useBranchMerger,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
@@ -19,7 +20,11 @@ import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/consta
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { StoreContext } from '@context/StoreContext'
+import { useContentUpdateProps } from '@hooks/useContentUpdateProps'
 import { IconButton } from '@mui/material'
+import UpdateBranchButton from '@components/UpdateBranchButton'
+import ErrorDialog from '@components/ErrorDialog'
+
 
 export default function ResourceCard({
   id,
@@ -52,6 +57,7 @@ export default function ResourceCard({
 }) {
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
 
   function updateTempContent(c) {
@@ -86,16 +92,11 @@ export default function ResourceCard({
       contentRef,
       listRef,
       usingUserBranch,
+      userEditBranchName,
       workingResourceBranch,
-      mergeFromMaster,
-      mergeToMaster,
-      loadingMergeFromMaster,
-      loadingMergeToMaster,
     },
     actions: {
       startEdit,
-      mergeFromMasterIntoUserBranch,
-      mergeToMasterFromUserBranch,
     },
   } = useUserBranch({
     owner,
@@ -109,6 +110,31 @@ export default function ResourceCard({
     onResourceError,
     useUserLocalStorage,
   })
+
+  const repo = `${languageId}_${cardResourceId}`
+  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
+  const {
+    state: {
+      mergeStatus: mergeToMaster,
+      updateStatus: mergeFromMaster,
+    },
+    actions: {
+      updateUserBranch: mergeFromMasterIntoUserBranch,
+      mergeMasterBranch: mergeToMasterFromUserBranch
+    }
+  } = _useBranchMerger;
+
+  const updateButtonProps = useContentUpdateProps({ isSaving, useBranchMerger: _useBranchMerger, reloadContent: reloadResource });
+  const {
+    isErrorDialogOpen,
+    onCloseErrorDialog,
+    isLoading,
+    dialogMessage,
+    dialogTitle,
+    dialogLink,
+    dialogLinkTooltip
+  } = updateButtonProps;
+
 
   useEffect(() => {
     if (cardResourceId) {
@@ -238,6 +264,7 @@ export default function ResourceCard({
 
   async function handleSaveEdit() {
     // Save edit, if successful trigger resource reload and set saved to true.
+    setIsSaving(true)
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {
@@ -248,6 +275,7 @@ export default function ResourceCard({
         } else {
           setSavedChanges(cardResourceId, false)
         }
+        setIsSaving(false)
       })
     }
 
@@ -263,40 +291,21 @@ export default function ResourceCard({
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
-  const needToMergeFromMaster = mergeFromMaster?.mergeNeeded
-  const mergeFromMasterHasConflicts = mergeFromMaster?.conflict
   const mergeToMasterHasConflicts = mergeToMaster?.conflict
-
-  // eslint-disable-next-line no-nested-ternary
-  const mergeFromMasterTitle = mergeFromMasterHasConflicts ? 'Merge Conflicts for update from master' : (needToMergeFromMaster ? 'Update from master' : 'No merge conflicts for update with master')
-  // eslint-disable-next-line no-nested-ternary
-  const mergeFromMasterColor = mergeFromMasterHasConflicts ? 'black' : (needToMergeFromMaster ? 'black' : 'lightgray')
   const mergeToMasterTitle = mergeToMasterHasConflicts ? 'Merge Conflicts for share with master' : 'No merge conflicts for share with master'
   const mergeToMasterColor = mergeToMasterHasConflicts ? 'black' : 'black'
 
   const onRenderToolbar = ({ items }) => {
     const newItems = [...items]
 
-    // TODO 399: Remove these checks since we will always display button.
-    if (mergeFromMaster) {
-      newItems.push(
-        <IconButton
-          className={classes.margin}
-          key='update-from-master'
-          onClick={mergeFromMasterIntoUserBranch}
-          title={mergeFromMasterTitle}
-          aria-label={mergeFromMasterTitle}
-          style={{ cursor: 'pointer' }}
-        >
-          {mergeFromMasterHasConflicts ?
-            <MdUpdateDisabled id='update-from-master-icon' color={mergeFromMasterColor} />
-            :
-            <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
-          }
-        </IconButton>
-      )
-    }
+    newItems.push(
+      <>
+        <UpdateBranchButton {...updateButtonProps} isLoading={isLoading || isSaving}/>
+        <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={ isLoading || isSaving } link={dialogLink} linkTooltip={dialogLinkTooltip} />
+      </>
+    )
 
+    // TODO 399: Remove these checks since we will always display button.
     if (mergeToMaster) {
       newItems.push(
         <IconButton
@@ -319,10 +328,6 @@ export default function ResourceCard({
   }
 
   let _message = isEditing ? 'Saving Resource...' : message || errorMessage
-
-  if (loadingMergeFromMaster || loadingMergeToMaster) {
-    _message = 'Merging Resource...'
-  }
 
   return (
     <Card
