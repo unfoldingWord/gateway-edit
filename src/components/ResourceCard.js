@@ -9,6 +9,9 @@ import {
   useTsvMerger,
   useUserBranch,
   useBranchMerger,
+  UpdateBranchButton,
+  ErrorDialog,
+  useContentUpdateProps,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
@@ -20,10 +23,7 @@ import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/consta
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { StoreContext } from '@context/StoreContext'
-import { useContentUpdateProps } from '@hooks/useContentUpdateProps'
 import { IconButton } from '@mui/material'
-import UpdateBranchButton from '@components/UpdateBranchButton'
-import ErrorDialog from '@components/ErrorDialog'
 
 
 export default function ResourceCard({
@@ -124,18 +124,6 @@ export default function ResourceCard({
     }
   } = _useBranchMerger;
 
-  const updateButtonProps = useContentUpdateProps({ isSaving, useBranchMerger: _useBranchMerger, reloadContent: reloadResource });
-  const {
-    isErrorDialogOpen,
-    onCloseErrorDialog,
-    isLoading,
-    dialogMessage,
-    dialogTitle,
-    dialogLink,
-    dialogLinkTooltip
-  } = updateButtonProps;
-
-
   useEffect(() => {
     if (cardResourceId) {
       updateMergeState(
@@ -174,6 +162,17 @@ export default function ResourceCard({
     ref: workingResourceBranch,
     httpConfig: RESOURCE_HTTP_CONFIG,
   })
+
+  const updateButtonProps = useContentUpdateProps({ isSaving, useBranchMerger: _useBranchMerger, reloadContent: reloadResource });
+  const {
+    isErrorDialogOpen,
+    onCloseErrorDialog,
+    isLoading,
+    dialogMessage,
+    dialogTitle,
+    dialogLink,
+    dialogLinkTooltip
+  } = updateButtonProps;
 
   const {
     state: {
