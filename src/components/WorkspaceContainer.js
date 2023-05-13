@@ -13,6 +13,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import {
   fixOccurrence,
+  getVersesForRef,
   NT_ORIG_LANG,
   NT_ORIG_LANG_BIBLE,
   ORIGINAL_SOURCE,
@@ -299,7 +300,6 @@ function WorkspaceContainer() {
     authentication,
     bookIndex: BIBLES_ABBRV_INDEX[bookId],
     classes,
-    fetchGlossesForVerse,
     getLanguage,
     getLexiconData,
     greekRepoUrl,
@@ -587,6 +587,27 @@ function WorkspaceContainer() {
 
     setState( { originalScriptureBookObjects })
   }, [originalScriptureResults?.bookObjects])
+
+  useEffect(() => { // pre-cache glosses on verse change
+    const fetchGlossDataForVerse = async () => {
+      const verses = getVersesForRef(scriptureReference, originalScriptureBookObjects, originalLanguageId)
+
+      if (verses?.length) {
+        for (const verseReference of verses) {
+          const origVerseObjects = verseReference?.verseData?.verseObjects
+
+          if (origVerseObjects) {
+            // eslint-disable-next-line no-await-in-loop
+            await fetchGlossesForVerse(origVerseObjects, originalLanguageId)
+          }
+        }
+      }
+    }
+
+    if (originalScriptureBookObjects && scriptureReference?.projectId) {
+      fetchGlossDataForVerse()
+    }
+  }, [scriptureReference, originalScriptureBookObjects, originalLanguageId ])
 
   return (
     (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
