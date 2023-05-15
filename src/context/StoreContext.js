@@ -60,6 +60,8 @@ export default function StoreContextProvider(props) {
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
   const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
   const [mergeStatusForCards, setMergeStatusForCards] = useState({})
+  const [cardsSaving, setCardsSaving] = useState([])
+  const [cardsLoading, setCardsLoading] = useState([])
 
   function updateMergeState(cardId, mergeFromMaster, mergeToMaster, mergeFromMasterIntoUserBranch, mergeToMasterFromUserBranch) {
     console.log('updateMergeState',{cardId, mergeFromMaster, mergeToMaster})
@@ -165,6 +167,8 @@ export default function StoreContextProvider(props) {
       hebrewRepoUrl,
       mainScreenRef,
       savedChanges,
+      cardsSaving,
+      cardsLoading,
       mergeStatusForCards,
     },
     actions: {
@@ -186,6 +190,8 @@ export default function StoreContextProvider(props) {
       setHebrewRepoUrl,
       setMainScreenRef,
       setSavedChanges,
+      setCardsSaving,
+      setCardsLoading,
       checkUnsavedChanges,
       showSaveChangesPrompt,
       updateMergeState,

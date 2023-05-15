@@ -15,7 +15,7 @@ import {
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
-import { MdUpdate, MdUpdateDisabled } from 'react-icons/md'
+import { MdUpdateDisabled } from 'react-icons/md'
 import { FiShare } from 'react-icons/fi'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import { getResourceMessage } from '@utils/resources'
@@ -111,31 +111,6 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
-  const repo = `${languageId}_${cardResourceId}`
-  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
-  const {
-    state: {
-      mergeStatus: mergeToMaster,
-      updateStatus: mergeFromMaster,
-    },
-    actions: {
-      updateUserBranch: mergeFromMasterIntoUserBranch,
-      mergeMasterBranch: mergeToMasterFromUserBranch
-    }
-  } = _useBranchMerger;
-
-  useEffect(() => {
-    if (cardResourceId) {
-      updateMergeState(
-        cardResourceId,
-        mergeFromMaster,
-        mergeToMaster,
-        mergeFromMasterIntoUserBranch,
-        mergeToMasterFromUserBranch,
-      )
-    }
-  },[cardResourceId, mergeFromMaster, mergeToMaster])
-
   const {
     tsvs,
     items,
@@ -163,8 +138,21 @@ export default function ResourceCard({
     httpConfig: RESOURCE_HTTP_CONFIG,
   })
 
+  const repo = `${languageId}_${cardResourceId}`
+  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
+  const {
+    state: {
+      mergeStatus: mergeToMaster,
+      updateStatus: mergeFromMaster,
+    },
+    actions: {
+      mergeMasterBranch: mergeToMasterFromUserBranch
+    }
+  } = _useBranchMerger;
+
   const updateButtonProps = useContentUpdateProps({ isSaving, useBranchMerger: _useBranchMerger, reloadContent: reloadResource });
   const {
+    callUpdateUserBranch,
     isErrorDialogOpen,
     onCloseErrorDialog,
     isLoading,
@@ -173,6 +161,26 @@ export default function ResourceCard({
     dialogLink,
     dialogLinkTooltip
   } = updateButtonProps;
+
+  useEffect(() => {
+    if (isLoading) {
+      setCardsLoading(prevCardsLoading => [...prevCardsLoading, cardResourceId])
+    } else {
+      setCardsLoading(prevCardsLoading => prevCardsLoading.filter(cardId => cardId !== cardResourceId))
+    }
+  }, [isLoading])
+
+  useEffect(() => {
+    if (cardResourceId) {
+      updateMergeState(
+        cardResourceId,
+        mergeFromMaster,
+        mergeToMaster,
+        callUpdateUserBranch,
+        mergeToMasterFromUserBranch,
+      )
+    }
+  },[cardResourceId, mergeFromMaster, mergeToMaster])
 
   const {
     state: {
@@ -232,7 +240,13 @@ export default function ResourceCard({
     setContent: updateTempContent,
   })
 
-  const { actions: { updateMergeState } } = useContext(StoreContext)
+  const {
+    actions: {
+      updateMergeState,
+      setCardsSaving,
+      setCardsLoading,
+    }
+  } = useContext(StoreContext)
 
   useEffect(() => {
     if (updateTaDetails) {
@@ -263,7 +277,7 @@ export default function ResourceCard({
 
   async function handleSaveEdit() {
     // Save edit, if successful trigger resource reload and set saved to true.
-    setIsSaving(true)
+    setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {
@@ -274,7 +288,7 @@ export default function ResourceCard({
         } else {
           setSavedChanges(cardResourceId, false)
         }
-        setIsSaving(false)
+        setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
       })
     }
 

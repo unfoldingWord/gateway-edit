@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo } from 'react'
+import { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
@@ -12,7 +12,8 @@ import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
 import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
-import { MdUpdate, MdUpdateDisabled } from 'react-icons/md'
+import useUpdateCardsProps from '../hooks/useUpdateCardsProps'
+import { UpdateBranchButton, ErrorDialog } from 'translation-helps-rcl'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -47,16 +48,22 @@ export default function Header({
   const [drawerOpen, setOpen] = useState(false)
   const { actions: { logout } } = useContext(AuthContext)
   const {
+    state: {
+      cardsSaving,
+      cardsLoading
+    },
     actions: {
       checkUnsavedChanges,
-      getMergeFromMasterStatus,
-      callMergeFromMasterForCards,
     }
   } = useContext(StoreContext)
 
-  const mergeStatus = useMemo(() =>
-    getMergeFromMasterStatus(mergeStatusForCards)
-  ,[mergeStatusForCards])
+  const updateButtonProps = useUpdateCardsProps({ mergeStatusForCards });
+  const {
+    isErrorDialogOpen,
+    onCloseErrorDialog,
+    dialogMessage,
+    dialogTitle,
+  } = updateButtonProps;
 
   const handleDrawerOpen = () => {
     if (!drawerOpen) {
@@ -78,12 +85,7 @@ export default function Header({
     setFeedback && setFeedback(false)
   }
 
-  const needToMergeFromMaster = mergeStatus?.mergeNeeded
-  const mergeFromMasterHasConflicts = mergeStatus?.mergeConflict
-  // eslint-disable-next-line no-nested-ternary
-  const mergeFromMasterTitle = mergeFromMasterHasConflicts ? 'Merge Conflicts for update from master' : (needToMergeFromMaster ? 'Update from master' : 'No merge conflicts for update with master')
-  // eslint-disable-next-line no-nested-ternary
-  const mergeFromMasterColor = mergeFromMasterHasConflicts ? 'black' : (needToMergeFromMaster ? 'black' : 'lightgray')
+  const loadingProps = { color: "secondary" };
 
   return (
     <header>
@@ -110,23 +112,10 @@ export default function Header({
           <div className='flex flex-1 justify-center items-center'>
             <BibleReference />
           </div>
-          {/* TODO 399: Incorporate message so we can always show this */}
-          {mergeStatus?.foundMergeStatusCard &&
-          <IconButton
-            className={classes.margin}
-            key='app-update-from-master'
-            onClick={() => callMergeFromMasterForCards(mergeStatusForCards)}
-            title={mergeFromMasterTitle}
-            aria-label={mergeFromMasterTitle}
-            style={{ cursor: 'pointer' }}
-          >
-            {mergeStatus?.mergeConflict ?
-              <MdUpdateDisabled id='update-from-master-icon' color={mergeFromMasterColor} />
-              :
-              <MdUpdate id='update-from-master-icon' color={mergeFromMasterColor} />
-            }
-          </IconButton>
-          }
+
+          <UpdateBranchButton {...updateButtonProps} isLoading={cardsLoading?.length || cardsSaving?.length} loadingProps={loadingProps}/>
+          <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={cardsLoading?.length || cardsSaving?.length} />
+
           <div className='flex flex-1 justify-end'>
             {/* <Button
               className={classes.button}
