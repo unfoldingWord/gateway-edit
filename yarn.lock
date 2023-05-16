@@ -9539,10 +9539,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.4.1-beta.9:
-  version "5.4.1-beta.9"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.1-beta.9.tgz#afa2dc40687de729ffe4612bb936c024c39eb6ca"
-  integrity sha512-BWHSgK9I1fl4XwDGBJYWta4R+K4rnCETgklqz6jf+T4k5QlV7KqFnDq3BRGC4Hyh5JCcOx3iZyws8uu21i2sAg==
+scripture-resources-rcl@5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.1.tgz#41a0cbe609961bae085b562accc22e967631d79d"
+  integrity sha512-57gfn/SkUvW8AmWj1BiVxWaqAP0vYIlaLNQ2VTvgLUe7KPoSOX2aBCMPOVJEqWb9EwCO/FMFa09T+WVKJjfdsg==
   dependencies:
     bible-reference-range "^1.0.1"
     deep-freeze "^0.0.1"
@@ -9672,10 +9672,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.3-beta.87:
-  version "3.3.3-beta.87"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.87.tgz#0d1f9e7eec6c707ba0b33954f2f0dd0a4bc2427d"
-  integrity sha512-0CBt+xS3VVu+O75yTz/8yoyTkrthKVMj10qYVJi8H2/yJZYDme0wI5LxAUQc7QMy+BJSDI8IVvGlwhXEsawHyA==
+single-scripture-rcl@3.3.3-patch.4:
+  version "3.3.3-patch.4"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-patch.4.tgz#3f204265d08045d8f619550b266653a04597c62f"
+  integrity sha512-GJuz1QIXDlJ4bxjY0qVRaLhBr3JMIcX4sNranszIoXaydPT/Fw5cjnlWoYX6QKUIoi6KNp47f1dHZh8rGCYO7w==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -10514,10 +10514,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.9-beta.15:
-  version "3.3.9-beta.15"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.15.tgz#3f70dd908f29d35a9a9ee800e1d2259d05966799"
-  integrity sha512-ujrFcuTCE8KtV4nykuK9XGx6jIgMVZAsokp4vJvqVHDw+MXCU5R2HfnGThlC1R/oQMywGsapy0h1BGMuzXPgRw==
+translation-helps-rcl@3.3.9-patch.2:
+  version "3.3.9-patch.2"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-patch.2.tgz#a3cd0e9ac3a7386ef04a73f482fc1b3e24edcaeb"
+  integrity sha512-T0d9rN8B9HFOIv22XsWcPHT2Vufp4iJ+0EBQJyCDTQqNST/oufEJhnHmv8TqNl6VXVd1ZNIpx4CNbqWZjstIJg==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
