@@ -124,6 +124,8 @@ function WorkspaceContainer() {
       setSavedChanges,
       updateMergeState,
       showSaveChangesPrompt,
+      setCardsLoading,
+      setCardsSaving,
     },
   } = useContext(StoreContext)
 
@@ -343,6 +345,8 @@ function WorkspaceContainer() {
     reference: scriptureReference,
     setWordAlignerStatus,
     updateMergeState,
+    setCardsLoading,
+    setCardsSaving,
   }
 
   const commonResourceCardConfigs = {
