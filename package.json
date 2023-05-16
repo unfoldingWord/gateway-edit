@@ -1,6 +1,6 @@
 {
   "name": "gateway-edit",
-  "version": "1.2.0",
+  "version": "2.1.0",
   "scripts": {
     "dev": "bash -c \"source ./scripts/set-env.sh && cross-env NODE_OPTIONS=--max_old_space_size=4096 next\"",
     "build": "bash -c \"source ./scripts/set-env.sh && next build\"",
