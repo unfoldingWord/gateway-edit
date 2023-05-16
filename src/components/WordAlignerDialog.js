@@ -73,13 +73,13 @@ export default function WordAlignerDialog({
 
   function cancelAlignment() {
     const cancelAlignment = alignerStatus?.actions?.cancelAlignment
-    console.log(`cancelAlignment() - cancelAlignment is ${!!cancelAlignment}`)
+    console.log(`WordAlignerDialog.cancelAlignment() - cancelAlignment is ${!!cancelAlignment}`)
     cancelAlignment?.()
   }
 
   function saveAlignment() {
     const saveAlignment = alignerStatus?.actions?.saveAlignment
-    console.log(`saveAlignment() - saveAlignment is ${!!saveAlignment}`)
+    console.log(`WordAlignerDialog.saveAlignment() - saveAlignment is ${!!saveAlignment}`)
     saveAlignment?.(alignmentChange)
   }
 
