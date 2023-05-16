@@ -67,9 +67,16 @@ export default function useUpdateCardsProps({ mergeStatusForCards } = {}) {
   }
 
   const { message: dialogMessage, title: dialogTitle } = useMemo(() => {
+    let updateStatusMessage;
+    if (cardsToMerge?.length) {
+      updateStatusMessage = "Some cards have succesfully updated, while others have not."
+    } else {
+      updateStatusMessage = "No cards have successfully updated with your team's work."
+    }
+
     const message =
     <>
-      <p><strong>No cards have successfully updated with your team's work. Card update status displayed below...</strong></p>
+      <p><strong>{updateStatusMessage} Card update status displayed below...</strong></p>
       <p><strong>Cards With Conflicts:</strong> {renderCardNamesFromIds(cardsWithConflicts)}</p>
       <p><strong>Cards With Errors:</strong> {renderCardNamesFromIds(cardsWithError)}</p>
       <p>
