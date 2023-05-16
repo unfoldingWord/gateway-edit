@@ -138,6 +138,8 @@ function WorkspaceContainer() {
       setSavedChanges,
       updateMergeState,
       showSaveChangesPrompt,
+      setCardsLoading,
+      setCardsSaving,
     },
   } = useContext(StoreContext)
 
@@ -320,6 +322,8 @@ function WorkspaceContainer() {
     translate,
     useUserLocalStorage,
     updateMergeState,
+    setCardsLoading,
+    setCardsSaving,
   }
 
   const commonResourceCardConfigs = {
