@@ -73,11 +73,13 @@ export default function WordAlignerDialog({
 
   function cancelAlignment() {
     const cancelAlignment = alignerStatus?.actions?.cancelAlignment
+    console.log(`cancelAlignment() - cancelAlignment is ${!!cancelAlignment}`)
     cancelAlignment?.()
   }
 
   function saveAlignment() {
     const saveAlignment = alignerStatus?.actions?.saveAlignment
+    console.log(`saveAlignment() - saveAlignment is ${!!saveAlignment}`)
     saveAlignment?.(alignmentChange)
   }
 
@@ -87,7 +89,7 @@ export default function WordAlignerDialog({
         fullWidth={true}
         maxWidth={'lg'}
         onClose={() => {}}
-        open={alignerData}
+        open={!!alignerData}
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-aligner-dialog-title"
       >
