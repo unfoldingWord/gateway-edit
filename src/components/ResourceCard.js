@@ -318,7 +318,6 @@ export default function ResourceCard({
       </>
     )
 
-    // TODO 399: Remove these checks since we will always display button.
     if (mergeToMaster) {
       newItems.push(
         <IconButton
