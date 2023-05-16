@@ -910,18 +910,10 @@
     core-js "^2.6.12"
     regenerator-runtime "^0.13.11"
 
-"@babel/runtime-corejs3@^7.12.1":
+"@babel/runtime-corejs3@^7.12.1", "@babel/runtime-corejs3@^7.16.5":
   version "7.21.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.21.0.tgz#6e4939d9d9789ff63e2dc58e88f13a3913a24eba"
   integrity sha512-TDD4UJzos3JJtM+tHX+w2Uc+KWj7GV+VKKFdMVd2Rx8sdA19hcc3P3AHFYd5LVOw+pYuSd5lICC3gm52B6Rwxw==
-  dependencies:
-    core-js-pure "^3.25.1"
-    regenerator-runtime "^0.13.11"
-
-"@babel/runtime-corejs3@^7.16.5":
-  version "7.21.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.21.5.tgz#a6d4e132ab1cb2fae2354f02284ebb6e07b4f7d8"
-  integrity sha512-FRqFlFKNazWYykft5zvzuEl1YyTDGsIRrjV9rvxvYkUC7W/ueBng1X68Xd6uRMzAaJ0xMKn08/wem5YS1lpX8w==
   dependencies:
     core-js-pure "^3.25.1"
     regenerator-runtime "^0.13.11"
@@ -2119,17 +2111,10 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
-"@types/react-dom@<18.0.0":
+"@types/react-dom@<18.0.0", "@types/react-dom@^17.0.0":
   version "17.0.19"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.19.tgz#36feef3aa35d045cacd5ed60fe0eef5272f19492"
   integrity sha512-PiYG40pnQRdPHnlf7tZnp0aQ6q9tspYr72vD61saO6zFCybLfMqwUCN0va1/P+86DXn18ZWeW30Bk7xlC5eEAQ==
-  dependencies:
-    "@types/react" "^17"
-
-"@types/react-dom@^17.0.0":
-  version "17.0.20"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.20.tgz#e0c8901469d732b36d8473b40b679ad899da1b53"
-  integrity sha512-4pzIjSxDueZZ90F52mU3aPoogkHIoSIDG+oQ+wQK7Cy2B9S+MvOqY0uEA/qawKz381qrEDkvpwyt8Bm31I8sbA==
   dependencies:
     "@types/react" "^17"
 
@@ -2166,9 +2151,9 @@
     csstype "^3.0.2"
 
 "@types/react@^17.0.0":
-  version "17.0.59"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.59.tgz#5aa4e161a356fcb824d81f166e01bad9e82243bb"
-  integrity sha512-gSON5zWYIGyoBcycCE75E9+r6dCC2dHdsrVkOEiIYNU5+Q28HcBAuqvDuxHcCbMfHBHdeT5Tva/AFn3rnMKE4g==
+  version "17.0.58"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.58.tgz#c8bbc82114e5c29001548ebe8ed6c4ba4d3c9fb0"
+  integrity sha512-c1GzVY97P0fGxwGxhYq989j4XwlcHQoto6wQISOC2v6wm3h0PORRWJFHlkRjfGsiG3y1609WdQ+J+tKxvrEd6A==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -9539,10 +9524,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.4.1-beta.9:
-  version "5.4.1-beta.9"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.1-beta.9.tgz#afa2dc40687de729ffe4612bb936c024c39eb6ca"
-  integrity sha512-BWHSgK9I1fl4XwDGBJYWta4R+K4rnCETgklqz6jf+T4k5QlV7KqFnDq3BRGC4Hyh5JCcOx3iZyws8uu21i2sAg==
+scripture-resources-rcl@5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.0.tgz#2d670b1c3a204462c1604eb039e3a525ccc8ffe2"
+  integrity sha512-SaVdCDHS1l4GS/a0eHIyxggW6twk70OiR+269R6z/Q0DauRPMk8LfMLp/joIQZXzI2o5mHqk4zt1dJBd9KHFCA==
   dependencies:
     bible-reference-range "^1.0.1"
     deep-freeze "^0.0.1"
@@ -9672,10 +9657,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.3-beta.87:
-  version "3.3.3-beta.87"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-beta.87.tgz#0d1f9e7eec6c707ba0b33954f2f0dd0a4bc2427d"
-  integrity sha512-0CBt+xS3VVu+O75yTz/8yoyTkrthKVMj10qYVJi8H2/yJZYDme0wI5LxAUQc7QMy+BJSDI8IVvGlwhXEsawHyA==
+single-scripture-rcl@3.3.3-patch.3:
+  version "3.3.3-patch.3"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-patch.3.tgz#7de0cb30b8c349a3bd0f2f201428a756db3862ae"
+  integrity sha512-sh5apSoxKCqPTTGoDexP0sfS81ssvBInfjlWIUWBIvM5JQ4ZTKV7nYQlRKLZkuzzQFQ94CqOJBtFoOfh1q0Amw==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -10514,10 +10499,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.9-beta.15:
-  version "3.3.9-beta.15"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-beta.15.tgz#3f70dd908f29d35a9a9ee800e1d2259d05966799"
-  integrity sha512-ujrFcuTCE8KtV4nykuK9XGx6jIgMVZAsokp4vJvqVHDw+MXCU5R2HfnGThlC1R/oQMywGsapy0h1BGMuzXPgRw==
+translation-helps-rcl@3.3.9-patch.1:
+  version "3.3.9-patch.1"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-patch.1.tgz#acd7f8c1f512c42c153d6ac299f3f705f31c26e3"
+  integrity sha512-RC41StDuuL6qE7spQY487Da+bADyzKdCZP3JtWCaDVVFKMmPsftca9MAlNsiId3oQcU+GOb4vNy6QpQ7A5Kbfg==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
