@@ -87,7 +87,7 @@ export default function WordAlignerDialog({
         fullWidth={true}
         maxWidth={'lg'}
         onClose={() => {}}
-        open={alignerData}
+        open={!!alignerData}
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-aligner-dialog-title"
       >
