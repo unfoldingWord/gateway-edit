@@ -61,7 +61,8 @@ export default function StoreContextProvider(props) {
   const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
   const [mergeStatusForCards, setMergeStatusForCards] = useState({})
   const [cardsSaving, setCardsSaving] = useState([])
-  const [cardsLoading, setCardsLoading] = useState([])
+  const [cardsLoadingUpdate, setCardsLoadingUpdate] = useState([])
+  const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
 
   function updateMergeState(cardId, mergeFromMaster, mergeToMaster, mergeFromMasterIntoUserBranch, mergeToMasterFromUserBranch) {
     console.log('updateMergeState',{cardId, mergeFromMaster, mergeToMaster})
@@ -168,7 +169,8 @@ export default function StoreContextProvider(props) {
       mainScreenRef,
       savedChanges,
       cardsSaving,
-      cardsLoading,
+      cardsLoadingUpdate,
+      cardsLoadingMerge,
       mergeStatusForCards,
     },
     actions: {
@@ -191,7 +193,8 @@ export default function StoreContextProvider(props) {
       setMainScreenRef,
       setSavedChanges,
       setCardsSaving,
-      setCardsLoading,
+      setCardsLoadingUpdate,
+      setCardsLoadingMerge,
       checkUnsavedChanges,
       showSaveChangesPrompt,
       updateMergeState,
