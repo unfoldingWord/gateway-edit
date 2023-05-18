@@ -74,11 +74,13 @@ export default function WordAlignerDialog({
   function cancelAlignment() {
     const cancelAlignment = alignerStatus?.actions?.cancelAlignment
     cancelAlignment?.()
+    setAlignmentChange(null)
   }
 
   function saveAlignment() {
     const saveAlignment = alignerStatus?.actions?.saveAlignment
     saveAlignment?.(alignmentChange)
+    setAlignmentChange(null)
   }
 
   return (
