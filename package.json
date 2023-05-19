@@ -51,10 +51,10 @@
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "2.1.2",
     "scripture-resources-rcl": "5.4.1",
-    "single-scripture-rcl": "3.3.3-patch.7",
+    "single-scripture-rcl": "/Users/blm/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.3.3-146.tgz",
     "tailwindcss": "^2.0.4",
     "tc-ui-toolkit": "5.3.3",
-    "translation-helps-rcl": "3.3.9-patch.3",
+    "translation-helps-rcl": "file:.yalc/translation-helps-rcl",
     "use-deep-compare-effect": "^1.3.1",
     "word-aligner": "^1.0.0",
     "word-aligner-rcl": "0.9.3"

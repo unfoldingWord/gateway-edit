@@ -12,42 +12,54 @@ import {
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
+import * as isEqual from 'deep-equal'
 import { getResourceMessage } from '@utils/resources'
 import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
+import { delay } from '../utils/resources'
 
 export default function ResourceCard({
-  id,
-  title,
-  verse,
-  owner,
-  server,
   appRef,
+  authentication,
   chapter,
   classes,
-  filePath,
-  setCurrentCheck,
-  viewMode,
-  projectId,
-  languageId,
-  resourceId,
-  onMinimize,
-  errorMessage,
-  loggedInUser,
-  selectedQuote,
   disableFilters,
-  authentication,
-  updateTaDetails,
-  onResourceError,
-  setSavedChanges,
   disableNavigation,
+  errorMessage,
+  filePath,
   hideMarkdownToggle,
-  useUserLocalStorage,
+  id,
+  languageId,
+  loggedInUser,
+  onMinimize,
+  onResourceError,
+  owner,
+  projectId,
+  resourceId,
   showSaveChangesPrompt,
+  selectedQuote,
+  server,
+  setCurrentCheck,
+  setSavedChanges,
+  title,
+  updateTaDetails,
+  useUserLocalStorage,
+  verse,
+  viewMode,
 }) {
+  const _basicReference = {
+    chapter,
+    verse,
+    projectId,
+  }
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
+  const [fetchConfig, setFetchConfig] = useState({
+    basicReference: _basicReference,
+    config: RESOURCE_HTTP_CONFIG,
+    readyToFetch: false,
+  })
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
 
   function updateTempContent(c) {
@@ -79,8 +91,9 @@ export default function ResourceCard({
 
   const {
     state: {
-      listRef,
+      branchDetermined,
       contentRef,
+      listRef,
       usingUserBranch,
       workingResourceBranch,
     },
@@ -98,31 +111,52 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
+  // update fetch configuration if changed
+  useEffect(() => {
+    const config = RESOURCE_HTTP_CONFIG
+
+    if (usingUserBranch) {
+      config.noCache = true
+    }
+
+    const newFetchConfig = {
+      reference: _basicReference,
+      config: config,
+      readyToFetch: branchDetermined,
+    }
+
+    if (!isEqual(fetchConfig, newFetchConfig)) {
+      setFetchConfig(newFetchConfig)
+    }
+  }, [_basicReference, branchDetermined, usingUserBranch])
+
+  const _reference = fetchConfig?.reference
   const {
-    tsvs,
+    fetchResponse,
     items,
     markdown,
-    resource,
-    fetchResponse,
-    resourceStatus,
     reloadResource,
+    resource,
+    resourceStatus,
+    tsvs,
   } = useContent({
-    verse,
-    owner,
-    server,
-    chapter,
-    listRef,
-    filePath,
-    viewMode,
-    projectId,
+    chapter: _reference?.chapter,
     contentRef,
+    filePath,
+    httpConfig: fetchConfig?.config,
     languageId,
-    resourceId,
     loggedInUser,
+    listRef,
     onResourceError,
-    useUserLocalStorage,
+    owner,
+    projectId: _reference?.projectId,
+    readyToFetch: fetchConfig?.readyToFetch,
     ref: workingResourceBranch,
-    httpConfig: RESOURCE_HTTP_CONFIG,
+    resourceId,
+    server,
+    useUserLocalStorage,
+    verse: _reference?.verse,
+    viewMode,
   })
 
   const {
@@ -184,6 +218,10 @@ export default function ResourceCard({
   })
 
   useEffect(() => {
+    console.log('ResourceCard verse changed', { chapter, verse, projectId })
+  }, [chapter, verse, projectId])
+
+  useEffect(() => {
     if (updateTaDetails) {
       const {
         Quote, OrigQuote, Occurrence, Reference, SupportReference = null,
@@ -215,10 +253,12 @@ export default function ResourceCard({
     const saveEdit = async (branch) => {
       await onSaveEdit(branch).then((success) => {
         if (success) {
-          console.info('Reloading resource')
-          reloadResource()
           setSaved(true)
           setSavedChanges(cardResourceId, true)
+          delay(500, () => {
+            console.info('Reloading resource')
+            reloadResource()
+          })
         } else {
           setSavedChanges(cardResourceId, false)
         }
