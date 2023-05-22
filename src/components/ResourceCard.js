@@ -130,6 +130,7 @@ export default function ResourceCard({
     }
 
     if (!isEqual(fetchConfig, newFetchConfig)) {
+      console.log(`ResourceCard() fetchConfig changed to`, { sha, newFetchConfig })
       setFetchConfig(newFetchConfig)
     }
   }, [basicReference, branchDetermined, usingUserBranch])
