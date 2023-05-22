@@ -214,10 +214,10 @@ export default function ResourceCard({
     repo: `${languageId}_${cardResourceId}`,
   })
 
-  // Useful to clear content and saved state when chapter and verse changes.
-  useEffect(() => {
-    console.log(`ResourceCard() sha changed to`, { sha, resource })
-  }, [sha])
+  // // Useful to clear content and saved state when chapter and verse changes.
+  // useEffect(() => {
+  //   console.log(`ResourceCard() sha changed to`, { sha, resource })
+  // }, [sha])
 
   const { onTsvEdit } = useTsvMerger({
     tsvs,
@@ -227,9 +227,9 @@ export default function ResourceCard({
     setContent: updateTempContent,
   })
 
-  useEffect(() => {
-    console.log('ResourceCard verse changed', { chapter, verse, projectId })
-  }, [chapter, verse, projectId])
+  // useEffect(() => {
+  //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
+  // }, [chapter, verse, projectId])
 
   useEffect(() => {
     if (updateTaDetails) {
