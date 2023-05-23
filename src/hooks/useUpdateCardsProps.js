@@ -69,7 +69,7 @@ export default function useUpdateCardsProps({ mergeStatusForCards } = {}) {
   const { message: dialogMessage, title: dialogTitle } = useMemo(() => {
     let updateStatusMessage;
     if (cardsToMerge?.length) {
-      updateStatusMessage = "Some cards have succesfully updated, while others have not."
+      updateStatusMessage = "Some cards have successfully updated, while others have not."
     } else {
       updateStatusMessage = "No cards have successfully updated with your team's work."
     }
@@ -86,7 +86,7 @@ export default function useUpdateCardsProps({ mergeStatusForCards } = {}) {
     </>
 
     return {
-      title: "No Cards Updated",
+      title: "Cards Update Feedback",
       message,
     };
   }, [cardMergeGroupings])

@@ -1,17 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import SettingsIcon from '@material-ui/icons/Settings'
 import BugReportIcon from '@material-ui/icons/BugReport'
+import DoneAllIcon from '@material-ui/icons/DoneAll';
 import IconButton from '@material-ui/core/IconButton'
 import ListItem from '@material-ui/core/ListItem'
 import List from '@material-ui/core/List'
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined'
+import { MergeBranchButton, MergeDialog, ErrorDialog } from 'translation-helps-rcl'
+import { StoreContext } from '@context/StoreContext'
+import useMergeCardsProps from '../hooks/useMergeCardsProps'
 // TODO: Enable buttons once ready to fully implement functionality
 // import DashboardIcon from '@material-ui/icons/Dashboard'
 // import Crop54Icon from '@material-ui/icons/Crop54'
@@ -44,6 +49,26 @@ export default function Drawer({
     onClose()
     showFeedback && showFeedback()
   }
+
+  const {
+    state: {
+      mergeStatusForCards,
+      cardsSaving,
+      cardsLoadingMerge
+    },
+  } = useContext(StoreContext)
+
+  const mergeButtonProps = useMergeCardsProps({ mergeStatusForCards });
+  const {
+    onClick: onMergeClick,
+    blocked: mergeBlocked,
+    pending: mergePending,
+    dialogMessage,
+    dialogTitle,
+    isErrorDialogOpen,
+    isMessageDialogOpen,
+    onCloseErrorDialog
+  } = mergeButtonProps;
 
   async function onLogout() {
     const okToContinue = await checkUnsavedChanges()
@@ -191,6 +216,23 @@ export default function Drawer({
             <BugReportIcon />
           </ListItemIcon>
           <ListItemText primary={'Bug Report or Feedback'} />
+        </ListItem>
+        <ListItem button onClick={onMergeClick} disabled={!mergePending | mergeBlocked}>
+          <ListItemIcon>
+            <DoneAllIcon/>
+          </ListItemIcon>
+          <ListItemText primary="Merge my work" />
+          <ListItemSecondaryAction>
+            <MergeBranchButton {...mergeButtonProps} isLoading={ cardsLoadingMerge?.length || cardsSaving?.length } />
+            <MergeDialog {...mergeButtonProps} open={isMessageDialogOpen} />
+            <ErrorDialog
+              title={dialogTitle}
+              content={dialogMessage}
+              isLoading={ cardsLoadingMerge?.length || cardsSaving?.length }
+              onClose={onCloseErrorDialog}
+              open={isErrorDialogOpen}
+            />
+          </ListItemSecondaryAction>
         </ListItem>
         {user && (
           <ListItem button key={'Logout'} onClick={onLogout}>

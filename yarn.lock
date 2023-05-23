@@ -9655,20 +9655,6 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@../single-scripture-rcl/single-scripture-rcl-v3.4.1-beta.1.tgz:
-  version "3.4.1-beta.1"
-  resolved "../single-scripture-rcl/single-scripture-rcl-v3.4.1-beta.1.tgz#17b137bbefaf80502cc523445137e2dc849b60ee"
-  dependencies:
-    "@types/react" "^17.0.0"
-    "@types/react-dom" "^17.0.0"
-    deep-equal "^2.0.5"
-    lodash "^4.17.21"
-    react-docgen-typescript "^1.20.5"
-    source-map-loader "^1.1.3"
-    styled-components "^5.2.1"
-    ts-loader "^8.0.12"
-    typescript "^4.1.3"
-
 single-scripture-rcl@../single-scripture-rcl/single-scripture-rcl-v3.4.1-beta.2.tgz:
   version "3.4.1-beta.2"
   resolved "../single-scripture-rcl/single-scripture-rcl-v3.4.1-beta.2.tgz#4c5b0c3f878a408426c68f7603e2a7d728039dc7"
