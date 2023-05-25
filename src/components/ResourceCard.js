@@ -214,7 +214,6 @@ export default function ResourceCard({
     repo: `${languageId}_${cardResourceId}`,
   })
 
-  // // Useful to clear content and saved state when chapter and verse changes.
   // useEffect(() => {
   //   console.log(`ResourceCard() sha changed to`, { sha, resource })
   // }, [sha])
