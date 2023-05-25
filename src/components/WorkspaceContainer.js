@@ -196,6 +196,7 @@ function WorkspaceContainer() {
   }
 
   useEffect(()=>{
+    // console.log('on reference change:', { chapter, verse, bookId, currentVerseReference })
     const reference = {
       chapter,
       verse,
