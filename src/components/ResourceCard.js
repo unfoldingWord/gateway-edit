@@ -164,6 +164,8 @@ export default function ResourceCard({
   const { isLoading: isMergeLoading, callMergeUserBranch } = useMasterMergeProps({
     isSaving,
     useBranchMerger: _useBranchMerger,
+    content: items,
+    reloadContent: reloadResource,
   })
 
   useEffect(() => {

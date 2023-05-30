@@ -1,8 +1,14 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
-export default function useMergeCardsProps({ mergeStatusForCards = {} } = {}) {
+export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging } = {}) {
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false)
+
+  useEffect(() => {
+    if (!isMerging) {
+      setIsMessageDialogOpen(false)
+    }
+  }, [isMerging])
 
   const loadingProps = { color: 'primary' }
 
@@ -114,14 +120,12 @@ export default function useMergeCardsProps({ mergeStatusForCards = {} } = {}) {
     })
     await Promise.all(syncPromises)
     if (cardsWithConflicts?.length || cardsWithError?.length || !cardsToMerge?.length) {
-      setIsMessageDialogOpen(false)
       return setIsErrorDialogOpen(true)
     }
   }
 
   const onSubmit = description => {
     syncMergeableCards(cardsToMerge, description)
-
   }
 
   return {

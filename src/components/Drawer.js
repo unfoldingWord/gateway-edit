@@ -58,7 +58,7 @@ export default function Drawer({
     },
   } = useContext(StoreContext)
 
-  const mergeButtonProps = useMergeCardsProps({ mergeStatusForCards });
+  const mergeButtonProps = useMergeCardsProps({ mergeStatusForCards, isMerging: cardsLoadingMerge?.length });
   const {
     onClick: onMergeClick,
     blocked: mergeBlocked,
@@ -223,8 +223,15 @@ export default function Drawer({
           </ListItemIcon>
           <ListItemText primary="Merge my work" />
           <ListItemSecondaryAction>
-            <MergeBranchButton {...mergeButtonProps} isLoading={ cardsLoadingMerge?.length || cardsSaving?.length } />
-            <MergeDialog {...mergeButtonProps} open={isMessageDialogOpen} />
+            <MergeBranchButton
+              {...mergeButtonProps}
+              isLoading={ cardsLoadingMerge?.length || cardsSaving?.length }
+            />
+            <MergeDialog
+              {...mergeButtonProps}
+              open={isMessageDialogOpen}
+              isLoading={ cardsLoadingMerge?.length }
+            />
             <ErrorDialog
               title={dialogTitle}
               content={dialogMessage}
