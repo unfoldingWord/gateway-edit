@@ -95,6 +95,7 @@ export default function ResourceCard({
     },
     actions: {
       startEdit,
+      finishEdit,
     },
   } = useUserBranch({
     owner,
@@ -148,7 +149,7 @@ export default function ResourceCard({
   const updateButtonProps = useContentUpdateProps({
     isSaving,
     useBranchMerger: _useBranchMerger,
-    reloadContent: reloadResource,
+    onUpdate: reloadResource,
   });
   const {
     callUpdateUserBranch,
@@ -161,11 +162,14 @@ export default function ResourceCard({
     dialogLinkTooltip
   } = updateButtonProps;
 
+  const onMerge = () => {
+    finishEdit()
+    reloadResource()
+  }
+
   const { isLoading: isMergeLoading, callMergeUserBranch } = useMasterMergeProps({
-    isSaving,
     useBranchMerger: _useBranchMerger,
-    content: items,
-    reloadContent: reloadResource,
+    onMerge,
   })
 
   useEffect(() => {
