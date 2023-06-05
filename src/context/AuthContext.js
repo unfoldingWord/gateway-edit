@@ -6,7 +6,6 @@ import {
   QA_BASE_URL,
   CLOSE,
   HTTP_GET_MAX_WAIT_TIME,
-  // SERVER_KEY,
   TOKEN_ID,
 } from '@common/constants'
 import {
@@ -15,7 +14,6 @@ import {
   unAuthenticated,
 } from '@utils/network'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
-// import useLocalStorage from '@hooks/useLocalStorage'
 
 export const AuthContext = createContext({})
 
@@ -23,7 +21,6 @@ export default function AuthContextProvider(props) {
   const [authentication, setAuthentication] = useState(null)
   const [networkError, setNetworkError] = useState(null)
   // Do not persist server settings across logins
-  // const [server, setServer] = useLocalStorage(SERVER_KEY, defaultServer)
   const [server, setServer] = useState('')
 
   // note: window is only available on client side, so the below is placed into a hook
