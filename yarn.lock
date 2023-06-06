@@ -9388,10 +9388,10 @@ resolve@^2.0.0-next.4:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
-resource-workspace-rcl@2.1.3-beta:
-  version "2.1.3-beta"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.3-beta.tgz#c34168fdb2d83f4ac086068b91ee2cb941d670f4"
-  integrity sha512-lm3kyrjvWord8p8n/N54Jal3vJ8dVEicOhZcgSKafBmTfXucblqv1r8gGkXZ9DT4XsyCqC02XrELtLfBG9fMnA==
+resource-workspace-rcl@2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.3.tgz#ec5749edc82fc014abf67225f5f38aaecf71cd33"
+  integrity sha512-Al1q475YNF2IhvmLOKk4MY5c/u7gW7mV2CV1F2GDLzO1OlW6vN0VRrQt7tY2sjWvTKXwKLkmxKYtzwTYfvfdfQ==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"

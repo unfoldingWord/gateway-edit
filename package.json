@@ -49,7 +49,7 @@
     "react-draggable": "^4.4.5",
     "react-icons": "^4.8.0",
     "regenerator-runtime": "^0.13.7",
-    "resource-workspace-rcl": "2.1.3-beta",
+    "resource-workspace-rcl": "2.1.3",
     "scripture-resources-rcl": "5.4.1",
     "single-scripture-rcl": "3.4.1",
     "tailwindcss": "^2.0.4",
