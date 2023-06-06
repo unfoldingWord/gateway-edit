@@ -1,7 +1,7 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 describe('App login & initial setup', () => {
   before(() => {
-    cy.visit('/')
+    cy.visit('/?server=prod')
   })
 
   it('Should log in & get to the resource workspace screen successfully', () => {
