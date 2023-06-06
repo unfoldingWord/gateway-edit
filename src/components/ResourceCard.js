@@ -1,63 +1,83 @@
-import { useEffect, useState, useContext } from 'react'
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
   useContent,
   CardContent,
+  ErrorDialog,
   ERROR_STATE,
+  UpdateBranchButton,
+  useBranchMerger,
   useCardState,
+  useContentUpdateProps,
   useTsvMerger,
   useUserBranch,
-  useBranchMerger,
-  UpdateBranchButton,
-  ErrorDialog,
-  useContentUpdateProps,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
 import { MdUpdateDisabled } from 'react-icons/md'
 import { FiShare } from 'react-icons/fi'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
+import * as isEqual from 'deep-equal'
 import { getResourceMessage } from '@utils/resources'
-import { RESOURCE_HTTP_CONFIG, SERVER_MAX_WAIT_TIME_RETRY } from '@common/constants'
+import {
+  HTTP_CONFIG,
+  RESOURCE_HTTP_CONFIG,
+  SERVER_MAX_WAIT_TIME_RETRY,
+} from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
+import { delay } from '../utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { IconButton } from '@mui/material'
 
 
 export default function ResourceCard({
-  id,
-  title,
-  verse,
-  owner,
-  server,
   appRef,
+  authentication,
   chapter,
   classes,
-  filePath,
-  setCurrentCheck,
-  viewMode,
-  projectId,
-  languageId,
-  resourceId,
-  onMinimize,
-  errorMessage,
-  loggedInUser,
-  selectedQuote,
   disableFilters,
-  authentication,
-  updateTaDetails,
-  onResourceError,
-  setSavedChanges,
   disableNavigation,
+  errorMessage,
+  filePath,
   hideMarkdownToggle,
-  useUserLocalStorage,
+  id,
+  languageId,
+  loggedInUser,
+  onMinimize,
+  onResourceError,
+  owner,
+  projectId,
+  resourceId,
   showSaveChangesPrompt,
+  selectedQuote,
+  server,
+  setCurrentCheck,
+  setSavedChanges,
+  title,
+  updateTaDetails,
+  useUserLocalStorage,
+  verse,
+  viewMode,
 }) {
+  const basicReference = {
+    chapter,
+    verse,
+    projectId,
+  }
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [fetchConfig, setFetchConfig] = useState({
+    basicReference,
+    config: HTTP_CONFIG,
+    readyToFetch: false,
+  })
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
 
   function updateTempContent(c) {
@@ -89,15 +109,14 @@ export default function ResourceCard({
 
   const {
     state: {
+      branchDetermined,
       contentRef,
       listRef,
       usingUserBranch,
       userEditBranchName,
       workingResourceBranch,
     },
-    actions: {
-      startEdit,
-    },
+    actions: { startEdit },
   } = useUserBranch({
     owner,
     server,
@@ -111,31 +130,53 @@ export default function ResourceCard({
     useUserLocalStorage,
   })
 
+  // update fetch configuration if changed
+  useEffect(() => {
+    const config = usingUserBranch ? RESOURCE_HTTP_CONFIG : HTTP_CONFIG
+
+    if (usingUserBranch) {
+      config.noCache = true // force no caching
+    }
+
+    const newFetchConfig = {
+      reference: basicReference,
+      config: config,
+      readyToFetch: branchDetermined,
+    }
+
+    if (!isEqual(fetchConfig, newFetchConfig)) {
+      console.log(`ResourceCard() fetchConfig changed to`, { sha, newFetchConfig })
+      setFetchConfig(newFetchConfig)
+    }
+  }, [basicReference, branchDetermined, usingUserBranch])
+
+  const _reference = fetchConfig?.reference
   const {
-    tsvs,
+    fetchResponse,
     items,
     markdown,
-    resource,
-    fetchResponse,
-    resourceStatus,
     reloadResource,
+    resource,
+    resourceStatus,
+    tsvs,
   } = useContent({
-    verse,
-    owner,
-    server,
-    chapter,
-    listRef,
-    filePath,
-    viewMode,
-    projectId,
+    chapter: _reference?.chapter,
     contentRef,
+    filePath,
+    httpConfig: fetchConfig?.config,
     languageId,
-    resourceId,
     loggedInUser,
+    listRef,
     onResourceError,
-    useUserLocalStorage,
+    owner,
+    projectId: _reference?.projectId,
+    readyToFetch: fetchConfig?.readyToFetch,
     ref: workingResourceBranch,
-    httpConfig: RESOURCE_HTTP_CONFIG,
+    resourceId,
+    server,
+    useUserLocalStorage,
+    verse: _reference?.verse,
+    viewMode,
   })
 
   const repo = `${languageId}_${cardResourceId}`
@@ -232,6 +273,10 @@ export default function ResourceCard({
     repo: `${languageId}_${cardResourceId}`,
   })
 
+  // useEffect(() => {
+  //   console.log(`ResourceCard() sha changed to`, { sha, resource })
+  // }, [sha])
+
   const { onTsvEdit } = useTsvMerger({
     tsvs,
     verse,
@@ -239,6 +284,10 @@ export default function ResourceCard({
     itemIndex,
     setContent: updateTempContent,
   })
+
+  // useEffect(() => {
+  //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
+  // }, [chapter, verse, projectId])
 
   const {
     actions: {
@@ -279,13 +328,17 @@ export default function ResourceCard({
     // Save edit, if successful trigger resource reload and set saved to true.
     setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch) => {
+      console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
       await onSaveEdit(branch).then((success) => {
         if (success) {
-          console.info('Reloading resource')
-          reloadResource()
           setSaved(true)
           setSavedChanges(cardResourceId, true)
+          delay(500).then(() => {
+            console.info('handleSaveEdit() Reloading resource')
+            reloadResource()
+          })
         } else {
+          console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
           setSavedChanges(cardResourceId, false)
         }
         setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
@@ -294,6 +347,7 @@ export default function ResourceCard({
 
     // If not using user branch create it then save the edit.
     if (!usingUserBranch) {
+      console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
       await startEdit().then((branch) => saveEdit(branch))
     } else {// Else just save the edit.
       await saveEdit()
@@ -343,51 +397,51 @@ export default function ResourceCard({
 
   return (
     <Card
-      id={id}
-      title={title}
-      items={items}
-      classes={classes}
-      headers={headers}
-      filters={filters}
-      editable={editable}
-      fontSize={fontSize}
-      itemIndex={itemIndex}
-      setFilters={setFilters}
-      setContent={setContent}
-      setFontSize={setFontSize}
-      saved={saved || isEditing}
-      onSaveEdit={handleSaveEdit}
-      setItemIndex={setItemIndex}
-      markdownView={markdownView}
-      disableFilters={disableFilters}
       cardResourceId={cardResourceId}
-      setMarkdownView={setMarkdownView}
+      classes={classes}
+      disableFilters={disableFilters}
       disableNavigation={disableNavigation}
+      editable={editable}
+      filters={filters}
+      fontSize={fontSize}
+      headers={headers}
       hideMarkdownToggle={hideMarkdownToggle}
-      showSaveChangesPrompt={showSaveChangesPrompt}
+      id={id}
+      items={items}
+      itemIndex={itemIndex}
+      markdownView={markdownView}
       onMinimize={onMinimize ? () => onMinimize(id) : null}
       onRenderToolbar={onRenderToolbar}
+      onSaveEdit={handleSaveEdit}
+      title={title}
+      saved={saved || isEditing}
+      setContent={setContent}
+      setFilters={setFilters}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
     >
       <CardContent
+        cardResourceId={cardResourceId}
+        editable={editable}
+        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        filters={filters}
+        fontSize={fontSize}
         id={`${id}_content`}
         item={item}
         items={items}
-        filters={filters}
-        editable={editable}
-        viewMode={viewMode}
-        fontSize={fontSize}
-        setCurrentCheck={setCurrentCheck}
-        onTsvEdit={onTsvEdit}
         languageId={languageId}
-        setContent={setContent}
-        onEdit={updateTempContent}
+        markdown={(cardResourceId === 'ta' || cardResourceId === 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
         markdownView={markdownView}
+        onEdit={updateTempContent}
+        onTsvEdit={onTsvEdit}
         selectedQuote={selectedQuote}
-        cardResourceId={cardResourceId}
-        updateTaDetails={updateTaDetails}
+        setContent={setContent}
+        setCurrentCheck={setCurrentCheck}
         showSaveChangesPrompt={showSaveChangesPrompt}
-        errorMessage={_message}
-        markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
+        updateTaDetails={updateTaDetails}
+        viewMode={viewMode}
       />
     </Card>
   )
