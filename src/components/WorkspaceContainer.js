@@ -408,7 +408,7 @@ function WorkspaceContainer() {
     {
       title: 'Literal Translation',
       type: 'scripture_card',
-      id: 'scripture_card_Literal_Translation',
+      id: 'scripture_card_0',
       cardNum: 0,
       resource: {
         owner,
@@ -421,7 +421,7 @@ function WorkspaceContainer() {
     {
       title: 'Original Source',
       type: 'scripture_card',
-      id: 'scripture_card_Original_Source',
+      id: 'scripture_card_1',
       cardNum: 1,
       resource: {
         owner,
@@ -434,7 +434,7 @@ function WorkspaceContainer() {
     {
       title: 'Simplified Translation',
       type: 'scripture_card',
-      id: 'scripture_card_Simplified_Translation',
+      id: 'scripture_card_2',
       cardNum: 2,
       resource: {
         owner,
