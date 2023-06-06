@@ -133,13 +133,13 @@ function WorkspaceContainer() {
       setTokenNetworkError,
       setLastError,
       updateTaDetails,
+      setCardsLoading,
+      setCardsSaving,
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setSavedChanges,
-      updateMergeState,
       showSaveChangesPrompt,
-      setCardsLoading,
-      setCardsSaving,
+      updateMergeState,
     },
   } = useContext(StoreContext)
 
@@ -317,13 +317,13 @@ function WorkspaceContainer() {
     reference: scriptureReference,
     selectedQuote,
     server,
+    setCardsLoading,
+    setCardsSaving,
     setSavedChanges,
     setWordAlignerStatus,
     translate,
-    useUserLocalStorage,
     updateMergeState,
-    setCardsLoading,
-    setCardsSaving,
+    useUserLocalStorage,
   }
 
   const commonResourceCardConfigs = {
@@ -566,6 +566,11 @@ function WorkspaceContainer() {
 
   const originalScriptureResults = useScripture({
     ...originalScripture,
+    config: {
+      ...config,
+      server: origServer,
+    },
+    readyForFetch: !!bookId,
     resource: {
       ...originalScripture.resource,
       resourceId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,

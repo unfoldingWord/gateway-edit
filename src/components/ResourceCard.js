@@ -1,17 +1,21 @@
-import { useEffect, useState, useContext } from 'react'
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
   useContent,
   CardContent,
+  ErrorDialog,
   ERROR_STATE,
+  UpdateBranchButton,
+  useBranchMerger,
   useCardState,
+  useContentUpdateProps,
   useTsvMerger,
   useUserBranch,
-  useBranchMerger,
-  UpdateBranchButton,
-  ErrorDialog,
-  useContentUpdateProps,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
@@ -74,6 +78,11 @@ export default function ResourceCard({
     readyToFetch: false,
   })
   const [isSaving, setIsSaving] = useState(false)
+  const [fetchConfig, setFetchConfig] = useState({
+    basicReference,
+    config: HTTP_CONFIG,
+    readyToFetch: false,
+  })
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
 
   function updateTempContent(c) {
@@ -112,9 +121,7 @@ export default function ResourceCard({
       userEditBranchName,
       workingResourceBranch,
     },
-    actions: {
-      startEdit,
-    },
+    actions: { startEdit },
   } = useUserBranch({
     owner,
     server,
@@ -180,7 +187,11 @@ export default function ResourceCard({
     projectId: _reference?.projectId,
     readyToFetch: fetchConfig?.readyToFetch,
     ref: workingResourceBranch,
-    httpConfig: fetchConfig?.config,
+    resourceId,
+    server,
+    useUserLocalStorage,
+    verse: _reference?.verse,
+    viewMode,
   })
 
   const repo = `${languageId}_${cardResourceId}`
@@ -303,10 +314,6 @@ export default function ResourceCard({
   //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
   // }, [chapter, verse, projectId])
 
-  // useEffect(() => {
-  //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
-  // }, [chapter, verse, projectId])
-
   const {
     actions: {
       updateMergeState,
@@ -355,6 +362,9 @@ export default function ResourceCard({
             console.info('handleSaveEdit() Reloading resource')
             reloadResource()
           })
+        } else {
+          console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
+          setSavedChanges(cardResourceId, false)
         }
         setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
       })
@@ -432,6 +442,7 @@ export default function ResourceCard({
       itemIndex={itemIndex}
       markdownView={markdownView}
       onMinimize={onMinimize ? () => onMinimize(id) : null}
+      onRenderToolbar={onRenderToolbar}
       onSaveEdit={handleSaveEdit}
       title={title}
       saved={saved || isEditing}
@@ -441,8 +452,6 @@ export default function ResourceCard({
       setItemIndex={setItemIndex}
       setMarkdownView={setMarkdownView}
       showSaveChangesPrompt={showSaveChangesPrompt}
-      onMinimize={onMinimize ? () => onMinimize(id) : null}
-      onRenderToolbar={onRenderToolbar}
     >
       <CardContent
         cardResourceId={cardResourceId}
