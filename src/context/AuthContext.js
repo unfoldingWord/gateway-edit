@@ -1,11 +1,11 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import localforage from 'localforage'
 import { AuthenticationContextProvider } from 'gitea-react-toolkit'
 import {
   BASE_URL,
+  QA_BASE_URL,
   CLOSE,
   HTTP_GET_MAX_WAIT_TIME,
-  SERVER_KEY,
   TOKEN_ID,
 } from '@common/constants'
 import {
@@ -14,14 +14,36 @@ import {
   unAuthenticated,
 } from '@utils/network'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
-import useLocalStorage from '@hooks/useLocalStorage'
 
 export const AuthContext = createContext({})
 
 export default function AuthContextProvider(props) {
   const [authentication, setAuthentication] = useState(null)
   const [networkError, setNetworkError] = useState(null)
-  const [server, setServer] = useLocalStorage(SERVER_KEY, BASE_URL)
+  // Do not persist server settings across logins
+  const [server, setServer] = useState('')
+
+  // note: window is only available on client side, so the below is placed into a hook
+  // hooks only run on client side.
+  useEffect( () => {
+  /*
+    Determine the default value for server here.
+    if non-prod url, then let default be qa; else prod
+  */
+    console.log('URL is:',window.location.href)
+
+    if ( window.location.href.includes('localhost')
+        || window.location.href.includes('develop')
+        || window.location.href.includes('deploy-preview')
+    ) {
+      console.log('local or develop or preview, defaulting to ',QA_BASE_URL)
+      setServer(QA_BASE_URL)
+    } else {
+      console.log('production server, defaulting to ',BASE_URL)
+      setServer(BASE_URL)
+    }
+  }, [] )
+
 
   /**
    * in the case of a network error, process and display error dialog
