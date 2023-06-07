@@ -6,21 +6,17 @@ import {
 import PropTypes from 'prop-types'
 import {
   Card,
-  useContent,
   CardContent,
   ErrorDialog,
   ERROR_STATE,
   UpdateBranchButton,
   useBranchMerger,
   useCardState,
-  useContentUpdateProps,
-  useTsvMerger,
-  useUserBranch,
-  useBranchMerger,
-  UpdateBranchButton,
-  ErrorDialog,
+  useContent,
   useContentUpdateProps,
   useMasterMergeProps,
+  useTsvMerger,
+  useUserBranch,
   MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
