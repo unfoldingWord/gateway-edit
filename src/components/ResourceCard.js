@@ -10,18 +10,14 @@ import {
   CardContent,
   ErrorDialog,
   ERROR_STATE,
+  MANIFEST_NOT_LOADED_ERROR,
   UpdateBranchButton,
   useBranchMerger,
   useCardState,
   useContentUpdateProps,
+  useMasterMergeProps,
   useTsvMerger,
   useUserBranch,
-  useBranchMerger,
-  UpdateBranchButton,
-  ErrorDialog,
-  useContentUpdateProps,
-  useMasterMergeProps,
-  MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
@@ -196,8 +192,13 @@ export default function ResourceCard({
   const updateButtonProps = useContentUpdateProps({
     isSaving,
     useBranchMerger: _useBranchMerger,
-    onUpdate: reloadResource,
-  });
+    onUpdate: () => {
+      delay(500).then(() => {
+        reloadResource()
+      })
+    }
+  })
+
   const {
     callUpdateUserBranch,
     isErrorDialogOpen,
@@ -211,7 +212,9 @@ export default function ResourceCard({
 
   const onMerge = () => {
     finishEdit()
-    reloadResource()
+    delay(500).then(() => {
+      reloadResource()
+    })
   }
 
   const { isLoading: isMergeLoading, callMergeUserBranch } = useMasterMergeProps({

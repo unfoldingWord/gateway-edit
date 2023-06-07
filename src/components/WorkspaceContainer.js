@@ -132,6 +132,7 @@ function WorkspaceContainer() {
       setCurrentLayout,
       setTokenNetworkError,
       setLastError,
+      updateMergeState,
       updateTaDetails,
       showSaveChangesPrompt,
       setCardsLoadingUpdate,
