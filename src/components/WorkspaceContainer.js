@@ -132,8 +132,6 @@ function WorkspaceContainer() {
       setCurrentLayout,
       setTokenNetworkError,
       setLastError,
-      updateMergeState,
-      updateTaDetails,
       showSaveChangesPrompt,
       setCardsLoadingUpdate,
       setCardsLoadingMerge,
@@ -141,6 +139,8 @@ function WorkspaceContainer() {
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setSavedChanges,
+      updateMergeState,
+      updateTaDetails,
     },
   } = useContext(StoreContext)
 

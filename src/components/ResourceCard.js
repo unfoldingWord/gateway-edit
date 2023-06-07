@@ -6,7 +6,6 @@ import {
 import PropTypes from 'prop-types'
 import {
   Card,
-  useContent,
   CardContent,
   ErrorDialog,
   ERROR_STATE,
@@ -14,6 +13,7 @@ import {
   UpdateBranchButton,
   useBranchMerger,
   useCardState,
+  useContent,
   useContentUpdateProps,
   useMasterMergeProps,
   useTsvMerger,
