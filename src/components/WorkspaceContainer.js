@@ -259,7 +259,7 @@ function WorkspaceContainer() {
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
-          hideClose={true}
+          hideClose={false}
           /* show reload if send feedback not enabled */
           onRetry={!networkError.actionButtonText ? reloadApp : null}
         />
@@ -611,9 +611,8 @@ function WorkspaceContainer() {
   }, [scriptureReference, originalScriptureBookObjects, originalLanguageId ])
 
   return (
-    (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+    (!workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
-        {showNetworkError()}
         <CircularProgress size={180} />
       </>
       :
@@ -674,6 +673,12 @@ function WorkspaceContainer() {
           translate={translate}
           getLexiconData={getLexiconData}
         />
+
+        {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
+          <>
+            {showNetworkError()}
+          </>
+        }
       </>
   )
 }
