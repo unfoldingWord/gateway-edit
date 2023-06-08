@@ -195,6 +195,8 @@ export default function ResourceCard({
   })
 
   const {
+    error: saveError,
+    isError: isSaveError,
     isEditing,
     onSaveEdit,
   } = useEdit({
@@ -212,7 +214,15 @@ export default function ResourceCard({
     branch: workingResourceBranch,
     filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
+    dontCreateBranch: true,
   })
+
+  useEffect(() => { // when we get a save saveError
+    if (saveError && isSaveError) {
+      console.log(`save error`, saveError)
+      onResourceError && onResourceError(null, false, null, `Error saving ${languageId}_${cardResourceId} ${saveError}`, true)
+    }
+  }, [saveError, isSaveError])
 
   // useEffect(() => {
   //   console.log(`ResourceCard() sha changed to`, { sha, resource })
