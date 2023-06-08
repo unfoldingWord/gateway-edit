@@ -212,6 +212,7 @@ export default function ResourceCard({
     branch: workingResourceBranch,
     filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
+    dontCreateBranch: true,
   })
 
   // useEffect(() => {
