@@ -135,7 +135,7 @@ export default function ResourceCard({
   useEffect(() => {
     const config = usingUserBranch ? RESOURCE_HTTP_CONFIG : HTTP_CONFIG
 
-    if (usingUserBranch) {
+    if (usingUserBranch || isMergeLoading) {
       config.noCache = true // force no caching
     }
 
