@@ -135,9 +135,7 @@ export default function ResourceCard({
   useEffect(() => {
     const config = usingUserBranch ? RESOURCE_HTTP_CONFIG : HTTP_CONFIG
 
-    if (usingUserBranch) {
-      config.noCache = true // force no caching
-    }
+    config.noCache = true // force no caching
 
     const newFetchConfig = {
       reference: basicReference,
@@ -193,9 +191,7 @@ export default function ResourceCard({
     isSaving,
     useBranchMerger: _useBranchMerger,
     onUpdate: () => {
-      delay(500).then(() => {
-        reloadResource()
-      })
+      delay(500).then(() => reloadResource())
     }
   })
 
