@@ -613,6 +613,7 @@ function WorkspaceContainer() {
   return (
     (!workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
+        {showNetworkError()}
         <CircularProgress size={180} />
       </>
       :
