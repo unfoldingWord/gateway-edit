@@ -6,21 +6,20 @@ import {
 import PropTypes from 'prop-types'
 import {
   Card,
-  useContent,
   CardContent,
   ErrorDialog,
   ERROR_STATE,
+  MANIFEST_NOT_LOADED_ERROR,
   UpdateBranchButton,
   useBranchMerger,
   useCardState,
+  useContent,
   useContentUpdateProps,
+  useMasterMergeProps,
   useTsvMerger,
   useUserBranch,
-  MANIFEST_NOT_LOADED_ERROR,
 } from 'translation-helps-rcl'
 import { useEdit } from 'gitea-react-toolkit'
-import { MdUpdateDisabled } from 'react-icons/md'
-import { FiShare } from 'react-icons/fi'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import * as isEqual from 'deep-equal'
 import { getResourceMessage } from '@utils/resources'
@@ -33,7 +32,6 @@ import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { delay } from '../utils/resources'
 import { StoreContext } from '@context/StoreContext'
-import { IconButton } from '@mui/material'
 
 
 export default function ResourceCard({
@@ -116,7 +114,10 @@ export default function ResourceCard({
       userEditBranchName,
       workingResourceBranch,
     },
-    actions: { startEdit },
+    actions: {
+      startEdit,
+      finishEdit,
+    },
   } = useUserBranch({
     owner,
     server,
@@ -134,9 +135,7 @@ export default function ResourceCard({
   useEffect(() => {
     const config = usingUserBranch ? RESOURCE_HTTP_CONFIG : HTTP_CONFIG
 
-    if (usingUserBranch) {
-      config.noCache = true // force no caching
-    }
+    config.noCache = true // force no caching
 
     const newFetchConfig = {
       reference: basicReference,
@@ -186,30 +185,54 @@ export default function ResourceCard({
       mergeStatus: mergeToMaster,
       updateStatus: mergeFromMaster,
     },
-    actions: {
-      mergeMasterBranch: mergeToMasterFromUserBranch
-    }
   } = _useBranchMerger;
 
-  const updateButtonProps = useContentUpdateProps({ isSaving, useBranchMerger: _useBranchMerger, reloadContent: reloadResource });
+  const updateButtonProps = useContentUpdateProps({
+    isSaving,
+    useBranchMerger: _useBranchMerger,
+    onUpdate: () => {
+      delay(500).then(() => reloadResource())
+    }
+  })
+
   const {
     callUpdateUserBranch,
     isErrorDialogOpen,
     onCloseErrorDialog,
-    isLoading,
+    isLoading: isUpdateLoading,
     dialogMessage,
     dialogTitle,
     dialogLink,
     dialogLinkTooltip
   } = updateButtonProps;
 
+  const onMerge = () => {
+    finishEdit()
+    delay(500).then(() => {
+      reloadResource()
+    })
+  }
+
+  const { isLoading: isMergeLoading, callMergeUserBranch } = useMasterMergeProps({
+    useBranchMerger: _useBranchMerger,
+    onMerge,
+  })
+
   useEffect(() => {
-    if (isLoading) {
-      setCardsLoading(prevCardsLoading => [...prevCardsLoading, cardResourceId])
+    if (isUpdateLoading) {
+      setCardsLoadingUpdate(prevCardsLoading => [...prevCardsLoading, cardResourceId])
     } else {
-      setCardsLoading(prevCardsLoading => prevCardsLoading.filter(cardId => cardId !== cardResourceId))
+      setCardsLoadingUpdate(prevCardsLoading => prevCardsLoading.filter(cardId => cardId !== cardResourceId))
     }
-  }, [isLoading])
+  }, [isUpdateLoading])
+
+  useEffect(() => {
+    if (isMergeLoading) {
+      setCardsLoadingMerge(prevCardsLoading => [...prevCardsLoading, cardResourceId])
+    } else {
+      setCardsLoadingMerge(prevCardsLoading => prevCardsLoading.filter(cardId => cardId !== cardResourceId))
+    }
+  }, [isMergeLoading])
 
   useEffect(() => {
     if (cardResourceId) {
@@ -218,7 +241,7 @@ export default function ResourceCard({
         mergeFromMaster,
         mergeToMaster,
         callUpdateUserBranch,
-        mergeToMasterFromUserBranch,
+        callMergeUserBranch,
       )
     }
   },[cardResourceId, mergeFromMaster, mergeToMaster])
@@ -293,7 +316,8 @@ export default function ResourceCard({
     actions: {
       updateMergeState,
       setCardsSaving,
-      setCardsLoading,
+      setCardsLoadingUpdate,
+      setCardsLoadingMerge,
     }
   } = useContext(StoreContext)
 
@@ -358,38 +382,16 @@ export default function ResourceCard({
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
-  const mergeToMasterHasConflicts = mergeToMaster?.conflict
-  const mergeToMasterTitle = mergeToMasterHasConflicts ? 'Merge Conflicts for share with master' : 'No merge conflicts for share with master'
-  const mergeToMasterColor = mergeToMasterHasConflicts ? 'black' : 'black'
-
   const onRenderToolbar = ({ items }) => {
     const newItems = [...items]
 
     newItems.push(
       <>
-        <UpdateBranchButton {...updateButtonProps} isLoading={isLoading || isSaving}/>
-        <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={ isLoading || isSaving } link={dialogLink} linkTooltip={dialogLinkTooltip} />
+        <UpdateBranchButton {...updateButtonProps} isLoading={isUpdateLoading || isSaving}/>
+        <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={ isUpdateLoading || isSaving } link={dialogLink} linkTooltip={dialogLinkTooltip} />
       </>
     )
 
-    if (mergeToMaster) {
-      newItems.push(
-        <IconButton
-          className={classes.margin}
-          key='share-to-master'
-          onClick={mergeToMasterFromUserBranch}
-          title={mergeToMasterTitle}
-          aria-label={mergeToMasterTitle}
-          style={{ cursor: 'pointer' }}
-        >
-          {mergeToMasterHasConflicts ?
-            <MdUpdateDisabled id='share-to-master-icon' color={mergeToMasterColor} />
-            :
-            <FiShare id='share-to-master-icon' color={mergeToMasterColor} />
-          }
-        </IconButton>
-      )
-    }
     return newItems
   }
 

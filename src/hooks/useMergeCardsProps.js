@@ -1,7 +1,16 @@
-import { useMemo, useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
-export default function useUpdateCardsProps({ mergeStatusForCards } = {}) {
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
+export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging } = {}) {
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
+  const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false)
+
+  useEffect(() => {
+    if (!isMerging) {
+      setIsMessageDialogOpen(false)
+    }
+  }, [isMerging])
+
+  const loadingProps = { color: 'primary' }
 
   const getMergeGroupingFromStatus = mergeStatus => {
     const { conflict, mergeNeeded, error, message } = mergeStatus
@@ -15,10 +24,10 @@ export default function useUpdateCardsProps({ mergeStatusForCards } = {}) {
     return 'cardsToMerge'
   }
 
-  const groupCardByMergability = (prevUpdateCardState, cardId) => {
-    const mergeFromMasterStatus = mergeStatusForCards[cardId].mergeFromMaster
-    const mergeGrouping = getMergeGroupingFromStatus(mergeFromMasterStatus)
-    return {...prevUpdateCardState, [mergeGrouping]: [...prevUpdateCardState[mergeGrouping], cardId]}
+  const groupCardByMergability = (prevMergeCardState, cardId) => {
+    const mergeToMasterStatus = mergeStatusForCards[cardId].mergeToMaster
+    const mergeGrouping = getMergeGroupingFromStatus(mergeToMasterStatus)
+    return {...prevMergeCardState, [mergeGrouping]: [...prevMergeCardState[mergeGrouping], cardId]}
   }
 
   const initialCardMergeGroupings = {
@@ -69,55 +78,67 @@ export default function useUpdateCardsProps({ mergeStatusForCards } = {}) {
   const { message: dialogMessage, title: dialogTitle } = useMemo(() => {
     let updateStatusMessage;
     if (cardsToMerge?.length) {
-      updateStatusMessage = "Some cards have successfully updated, while others have not."
+      updateStatusMessage = "Some of your changes have been saved to your team's work, while others have not."
     } else {
-      updateStatusMessage = "No cards have successfully updated with your team's work."
+      updateStatusMessage = "None of your changes have been saved to your team's work."
     }
 
     const message =
     <>
-      <p><strong>{updateStatusMessage} Card update status displayed below...</strong></p>
+      <p><strong>{updateStatusMessage} Card merge status displayed below...</strong></p>
       <p><strong>Cards With Conflicts:</strong> {renderCardNamesFromIds(cardsWithConflicts)}</p>
       <p><strong>Cards With Errors:</strong> {renderCardNamesFromIds(cardsWithError)}</p>
       <p>
-        <strong>Cards With No Updates To Load: </strong>
+        <strong>Cards With No Changes To Save: </strong>
         {renderCardNamesFromIds([...cardsWithNoUserBranch, ...cardsWithNoMergeNeeded])}
       </p>
     </>
 
     return {
-      title: "Cards Update Feedback",
+      title: "Cards Sync Feedback",
       message,
     };
   }, [cardMergeGroupings])
+
+  const onClick = () => {
+    if (blocked || !pending) return setIsErrorDialogOpen(true)
+    setIsMessageDialogOpen(true)
+  }
 
   const onCloseErrorDialog = () => {
     setIsErrorDialogOpen(false)
   }
 
-  const updateMergeableCards = async mergeableCardIds => {
-    const updatePromises = mergeableCardIds.map(cardId => {
-      const { mergeFromMasterIntoUserBranch } = mergeStatusForCards[cardId]
-      return mergeFromMasterIntoUserBranch()
+  const onCancel = () => {
+    setIsMessageDialogOpen(false)
+  }
+
+  const syncMergeableCards = async (mergeableCardIds, description) => {
+    const syncPromises = mergeableCardIds.map(cardId => {
+      const { mergeToMasterFromUserBranch } = mergeStatusForCards[cardId]
+      return mergeToMasterFromUserBranch(description)
     })
-    await Promise.all(updatePromises)
+    await Promise.all(syncPromises)
     if (cardsWithConflicts?.length || cardsWithError?.length || !cardsToMerge?.length) {
       return setIsErrorDialogOpen(true)
     }
   }
 
-  const onClick = () => {
-    updateMergeableCards(cardsToMerge)
+  const onSubmit = description => {
+    syncMergeableCards(cardsToMerge, description)
   }
 
   return {
     onClick,
-    cardMergeGroupings,
-    isErrorDialogOpen,
+    onSubmit,
+    onCancel,
     onCloseErrorDialog,
+    isMessageDialogOpen,
+    isErrorDialogOpen,
     dialogMessage,
     dialogTitle,
     pending,
-    blocked
+    blocked,
+    loadingProps
   }
 }
