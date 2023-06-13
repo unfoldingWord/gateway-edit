@@ -9388,10 +9388,10 @@ resolve@^2.0.0-next.4:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
-resource-workspace-rcl@2.1.4-beta:
-  version "2.1.4-beta"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.4-beta.tgz#411939f52904dc2378c3d8947df661ccb9d55316"
-  integrity sha512-Tulk7SXd7cvA4wKnVj4OzvoOhziCYELSRA3VlWG0VDBHcH6HDpN3CpIdp4/HR6IHZf1qPkPGGqpCGWrcWHUWqQ==
+resource-workspace-rcl@2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.4.tgz#a1efadf0f5b4a7e8cc838b84d2c1b932f3bec5c9"
+  integrity sha512-EjkCXfVSspL2DBYPpWkcHzGh4CFVmIKhMoI/4wpcjIGlvotLUqe+BIH/NovKfpzbfbycV8Rw5E+egcYanLG5Tg==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
@@ -9679,10 +9679,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.2-beta.3:
-  version "3.4.2-beta.3"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.2-beta.3.tgz#736dd0f790aee0bca16f34be5962a4bdc486978e"
-  integrity sha512-4Hq1DvBBPDH8uUobyA6QAfvyaHV4kOYr4HRpqjORtwvNDwTZYRIC8Digjaa8eOHd1IT6fORyhVhqdq18tMRYag==
+single-scripture-rcl@3.4.3:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.3.tgz#21bd6cb9c6316501e0c58983bbb99487ed75d8f8"
+  integrity sha512-jvU6jp6r0DTfGkNJfLoXeYxcTLe1CcrghLTwmM3qMvhMYzbVKERtTHBojXPQCYjLnJtobF34hLdLCWwYqczG5Q==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
