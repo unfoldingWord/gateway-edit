@@ -279,8 +279,6 @@ export default function ResourceCard({
             console.info('handleSaveEdit() Reloading resource')
             reloadResource()
           })
-        } else {
-          setSavedChanges(cardResourceId, false)
         }
       })
     }
@@ -288,7 +286,13 @@ export default function ResourceCard({
     // If not using user branch create it then save the edit.
     if (!usingUserBranch) {
       console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
-      await startEdit().then((branch) => saveEdit(branch))
+      await startEdit().then(branch => {
+        if (branch) {
+          saveEdit(branch)
+        } else { // if error on branch creation
+          onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
+        }
+      })
     } else {// Else just save the edit.
       await saveEdit()
     }
