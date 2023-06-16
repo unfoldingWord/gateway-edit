@@ -76,7 +76,7 @@ export default function useLexicon({
    */
   function onRepository(repo) {
     if ( repo?.branch && (repo?.html_url !== repository?.html_url)) {
-      // console.log(`useLexicon.onRepository():`, repo)
+      // console.log(`useLexicon.onRepository(): url changed to ${repo?.html_url} from ${repository?.html_url}`, repo)
       setRepository(repo)
     }
   }
@@ -108,7 +108,7 @@ export default function useLexicon({
     } else if (!lexCacheInit || fetchingGlosses) {
       message = `Not ready - initializing glosses`
     }
-    // console.log(`getLexiconData: gloss not loaded for ${entryId}`, message)
+    // console.log(`useLexicon.getLexiconData: gloss not loaded for ${entryId}`, message)
     return message
   }
 
@@ -121,7 +121,7 @@ export default function useLexicon({
   function getLexiconData(lexiconId, entryId) {
     let gloss = null
 
-    if (lexiconGlosses && Object.keys(lexiconGlosses).length && entryId) {
+    if (lexiconGlosses && entryId) {
       gloss = lexiconGlosses[entryId.toString()]
 
       if (!gloss) { // show reason we can't find gloss
@@ -131,6 +131,7 @@ export default function useLexicon({
       }
     } else { // show error or reason glosses are not loaded
       const defaultMessage = `Not ready - glosses not yet available`
+      console.log(`useLexicon.getLexiconData - lexiconId ${lexiconId}, lexiconGlosses length = ${lexiconGlosses?.length}`)
       const message = getReasonForLexiconFailure(defaultMessage, entryId)
       gloss = messageToGloss(message)
     }
@@ -143,6 +144,7 @@ export default function useLexicon({
    * @return {Promise<void>}
    */
   async function updateLexiconGlosses(newLexiconGlosses) {
+    console.log(`useLexicon.updateLexiconGlosses -`, newLexiconGlosses)
     setLexiconGlosses(newLexiconGlosses)
     await saveToGlossesStore(getGlossesCachePath(), newLexiconGlosses)
   }
@@ -159,7 +161,7 @@ export default function useLexicon({
     }
 
     if (origlangLexConfig && verseObjects?.length && !fetchingGlosses) {
-      // console.log(`fetchGlossesForVerse - language ${languageId}, ${verseObjects?.length} verseObjects`)
+      console.log(`useLexicon.fetchGlossesForVerse - language ${languageId}, ${verseObjects?.length} verseObjects`)
       const wordObjects = core.getWordObjects(verseObjects)
 
       if (wordObjects?.length) {
@@ -167,12 +169,15 @@ export default function useLexicon({
 
         // check if already prefetching this list
         if (strongs?.length && !isEqual(strongs, strongsNumbersInVerse)) {
+          console.log(`useLexicon.fetchGlossesForVerse - found strongs numbers in verses`, strongs)
+          setStrongsNumbersInVerse(strongs)
+
           if (lexiconGlosses && Object.keys(lexiconGlosses).length) {
-            // console.log(`fetchGlossesForVerse - loading strongs numbers`)
+            console.log(`useLexicon.fetchGlossesForVerse - loading strongs numbers`)
             await fetchGlossesForStrongsNumbers(strongs)
-          } else { // lexicon words not loaded, save strongs list for later
-            setStrongsNumbersInVerse(strongs)
           }
+        } else if (!strongs?.length) {
+          console.log(`useLexicon.fetchGlossesForVerse - no strongs numbers found`)
         }
       }
     }
@@ -195,21 +200,21 @@ export default function useLexicon({
    */
   async function fetchGlossesForStrongsNumbers(strongs) {
     if (strongs?.length && !fetchingGlosses && origlangLexConfig) {
+      console.log(`useLexicon.fetchGlossesForStrongsNumber: extracting strongs list length ${strongs.length}`, strongs)
       setFetchingGlosses(true)
       let newLexiconWords = (await fetchFromGlossesStore(getGlossesCachePath())) || {}
-      // console.log(`fetchGlossesForStrongsNumber: extracting strongs list length ${strongs.length}, already extracted word length ${Object.keys(newLexiconWords).length}`)
+      console.log(`useLexicon.fetchGlossesForStrongsNumber: already extracted word length ${Object.keys(newLexiconWords).length}`, newLexiconWords)
       const files = await getFilesFromCachedLexicon()
       let modified = await extractGlossesFromRepoZip(lexRepoName, origlangLexConfig, strongs, newLexiconWords, files)
 
       if (modified) {
         await updateLexiconGlosses(newLexiconWords)
-        // console.log('fetchGlossesForStrongsNumbers: lexicon words updated, length', Object.keys(newLexiconWords).length)
+        console.log('useLexicon.fetchGlossesForStrongsNumbers: lexicon words updated, length', Object.keys(newLexiconWords).length)
       } else {
         setLexiconGlosses(newLexiconWords)
       }
 
-      // console.log('fetchGlossesForStrongsNumbers: new word list length', strongs?.length)
-      setStrongsNumbersInVerse(strongs)
+      console.log('useLexicon.fetchGlossesForStrongsNumbers: new word list length', strongs?.length)
       setFetchingGlosses(false)
     }
   }
@@ -217,17 +222,20 @@ export default function useLexicon({
   async function unzipFileFromCachedLexicon(filename) {
     const filePath = `${origlangLexConfig.lexiconPath}/${filename}`
     const file = await lexiconProps?.actions?.fileFromZip(filePath)
+    console.log(`initLexicon.unzipFileFromCachedLexicon`, file)
     return file
   }
 
   async function getGlossFromCachedLexicon(strongs) {
     const filename = `${strongs}.json`
     const file = await unzipFileFromCachedLexicon(filename)
+    console.log(`initLexicon.getGlossFromCachedLexicon`, !!file)
     return file
   }
 
   async function isLexiconRepoCached() {
     const file = await getGlossFromCachedLexicon(1)
+    console.log(`initLexicon.isLexiconRepoCached`, !!file)
     return !!file
   }
 
@@ -276,35 +284,44 @@ export default function useLexicon({
      * @return {Promise<void>}
      */
     const loadLexiconDataForRepo = async () => {
+      // console.log(`useLexicon.loadLexiconDataForRepo: hook called`, { fetchingLexicon, repository, storeZip: !!lexiconProps?.actions?.storeZip})
+
       if (!fetchingLexicon && repository && lexiconProps?.actions?.storeZip) {
-        setFetchingLexicon(true)
-        let lexiconWords = await fetchFromGlossesStore(getGlossesCachePath())
+        try {
+          console.log(`useLexicon.loadLexiconDataForRepo: fetching glosses`)
+          setFetchingLexicon(true)
+          let lexiconWords = await fetchFromGlossesStore(getGlossesCachePath())
 
-        if (!lexiconWords) {
-          lexiconWords = {}
-        } else {
-          // console.log(`useLexicon.loadLexiconDataForRepo: ${getGlossesCachePath()} cached lexicon words length`, Object.keys(lexiconWords).length)
-        }
+          if (!lexiconWords) {
+            lexiconWords = {}
+          } else {
+            console.log(`useLexicon.loadLexiconDataForRepo: ${getGlossesCachePath()} cached lexicon words length`, Object.keys(lexiconWords).length)
+          }
 
-        let lexiconRepoCached = await isLexiconRepoCached()
+          let lexiconRepoCached = await isLexiconRepoCached()
 
-        if (lexiconRepoCached) {
-          // console.log(`useLexicon.loadLexiconDataForRepo: lexicon zip already loaded`)
-        } else {
-          // fetch repo zip file and store in index DB
-          await lexiconProps?.actions?.storeZip()
-          // verify that zip file is loaded
-          lexiconRepoCached = await isLexiconRepoCached()
-        }
+          if (lexiconRepoCached) {
+            console.log(`useLexicon.loadLexiconDataForRepo: lexicon zip already loaded`)
+          } else {
+            console.log(`useLexicon.loadLexiconDataForRepo: loading from indexDB`)
+            // fetch repo zip file and store in index DB
+            await lexiconProps?.actions?.storeZip()
+            // verify that zip file is loaded
+            lexiconRepoCached = await isLexiconRepoCached()
+          }
 
-        if (lexiconRepoCached) {
-          await updateLexiconGlosses(lexiconWords)
-          setLexCacheInit(true)
-          setOrigLangError(null)
-        } else {
-          const originalLang = getOriginalLanguageStr(isNT_)
-          console.warn(`useLexicon.loadLexiconDataForRepo: could not load ${originalLang} lexicon repo zip: ${getGlossesCachePath()}`)
-          setOrigLangError(`Could not load ${originalLang} lexicon repo zip: ${getGlossesCachePath()}`)
+          if (lexiconRepoCached) {
+            await updateLexiconGlosses(lexiconWords)
+            console.log(`useLexicon.loadLexiconDataForRepo: lexicon loaded and ready`)
+            setLexCacheInit(true)
+            setOrigLangError(null)
+          } else {
+            const originalLang = getOriginalLanguageStr(isNT_)
+            console.warn(`useLexicon.loadLexiconDataForRepo: could not load ${originalLang} lexicon repo zip: ${getGlossesCachePath()}`)
+            setOrigLangError(`Could not load ${originalLang} lexicon repo zip: ${getGlossesCachePath()}`)
+          }
+        } catch (e) {
+          console.warn(`useLexicon.loadLexiconDataForRepo: exception thrown`, e)
         }
 
         setFetchingLexicon(false)
@@ -317,14 +334,17 @@ export default function useLexicon({
   useEffect(() => {
     const updateGlossesForLatestVerse = async () => {
       if (lexCacheInit) {
+        console.log(`useLexicon - init lexCacheInit now`, { lexCacheInit, strongsNumbersInVerse })
+
         if (strongsNumbersInVerse) { // get Lexicons for current verse
+          console.log(`useLexicon - init calling fetchGlossesForStrongsNumbers()`)
           await fetchGlossesForStrongsNumbers(strongsNumbersInVerse)
         }
       }
     }
 
     updateGlossesForLatestVerse()
-  }, [lexCacheInit])
+  }, [lexCacheInit, strongsNumbersInVerse])
 
 
   return {
