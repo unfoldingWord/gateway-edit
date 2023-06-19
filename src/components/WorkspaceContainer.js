@@ -4,14 +4,16 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { useDeepCompareEffectNoCheck } from 'use-deep-compare-effect'
 import * as isEqual from 'deep-equal'
 import {
-  Workspace, MinimizedCardsListUI, useMinimizedCardsState,
+  MinimizedCardsListUI,
+  useMinimizedCardsState,
+  Workspace,
 } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
-import { SelectionsContextProvider } from 'scripture-resources-rcl'
 import {
+  fixOccurrence,
+  getVersesForRef,
   NT_ORIG_LANG,
   NT_ORIG_LANG_BIBLE,
   ORIGINAL_SOURCE,
@@ -42,10 +44,12 @@ import {
 import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
+import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import _ from 'lodash'
-import { cleanupVerseObjects, fixOccurrence } from '../utils/resources'
+import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,15 +63,46 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
+const wordAlignmentScreenRatio = 0.7
+const wordAlignmentMaxHeightPx = 1000
 
 function WorkspaceContainer() {
   const router = useRouter()
   const classes = useStyles()
-  const [workspaceReady, setWorkspaceReady] = useState(false)
-  const [selections, _setSelections] = useState(new Map())
-  const [networkError, setNetworkError] = useState(null)
-  const [currentVerseSpans, setCurrentVerseSpans] = useState([])
-  const [verseObjectsMap, setVerseObjectsMap] = useState(new Map())
+  const [state, _setState] = useState({
+    currentVerseReference: null,
+    originalScriptureBookObjects: null,
+    networkError: null,
+    scriptureReference: {},
+    wordAlignerStatus: null,
+    workspaceReady: false,
+  })
+
+  const {
+    currentVerseReference,
+    networkError,
+    originalScriptureBookObjects,
+    scriptureReference,
+    wordAlignerStatus,
+    workspaceReady,
+  } = state
+
+  function setState(newState) {
+    _setState(prevState => ({ ...prevState, ...newState }))
+  }
+
+  const { height } = useWindowDimensions()
+
+  const wordAlignerHeight = useMemo(() => {
+    let _height = wordAlignmentScreenRatio * height
+
+    if (_height > wordAlignmentMaxHeightPx) {
+      _height = wordAlignmentMaxHeightPx
+    }
+
+    return _height
+  }, [height])
+
   const {
     state: {
       owner,
@@ -130,38 +165,60 @@ function WorkspaceContainer() {
    * clean up quote before applying
    * @param {object} newQuote
    */
-  function setQuote(newQuote) {
-    const _quote = newQuote ? {
+  function setCurrentCheck(newQuote) {
+    console.log('newQuote', newQuote)
+    let _quote = newQuote ? {
       ...newQuote,
       occurrence: fixOccurrence(newQuote.occurrence),
     } : {}
 
+    if (newQuote && !newQuote.reference) {
+      _quote.reference= `${chapter}:${verse}`
+    }
+
     if (!isEqual(selectedQuote, _quote)) {
       _setQuote(_quote)
+    }
+
+    if (!isEqual(newQuote.reference, currentVerseReference)){
+      setState( { currentVerseReference: newQuote.reference })
     }
   }
 
   /**
-   * update selectrions if changed
-   * @param {Map} newSelections
+   * update word aligner status
+   * @param newWordAlignmentStatus
    */
-  function setSelections(newSelections) {
-    let _newSelections = newSelections
+  function setWordAlignerStatus(newWordAlignmentStatus) {
+    if (!isEqual(wordAlignerStatus, newWordAlignmentStatus)) {
+      setState({ wordAlignerStatus: newWordAlignmentStatus })
+    }
+  }
 
-    if (newSelections?.size && currentVerseSpans?.length) { // add support for verse range
-      _newSelections = new Map(newSelections) // shallow copy
-      let primaryReference = `${chapter}:${verse}`
-      const _selections = _newSelections.get(primaryReference)
+  useEffect(()=>{
+    // console.log('on reference change:', { chapter, verse, bookId, currentVerseReference })
+    const reference = {
+      chapter,
+      verse,
+      bookId,
+      projectId: bookId,
+    }
 
-      for (const verseSpan of currentVerseSpans) {
-        _newSelections.set(verseSpan, _selections)
+    if (currentVerseReference){
+      const index = currentVerseReference.indexOf(':')
+
+      if (index >= 0){
+        const chapter = currentVerseReference.substring(0,index)
+        const verse = currentVerseReference.substring(index + 1)
+        reference.chapter = chapter
+        reference.verse = verse
       }
     }
 
-    if (!isEqual(selections, _newSelections)) {
-      _setSelections(_newSelections)
+    if (!isEqual(reference, scriptureReference)){
+      setState({ scriptureReference: reference })
     }
-  }
+  },[chapter, verse, bookId, currentVerseReference])
 
   /**
    * in the case of a network error, process and display error dialog
@@ -170,6 +227,10 @@ function WorkspaceContainer() {
    */
   function processError(errorMessage, httpCode=0) {
     processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
+  }
+
+  function setNetworkError( error ) {
+    setState( { networkError: error })
   }
 
   /**
@@ -198,7 +259,7 @@ function WorkspaceContainer() {
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
-          hideClose={true}
+          hideClose={false}
           /* show reload if send feedback not enabled */
           onRetry={!networkError.actionButtonText ? reloadApp : null}
         />
@@ -230,66 +291,51 @@ function WorkspaceContainer() {
     }
   }
 
-  /**
-   * add a verse range to list of verse ranges displayed in the scripture panes.  This is so we can remap selections to also include the verse ranges
-   * @param {string} range - such as 1:1-2
-   */
-  function addVerseRange(range) {
-    const _currentVerseSpans = currentVerseSpans || []
-
-    if (_currentVerseSpans.indexOf(range) < 0) { // only add to list if new
-      const newVerseSpans = [..._currentVerseSpans]
-      newVerseSpans.push(range)
-
-      if (!isEqual(newVerseSpans, _currentVerseSpans)) {
-        setCurrentVerseSpans(newVerseSpans)
-      }
-    }
-  }
-
   useEffect(() => { // on verse navigation, clear verse spans and selections
-    if (currentVerseSpans?.length) {
-      setCurrentVerseSpans([])
-    }
-
-    // clear selections
-    setSelections(new Map())
+    // clear current verse reference and alignments
+    setState( { currentVerseReference: null, wordAlignerStatus: null })
   }, [chapter, verse, bookId])
 
   const commonScriptureCardConfigs = {
-    isNT,
-    server,
     appRef,
+    authentication,
+    bookIndex: BIBLES_ABBRV_INDEX[bookId],
     classes,
     getLanguage,
-    useUserLocalStorage,
-    originalLanguageOwner: scriptureOwner,
-    onResourceError,
-    httpConfig: HTTP_CONFIG,
+    getLexiconData,
     greekRepoUrl,
     hebrewRepoUrl,
-    fetchGlossesForVerse,
-    getLexiconData,
+    httpConfig: HTTP_CONFIG,
+    isNT,
+    loggedInUser,
+    onResourceError,
+    originalLanguageOwner: scriptureOwner,
+    originalScriptureBookObjects,
+    reference: scriptureReference,
+    selectedQuote,
+    server,
+    setSavedChanges,
+    setWordAlignerStatus,
     translate,
-    addVerseRange,
+    useUserLocalStorage,
   }
 
   const commonResourceCardConfigs = {
+    appRef,
+    authentication,
     classes,
     chapter,
-    verse,
-    server,
-    owner,
-    appRef,
     languageId,
-    useUserLocalStorage,
-    onResourceError,
     loggedInUser,
-    authentication,
+    onResourceError,
+    owner,
+    server,
+    verse,
+    useUserLocalStorage,
   }
 
   useEffect(() => {
-    setWorkspaceReady(false)
+    setState( { workspaceReady: false })
 
     if (owner && languageId && appRef && server && loggedInUser) {
       getResourceBibles({
@@ -312,9 +358,9 @@ function WorkspaceContainer() {
         } else {
           console.warn(`no bibles found for ${resourceLink}`)
         }
-        setWorkspaceReady(true)
+        setState( { workspaceReady: true })
       }).catch((e) => {
-        setWorkspaceReady(true)
+        setState( { workspaceReady: true })
         processError(e.toString())
       })
     }// eslint-disable-next-line
@@ -324,7 +370,7 @@ function WorkspaceContainer() {
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
 
     if (missingOrignalBibles) { // if we don't have a path
-      setWorkspaceReady(false)
+      setState( { workspaceReady: false })
       console.log(`WorkspaceContainer - waiting on latest original bible repos`)
     }
 
@@ -347,12 +393,12 @@ function WorkspaceContainer() {
 
       if (missingOrignalBibles && repoHebrew && repoGreek) {
         console.log(`WorkspaceContainer - found original bible repos`)
-        setWorkspaceReady(true)
+        setState( { workspaceReady: true })
       } else if (changed) { // force redraw
         console.log(`WorkspaceContainer - original bible repos changed, force reload`)
-        setWorkspaceReady(false)
+        setState( { workspaceReady: false })
         setTimeout(() => {
-          setWorkspaceReady(true)
+          setState( { workspaceReady: true })
         }, 500)
       }
     })
@@ -364,12 +410,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Literal_Translation',
       cardNum: 0,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -383,12 +423,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Original_Source',
       cardNum: 1,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -402,12 +436,6 @@ function WorkspaceContainer() {
       type: 'scripture_card',
       id: 'scripture_card_Simplified_Translation',
       cardNum: 2,
-      reference: {
-        chapter,
-        verse,
-        bookId,
-        projectId: bookId,
-      },
       resource: {
         owner,
         languageId,
@@ -423,7 +451,7 @@ function WorkspaceContainer() {
       filePath: null,
       resourceId: 'tn',
       projectId: bookId,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       updateTaDetails: updateTaDetails,
       loggedInUser: loggedInUser,
@@ -454,7 +482,7 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       disableFilters: true,
       disableNavigation: true,
@@ -473,7 +501,7 @@ function WorkspaceContainer() {
       resourceId: 'twl',
       projectId: bookId,
       filePath: null,
-      setQuote: setQuote,
+      setCurrentCheck: setCurrentCheck,
       selectedQuote: selectedQuote,
       disableFilters: true,
       loggedInUser: loggedInUser,
@@ -506,6 +534,7 @@ function WorkspaceContainer() {
   })
 
   const isNewTestament = isNT(bookId)
+  const originalLanguageId = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG
   const originalScripture = {
     reference: {
       projectId: bookId,
@@ -516,7 +545,7 @@ function WorkspaceContainer() {
     resource: {
       owner: 'unfoldingWord',
       originalLanguageOwner: 'unfoldingWord',
-      languageId: isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG,
+      languageId: originalLanguageId,
       resourceId: ORIGINAL_SOURCE,
     },
     getLanguage: () => ({ direction: isNewTestament ? 'ltr' : 'rtl' }),
@@ -529,7 +558,7 @@ function WorkspaceContainer() {
 
   const { server: origServer, resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
 
-  const originalScriptureConfig = useScripture({
+  const originalScriptureResults = useScripture({
     ...originalScripture,
     resource: {
       ...originalScripture.resource,
@@ -542,38 +571,53 @@ function WorkspaceContainer() {
       ...config,
       server: origServer,
     },
+    wholeBook: true,
+    readyForFetch: !!bookId,
   })
 
-  useDeepCompareEffectNoCheck(() => { // see if we need to update map of original verse objects
-    const _map = new Map()
-    const verseObjects = cleanupVerseObjects(originalScriptureConfig?.verseObjects)
-    _map.set(`${chapter}:${verse}`, verseObjects)
+  useEffect(() => {
+    let originalScriptureBookObjects = null
 
-    if (currentVerseSpans?.length) { // add support for verse ranges
-      for (const verseSpan of currentVerseSpans) {
-        _map.set(verseSpan, verseObjects)
+    if (originalScriptureResults?.bookObjects) {
+      originalScriptureBookObjects = {
+        ...originalScriptureResults?.bookObjects,
+        bookId,
+        languageId: originalLanguageId,
       }
     }
 
-    if (!isEqual(verseObjectsMap, _map)) {
-      setVerseObjectsMap(_map)
+    setState( { originalScriptureBookObjects })
+  }, [originalScriptureResults?.bookObjects])
+
+  useEffect(() => { // pre-cache glosses on verse change
+    const fetchGlossDataForVerse = async () => {
+      const verses = getVersesForRef(scriptureReference, originalScriptureBookObjects, originalLanguageId)
+
+      if (verses?.length) {
+        for (const verseReference of verses) {
+          const origVerseObjects = verseReference?.verseData?.verseObjects
+
+          if (origVerseObjects) {
+            // eslint-disable-next-line no-await-in-loop
+            await fetchGlossesForVerse(origVerseObjects, originalLanguageId)
+          }
+        }
+      }
     }
-  }, [originalScriptureConfig.verseObjects, chapter, verse, currentVerseSpans])
+
+    if (originalScriptureBookObjects && scriptureReference?.projectId) {
+      fetchGlossDataForVerse()
+    }
+  }, [scriptureReference, originalScriptureBookObjects, originalLanguageId ])
 
   return (
-    (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+    (!workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
         {showNetworkError()}
         <CircularProgress size={180} />
       </>
       :
-      <SelectionsContextProvider
-        selections={selections}
-        onSelections={setSelections}
-        quote={selectedQuote?.quote}
-        occurrence={fixOccurrence(selectedQuote?.occurrence)}
-        verseObjectsMap={verseObjectsMap}
-      >
+      <>
         <MinimizedCardsListUI minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>
         {loading || content || error ?
           <DraggableCard
@@ -624,7 +668,19 @@ function WorkspaceContainer() {
             )
           }
         </Workspace>
-      </SelectionsContextProvider>
+        <WordAlignerDialog
+          alignerStatus={wordAlignerStatus}
+          height={wordAlignerHeight}
+          translate={translate}
+          getLexiconData={getLexiconData}
+        />
+
+        {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
+          <>
+            {showNetworkError()}
+          </>
+        }
+      </>
   )
 }
 
