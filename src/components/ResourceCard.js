@@ -277,6 +277,8 @@ export default function ResourceCard({
   })
 
   const {
+    error: saveError,
+    isError: isSaveError,
     isEditing,
     onSaveEdit,
   } = useEdit({
@@ -294,7 +296,15 @@ export default function ResourceCard({
     branch: workingResourceBranch,
     filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
+    dontCreateBranch: true,
   })
+
+  useEffect(() => { // when we get a save saveError
+    if (saveError && isSaveError) {
+      console.log(`save error`, saveError)
+      onResourceError && onResourceError(null, false, null, `Error saving ${languageId}_${cardResourceId} ${saveError}`, true)
+    }
+  }, [saveError, isSaveError])
 
   // useEffect(() => {
   //   console.log(`ResourceCard() sha changed to`, { sha, resource })
@@ -361,6 +371,10 @@ export default function ResourceCard({
             console.info('handleSaveEdit() Reloading resource')
             reloadResource()
           })
+          delay(500).then(() => {
+            console.info('handleSaveEdit() Reloading resource')
+            reloadResource()
+          })
         } else {
           console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
           setSavedChanges(cardResourceId, false)
@@ -372,7 +386,13 @@ export default function ResourceCard({
     // If not using user branch create it then save the edit.
     if (!usingUserBranch) {
       console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
-      await startEdit().then((branch) => saveEdit(branch))
+      await startEdit().then(branch => {
+        if (branch) {
+          saveEdit(branch)
+        } else { // if error on branch creation
+          onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
+        }
+      })
     } else {// Else just save the edit.
       await saveEdit()
     }
