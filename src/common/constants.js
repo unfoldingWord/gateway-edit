@@ -10,12 +10,13 @@ export const TOKEN_ID = 'gatewayEdit'
 export const FEEDBACK_PAGE = '/feedback'
 export const SERVER_KEY = 'server'
 
-export const SERVER_MAX_WAIT_TIME_RETRY = 10000 // in milliseconds
-export const HTTP_GET_MAX_WAIT_TIME = 5000 // in milliseconds
+export const SERVER_MAX_WAIT_TIME_RETRY = 25000 // in milliseconds
+export const HTTP_GET_MAX_WAIT_TIME = 25000 // in milliseconds
 export const HTTP_GET_CACHE_TIME = 60 * 60 * 1000 // in milliseconds, cache for 1 hour
 export const HTTP_CONFIG = {
   cache: { maxAge: HTTP_GET_CACHE_TIME },
   timeout: HTTP_GET_MAX_WAIT_TIME,
+  serverTimeOut: SERVER_MAX_WAIT_TIME_RETRY,
 }
 // Necessary for edit mode.
 export const RESOURCE_HTTP_CONFIG = {

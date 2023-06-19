@@ -192,38 +192,3 @@ export function delay(ms) {
   )
 }
 
-export function fixOccurrence(occurrence) {
-  if (typeof occurrence === 'string') {
-    return parseInt(occurrence)
-  }
-  return occurrence
-}
-
-export function cleanupVerseObjects(verseObjects) {
-  if (verseObjects?.length) {
-    const verseObjects_ = [...verseObjects]
-
-    for (let i = 0, l = verseObjects_.length; i < l; i++) {
-      const vo = verseObjects_[i]
-
-      if (vo.type === 'word') {
-        const word = {
-          ...vo,
-          occurrence: fixOccurrence(vo.occurrence),
-          occurrences: fixOccurrence(vo.occurrences),
-        }
-        verseObjects_[i] = word
-      } else if (vo.children) {
-        const children = cleanupVerseObjects(vo.children)
-        const newVo = {
-          ...vo,
-          children,
-        }
-        verseObjects_[i] = newVo
-      }
-    }
-    return verseObjects_
-  }
-  return []
-}
-
