@@ -683,7 +683,7 @@ function WorkspaceContainer() {
           getLexiconData={getLexiconData}
         />
 
-        {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
+        {(tokenNetworkError || networkError) && // If error, show error popup dialog
           <>
             {showNetworkError()}
           </>

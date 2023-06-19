@@ -371,13 +371,8 @@ export default function ResourceCard({
             console.info('handleSaveEdit() Reloading resource')
             reloadResource()
           })
-          delay(500).then(() => {
-            console.info('handleSaveEdit() Reloading resource')
-            reloadResource()
-          })
         } else {
           console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
-          setSavedChanges(cardResourceId, false)
         }
         setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
       })
@@ -414,8 +409,6 @@ export default function ResourceCard({
 
     return newItems
   }
-
-  let _message = isEditing ? 'Saving Resource...' : message || errorMessage
 
   return (
     <Card
