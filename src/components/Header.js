@@ -1,5 +1,10 @@
-import { useState, useContext } from 'react'
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import PropTypes from 'prop-types'
+import { useFilePicker } from 'use-file-picker'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -12,6 +17,7 @@ import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
 import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
+import { getFilterFromTSV } from '@utils/tsv'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -40,11 +46,35 @@ export default function Header({
   feedback,
   setFeedback,
 }) {
+  const [openFileSelector, { filesContent, loading }] = useFilePicker({ accept: '.tsv' })
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
   const { actions: { logout } } = useContext(AuthContext)
-  const { actions: { checkUnsavedChanges } } = useContext(StoreContext)
+  const {
+    state: {
+      filter,
+      filterTSV,
+    },
+    actions: {
+      checkUnsavedChanges,
+      setFilter,
+      setFilterTSV,
+    } } = useContext(StoreContext)
+
+  useEffect(() => {
+    if (filesContent?.length) {
+      console.log(filesContent)
+      const fileName = filesContent[0].name
+      const content = filesContent[0].content
+      const refs = getFilterFromTSV(content)
+
+      if (refs?.length) {
+        setFilterTSV(fileName)
+        setFilter(refs)
+      }
+    }
+  }, [ filesContent ])
 
   const handleDrawerOpen = () => {
     if (!drawerOpen) {
@@ -91,6 +121,7 @@ export default function Header({
           <div className='flex flex-1 justify-center items-center'>
             <BibleReference />
           </div>
+          <button onClick={() => openFileSelector()}>Open TSV </button>
           <div className='flex flex-1 justify-end'>
             {/* <Button
               className={classes.button}
