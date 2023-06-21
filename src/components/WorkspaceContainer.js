@@ -7,8 +7,8 @@ import {
 import * as isEqual from 'deep-equal'
 import {
   MinimizedCardsListUI,
-  Workspace,
   useMinimizedCardsState,
+  Workspace,
 } from 'resource-workspace-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -263,7 +263,7 @@ function WorkspaceContainer() {
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
-          hideClose={true}
+          hideClose={false}
           /* show reload if send feedback not enabled */
           onRetry={!networkError.actionButtonText ? reloadApp : null}
         />
@@ -416,7 +416,7 @@ function WorkspaceContainer() {
     {
       title: 'Literal Translation',
       type: 'scripture_card',
-      id: 'scripture_card_Literal_Translation',
+      id: 'scripture_card_0',
       cardNum: 0,
       resource: {
         owner,
@@ -429,7 +429,7 @@ function WorkspaceContainer() {
     {
       title: 'Original Source',
       type: 'scripture_card',
-      id: 'scripture_card_Original_Source',
+      id: 'scripture_card_1',
       cardNum: 1,
       resource: {
         owner,
@@ -442,7 +442,7 @@ function WorkspaceContainer() {
     {
       title: 'Simplified Translation',
       type: 'scripture_card',
-      id: 'scripture_card_Simplified_Translation',
+      id: 'scripture_card_2',
       cardNum: 2,
       resource: {
         owner,
@@ -619,7 +619,7 @@ function WorkspaceContainer() {
   }, [scriptureReference, originalScriptureBookObjects, originalLanguageId ])
 
   return (
-    (tokenNetworkError || networkError || !workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+    (!workspaceReady) ? // Do not render workspace until user logged in and we have user settings
       <>
         {showNetworkError()}
         <CircularProgress size={180} />
@@ -682,6 +682,12 @@ function WorkspaceContainer() {
           translate={translate}
           getLexiconData={getLexiconData}
         />
+
+        {(tokenNetworkError || networkError) && // If error, show error popup dialog
+          <>
+            {showNetworkError()}
+          </>
+        }
       </>
   )
 }

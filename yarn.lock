@@ -5395,26 +5395,29 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gitea-react-toolkit@1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-1.11.0.tgz#ded163a2d4b8bc7d347ed056f5776689a8807c2c"
-  integrity sha512-1r03L9M/brlr9FMyusDSy+czH4dUiOUsg3C5SieDPEBba30xqjAFjf7KXt18EEPevopGtbjxd77ZJWKTdq3XvA==
+gitea-react-toolkit@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.2.1.tgz#e13191ae6e3089d12d0f2eeaa69ce49c740651a2"
+  integrity sha512-9VPuWOHQv+z+H2j+GRhShVPKRC1O+qVNWcoashjpXhd1IS4lF820YIl/YDacFa7SvgOpm/sOZ3MPVnxcGIG4aA==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
     axios-cache-adapter "2.4.1"
     base-64 "0.1.0"
+    deep-equal "^2.0.5"
+    js-base64 "^3.7.2"
     jszip "^3.5.0"
     localforage "1.7.3"
-    markdown-translatable "1.3.1"
+    markdown-translatable "1.3.1-rc.1"
     prop-types "15.7.2"
+    use-deep-compare "^1.1.0"
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
-gitea-react-toolkit@2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.2.1.tgz#e13191ae6e3089d12d0f2eeaa69ce49c740651a2"
-  integrity sha512-9VPuWOHQv+z+H2j+GRhShVPKRC1O+qVNWcoashjpXhd1IS4lF820YIl/YDacFa7SvgOpm/sOZ3MPVnxcGIG4aA==
+gitea-react-toolkit@2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.2.5.tgz#3bf73e3ce5820251baaa7356f0dace9e3f73c541"
+  integrity sha512-YzuKmVYDUzVqi144YwIZhqwtiwe189P31Pbjy/KaCBHMVsbfY+jQ5h7mhYwG9mmh/Do+d+CuCTSC6/IGk6a1Vg==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -7610,20 +7613,6 @@ markdown-escapes@^1.0.0:
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
 
-markdown-translatable@1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.3.1.tgz#29393f8650be38885c7991f2e2e661bbe9d000ae"
-  integrity sha512-oZieaVOCjxZISyGDvcpb3XsJsnPvKd4xCULFQawQ/L395EwGHFERG6gCH65b3w3HjkLEWhdPknWf1BLK6Mu6Tg==
-  dependencies:
-    deep-freeze "^0.0.1"
-    md5 "^2.2.1"
-    prop-types "^15.7.2"
-    react-headroom "^3.1.0"
-    react-markdown "4.0.6"
-    showdown "^1.9.1"
-    turndown "^7.0.0"
-    turndown-plugin-gfm "^1.0.2"
-
 markdown-translatable@1.3.1-rc.1:
   version "1.3.1-rc.1"
   resolved "https://registry.yarnpkg.com/markdown-translatable/-/markdown-translatable-1.3.1-rc.1.tgz#498a264d544f87511465ae06dd454565be1daabb"
@@ -9388,10 +9377,10 @@ resolve@^2.0.0-next.4:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
-resource-workspace-rcl@2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.3.tgz#ec5749edc82fc014abf67225f5f38aaecf71cd33"
-  integrity sha512-Al1q475YNF2IhvmLOKk4MY5c/u7gW7mV2CV1F2GDLzO1OlW6vN0VRrQt7tY2sjWvTKXwKLkmxKYtzwTYfvfdfQ==
+resource-workspace-rcl@2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.4.tgz#a1efadf0f5b4a7e8cc838b84d2c1b932f3bec5c9"
+  integrity sha512-EjkCXfVSspL2DBYPpWkcHzGh4CFVmIKhMoI/4wpcjIGlvotLUqe+BIH/NovKfpzbfbycV8Rw5E+egcYanLG5Tg==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
@@ -9679,10 +9668,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.2:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.2.tgz#685ae9aa5138769395a738e7e425d84643ec4ae8"
-  integrity sha512-h57EpUGbiqqrOdOGb7ThYfkgSjoIoCej+EBDJD5gC1fSwFpt8ywDGYnY61ICxSr0fcwi9N/dOXm7CsTdQ9y7yQ==
+single-scripture-rcl@3.4.4:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.4.tgz#f9759c7ef0b012b7316a687189d07a5ffd90b77d"
+  integrity sha512-5RCcsB1Qujqg81DqhpwaEyeLFYPowb5AxNNZx+twK5cmNgyFf88kq6vuvJ9YARLcfx0cm5Vo6wdG/3wQiAETwg==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"

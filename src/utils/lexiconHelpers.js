@@ -174,7 +174,7 @@ export async function extractGlossesFromRepoZip(
   strongs,
   lexiconGlosses,
   repoFiles) {
-  const fileNames = Object.keys(repoFiles)
+  const fileNames = repoFiles && Object.keys(repoFiles)
   let modified = false
 
   if (fileNames && fileNames.length) {

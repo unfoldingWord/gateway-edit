@@ -113,10 +113,10 @@ export default function Header({
             <BibleReference />
           </div>
 
-          <UpdateBranchButton {...updateButtonProps} isLoading={cardsLoadingUpdate?.length || cardsSaving?.length} loadingProps={loadingProps}/>
-          <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={cardsLoadingUpdate?.length || cardsSaving?.length} />
 
           <div className='flex flex-1 justify-end'>
+            <UpdateBranchButton {...updateButtonProps} isLoading={cardsLoadingUpdate?.length || cardsSaving?.length} loadingProps={loadingProps}/>
+            <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={cardsLoadingUpdate?.length || cardsSaving?.length} />
             {/* <Button
               className={classes.button}
               variant='outlined'
