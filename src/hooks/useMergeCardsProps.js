@@ -18,6 +18,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     if (conflict) return 'cardsWithConflicts'
     if (error) {
       if (message.includes('does not exist')) return 'cardsWithNoUserBranch'
+      if (message.includes('nothing to commit')) return 'cardsWithNoChanges'
       return 'cardsWithError'
     }
     if (!mergeNeeded) return 'cardsWithNoMergeNeeded'
@@ -34,6 +35,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     cardsWithConflicts: [],
     cardsWithNoUserBranch: [],
     cardsWithError: [],
+    cardsWithNoChanges: [],
     cardsWithNoMergeNeeded: [],
     cardsToMerge: []
   }
@@ -48,6 +50,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     cardsWithConflicts,
     cardsWithNoUserBranch,
     cardsWithError,
+    cardsWithNoChanges,
     cardsWithNoMergeNeeded,
     cardsToMerge
   } = cardMergeGroupings ? cardMergeGroupings : {}
@@ -72,25 +75,24 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     }
 
     if (cardIds?.length === 0) return "None"
-    return cardIds.map(getCardNameFromId).reduce(renderAsList, "")
+    return cardIds?.map(getCardNameFromId).reduce(renderAsList, "")
   }
 
   const { message: dialogMessage, title: dialogTitle } = useMemo(() => {
-    let updateStatusMessage;
-    if (cardsToMerge?.length) {
-      updateStatusMessage = "Some of your changes have been saved to your team's work, while others have not."
-    } else {
-      updateStatusMessage = "None of your changes have been saved to your team's work."
-    }
+    const updateStatusMessage = "Some of your changes have not been saved because of errors or conflicts."
 
     const message =
     <>
-      <p><strong>{updateStatusMessage} Card merge status displayed below...</strong></p>
+      <p><strong>{updateStatusMessage} Further status displayed below...</strong></p>
       <p><strong>Cards With Conflicts:</strong> {renderCardNamesFromIds(cardsWithConflicts)}</p>
       <p><strong>Cards With Errors:</strong> {renderCardNamesFromIds(cardsWithError)}</p>
       <p>
         <strong>Cards With No Changes To Save: </strong>
         {renderCardNamesFromIds([...cardsWithNoUserBranch, ...cardsWithNoMergeNeeded])}
+      </p>
+      <p>
+        <strong>Cards Where Changes Are Same as Source: </strong>
+        {renderCardNamesFromIds(cardsWithNoChanges)}
       </p>
     </>
 
@@ -118,10 +120,13 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
       const { mergeToMasterFromUserBranch } = mergeStatusForCards[cardId]
       return mergeToMasterFromUserBranch(description)
     })
-    await Promise.all(syncPromises)
-    if (cardsWithConflicts?.length || cardsWithError?.length || !cardsToMerge?.length) {
-      return setIsErrorDialogOpen(true)
-    }
+
+    const responses = await Promise.all(syncPromises)
+    const wasMergeSuccessful = responses.every(response =>
+      response.success && response.message === ""
+    )
+    if (!wasMergeSuccessful) return setIsErrorDialogOpen(true)
+
   }
 
   const onSubmit = description => {
