@@ -16,6 +16,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     const { conflict, mergeNeeded, error, message } = mergeStatus
 
     if (conflict) return 'cardsWithConflicts'
+
     if (error) {
       if (message.includes('does not exist')) return 'cardsWithNoUserBranch'
       return 'cardsWithError'
@@ -77,6 +78,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
 
   const { message: dialogMessage, title: dialogTitle } = useMemo(() => {
     let updateStatusMessage;
+
     if (cardsToMerge?.length) {
       updateStatusMessage = "Some of your changes have been saved to your team's work, while others have not."
     } else {
@@ -119,13 +121,15 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
       return mergeToMasterFromUserBranch(description)
     })
     await Promise.all(syncPromises)
+
     if (cardsWithConflicts?.length || cardsWithError?.length || !cardsToMerge?.length) {
       return setIsErrorDialogOpen(true)
     }
   }
 
-  const onSubmit = description => {
-    syncMergeableCards(cardsToMerge, description)
+  const onSubmit = ({ mergeableCardIds, description }) => {
+    console.log({ cardsToMerge, mergeableCardIds })
+    syncMergeableCards(mergeableCardIds, description)
   }
 
   return {
@@ -139,6 +143,9 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     dialogTitle,
     pending,
     blocked,
-    loadingProps
+    loadingProps,
+    cardMergeGroupings,
   }
 }
+
+// cardsToMerge=[ult, ust]
