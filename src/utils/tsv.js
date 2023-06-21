@@ -1,3 +1,4 @@
+import { bibleRefSort } from './bible'
 
 export default function tsvToJson(tsv) {
   const result = []
@@ -39,7 +40,7 @@ export function getFilterFromTSV(tsvData) {
     }
   }
 
-  refs = refs.sort()
+  refs = refs.sort(bibleRefSort)
   console.log(refs)
   return refs
 }

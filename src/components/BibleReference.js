@@ -3,6 +3,7 @@ import useEffect from 'use-deep-compare-effect'
 import BibleReference, { useBibleReference } from 'bible-reference-rcl'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { StoreContext } from '@context/StoreContext'
+import { refsToObject } from '@utils/bible'
 
 const useStyles = makeStyles((theme) => ({
   underline: {
@@ -19,6 +20,7 @@ function BibleReferenceComponent(props) {
       bibleReference: {
         bookId, chapter, verse,
       },
+      filter,
       supportedBibles,
     },
     actions: { onReferenceChange, checkUnsavedChanges },
@@ -47,6 +49,15 @@ function BibleReferenceComponent(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supportedBibles])
+
+  React.useEffect(() => { // if bible filter changes, update bible-reference-rcl
+    if (filter?.length) {
+      const supportedBooks = refsToObject(filter) // convert from array of references to structured object
+      actions.setBookChapterVerses(supportedBooks)
+      console.log('filter applied', { newBCV: supportedBooks, filterArray: filter })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter])
 
   return (
     <BibleReference
