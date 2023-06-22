@@ -42,3 +42,4 @@ export const RETRY = 'Retry'
 export const CANCEL = 'Cancel'
 export const CLOSE = 'Close'
 export const LOADING = 'Loading...'
+export const RESET_FILTER = -1

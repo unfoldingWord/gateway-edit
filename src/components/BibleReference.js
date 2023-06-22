@@ -21,9 +21,14 @@ function BibleReferenceComponent(props) {
         bookId, chapter, verse,
       },
       filter,
+      filterTSV,
       supportedBibles,
     },
-    actions: { onReferenceChange, checkUnsavedChanges },
+    actions: {
+      checkUnsavedChanges,
+      onReferenceChange,
+      setFilterTSV,
+    },
   } = useContext(StoreContext)
 
   const { state, actions } = useBibleReference({
@@ -51,10 +56,14 @@ function BibleReferenceComponent(props) {
   }, [supportedBibles])
 
   React.useEffect(() => { // if bible filter changes, update bible-reference-rcl
-    if (filter?.length) {
+    if (filter?.length) { // applying new filter
       const supportedBooks = refsToObject(filter) // convert from array of references to structured object
       actions.setBookChapterVerses(supportedBooks)
       console.log('filter applied', { newBCV: supportedBooks, filterArray: filter })
+    } else if (filterTSV) { // clearing previous filter
+      actions.setBookChapterVerses(null)
+      console.log('filter removed')
+      setFilterTSV(null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter])

@@ -96,6 +96,15 @@ export default function Header({
     setFeedback && setFeedback(false)
   }
 
+  function handleTsvButton() {
+    if (!filter) { // load TSV file
+      openFileSelector()
+    } else { // clear filter
+      setFilterTSV(null)
+      setFilter(null)
+    }
+  }
+
   return (
     <header>
       <AppBar position='static'>
@@ -121,7 +130,7 @@ export default function Header({
           <div className='flex flex-1 justify-center items-center'>
             <BibleReference />
           </div>
-          <button onClick={() => openFileSelector()}>Open TSV </button>
+          <button onClick={() => handleTsvButton()}>{filter ? 'Filter OFF' : 'Open TSV' } </button>
           <div className='flex flex-1 justify-end'>
             {/* <Button
               className={classes.button}
