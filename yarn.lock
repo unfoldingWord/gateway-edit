@@ -2970,8 +2970,10 @@ bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
 
-"bible-reference-rcl@file:.yalc/bible-reference-rcl":
+bible-reference-rcl@1.1.1-beta:
   version "1.1.1-beta"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.1.1-beta.tgz#6233b0883cacf4c3d03b5eccf324a011b054fb55"
+  integrity sha512-6l4RO1B6fSmvhbKN/0J0T8JbqF+Uz9IYAReUmEP+sQ8ibzuQJrNGqGNrYWI3/gVztgu0DxyvjCllKobfrYBYig==
   dependencies:
     lodash "^4.5.0"
     lodash.isequal "^4.5.0"

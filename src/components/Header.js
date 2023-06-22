@@ -17,7 +17,6 @@ import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
 import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
-import { getFilterFromTSV } from '@utils/tsv'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -54,7 +53,6 @@ export default function Header({
   const {
     state: {
       filter,
-      filterTSV,
     },
     actions: {
       checkUnsavedChanges,
@@ -65,13 +63,16 @@ export default function Header({
   useEffect(() => {
     if (filesContent?.length) {
       console.log(filesContent)
-      const fileName = filesContent[0].name
+      const filename = filesContent[0].name
       const content = filesContent[0].content
-      const refs = getFilterFromTSV(content)
 
-      if (refs?.length) {
-        setFilterTSV(fileName)
-        setFilter(refs)
+      if (content) {
+        setFilter({
+          enabled: true,
+          filename,
+          rawTSV: content,
+          filteredBooks: null,
+        })
       }
     }
   }, [ filesContent ])
@@ -97,13 +98,16 @@ export default function Header({
   }
 
   function handleTsvButton() {
-    if (!filter) { // load TSV file
+    if (!filter?.enabled) { // load TSV file
+      console.log('Fetching TSV')
       openFileSelector()
     } else { // clear filter
-      setFilterTSV(null)
-      setFilter(null)
+      console.log('Toggling Filter off')
+      setFilter({ enabled: false })
     }
   }
+
+  const searchStr = filter?.enabled && filter.config?.searchStr
 
   return (
     <header>
@@ -130,7 +134,14 @@ export default function Header({
           <div className='flex flex-1 justify-center items-center'>
             <BibleReference />
           </div>
-          <button onClick={() => handleTsvButton()}>{filter ? 'Filter OFF' : 'Open TSV' } </button>
+          <div className='flex flex-1'>
+            <button onClick={() => handleTsvButton()}>{filter?.enabled ? 'Filter OFF' : 'Open TSV' } </button>
+          </div>
+          <div className='flex flex-1'>
+            <b>
+              {searchStr ? `Filter: ${searchStr}` : ''}
+            </b>
+          </div>
           <div className='flex flex-1 justify-end'>
             {/* <Button
               className={classes.button}

@@ -59,8 +59,13 @@ export default function StoreContextProvider(props) {
   const [hebrewRepoUrl, setHebrewRepoUrl] = useLocalStorage('hebrewRepoUrl', null)
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
   const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
-  const [filter, setFilter] = useState(null)
-  const [filterTSV, setFilterTSV] = useState(null)
+  const [filter, _setFilter] = useState({
+    enabled: false,
+    filename: null,
+    filteredBooks: null,
+    config: null,
+    rawTSV: null,
+  })
 
   const {
     savedChanges,
@@ -68,6 +73,14 @@ export default function StoreContextProvider(props) {
     checkUnsavedChanges,
     showSaveChangesPrompt,
   } = useSaveChangesPrompt()
+
+  function setFilter(config) {
+    const newConfig = {
+      ...filter,
+      ...config,
+    }
+    _setFilter(newConfig)
+  }
 
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)
@@ -100,7 +113,6 @@ export default function StoreContextProvider(props) {
       bibleReference,
       currentLayout,
       filter,
-      filterTSV,
       greekRepoUrl,
       hebrewRepoUrl,
       languageId,
@@ -125,7 +137,6 @@ export default function StoreContextProvider(props) {
       setAppRef,
       setCurrentLayout,
       setFilter,
-      setFilterTSV,
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setLanguageId,

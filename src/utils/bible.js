@@ -1,3 +1,4 @@
+import { getFilterFromTSV } from '@utils/tsv'
 import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
 
 function zeroAdjustLength(text, len) {
@@ -42,6 +43,14 @@ export function bibleRefSort(a, b) { // sorts by true book/chapter/verse order
   const bkey = normalizeRef(b)
   // eslint-disable-next-line no-nested-ternary
   return akey < bkey ? -1 : akey > bkey ? 1 : 0
+}
+
+export function getSupportedBooksFromTSV(tsv) {
+  const { refs, items } = getFilterFromTSV(tsv)
+  let config = items?.length && items[0]?.Configuration
+  config = config && JSON.parse(config)
+  const supportedBooks = refsToObject(refs) // convert from array of references to structured object
+  return { config, supportedBooks }
 }
 
 export function refsToObject(refs) {

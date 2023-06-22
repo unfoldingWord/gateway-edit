@@ -3,7 +3,7 @@ import useEffect from 'use-deep-compare-effect'
 import BibleReference, { useBibleReference } from 'bible-reference-rcl'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { StoreContext } from '@context/StoreContext'
-import { refsToObject } from '@utils/bible'
+import { getSupportedBooksFromTSV } from '@utils/bible'
 
 const useStyles = makeStyles((theme) => ({
   underline: {
@@ -21,13 +21,12 @@ function BibleReferenceComponent(props) {
         bookId, chapter, verse,
       },
       filter,
-      filterTSV,
       supportedBibles,
     },
     actions: {
       checkUnsavedChanges,
       onReferenceChange,
-      setFilterTSV,
+      setFilter,
     },
   } = useContext(StoreContext)
 
@@ -56,14 +55,20 @@ function BibleReferenceComponent(props) {
   }, [supportedBibles])
 
   React.useEffect(() => { // if bible filter changes, update bible-reference-rcl
-    if (filter?.length) { // applying new filter
-      const supportedBooks = refsToObject(filter) // convert from array of references to structured object
-      actions.setBookChapterVerses(supportedBooks)
-      console.log('filter applied', { newBCV: supportedBooks, filterArray: filter })
-    } else if (filterTSV) { // clearing previous filter
+    if (filter?.enabled) { // applying new filter
+      if (!filter.filteredBooks && filter.rawTSV) {
+        const { supportedBooks, config } = getSupportedBooksFromTSV(filter.rawTSV)
+        actions.setBookChapterVerses(supportedBooks)
+        console.log('filter applied', { newBCV: supportedBooks, filterArray: filter })
+        setFilter({
+          filteredBooks: supportedBooks,
+          config,
+        })
+      }
+    } else if (!filter?.enabled && filter?.filteredBooks) { // clearing previous filter
       actions.setBookChapterVerses(null)
       console.log('filter removed')
-      setFilterTSV(null)
+      setFilter({ filteredBooks: null })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter])

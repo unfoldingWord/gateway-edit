@@ -42,5 +42,5 @@ export function getFilterFromTSV(tsvData) {
 
   refs = refs.sort(bibleRefSort)
   console.log(refs)
-  return refs
+  return { refs, items }
 }
