@@ -107,7 +107,9 @@ export default function Header({
     }
   }
 
-  const searchStr = filter?.enabled && filter.config?.searchStr
+  const searchStr = filter?.config?.searchStr
+  const _filterMessage = searchStr ? `Filtering on: ${searchStr}` : 'Filtering'
+  const filterMessage = filter?.enabled ? _filterMessage : ''
 
   return (
     <header>
@@ -139,7 +141,7 @@ export default function Header({
           </div>
           <div className='flex flex-1'>
             <b>
-              {searchStr ? `Filter: ${searchStr}` : ''}
+              {filterMessage}
             </b>
           </div>
           <div className='flex flex-1 justify-end'>
