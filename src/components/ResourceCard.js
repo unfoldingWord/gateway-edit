@@ -380,31 +380,30 @@ export default function ResourceCard({
     setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch) => {
       console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
-      await onSaveEdit(branch).then((success) => {
-        if (success) {
-          setSaved(true)
-          setSavedChanges(cardResourceId, true)
-          delay(500).then(() => {
-            console.info('handleSaveEdit() Reloading resource')
-            reloadResource()
-          })
-        } else {
-          console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
-        }
-        setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
-      })
+      const success = await onSaveEdit(branch)
+
+      if (success) {
+        setSaved(true)
+        setSavedChanges(cardResourceId, true)
+        delay(500).then(() => {
+          console.info('handleSaveEdit() Reloading resource')
+          reloadResource()
+        })
+      } else {
+        console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
+      }
+      setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
     }
 
     // If not using user branch create it then save the edit.
     if (!usingUserBranch) {
       console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
-      await startEdit().then(branch => {
-        if (branch) {
-          saveEdit(branch)
-        } else { // if error on branch creation
-          onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
-        }
-      })
+      const branch = await startEdit()
+      if (branch) {
+        saveEdit(branch)
+      } else { // if error on branch creation
+        onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
+      }
     } else {// Else just save the edit.
       await saveEdit()
     }
