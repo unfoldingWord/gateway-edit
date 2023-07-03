@@ -3001,10 +3001,10 @@ bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
 
-bible-reference-rcl@1.2.1-beta.1:
-  version "1.2.1-beta.1"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.1-beta.1.tgz#b6a6fa488d48ae3a1b67e655d2d0ea195f8c2201"
-  integrity sha512-XlTzoNG+8mOARAUOWVtTDwCXHNNXZ0iMLf0+IaCv1H4eqCTAAh1K3dvo/mgyG6r0MbvpizbDOwGTH0/3+JIUuQ==
+bible-reference-rcl@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.1.tgz#e76aca9d7045b8d8bd24c31204ee760de272605d"
+  integrity sha512-LcppTMmrcVLZUkPg3Thq0EK/r5Z1YZ7jakktHosXaVNRCfRYfAPUm3SIYUqY9DZ6yxxCnMegxjA2DszxlLnGrg==
   dependencies:
     "@emotion/react" "^11.11.0"
     "@emotion/styled" "^11.11.0"
