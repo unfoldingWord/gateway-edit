@@ -38,17 +38,17 @@ export default function Layout({
   const storeContext = useContext(StoreContext)
   const {
     state: {
-      showAccountSetup,
       languageId,
       owner,
+      showAccountSetup,
       server,
       mergeStatusForCards,
     },
     actions: {
       setCurrentLayout,
-      setShowAccountSetup,
-      setServer,
       setMainScreenRef,
+      setServer,
+      setShowAccountSetup,
     },
   } = storeContext
 

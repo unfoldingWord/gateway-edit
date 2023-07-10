@@ -1,5 +1,10 @@
-import { useState, useContext } from 'react'
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import PropTypes from 'prop-types'
+import { useFilePicker } from 'use-file-picker'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -43,6 +48,7 @@ export default function Header({
   setFeedback,
   mergeStatusForCards,
 }) {
+  const [openFileSelector, { filesContent, loading }] = useFilePicker({ accept: '.tsv' })
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
@@ -50,10 +56,13 @@ export default function Header({
   const {
     state: {
       cardsSaving,
-      cardsLoadingUpdate
+      cardsLoadingUpdate,
+      filter,
     },
     actions: {
       checkUnsavedChanges,
+      setFilter,
+      setFilterTSV,
     }
   } = useContext(StoreContext)
 
@@ -64,6 +73,23 @@ export default function Header({
     dialogMessage,
     dialogTitle,
   } = updateButtonProps;
+
+  useEffect(() => {
+    if (filesContent?.length) {
+      console.log(filesContent)
+      const filename = filesContent[0].name
+      const content = filesContent[0].content
+
+      if (content) {
+        setFilter({
+          enabled: true,
+          filename,
+          rawTSV: content,
+          filteredBooks: null,
+        })
+      }
+    }
+  }, [ filesContent ])
 
   const handleDrawerOpen = () => {
     if (!drawerOpen) {
@@ -84,6 +110,20 @@ export default function Header({
   const doHideFeedback = () => {
     setFeedback && setFeedback(false)
   }
+
+  function handleTsvButton() {
+    if (!filter?.enabled) { // load TSV file
+      console.log('Fetching TSV')
+      openFileSelector()
+    } else { // clear filter
+      console.log('Toggling Filter off')
+      setFilter({ enabled: false })
+    }
+  }
+
+  const searchStr = filter?.config?.searchStr
+  const _filterMessage = searchStr ? `Filtering on: ${searchStr}` : 'Filtering'
+  const filterMessage = filter?.enabled ? _filterMessage : ''
 
   const loadingProps = { color: "secondary" };
 
@@ -111,6 +151,14 @@ export default function Header({
           </div>
           <div className='flex flex-1 justify-center items-center'>
             <BibleReference />
+          </div>
+          <div className='flex flex-1'>
+            <button onClick={() => handleTsvButton()}>{filter?.enabled ? 'Filter OFF' : 'Open TSV' } </button>
+          </div>
+          <div className='flex flex-1'>
+            <b>
+              {filterMessage}
+            </b>
           </div>
 
 

@@ -59,6 +59,13 @@ export default function StoreContextProvider(props) {
   const [hebrewRepoUrl, setHebrewRepoUrl] = useLocalStorage('hebrewRepoUrl', null)
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
   const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
+  const [filter, _setFilter] = useState({
+    enabled: false,
+    filename: null,
+    filteredBooks: null,
+    config: null,
+    rawTSV: null,
+  })
   const [mergeStatusForCards, setMergeStatusForCards] = useState({})
   const [cardsSaving, setCardsSaving] = useState([])
   const [cardsLoadingUpdate, setCardsLoadingUpdate] = useState([])
@@ -122,6 +129,14 @@ export default function StoreContextProvider(props) {
     showSaveChangesPrompt,
   } = useSaveChangesPrompt()
 
+  function setFilter(config) {
+    const newConfig = {
+      ...filter,
+      ...config,
+    }
+    _setFilter(newConfig)
+  }
+
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)
     setBibleReference(prevState => ({
@@ -148,58 +163,60 @@ export default function StoreContextProvider(props) {
 
   const value = {
     state: {
-      showAccountSetup,
-      scriptureOwner,
-      bibleReference,
-      selectedQuote,
-      languageId,
-      taArticle,
-      server,
       appRef,
-      owner,
-      supportedBibles,
-      currentLayout,
-      useUserLocalStorage,
-      loggedInUser: username,
       authentication,
-      lastError,
-      tokenNetworkError,
-      greekRepoUrl,
-      hebrewRepoUrl,
-      mainScreenRef,
-      savedChanges,
+      bibleReference,
       cardsSaving,
       cardsLoadingUpdate,
       cardsLoadingMerge,
+      currentLayout,
+      filter,
+      greekRepoUrl,
+      hebrewRepoUrl,
+      languageId,
+      lastError,
+      loggedInUser: username,
+      mainScreenRef,
       mergeStatusForCards,
+      owner,
+      savedChanges,
+      scriptureOwner,
+      selectedQuote,
+      server,
+      showAccountSetup,
+      supportedBibles,
+      taArticle,
+      tokenNetworkError,
+      useUserLocalStorage,
     },
     actions: {
+      callMergeFromMasterForCards,
+      checkUnsavedChanges,
+      getMergeFromMasterStatus,
       logout,
       onReferenceChange,
-      setShowAccountSetup,
-      setScriptureOwner,
-      setLanguageId,
       setAppRef,
-      setServer,
-      setQuote,
-      setOwner,
-      setSupportedBibles,
-      setCurrentLayout,
-      setLastError,
-      setTokenNetworkError,
-      updateTaDetails,
-      setGreekRepoUrl,
-      setHebrewRepoUrl,
-      setMainScreenRef,
-      setSavedChanges,
       setCardsSaving,
       setCardsLoadingUpdate,
       setCardsLoadingMerge,
-      checkUnsavedChanges,
+      setCurrentLayout,
+      setFilter,
+      setGreekRepoUrl,
+      setHebrewRepoUrl,
+      setLanguageId,
+      setLastError,
+      setMainScreenRef,
+      setOwner,
+      setQuote,
+      setSavedChanges,
+      setShowAccountSetup,
+      setScriptureOwner,
+      setServer,
+      setSupportedBibles,
+      setTokenNetworkError,
       showSaveChangesPrompt,
       updateMergeState,
-      getMergeFromMasterStatus,
-      callMergeFromMasterForCards,
+      updateTaDetails,
     },
   }
 
