@@ -4242,6 +4242,13 @@ dayjs@^1.10.4:
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
   integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
 
+dcs-branch-merger@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/dcs-branch-merger/-/dcs-branch-merger-1.4.0.tgz#8f4f28b9ee5e24ff64687de9a6ee0d8a6f1fba49"
+  integrity sha512-zKchiKN1rd4sUW99u6+HvKDLmHwzumilfcNJR8afkEViEvfgYAUrjPRihLg7y+FK4DtPbBkpicrKTLg7y3KnPw==
+  dependencies:
+    path "0.12.7"
+
 debounce-promise@^3.1.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/debounce-promise/-/debounce-promise-3.1.2.tgz#320fb8c7d15a344455cd33cee5ab63530b6dc7c5"
@@ -9664,10 +9671,10 @@ resolve@^2.0.0-next.4:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
-resource-workspace-rcl@2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.2.tgz#551242cd5e74cde549cd97b82cdf67dd12fe1814"
-  integrity sha512-rYUndXsMZarHM9Vmles3XeFdYjIfHJX/Di9tQYZSubAW1J60RxClXn9urxtVZ6GCeQ6g2RuwTKl2G7gXOrx8Jw==
+resource-workspace-rcl@2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/resource-workspace-rcl/-/resource-workspace-rcl-2.1.4.tgz#a1efadf0f5b4a7e8cc838b84d2c1b932f3bec5c9"
+  integrity sha512-EjkCXfVSspL2DBYPpWkcHzGh4CFVmIKhMoI/4wpcjIGlvotLUqe+BIH/NovKfpzbfbycV8Rw5E+egcYanLG5Tg==
   dependencies:
     prop-types "^15.7.2"
     react-grid-layout "1.2.0"
@@ -9962,10 +9969,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.3.3-patch.11:
-  version "3.3.3-patch.11"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.3.3-patch.11.tgz#7daeb26516ddc7f9cbcd8e570f2ee41451d74054"
-  integrity sha512-+Y1Mel1Jz38hzH+dk7BjVK75+k3lcxwR1UIWed11BzhwFBR261iPY90viA65tbFmBEmed+Hl/IXSvt9lKA3O5w==
+single-scripture-rcl@3.4.4:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.4.tgz#f9759c7ef0b012b7316a687189d07a5ffd90b77d"
+  integrity sha512-5RCcsB1Qujqg81DqhpwaEyeLFYPowb5AxNNZx+twK5cmNgyFf88kq6vuvJ9YARLcfx0cm5Vo6wdG/3wQiAETwg==
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
@@ -10805,15 +10812,16 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.3.9-patch.4:
-  version "3.3.9-patch.4"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.3.9-patch.4.tgz#0c09abdcde8c6b83fd3fc7074c7475e872aee940"
-  integrity sha512-X0IGo3wbUFWZ91pnqu2MU790yyHJl4HxQ/q0KpKaiZaEjYw4WcX6+f4NEA4AWThPS+nNvtb+5QgplpE8RWNshg==
+translation-helps-rcl@3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.0.tgz#682886826970f4dc0330ab32d27efd30f4c13985"
+  integrity sha512-/goKN/52fwfnWCSZqVc5MdgQaqVOoBQh/+vWEVyyVVm+8NmVpCA+xBz0HCz1Mayp/HjJRXa5CxyRdeLZnLaZ+A==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
     axios "^0.27.2"
     bible-reference-range "^1.1.0"
+    dcs-branch-merger "^1.4.0"
     deep-equal "^2.0.5"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"
