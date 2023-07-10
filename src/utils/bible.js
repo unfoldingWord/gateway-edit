@@ -49,11 +49,16 @@ export function getSupportedBooksFromTSV(tsv) {
   const { refs, items } = getFilterFromTSV(tsv)
   let config = items?.length && items[0]?.Configuration
   config = config && JSON.parse(config)
-  const supportedBooks = refsToObject(refs) // convert from array of references to structured object
+  const supportedBooks = convertRefsToSupportedBooks(refs) // convert from array of references to structured object
   return { config, supportedBooks }
 }
 
-export function refsToObject(refs) {
+/**
+ * take list of book/chapter/verses and create a structured object used by bible-reference-rcl
+ * @param refs - list in format such as ['gen 1:1', ...]
+ * @return {{}} - structure such as {gen: {1: ['1', '2', ...]}}}
+ */
+export function convertRefsToSupportedBooks(refs) {
   const supportedBooks = {}
 
   for (const ref of refs) {
