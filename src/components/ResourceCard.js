@@ -104,7 +104,7 @@ export default function ResourceCard({
 
   // Useful to clear content when selectedQuote.quote and selectedQuote.occurrence change, so that tw clears the content value on selection.
   useEffect(() => {
-    if (cardResourceId == 'tw') {
+    if (cardResourceId === 'tw') {
       setContent('')
     }
   }, [cardResourceId, selectedQuote?.quote, selectedQuote?.occurrence])
@@ -198,7 +198,7 @@ export default function ResourceCard({
         setTwlResourceLoaded(twlResourceLoaded_)
         if (ready) {
           if (resource?.manifest?.projects?.length) {
-            console.log(`repo '${repo}' ready:`, { resourceReady_, resourceStatus })
+            console.log(`repo '${repo}' ready:`, { ready, resourceStatus })
             loadTwls(resource, owner, repo, bookID)
           }
         } else {
