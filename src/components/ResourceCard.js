@@ -9,6 +9,8 @@ import {
   CardContent,
   ErrorDialog,
   ERROR_STATE,
+  INITIALIZED_STATE,
+  LOADING_STATE,
   MANIFEST_NOT_LOADED_ERROR,
   UpdateBranchButton,
   useBranchMerger,
@@ -32,7 +34,8 @@ import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { delay } from '../utils/resources'
 import { StoreContext } from '@context/StoreContext'
-
+import { loadTwls } from "../utils/twls";
+import { isNT } from "../common/BooksOfTheBible";
 
 export default function ResourceCard({
   appRef,
@@ -77,6 +80,7 @@ export default function ResourceCard({
     readyToFetch: false,
   })
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+  const [twlResourceLoaded, setTwlResourceLoaded] = useState(null)
 
   function updateTempContent(c) {
     setContent(c)
@@ -179,7 +183,32 @@ export default function ResourceCard({
   })
 
   const repo = `${languageId}_${cardResourceId}`
-  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
+
+  useEffect(() => {
+    if (cardResourceId === 'twl') {
+      const ready = resourceStatus && resourceStatus[INITIALIZED_STATE] && !resourceStatus[ERROR_STATE] && !resourceStatus[LOADING_STATE]
+      const bookID = _reference?.projectId
+      let twlResourceLoaded_ = null
+      if (ready) {
+        const testament = isNT(bookID) ? 'NT' : 'OT'
+        twlResourceLoaded_ = `${owner}/${repo}/${cardResourceId}/${testament}`
+      }
+
+      if (twlResourceLoaded_ !== twlResourceLoaded) {
+        setTwlResourceLoaded(twlResourceLoaded_)
+        if (ready) {
+          if (resource?.manifest?.projects?.length) {
+            console.log(`repo '${repo}' ready:`, { resourceReady_, resourceStatus })
+            loadTwls(resource, owner, repo, bookID)
+          }
+        } else {
+          setTwlResourceLoaded(null)
+        }
+      }
+    }
+  }, [resourceStatus, repo])
+
+  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 })
   const {
     state: {
       mergeStatus: mergeToMaster,
