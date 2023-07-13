@@ -4,13 +4,16 @@ import { HTTP_CONFIG, HTTP_GET_MAX_WAIT_TIME } from '../common/constants';
 import tsvToJson from './tsv';
 import { core } from 'scripture-resources-rcl';
 import usfmjs from 'usfm-js';
-import {delay} from "./delay";
-import {tokenizeOrigLang} from "string-punctuation-tokenizer";
+import { delay } from "./delay";
+import { tokenizeOrigLang } from "string-punctuation-tokenizer";
 import localforage from "localforage";
+import * as isEqual from "deep-equal";
 
 const databaseName = 'tWordsDatabase'
 const tWordsIndex = 'tWordsIndex';
 const tWordsTsv = 'tWordsTsv';
+const chunkSize = 1000
+const maxTwordsHours = 8;
 
 function normalizePath(project) {
   // normalize path
@@ -74,6 +77,20 @@ function mergeOlData(twls, bookObject) {
   }
 }
 
+function timeExpired(savedTime, maxHours) {
+  let timeout = false
+  if (!savedTime) {
+    timeout = true
+  } else {
+    const elapsedMs = (new Date() - savedTime)
+    const elapsedHrs = elapsedMs / (1000 * 60 * 60)
+    if (elapsedHrs >= maxHours) {
+      timeout = true
+    }
+  }
+  return timeout;
+}
+
 export async function loadTwls(resource, owner, repo, bookID){
   const projects = resource?.manifest?.projects
   if (projects?.length) {
@@ -84,6 +101,7 @@ export async function loadTwls(resource, owner, repo, bookID){
     let url = null
     let testament
     let twls
+    let twIndex
 
     if (isNT(bookID)) {
       olBibleRepo = "el-x-koine_ugnt"
@@ -95,18 +113,57 @@ export async function loadTwls(resource, owner, repo, bookID){
       testament = 'OT'
     }
 
-    const testamentKey = `${testament}-index`;
+    const config = {
+      owner,
+      repo,
+    }
+
+    let forceReload = false
+    const settingsKey = `${testament}-settings`
+
     try {
-      const data = await readFromStorage(tWordsIndex, testamentKey)
-      const twIndex = data?.twIndex
-      if (twIndex) { // if already cached, then nothing to do
-        return
-      }
+      const data = await readFromStorage(tWordsIndex, settingsKey)
+      const config_ = data?.config
+      const configChanged = !isEqual(config_, config)
+      const savedTime = data?.time
+      const timeout = timeExpired(savedTime, maxTwordsHours)
+      forceReload = configChanged || timeout
     } catch (e) {
       console.warn(`loadTwls() - error reading indexDB for ${owner}/${olBibleRepo}/${testament}`, e)
     }
 
-    if (!twlData || !Object.keys(twlData).length) {
+    if (!forceReload) {
+      try {
+        const verifyKeys = [ 'bibleIndex', 'groupIndex', 'lemmaIndex', 'quoteIndex', 'selectionIndex', 'strongsIndex' ]
+        const checksStore = `${testament}_checks`;
+        let keys = await getKeysFromStorage(checksStore)
+        if (keys?.length < 1) {
+          console.log(`loadTwls() - missing store ${checksStore}`)
+          forceReload = true;
+        }
+
+        keys = await getKeysFromStorage(tWordsIndex)
+        if (keys?.length) {
+          for (const key of verifyKeys) {
+            if (!forceReload) {
+              const _key = `${testament}_${key}`
+              if (!keys.includes(_key)) {
+                console.log(`loadTwls() - missing ${_key} in store ${tWordsIndex}`)
+                forceReload = true;
+              }
+            }
+          }
+        } else {
+          console.log(`loadTwls() - missing store ${tWordsIndex}`)
+        }
+
+      } catch (e) {
+        console.warn(`loadTwls() - error reading indexDB for ${owner}/${olBibleRepo}/${testament}`, e)
+        forceReload = true
+      }
+    }
+
+    if (forceReload) {
       twlData = {}
       const [languageId, resourceId] = olBibleRepo.split('_');
       try {
@@ -128,15 +185,18 @@ export async function loadTwls(resource, owner, repo, bookID){
       }
 
       for (const book of books) {
+        let timeout = true
 
         try {
           const data = await readFromStorage(tWordsTsv, book)
           twls = data?.twls
+          const savedTime = data?.time
+          timeout = timeExpired(savedTime, maxTwordsHours)
         } catch (e) {
           console.warn(`loadTwls() - error reading indexDB for ${owner}/${olBibleRepo}/${testament}`, e)
         }
 
-        if (!twls) {
+        if (!twls || timeout) {
           const project = projects?.find(p => (p.identifier === book))
           const book_ = project?.identifier
           if (!book_) {
@@ -144,7 +204,6 @@ export async function loadTwls(resource, owner, repo, bookID){
             continue
           }
 
-          console.log('tsv project found', project)
           let projectPath = normalizePath(project);
 
           url = `${resource?.config?.server}/${owner}/${repo}/raw/branch/master/${projectPath}`
@@ -189,7 +248,7 @@ export async function loadTwls(resource, owner, repo, bookID){
           }
 
           const bookObject = usfmjs.toJSON(data);
-          console.log('bookObject', bookObject)
+          // console.log('bookObject', bookObject)
           await delay(500) // add pause for UI operations
           mergeOlData(twls, bookObject);
 
@@ -200,17 +259,64 @@ export async function loadTwls(resource, owner, repo, bookID){
 
         twlData[book] = twls
       }
-      console.log(`twlData`, twlData)
-    }
 
-    const twIndex = await indexTwords(twlData)
-    for (const key of Object.keys(twIndex)) {
-      await delay(500)
-      console.log(`loadTwls() - saving key ${key}`)
-      await initializeAndLoadDataStorage(key, twIndex[key])
+      const twIndex = await indexTwords(twlData)
+      for (const key of Object.keys(twIndex)) {
+        await delay(500)
+        const saveKey = `${testament}_${key}`
+        console.log(`loadTwls() - saving key ${saveKey}`)
+        if (key === 'checks') {
+          await loadDataStorage(saveKey, twIndex[key])
+        } else {
+          await saveToStorage(tWordsIndex, saveKey, twIndex[key])
+        }
+      }
+
+      const time = new Date();
+      await saveToStorage(tWordsIndex, settingsKey, { time, config })
+      console.log(`loadTwls() - DONE generating tWords index`)
+    } else {
+      console.log(`loadTwls() - data already cached, nothing to do for ${owner}/${olBibleRepo}/${testament}`)
     }
-    console.log(`loadTwls() - DONE`)
     return twlData;
+  }
+}
+
+function addCheckToIndex(previousCheck, item, fullRef, checks, selectionIndex, checkKey, location) {
+  if (!previousCheck) {
+    item.refs = [fullRef];
+    checks.push(item);
+    selectionIndex[checkKey] = location
+  } else {
+    location = previousCheck;
+    const check = checks[previousCheck];
+    const refs = check.refs;
+    if (! fullRef in refs) {
+      refs.push(fullRef);
+    }
+  }
+  return location;
+}
+
+function addItemToIndex(index, key, item, location, lowerCase = false) {
+  const value = item?.[key] || [];
+  let valueStr = Array.isArray(value) ? value.join(' ') : value;
+
+  if (lowerCase) {
+    valueStr = valueStr.toLowerCase()
+  }
+
+  let list = findItem(index, valueStr, true);
+  pushUnique(list, location);
+  // if items value is an array and there are multiple values, add each value separately
+  if (value?.length > 1) {
+    for (let _value of value) {
+      if (lowerCase) {
+        _value = _value.toLowerCase()
+      }
+      list = findItem(index, _value, true);
+      pushUnique(list, location);
+    }
   }
 }
 
@@ -223,6 +329,7 @@ export async function indexTwords(twlData) {
   let checks = [];
   const bibleIndex = {};
   const groupIndex = {};
+  const lemmaIndex = {};
   const quoteIndex = {};
   const strongsIndex = {};
   const selectionIndex = {};
@@ -261,26 +368,13 @@ export async function indexTwords(twlData) {
         const checkKey = `${item.Catagory}_${groupId}_${quote}`;
         let previousCheck = selectionIndex[checkKey];
         const fullRef = `${bookId} ${reference}`
-
-        if (!previousCheck) {
-          item.refs = [fullRef];
-          checks.push(item);
-          selectionIndex[checkKey] = location
-        } else {
-          location = previousCheck;
-          const check = checks[previousCheck];
-          check.refs.push(fullRef);
-        }
+        location = addCheckToIndex(previousCheck, item, fullRef, checks, selectionIndex, checkKey, location);
 
         const [chapter, verse] = reference.split(':');
 
-        let strongs = item?.strong || [];
-        strongs = Array.isArray(strongs) ? strongs.join(' ') : strongs;
-        const strongsList = findItem(strongsIndex, strongs, true);
-        pushUnique(strongsList, location);
-
-        const quoteList = findItem(quoteIndex, quote, true);
-        pushUnique(quoteList, location);
+        addItemToIndex(strongsIndex, 'strong', item, location);
+        addItemToIndex(lemmaIndex, 'lemmas', item, location);
+        addItemToIndex(quoteIndex, 'quote', item, location, true);
 
         const bookIndex = findItem(bibleIndex, bookId, false);
         const chapterIndex = findItem(bookIndex, chapter, false);
@@ -299,6 +393,7 @@ export async function indexTwords(twlData) {
     checks,
     bibleIndex,
     groupIndex,
+    lemmaIndex,
     quoteIndex,
     selectionIndex,
     strongsIndex,
@@ -315,19 +410,40 @@ function initializeDataStorage(storeName) {
   return db;
 }
 
-export async function initializeAndLoadDataStorage(storeName, data) {
+async function saveChunk(db, key, subData, count) {
+  await db.setItem(key, subData);
+  // verify data
+  const value = await db.getItem(key);
+  if (!value?.length) {
+    console.warn(`initializeAndLoadDataStorage() - chunk ${count} did not verify`)
+    return false
+  }
+  return true
+}
+
+export async function loadDataStorage(storeName, data) {
   try {
-    const results = localforage.dropInstance({
-      name: databaseName,
-      storeName,
-    });
     const db = initializeDataStorage(storeName);
-    for (const key in data) {
-      const dataItem = data[key]
-      await db.setItem(key, dataItem);
+    if (Array.isArray(data)) {
+      const len = data.length
+      let count = 0
+      while (count < len) {
+        const subData = data.slice(count, count + chunkSize)
+        const key = `${count}`;
+        let success = await saveChunk(db, key, subData, count);
+        if (!success) {
+          success = await saveChunk(db, key, subData, count);
+        }
+        count+= chunkSize
+      }
+    } else {
+      for (const key in data) {
+        const dataItem = data[key]
+        await db.setItem(key, dataItem);
+      }
     }
   } catch (e) {
-    console.log('Error initializing database:', e);
+    console.log(`loadDataStorage - Error saving to database ${storeName}:`, e);
     return null;
   }
 }
@@ -344,7 +460,19 @@ export async function readFromStorage(storeName, key) {
     // console.log(`read value for ${key}`, value);
     return value
   } catch (e) {
-    console.log('Error reading database:', e);
+    console.log(`readFromStorage - Error reading database ${storeName}:`, e);
+    return null;
+  }
+}
+
+export async function getKeysFromStorage(storeName) {
+  try {
+    const db = initializeDataStorage(storeName);
+    const value = await db.keys();
+    // console.log(`read value for ${key}`, value);
+    return value
+  } catch (e) {
+    console.log(`getKeysFromStorage - Error reading database ${storeName}:`, e);
     return null;
   }
 }

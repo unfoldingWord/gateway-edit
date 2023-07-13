@@ -191,10 +191,10 @@ export default function ResourceCard({
       let twlResourceLoaded_ = null
       if (ready) {
         const testament = isNT(bookID) ? 'NT' : 'OT'
-        twlResourceLoaded_ = `${owner}/${repo}/${cardResourceId}/${testament}`
+        twlResourceLoaded_ = `${owner}/${repo}/${testament}`
       }
 
-      if (twlResourceLoaded_ !== twlResourceLoaded) {
+      if (ready && (twlResourceLoaded_ !== twlResourceLoaded)) {
         setTwlResourceLoaded(twlResourceLoaded_)
         if (ready) {
           if (resource?.manifest?.projects?.length) {
