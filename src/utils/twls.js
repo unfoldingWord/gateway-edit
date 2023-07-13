@@ -205,9 +205,11 @@ export async function loadTwls(resource, owner, repo, bookID){
 
     const twIndex = await indexTwords(twlData)
     for (const key of Object.keys(twIndex)) {
+      await delay(500)
+      console.log(`loadTwls() - saving key ${key}`)
       await initializeAndLoadDataStorage(key, twIndex[key])
     }
-    console.log(`twIndex`, twIndex)
+    console.log(`loadTwls() - DONE`)
     return twlData;
   }
 }
