@@ -199,7 +199,9 @@ export default function ResourceCard({
         if (ready) {
           if (resource?.manifest?.projects?.length) {
             console.log(`repo '${repo}' ready:`, { ready, resourceStatus })
-            loadTwls(resource, owner, repo, bookID)
+            delay(100).then(() => {
+              loadTwls(resource, owner, repo, bookID)
+            })
           }
         } else {
           setTwlResourceLoaded(null)

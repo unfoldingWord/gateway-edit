@@ -8,7 +8,9 @@ import {delay} from "./delay";
 import {tokenizeOrigLang} from "string-punctuation-tokenizer";
 import localforage from "localforage";
 
+const databaseName = 'tWordsDatabase'
 const tWordsIndex = 'tWordsIndex';
+const tWordsTsv = 'tWordsTsv';
 
 function normalizePath(project) {
   // normalize path
@@ -128,7 +130,7 @@ export async function loadTwls(resource, owner, repo, bookID){
       for (const book of books) {
 
         try {
-          const data = await readFromStorage(tWordsIndex, book)
+          const data = await readFromStorage(tWordsTsv, book)
           twls = data?.twls
         } catch (e) {
           console.warn(`loadTwls() - error reading indexDB for ${owner}/${olBibleRepo}/${testament}`, e)
@@ -191,7 +193,7 @@ export async function loadTwls(resource, owner, repo, bookID){
           await delay(500) // add pause for UI operations
           mergeOlData(twls, bookObject);
 
-          await saveToStorage(tWordsIndex, book, { time: new Date(), twls })
+          await saveToStorage(tWordsTsv, book, { time: new Date(), twls })
         } else {
           console.log(`loadTwls() - found cached data for ${owner}/${olBibleRepo}/${book}`)
         }
@@ -202,7 +204,9 @@ export async function loadTwls(resource, owner, repo, bookID){
     }
 
     const twIndex = await indexTwords(twlData)
-    await saveToStorage(tWordsIndex, testamentKey, { time: new Date(), twIndex })
+    for (const key of Object.keys(twIndex)) {
+      await initializeAndLoadDataStorage(key, twIndex[key])
+    }
     console.log(`twIndex`, twIndex)
     return twlData;
   }
@@ -254,15 +258,16 @@ export async function indexTwords(twlData) {
 
         const checkKey = `${item.Catagory}_${groupId}_${quote}`;
         let previousCheck = selectionIndex[checkKey];
+        const fullRef = `${bookId} ${reference}`
 
         if (!previousCheck) {
-          item.refs = [reference];
+          item.refs = [fullRef];
           checks.push(item);
           selectionIndex[checkKey] = location
         } else {
           location = previousCheck;
           const check = checks[previousCheck];
-          check.refs.push(reference);
+          check.refs.push(fullRef);
         }
 
         const [chapter, verse] = reference.split(':');
@@ -300,20 +305,39 @@ export async function indexTwords(twlData) {
   return indices;
 }
 
-export async function saveToStorage(storeName, key, data) {
+function initializeDataStorage(storeName) {
   const db = localforage.createInstance({
-    name: storeName,
+    name: databaseName,
+    storeName,
   });
+  return db;
+}
 
+export async function initializeAndLoadDataStorage(storeName, data) {
+  try {
+    const results = localforage.dropInstance({
+      name: databaseName,
+      storeName,
+    });
+    const db = initializeDataStorage(storeName);
+    for (const key in data) {
+      const dataItem = data[key]
+      await db.setItem(key, dataItem);
+    }
+  } catch (e) {
+    console.log('Error initializing database:', e);
+    return null;
+  }
+}
+
+export async function saveToStorage(storeName, key, data) {
+  const db = initializeDataStorage(storeName);
   await db.setItem(key, data);
 }
 
 export async function readFromStorage(storeName, key) {
   try {
-    const db = localforage.createInstance({
-      name: storeName,
-    });
-
+    const db = initializeDataStorage(storeName);
     const value = await db.getItem(key);
     // console.log(`read value for ${key}`, value);
     return value
