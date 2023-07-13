@@ -94,6 +94,7 @@ function timeExpired(savedTime, maxHours) {
 export async function loadTwls(resource, owner, repo, bookID){
   const projects = resource?.manifest?.projects
   if (projects?.length) {
+    const server = resource?.config?.server;
     let twlData
     let olBibleRepo = null
     let books = null
@@ -116,9 +117,11 @@ export async function loadTwls(resource, owner, repo, bookID){
     const config = {
       owner,
       repo,
+      server,
     }
 
     let forceReload = false
+    let forceRefetch = false
     const settingsKey = `${testament}-settings`
 
     try {
@@ -128,6 +131,7 @@ export async function loadTwls(resource, owner, repo, bookID){
       const savedTime = data?.time
       const timeout = timeExpired(savedTime, maxTwordsHours)
       forceReload = configChanged || timeout
+      forceRefetch = configChanged
     } catch (e) {
       console.warn(`loadTwls() - error reading indexDB for ${owner}/${olBibleRepo}/${testament}`, e)
     }
@@ -174,7 +178,7 @@ export async function loadTwls(resource, owner, repo, bookID){
           config: {
             ...HTTP_CONFIG,
             noCache: false,
-            server: resource?.config?.server,
+            server,
           },
           fullResponse: true,
         })
@@ -196,7 +200,7 @@ export async function loadTwls(resource, owner, repo, bookID){
           console.warn(`loadTwls() - error reading indexDB for ${owner}/${olBibleRepo}/${testament}`, e)
         }
 
-        if (!twls || timeout) {
+        if (forceRefetch || !twls || timeout) {
           const project = projects?.find(p => (p.identifier === book))
           const book_ = project?.identifier
           if (!book_) {
@@ -206,7 +210,7 @@ export async function loadTwls(resource, owner, repo, bookID){
 
           let projectPath = normalizePath(project);
 
-          url = `${resource?.config?.server}/${owner}/${repo}/raw/branch/master/${projectPath}`
+          url = `${server}/${owner}/${repo}/raw/branch/master/${projectPath}`
           let data = await doFetch(url, null, HTTP_GET_MAX_WAIT_TIME, false).then(response => {
             if (response?.status !== 200) {
               const errorCode = response?.status
@@ -222,7 +226,7 @@ export async function loadTwls(resource, owner, repo, bookID){
 
           await delay(500) // add pause for UI operations
           twls = tsvToJson(data)
-          console.log(`fetched data for ${owner}/${repo}/${projectPath}, file size`, twls?.length)
+          console.log(`loadTwls() - fetched data for ${owner}/${repo}/${projectPath}, file size`, twls?.length)
 
           const olProject = olManifest?.projects?.find(p => (p.identifier === book))
           const _book = olProject?.identifier
@@ -233,11 +237,11 @@ export async function loadTwls(resource, owner, repo, bookID){
 
           projectPath = normalizePath(olProject);
 
-          url = `${resource?.config?.server}/${owner}/${olBibleRepo}/raw/branch/master/${projectPath}`
+          url = `${server}/${owner}/${olBibleRepo}/raw/branch/master/${projectPath}`
           data = await doFetch(url, null, HTTP_GET_MAX_WAIT_TIME, false).then(response => {
             if (response?.status !== 200) {
               const errorCode = response?.status
-              console.warn(`ResourceCard - error getting TWL data from ${url}, ${errorCode}`)
+              console.warn(`ResourceCard - error getting bible from ${url}, ${errorCode}`)
               return null
             }
             return response?.data
@@ -278,7 +282,6 @@ export async function loadTwls(resource, owner, repo, bookID){
     } else {
       console.log(`loadTwls() - data already cached, nothing to do for ${owner}/${olBibleRepo}/${testament}`)
     }
-    return twlData;
   }
 }
 
