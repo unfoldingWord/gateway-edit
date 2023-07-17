@@ -34,7 +34,7 @@ import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { delay } from '../utils/resources'
 import { StoreContext } from '@context/StoreContext'
-import { loadTwls } from "../utils/twls";
+import {findQuoteMatches, loadTwls} from "../utils/twls";
 import { isNT } from "../common/BooksOfTheBible";
 
 export default function ResourceCard({
@@ -209,6 +209,40 @@ export default function ResourceCard({
       }
     }
   }, [resourceStatus, repo])
+
+  useEffect(() => {
+    if (cardResourceId === 'twl') {
+      const ready = resourceStatus && resourceStatus[INITIALIZED_STATE] && !resourceStatus[ERROR_STATE] && !resourceStatus[LOADING_STATE]
+      const bookID = _reference?.projectId
+      let twlResourceLoaded_ = null
+      if (ready) {
+        const testament = isNT(bookID) ? 'NT' : 'OT'
+        twlResourceLoaded_ = `${owner}/${repo}/${testament}`
+      }
+
+      if (ready && (twlResourceLoaded_ !== twlResourceLoaded)) {
+        setTwlResourceLoaded(twlResourceLoaded_)
+        if (ready) {
+          if (resource?.manifest?.projects?.length) {
+            console.log(`repo '${repo}' ready:`, { ready, resourceStatus })
+            delay(100).then(() => {
+              loadTwls(resource, owner, repo, bookID)
+            })
+          }
+        } else {
+          setTwlResourceLoaded(null)
+        }
+      }
+    }
+  }, [resourceStatus, repo])
+
+  useEffect(() => {
+    const quote = selectedQuote?.quote;
+    if (quote &&(cardResourceId === 'twl')) {
+      console.log('selectedQuote', selectedQuote)
+      findQuoteMatches(projectId, chapter, verse, quote)
+    }
+  }, [selectedQuote?.quote])
 
   const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 })
   const {

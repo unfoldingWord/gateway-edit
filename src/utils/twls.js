@@ -509,3 +509,58 @@ function pushUnique(array, item) {
     array.push(item);
   }
 }
+
+async function fetchChecksByIndex(checksToLookUp, checksDb) {
+  const checksFound = []
+  let checkChunkLoaded
+  let checkChunk
+
+  for (const index of checksToLookUp.sort()) {
+    const chunkOffset = index % chunkSize
+    const chunkId = index / chunkSize - chunkOffset
+    const chunkKey = `${chunkId}`;
+    if (chunkKey !== checkChunkLoaded) {
+      checkChunk = await readFromStorage(checksDb, chunkKey)
+    }
+    if (checkChunk) {
+      checksFound.push(checkChunk[chunkOffset])
+    }
+  }
+
+  return checksFound
+}
+
+export async function findQuoteMatches(bookID, chapter, verse, quote) {
+  const _quoteWords = Array.isArray(quote) ? quote : (quote || '').split(' ')
+  let testament = isNT(bookID) ? 'NT' : 'OT'
+  const indexName = `${testament}_quoteIndex`
+  const matchedIndices = {}
+  let checksToLookUp = []
+
+  try {
+    const quoteIndex = await readFromStorage(tWordsIndex, indexName)
+
+    if (quoteIndex) {
+      for (const quoteWord of _quoteWords) {
+        const _quoteWord = quoteWord.toLowerCase()
+        const checkIndices = quoteIndex[_quoteWord]
+        matchedIndices[quoteWord] = checkIndices
+        console.log(checkIndices)
+        if (!Object.keys(matchedIndices).length) {
+          checksToLookUp = checkIndices
+        } else {
+          for (const check in checkIndices) {
+            if (!checkIndices.includes(check)) {
+              checksToLookUp.push(check)
+            }
+          }
+        }
+      }
+    }
+    const checksDb = `${testament}_checks`
+    await fetchChecksByIndex(checksToLookUp, checksDb)
+  } catch (e) {
+    console.warn(`findQuoteMatches(${bookID}, ${chapter}, ${verse}, ${quote} - exception`, e)
+  }
+  console.log('found', matchedIndices)
+}
