@@ -511,7 +511,7 @@ function pushUnique(array, item) {
 }
 
 async function fetchChecksByIndex(checksToLookUp, checksDb) {
-  const checksFound = []
+  const checksFound = {}
   let checkChunkLoaded
   let checkChunk
 
@@ -523,7 +523,7 @@ async function fetchChecksByIndex(checksToLookUp, checksDb) {
       checkChunk = await readFromStorage(checksDb, chunkKey)
     }
     if (checkChunk) {
-      checksFound.push(checkChunk[chunkOffset])
+      checksFound[index] = checkChunk[chunkOffset]
     }
   }
 
@@ -558,7 +558,7 @@ export async function findQuoteMatches(bookID, chapter, verse, quote) {
       }
     }
     const checksDb = `${testament}_checks`
-    await fetchChecksByIndex(checksToLookUp, checksDb)
+    const checks = await fetchChecksByIndex(checksToLookUp, checksDb)
   } catch (e) {
     console.warn(`findQuoteMatches(${bookID}, ${chapter}, ${verse}, ${quote} - exception`, e)
   }
