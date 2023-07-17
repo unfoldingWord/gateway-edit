@@ -38,6 +38,7 @@ export default function Layout({
   const storeContext = useContext(StoreContext)
   const {
     state: {
+      defaultServer,
       languageId,
       owner,
       showAccountSetup,
@@ -58,13 +59,14 @@ export default function Layout({
 
   useEffect(() => {
     const params = router?.query
-    console.log('Layout - process.env.NEXT_PUBLIC_BUILD_NUMBER:', process.env.NEXT_PUBLIC_BUILD_NUMBER)
-    console.log('Layout - process.env.NEXT_PUBLIC_BUILD_CONTEXT:', process.env.NEXT_PUBLIC_BUILD_CONTEXT)
-    console.log('Layout - process.env.NEXT_PUBLIC_BUILD_BRANCH:', process.env.NEXT_PUBLIC_BUILD_BRANCH)
 
     if (typeof params?.server === 'string') { // if URL param given
-      const serverID_ = params.server.toUpperCase() === QA ? QA : PROD
-      const server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
+      let serverID_ = params?.server.toUpperCase() === QA ? QA : PROD
+      let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
+      if (params?.server?.length === 0) {
+        server_ = defaultServer
+        serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
+      }
 
       if (server !== server_) {
         console.log(`_app.js - On init switching server to: ${serverID_}, url server param '${params.server}', old server ${server}, reloading page`)
