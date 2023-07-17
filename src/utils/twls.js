@@ -514,13 +514,17 @@ async function fetchChecksByIndex(checksToLookUp, checksDb) {
   const checksFound = {}
   let checkChunkLoaded
   let checkChunk
+  checksToLookUp.sort((a, b) => a - b)
 
-  for (const index of checksToLookUp.sort()) {
+  for (const index of checksToLookUp) {
     const chunkOffset = index % chunkSize
-    const chunkId = index / chunkSize - chunkOffset
-    const chunkKey = `${chunkId}`;
+    const chunkId = (index - chunkOffset) / chunkSize
+    const chunkKey = `${chunkId * chunkSize}`;
     if (chunkKey !== checkChunkLoaded) {
       checkChunk = await readFromStorage(checksDb, chunkKey)
+      if (checkChunk) {
+        checkChunkLoaded = chunkKey
+      }
     }
     if (checkChunk) {
       checksFound[index] = checkChunk[chunkOffset]
@@ -546,19 +550,24 @@ export async function findQuoteMatches(bookID, chapter, verse, quote) {
         const checkIndices = quoteIndex[_quoteWord]
         matchedIndices[quoteWord] = checkIndices
         console.log(checkIndices)
-        if (!Object.keys(matchedIndices).length) {
-          checksToLookUp = checkIndices
-        } else {
-          for (const check in checkIndices) {
-            if (!checkIndices.includes(check)) {
-              checksToLookUp.push(check)
+        if (checkIndices?.length) {
+          if (!checksToLookUp?.length) {
+            checksToLookUp = checkIndices
+          } else {
+            for (const check of checkIndices) {
+              if (!checkIndices.includes(check)) {
+                checksToLookUp.push(check)
+              }
             }
           }
         }
       }
     }
-    const checksDb = `${testament}_checks`
-    const checks = await fetchChecksByIndex(checksToLookUp, checksDb)
+    if (checksToLookUp?.length) {
+      const checksDb = `${testament}_checks`
+      const checks = await fetchChecksByIndex(checksToLookUp, checksDb)
+      console.log(checks)
+    }
   } catch (e) {
     console.warn(`findQuoteMatches(${bookID}, ${chapter}, ${verse}, ${quote} - exception`, e)
   }

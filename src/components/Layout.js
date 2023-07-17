@@ -58,6 +58,9 @@ export default function Layout({
 
   useEffect(() => {
     const params = router?.query
+    console.log('Layout - process.env.NEXT_PUBLIC_BUILD_NUMBER:', process.env.NEXT_PUBLIC_BUILD_NUMBER)
+    console.log('Layout - process.env.NEXT_PUBLIC_BUILD_CONTEXT:', process.env.NEXT_PUBLIC_BUILD_CONTEXT)
+    console.log('Layout - process.env.NEXT_PUBLIC_BUILD_BRANCH:', process.env.NEXT_PUBLIC_BUILD_BRANCH)
 
     if (typeof params?.server === 'string') { // if URL param given
       const serverID_ = params.server.toUpperCase() === QA ? QA : PROD
