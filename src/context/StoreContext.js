@@ -8,10 +8,20 @@ import useLocalStorage from '@hooks/useLocalStorage'
 import * as useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
+import { useBranchMergerContext } from 'translation-helps-rcl'
 
 export const StoreContext = createContext({})
 
 export default function StoreContextProvider(props) {
+  const {
+    state: { mergeStatusForCards },
+    actions: {
+      updateMergeState,
+      getMergeFromMasterStatus,
+      callMergeFromMasterForCards,
+    },
+  } = useBranchMergerContext()
+
   const {
     state: {
       authentication,
@@ -59,61 +69,9 @@ export default function StoreContextProvider(props) {
   const [hebrewRepoUrl, setHebrewRepoUrl] = useLocalStorage('hebrewRepoUrl', null)
   const [supportedBibles, setSupportedBibles] = useLocalStorage('bibles', [])
   const [currentLayout, setCurrentLayout] = useUserLocalStorage('resourceLayout', null)
-  const [mergeStatusForCards, setMergeStatusForCards] = useState({})
   const [cardsSaving, setCardsSaving] = useState([])
   const [cardsLoadingUpdate, setCardsLoadingUpdate] = useState([])
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
-
-  function updateMergeState(cardId, mergeFromMaster, mergeToMaster, mergeFromMasterIntoUserBranch, mergeToMasterFromUserBranch) {
-    console.log('updateMergeState',{cardId, mergeFromMaster, mergeToMaster})
-    const newMergeStatus = {
-      ...mergeStatusForCards,
-      [cardId]: {
-        mergeFromMaster,
-        mergeToMaster,
-        mergeFromMasterIntoUserBranch,
-        mergeToMasterFromUserBranch,
-      },
-    }
-    setMergeStatusForCards(newMergeStatus)
-  }
-
-  function getMergeFromMasterStatus(_mergeStatusForCards = mergeStatusForCards) {
-    const cardIds = Object.keys(_mergeStatusForCards)
-    let mergeConflict = false
-    let mergeNeeded = false
-    let foundMergeStatusCard = false
-
-    for (const cardId of cardIds) {
-      const { mergeFromMaster } = _mergeStatusForCards[cardId]
-
-      if (mergeFromMaster && !mergeFromMaster.error) {
-        foundMergeStatusCard = true
-
-        if (mergeFromMaster.mergeNeeded) {
-          mergeNeeded = true
-        }
-
-        if (mergeFromMaster.conflict) {
-          mergeConflict = true
-        }
-      }
-    }
-    return {
-      mergeConflict,
-      mergeNeeded,
-      foundMergeStatusCard,
-    }
-  }
-
-  function callMergeFromMasterForCards(_mergeStatusForCards = mergeStatusForCards){
-    const cardIds = Object.keys(_mergeStatusForCards)
-
-    for (const cardId of cardIds){
-      const { mergeFromMasterIntoUserBranch } = _mergeStatusForCards[cardId]
-      mergeFromMasterIntoUserBranch && mergeFromMasterIntoUserBranch()
-    }
-  }
 
   const {
     savedChanges,
