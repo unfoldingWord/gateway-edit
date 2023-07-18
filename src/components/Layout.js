@@ -60,11 +60,10 @@ export default function Layout({
     const params = router?.query
 
     if (typeof params?.server === 'string') { // if URL param given
-      let serverID_ = params?.server.toUpperCase() === QA ? QA : PROD
+      let serverID_ = params.server.toUpperCase() === QA ? QA : PROD
       let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
-      if (params?.server?.length === 0) {
+      if (params.server?.length === 0){
         server_ = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
-        console.log(`Auth - default server is ${server_}, branch ${process.env.NEXT_PUBLIC_BUILD_BRANCH}`)
         serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
       }
 
