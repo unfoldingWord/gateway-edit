@@ -236,7 +236,7 @@ export default function Drawer({
               mergeStatusForCards={mergeStatusForCards}
               {...mergeButtonProps}
               open={isMessageDialogOpen}
-              isLoading={ cardsLoadingMerge?.length }
+              isLoading={ !!cardsLoadingMerge?.length }
             />
             <ErrorDialog
               title={dialogTitle}
