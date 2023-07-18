@@ -24,7 +24,7 @@ export default function AuthContextProvider(props) {
   const [networkError, setNetworkError] = useState(null)
 
   const defaultServer = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
-  console.log(`Auth - default server is ${defaultServer}, branch ${process.env.NEXT_PUBLIC_BUILD_BRANCH}`)
+  // console.log(`Auth - default server is ${defaultServer}, branch ${process.env.NEXT_PUBLIC_BUILD_CONTEXT}`)
   const [server, setServer] = useLocalStorage(SERVER_KEY, defaultServer)
 
   /**
@@ -100,7 +100,6 @@ export default function AuthContextProvider(props) {
   const value = {
     state: {
       authentication,
-      defaultServer,
       networkError,
       server,
     },

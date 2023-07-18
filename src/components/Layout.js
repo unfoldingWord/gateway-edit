@@ -38,7 +38,6 @@ export default function Layout({
   const storeContext = useContext(StoreContext)
   const {
     state: {
-      defaultServer,
       languageId,
       owner,
       showAccountSetup,
@@ -64,7 +63,9 @@ export default function Layout({
       let serverID_ = params?.server.toUpperCase() === QA ? QA : PROD
       let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
       if (params?.server?.length === 0) {
-        server_ = defaultServer
+        server_ = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
+        console.log(`Auth - default server is ${defaultServer}, branch ${process.env.NEXT_PUBLIC_BUILD_CONTEXT}`)
+
         serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
       }
 

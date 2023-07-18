@@ -15,7 +15,6 @@ export default function StoreContextProvider(props) {
   const {
     state: {
       authentication,
-      defaultServer,
       networkError: tokenNetworkError,
       server,
     },
@@ -171,7 +170,6 @@ export default function StoreContextProvider(props) {
       cardsLoadingUpdate,
       cardsLoadingMerge,
       currentLayout,
-      defaultServer,
       filter,
       greekRepoUrl,
       hebrewRepoUrl,
