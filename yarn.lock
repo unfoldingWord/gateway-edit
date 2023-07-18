@@ -3001,10 +3001,10 @@ bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
 
-bible-reference-rcl@1.2.2-beta.0:
-  version "1.2.2-beta.0"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.2-beta.0.tgz#8a8bcbc6215b15d92c9a25a4653a506c7c47d781"
-  integrity sha512-tSd4zgAyfbeJ3aiS2+Eegp3g4aXbp7+RokJIP4rdz3meCS2aRxDAqSznoccDLJCyJmj9YdiA2u8pXqoj9tOiog==
+bible-reference-rcl@1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.2.tgz#93e636a540ac1e5837f528e16e84f5fb3483b290"
+  integrity sha512-7OiRXwQDT4XB/tId+t/IXGTF4UMcs7zVg5x1JrwhLktg5NmZa9RXovTol2WtZUZ55AMRxMYj3OX9kx+iVuydKQ==
   dependencies:
     "@emotion/react" "^11.11.0"
     "@emotion/styled" "^11.11.0"
