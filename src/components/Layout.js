@@ -60,9 +60,13 @@ export default function Layout({
     const params = router?.query
 
     if (typeof params?.server === 'string') { // if URL param given
-      const serverID_ = params.server.toUpperCase() === QA ? QA : PROD
-      const server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
-
+      let serverID_ = params.server.toUpperCase() === QA ? QA : PROD
+      let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
+      if (params.server?.length === 0){
+        server_ = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
+        serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
+      }
+      
       if (server !== server_) {
         console.log(`_app.js - On init switching server to: ${serverID_}, url server param '${params.server}', old server ${server}, reloading page`)
         setServer(server_) // persist server selection in localstorage

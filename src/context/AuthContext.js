@@ -5,6 +5,7 @@ import {
   BASE_URL,
   CLOSE,
   HTTP_GET_MAX_WAIT_TIME,
+  QA_BASE_URL,
   SERVER_KEY,
   TOKEN_ID,
 } from '@common/constants'
@@ -21,7 +22,8 @@ export const AuthContext = createContext({})
 export default function AuthContextProvider(props) {
   const [authentication, setAuthentication] = useState(null)
   const [networkError, setNetworkError] = useState(null)
-  const [server, setServer] = useLocalStorage(SERVER_KEY, BASE_URL)
+  const defaultServer = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
+  const [server, setServer] = useLocalStorage(SERVER_KEY, defaultServer)
 
   /**
    * in the case of a network error, process and display error dialog
