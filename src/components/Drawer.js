@@ -58,10 +58,8 @@ export default function Drawer({
     },
   } = useContext(StoreContext)
 
-  console.log({ mergeStatusForCards })
-
   const mergeButtonProps = useMergeCardsProps({ mergeStatusForCards, isMerging: cardsLoadingMerge?.length });
-  console.log({ mergeButtonProps })
+
   const {
     onClick: onMergeClick,
     onSubmit,
@@ -72,7 +70,8 @@ export default function Drawer({
     isErrorDialogOpen,
     isMessageDialogOpen,
     onCloseErrorDialog,
-  } = mergeButtonProps;
+    cardsToMerge,
+  } = mergeButtonProps
 
   async function onLogout() {
     const okToContinue = await checkUnsavedChanges()
@@ -233,6 +232,7 @@ export default function Drawer({
               isLoading={ cardsLoadingMerge?.length || cardsSaving?.length }
             />
             <MergeDialog
+              cardsToMerge={cardsToMerge}
               mergeStatusForCards={mergeStatusForCards}
               {...mergeButtonProps}
               open={isMessageDialogOpen}

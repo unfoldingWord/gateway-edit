@@ -148,6 +148,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     blocked,
     loadingProps,
     cardMergeGroupings,
+    cardsToMerge,
   }
 }
 
