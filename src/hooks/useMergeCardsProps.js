@@ -16,6 +16,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     const { conflict, mergeNeeded, error, message } = mergeStatus
 
     if (conflict) return 'cardsWithConflicts'
+
     if (error) {
       if (message.includes('does not exist')) return 'cardsWithNoUserBranch'
       if (message.includes('nothing to commit')) return 'cardsWithNoChanges'
@@ -129,8 +130,9 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
 
   }
 
-  const onSubmit = description => {
-    syncMergeableCards(cardsToMerge, description)
+  const onSubmit = ({ mergeableCardIds, description }) => {
+    console.log({ cardsToMerge, mergeableCardIds })
+    syncMergeableCards(mergeableCardIds, description)
   }
 
   return {
@@ -144,6 +146,10 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     dialogTitle,
     pending,
     blocked,
-    loadingProps
+    loadingProps,
+    cardMergeGroupings,
+    cardsToMerge,
   }
 }
+
+// cardsToMerge=[ult, ust]

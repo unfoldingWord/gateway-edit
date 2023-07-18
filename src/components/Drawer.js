@@ -54,21 +54,24 @@ export default function Drawer({
     state: {
       mergeStatusForCards,
       cardsSaving,
-      cardsLoadingMerge
+      cardsLoadingMerge,
     },
   } = useContext(StoreContext)
 
   const mergeButtonProps = useMergeCardsProps({ mergeStatusForCards, isMerging: cardsLoadingMerge?.length });
+
   const {
     onClick: onMergeClick,
+    onSubmit,
     blocked: mergeBlocked,
     pending: mergePending,
     dialogMessage,
     dialogTitle,
     isErrorDialogOpen,
     isMessageDialogOpen,
-    onCloseErrorDialog
-  } = mergeButtonProps;
+    onCloseErrorDialog,
+    cardsToMerge,
+  } = mergeButtonProps
 
   async function onLogout() {
     const okToContinue = await checkUnsavedChanges()
@@ -225,9 +228,12 @@ export default function Drawer({
           <ListItemSecondaryAction>
             <MergeBranchButton
               {...mergeButtonProps}
+              {...mergeStatusForCards}
               isLoading={ cardsLoadingMerge?.length || cardsSaving?.length }
             />
             <MergeDialog
+              cardsToMerge={cardsToMerge}
+              mergeStatusForCards={mergeStatusForCards}
               {...mergeButtonProps}
               open={isMessageDialogOpen}
               isLoading={ cardsLoadingMerge?.length }
