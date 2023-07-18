@@ -21,7 +21,6 @@ export default function StoreContextProvider(props) {
       callMergeFromMasterForCards,
     },
   } = useBranchMergerContext()
-  console.log({ mergeStatusForCards })
 
   const {
     state: {
