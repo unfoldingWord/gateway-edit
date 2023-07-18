@@ -3,41 +3,32 @@
 # make sure we have latest build hash in public/build_number
 source ./scripts/update-build.sh
 
+# Set the name of the environment file and the key to update
 ENV_FILE=".env.local"
-KEY="NEXT_PUBLIC_BUILD_NUMBER"
+
+# Get the current build number from the public/build_number file
 BUILD_NUMBER=$(cat public/build_number)
 
-echo "Setting environment variable: NEXT_PUBLIC_BUILD_NUMBER=$BUILD_NUMBER"
-if ! grep -R "^[#]*\s*${KEY}=.*" $ENV_FILE > /dev/null; then
-  echo "APPENDING because '${KEY}' not found"
-  echo "$KEY=$BUILD_NUMBER" >> $ENV_FILE
-else
-  echo "SETTING because '${KEY}' found already"
-  sed -ir "s/^[#]*\s*${KEY}=.*/$KEY=$BUILD_NUMBER/" $ENV_FILE
-fi
+# Define a function to set a variable in a .env file
+set_env_var() {
+  local env_file=$1
+  local key=$2
+  local value=$3
 
-KEY="NEXT_PUBLIC_BUILD_CONTEXT"
-BUILD_CONTEXT=$(cat public/build_context)
+  echo "Setting environment variable: $key=$value"
+  if ! grep -R "^[#]*\s*${key}=.*" $env_file > /dev/null; then
+    echo "APPENDING because '$key' not found"
+    echo "$key=$value" >> $env_file
+  else
+    echo "SETTING because '$key' found already"
+    # use sed command to performs an in-place replacement of this variable assignment in the script file
+    sed -ir "s/^[#]*\s*${key}=.*/$key=$value/" $env_file
+  fi
+}
 
-echo "Setting environment variable: NEXT_PUBLIC_BUILD_CONTEXT=$BUILD_CONTEXT"
-if ! grep -R "^[#]*\s*${KEY}=.*" $ENV_FILE > /dev/null; then
-  echo "APPENDING because '${KEY}' not found"
-  echo "$KEY=$BUILD_CONTEXT" >> $ENV_FILE
-else
-  echo "SETTING because '${KEY}' found already"
-  sed -ir "s/^[#]*\s*${KEY}=.*/$KEY=$BUILD_CONTEXT/" $ENV_FILE
-fi
+# Call the function to set the environment variables
+set_env_var $ENV_FILE NEXT_PUBLIC_BUILD_NUMBER $BUILD_NUMBER
+set_env_var $ENV_FILE NEXT_PUBLIC_BUILD_BRANCH $BRANCH
+set_env_var $ENV_FILE NEXT_PUBLIC_BUILD_CONTEXT $CONTEXT
 
-KEY="NEXT_PUBLIC_BUILD_BRANCH"
-BUILD_BRANCH=$(cat public/build_branch)
-
-echo "Setting environment variable: NEXT_PUBLIC_BUILD_BRANCH=$BUILD_BRANCH"
-if ! grep -R "^[#]*\s*${KEY}=.*" $ENV_FILE > /dev/null; then
-  echo "APPENDING because '${KEY}' not found"
-  echo "$KEY=$BUILD_BRANCH" >> $ENV_FILE
-else
-  echo "SETTING because '${KEY}' found already"
-  sed -ir "s/^[#]*\s*${KEY}=.*/$KEY=$BUILD_BRANCH/" $ENV_FILE
-fi
-
-echo "Environment file: $(cat $ENV_FILE)"
+echo "Environment file new contents: $(cat $ENV_FILE)"

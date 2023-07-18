@@ -64,8 +64,7 @@ export default function Layout({
       let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
       if (params?.server?.length === 0) {
         server_ = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
-        console.log(`Auth - default server is ${defaultServer}, branch ${process.env.NEXT_PUBLIC_BUILD_CONTEXT}`)
-
+        console.log(`Auth - default server is ${server_}, branch ${process.env.NEXT_PUBLIC_BUILD_BRANCH}`)
         serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
       }
 
