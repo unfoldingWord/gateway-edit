@@ -1,0 +1,753 @@
+{
+  "0": {
+    "Reference": "1:1",
+    "ID": "ssd5",
+    "Tags": "keyterm; name",
+    "OrigWords": "Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "mat 1:1",
+      "mat 1:18"
+    ]
+  },
+  "57": {
+    "Reference": "1:18",
+    "ID": "wvjd",
+    "Tags": "keyterm; name",
+    "OrigWords": "Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "mat 1:18"
+    ]
+  },
+  "3079": {
+    "Reference": "18:32",
+    "ID": "w2b3",
+    "Tags": "keyterm",
+    "OrigWords": "λόγος τοῦ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/wordofgod",
+    "quote": [
+      "λόγος",
+      "τοῦ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "λόγος",
+      "ὁ",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G30560",
+      "G35880",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,NMS,",
+      "Gr,EA,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "λόγος τοῦ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "wordofgod",
+    "refs": [
+      "jhn 18:32"
+    ]
+  },
+  "3201": {
+    "Reference": "2:38",
+    "ID": "sef7",
+    "Tags": "keyterm; name",
+    "OrigWords": "Ἰησοῦ Χριστοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Ἰησοῦ",
+      "Χριστοῦ"
+    ],
+    "lemmas": [
+      "Ἰησοῦς",
+      "χριστός"
+    ],
+    "strong": [
+      "G24240",
+      "G55470"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Ἰησοῦ Χριστοῦ",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "act 2:38"
+    ]
+  },
+  "3219": {
+    "Reference": "3:6",
+    "ID": "krp4",
+    "Tags": "keyterm; name",
+    "OrigWords": "Ἰησοῦ Χριστοῦ τοῦ Ναζωραίου",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Ἰησοῦ",
+      "Χριστοῦ",
+      "τοῦ",
+      "Ναζωραίου"
+    ],
+    "lemmas": [
+      "Ἰησοῦς",
+      "χριστός",
+      "ὁ",
+      "Ναζωραῖος"
+    ],
+    "strong": [
+      "G24240",
+      "G55470",
+      "G35880",
+      "G34800"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,",
+      "Gr,N,,,,,GMS,",
+      "Gr,EA,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Ἰησοῦ Χριστοῦ τοῦ Ναζωραίου",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "act 3:6"
+    ]
+  },
+  "3274": {
+    "Reference": "4:33",
+    "ID": "ecm6",
+    "Tags": "keyterm; name",
+    "OrigWords": "Κυρίου Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Κυρίου",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "κύριος",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G29620",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Κυρίου Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "act 4:33"
+    ]
+  },
+  "3393": {
+    "Reference": "7:45",
+    "ID": "qvc4",
+    "Tags": "name",
+    "OrigWords": "Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/names/joshua",
+    "quote": [
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Ἰησοῦ",
+    "Catagory": "names",
+    "GroupID": "joshua",
+    "refs": [
+      "act 7:45"
+    ]
+  },
+  "3407": {
+    "Reference": "7:59",
+    "ID": "ctyf",
+    "Tags": "keyterm; name",
+    "OrigWords": "Κύριε Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Κύριε",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "κύριος",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G29620",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,VMS,",
+      "Gr,N,,,,,VMS,"
+    ],
+    "quoteString": "Κύριε Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "act 7:59"
+    ]
+  },
+  "3715": {
+    "Reference": "16:7",
+    "ID": "mtmk",
+    "Tags": "keyterm",
+    "OrigWords": "Πνεῦμα Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/holyspirit",
+    "quote": [
+      "Πνεῦμα",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "πνεῦμα",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G41510",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,NNS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Πνεῦμα Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "holyspirit",
+    "refs": [
+      "act 16:7"
+    ]
+  },
+  "4019": {
+    "Reference": "26:9",
+    "ID": "fh56",
+    "Tags": "keyterm; name",
+    "OrigWords": "Ἰησοῦ τοῦ Ναζωραίου",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Ἰησοῦ",
+      "τοῦ",
+      "Ναζωραίου"
+    ],
+    "lemmas": [
+      "Ἰησοῦς",
+      "ὁ",
+      "Ναζωραῖος"
+    ],
+    "strong": [
+      "G24240",
+      "G35880",
+      "G34800"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,",
+      "Gr,EA,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Ἰησοῦ τοῦ Ναζωραίου",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "act 26:9"
+    ]
+  },
+  "4085": {
+    "Reference": "28:31",
+    "ID": "nvyv",
+    "Tags": "keyterm; name",
+    "OrigWords": "Κυρίου Ἰησοῦ Χριστοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Κυρίου",
+      "Ἰησοῦ",
+      "Χριστοῦ"
+    ],
+    "lemmas": [
+      "κύριος",
+      "Ἰησοῦς",
+      "χριστός"
+    ],
+    "strong": [
+      "G29620",
+      "G24240",
+      "G55470"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,",
+      "Gr,N,,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Κυρίου Ἰησοῦ Χριστοῦ",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "act 28:31"
+    ]
+  },
+  "4086": {
+    "Reference": "1:1",
+    "ID": "dd98",
+    "Tags": "keyterm; name",
+    "OrigWords": "Χριστοῦ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Χριστοῦ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "χριστός",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G55470",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Χριστοῦ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "rom 1:1"
+    ]
+  },
+  "4208": {
+    "Reference": "3:24",
+    "ID": "v3yd",
+    "Tags": "keyterm",
+    "OrigWords": "ἐν Χριστῷ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/inchrist",
+    "quote": [
+      "ἐν",
+      "Χριστῷ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "ἐν",
+      "χριστός",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G17220",
+      "G55470",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,P,,,,,D,,,",
+      "Gr,N,,,,,DMS,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "ἐν Χριστῷ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "inchrist",
+    "refs": [
+      "rom 3:24"
+    ]
+  },
+  "4529": {
+    "Reference": "14:14",
+    "ID": "jh9g",
+    "Tags": "keyterm",
+    "OrigWords": "ἐν Κυρίῳ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/inchrist",
+    "quote": [
+      "ἐν",
+      "Κυρίῳ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "ἐν",
+      "κύριος",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G17220",
+      "G29620",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,P,,,,,D,,,",
+      "Gr,N,,,,,DMS,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "ἐν Κυρίῳ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "inchrist",
+    "refs": [
+      "rom 14:14"
+    ]
+  },
+  "4682": {
+    "Reference": "4:15",
+    "ID": "qaqg",
+    "Tags": "keyterm",
+    "OrigWords": "ἐν γὰρ Χριστῷ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/inchrist",
+    "quote": [
+      "ἐν",
+      "γὰρ",
+      "Χριστῷ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "ἐν",
+      "γάρ",
+      "χριστός",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G17220",
+      "G10630",
+      "G55470",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,P,,,,,D,,,",
+      "Gr,CC,,,,,,,,",
+      "Gr,N,,,,,DMS,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "ἐν γὰρ Χριστῷ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "inchrist",
+    "refs": [
+      "1co 4:15"
+    ]
+  },
+  "5265": {
+    "Reference": "3:14",
+    "ID": "jxfg",
+    "Tags": "keyterm; name",
+    "OrigWords": "Χριστῷ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/jesus",
+    "quote": [
+      "Χριστῷ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "χριστός",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G55470",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,DMS,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "Χριστῷ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "jesus",
+    "refs": [
+      "gal 3:14"
+    ]
+  },
+  "5366": {
+    "Reference": "1:15",
+    "ID": "xgsz",
+    "Tags": "keyterm",
+    "OrigWords": "ἐν τῷ Κυρίῳ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/inchrist",
+    "quote": [
+      "ἐν",
+      "τῷ",
+      "Κυρίῳ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "ἐν",
+      "ὁ",
+      "κύριος",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G17220",
+      "G35880",
+      "G29620",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,P,,,,,D,,,",
+      "Gr,EA,,,,DMS,",
+      "Gr,N,,,,,DMS,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "ἐν τῷ Κυρίῳ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "inchrist",
+    "refs": [
+      "eph 1:15"
+    ]
+  },
+  "5395": {
+    "Reference": "3:11",
+    "ID": "a7ug",
+    "Tags": "keyterm",
+    "OrigWords": "ἐν τῷ Χριστῷ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/inchrist",
+    "quote": [
+      "ἐν",
+      "τῷ",
+      "Χριστῷ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "ἐν",
+      "ὁ",
+      "χριστός",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G17220",
+      "G35880",
+      "G55470",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,P,,,,,D,,,",
+      "Gr,EA,,,,DMS,",
+      "Gr,N,,,,,DMS,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "ἐν τῷ Χριστῷ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "inchrist",
+    "refs": [
+      "eph 3:11"
+    ]
+  },
+  "5410": {
+    "Reference": "4:21",
+    "ID": "jsfg",
+    "Tags": "keyterm",
+    "OrigWords": "ἐν τῷ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/inchrist",
+    "quote": [
+      "ἐν",
+      "τῷ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "ἐν",
+      "ὁ",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G17220",
+      "G35880",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,P,,,,,D,,,",
+      "Gr,EA,,,,DMS,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "ἐν τῷ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "inchrist",
+    "refs": [
+      "eph 4:21"
+    ]
+  },
+  "5469": {
+    "Reference": "1:6",
+    "ID": "cv26",
+    "Tags": "keyterm",
+    "OrigWords": "ἡμέρας Χριστοῦ Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/dayofthelord",
+    "quote": [
+      "ἡμέρας",
+      "Χριστοῦ",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "ἡμέρα",
+      "χριστός",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G22500",
+      "G55470",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,N,,,,,GFS,",
+      "Gr,N,,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "ἡμέρας Χριστοῦ Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "dayofthelord",
+    "refs": [
+      "php 1:6"
+    ]
+  },
+  "5482": {
+    "Reference": "1:19",
+    "ID": "q82y",
+    "Tags": "keyterm",
+    "OrigWords": "Πνεύματος Ἰησοῦ Χριστοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/holyspirit",
+    "quote": [
+      "Πνεύματος",
+      "Ἰησοῦ",
+      "Χριστοῦ"
+    ],
+    "lemmas": [
+      "πνεῦμα",
+      "Ἰησοῦς",
+      "χριστός"
+    ],
+    "strong": [
+      "G41510",
+      "G24240",
+      "G55470"
+    ],
+    "morph": [
+      "Gr,N,,,,,GNS,",
+      "Gr,N,,,,,GMS,",
+      "Gr,N,,,,,GMS,"
+    ],
+    "quoteString": "Πνεύματος Ἰησοῦ Χριστοῦ",
+    "Catagory": "kt",
+    "GroupID": "holyspirit",
+    "refs": [
+      "php 1:19"
+    ]
+  },
+  "5704": {
+    "Reference": "3:12",
+    "ID": "ckq4",
+    "Tags": "keyterm",
+    "OrigWords": "ἐν Κυρίῳ Ἰησοῦ Χριστῷ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/inchrist",
+    "quote": [
+      "ἐν",
+      "Κυρίῳ",
+      "Ἰησοῦ",
+      "Χριστῷ"
+    ],
+    "lemmas": [
+      "ἐν",
+      "κύριος",
+      "Ἰησοῦς",
+      "χριστός"
+    ],
+    "strong": [
+      "G17220",
+      "G29620",
+      "G24240",
+      "G55470"
+    ],
+    "morph": [
+      "Gr,P,,,,,D,,,",
+      "Gr,N,,,,,DMS,",
+      "Gr,N,,,,,DMS,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "ἐν Κυρίῳ Ἰησοῦ Χριστῷ",
+    "Catagory": "kt",
+    "GroupID": "inchrist",
+    "refs": [
+      "2th 3:12"
+    ]
+  },
+  "6713": {
+    "Reference": "1:9",
+    "ID": "tfq3",
+    "Tags": "keyterm",
+    "OrigWords": "ἐν Ἰησοῦ",
+    "Occurrence": "1",
+    "TWLink": "rc://*/tw/dict/bible/kt/inchrist",
+    "quote": [
+      "ἐν",
+      "Ἰησοῦ"
+    ],
+    "lemmas": [
+      "ἐν",
+      "Ἰησοῦς"
+    ],
+    "strong": [
+      "G17220",
+      "G24240"
+    ],
+    "morph": [
+      "Gr,P,,,,,D,,,",
+      "Gr,N,,,,,DMS,"
+    ],
+    "quoteString": "ἐν Ἰησοῦ",
+    "Catagory": "kt",
+    "GroupID": "inchrist",
+    "refs": [
+      "rev 1:9"
+    ]
+  }
+}

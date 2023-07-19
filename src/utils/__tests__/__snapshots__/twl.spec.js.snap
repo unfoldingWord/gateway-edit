@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getStrongsFromChecks it should match 1`] = `
+Array [
+  "G24240",
+  "G55470",
+  "G17220",
+  "G35880",
+  "G29620",
+  "G34800",
+  "G41510",
+  "G30560",
+  "G10630",
+  "G22500",
+]
+`;

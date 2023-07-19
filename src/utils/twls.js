@@ -567,9 +567,98 @@ export async function findQuoteMatches(bookID, chapter, verse, quote) {
       const checksDb = `${testament}_checks`
       const checks = await fetchChecksByIndex(checksToLookUp, checksDb)
       console.log(checks)
+      const checksSorted = getSortedListOfChecks(checks, _quoteWords);
     }
   } catch (e) {
     console.warn(`findQuoteMatches(${bookID}, ${chapter}, ${verse}, ${quote} - exception`, e)
   }
   console.log('found', matchedIndices)
 }
+
+// function addWordsInOrderOfRefsCount(checksMerged, matchedQuote, bestMatches) {
+//   const tWords = checksMerged[matchedQuote]
+//   const sortedList = Object.keys(tWords).sort((a, b) => (-tWords[a].refs?.length + tWords[b].refs?.length));
+//   sortedList.forEach(item => bestMatches.push(tWords[item]))
+// }
+//
+// function getCountForKey(checksMerged, ref, key) {
+//   const tWords = checksMerged[ref];
+//   const keys = Object.keys(tWords)
+//   let count = 10000
+//   if (keys.length) {
+//     const firstKey = keys[0]
+//     const firstItem = tWords[firstKey];
+//     const keyItem = firstItem?.[key];
+//     count = keyItem?.length || count
+//   }
+//   return count
+// }
+
+export function getStrongsFromChecks(checks, quoteWords) {
+  const strongs = {}
+  // merge and index checks
+  for (const key of Object.keys(checks)) {
+    const check = checks[key]
+    for (const strong of check?.strong) {
+      let found = strongs[strong]
+      if (!found) {
+        strongs[strong] = check.refs?.length || 1
+      } else {
+        strongs[strong] = found + check.refs?.length || 1
+      }
+    }
+  }
+  const sorted = Object.keys(strongs).sort((a, b) => (-strongs[a] + strongs[b]))
+  return sorted
+}
+
+export function getSortedListOfChecks(checks, quoteWords) {
+  const tWords = {}
+  // merge and index checks
+  for (const key of Object.keys(checks)) {
+    const check = checks[key]
+    const tWord = `${check.Catagory}/${check.GroupID}`
+    let list = tWords[tWord]
+    if (!list) {
+      list = []
+      tWords[tWord] = list
+    }
+    // add each ref separately
+    const refs = check.refs
+    for (const ref of refs) {
+      const _check = {
+        ...check,
+        refs: [ref]
+      }
+      list.push(_check)
+    }
+  }
+  // order the matches in descending order of usage
+  let sortedTWords = Object.keys(tWords).sort((a, b) => (-tWords[a]?.length + tWords[b]?.length))
+  sortedTWords = sortedTWords.map(tWord => tWords[tWord])
+  // const bestMatches = []
+  // const unusedKeys = Object.keys(checksMerged)
+  // // first priority is exact match
+  // let index = unusedKeys.indexOf(quoteWords.join(' '));
+  // if (index >= 0) {
+  //   const matchedQuote = unusedKeys[index];
+  //   addWordsInOrderOfRefsCount(checksMerged, matchedQuote, bestMatches);
+  //   unusedKeys.splice(index, 1);
+  // }
+  // const tWordsIndex = {}
+  // unusedKeys.sort((a, b) => {
+  //   // do primary sort on quote count
+  //   const aQuoteCount = getCountForKey(checksMerged, a, 'quote')
+  //   const bQuoteCount = getCountForKey(checksMerged, b, 'quote')
+  //   let diff = aQuoteCount - bQuoteCount
+  //   if (diff === 0) { // if quote counts the same, do secondary inverse sort on refs count
+  //     const aRefsCount = getCountForKey(checksMerged, a, 'refs')
+  //     const bRefsCount = getCountForKey(checksMerged, b, 'refs')
+  //     diff = -(aRefsCount - bRefsCount)
+  //   }
+  //   return diff
+// })
+
+  return sortedTWords;
+}
+
