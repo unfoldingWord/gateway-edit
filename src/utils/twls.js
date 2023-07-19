@@ -563,11 +563,25 @@ export async function findQuoteMatches(bookID, chapter, verse, quote) {
         }
       }
     }
+
     if (checksToLookUp?.length) {
       const checksDb = `${testament}_checks`
       const checks = await fetchChecksByIndex(checksToLookUp, checksDb)
-      console.log(checks)
-      const checksSorted = getSortedListOfChecks(checks, _quoteWords);
+      const checksSorted = getSortedListOfChecks(checks, _quoteWords)
+      const strongs = getStrongsFromChecks(checks)
+      if (strongs?.length) {
+        const indexName = `${testament}_strongsIndex`
+        const strongsIndex = await readFromStorage(tWordsIndex, indexName)
+
+        if (strongsIndex) {
+          for (const strong of strongs) {
+            const checksToLookUp_ = strongsIndex[strong]
+            const checks_ = await fetchChecksByIndex(checksToLookUp_, checksDb)
+            console.log(checks_)
+          }
+          console.log(strongsIndex)
+        }
+      }
     }
   } catch (e) {
     console.warn(`findQuoteMatches(${bookID}, ${chapter}, ${verse}, ${quote} - exception`, e)
@@ -594,7 +608,7 @@ export async function findQuoteMatches(bookID, chapter, verse, quote) {
 //   return count
 // }
 
-export function getStrongsFromChecks(checks, quoteWords) {
+export function getStrongsFromChecks(checks) {
   const strongs = {}
   // merge and index checks
   for (const key of Object.keys(checks)) {
@@ -612,7 +626,7 @@ export function getStrongsFromChecks(checks, quoteWords) {
   return sorted
 }
 
-export function getSortedListOfChecks(checks, quoteWords) {
+export function getSortedListOfChecks(checks) {
   const tWords = {}
   // merge and index checks
   for (const key of Object.keys(checks)) {
