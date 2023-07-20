@@ -611,7 +611,7 @@ export async function findQuoteMatches(bookID, chapter, verse, quote) {
       }
     }
 
-    if (missingWord || !checks?.length) {
+    if (missingWord || !(checks?.length > 4)) {
       const data = await readFromStorage(tWordsUSFM, bookID)
       const bookObject = data?.bookObject
 
@@ -650,7 +650,7 @@ export async function findQuoteMatches(bookID, chapter, verse, quote) {
   } catch (e) {
     console.warn(`findQuoteMatches(${bookID}, ${chapter}, ${verse}, ${quote} - exception`, e)
   }
-  console.log(`findQuoteMatches - results`, { sortedTWords_, sortedChecks_ })
+  console.log(`findQuoteMatches - results ${sortedTWords_}`, { sortedTWords_, sortedChecks_ })
 }
 
 /**
