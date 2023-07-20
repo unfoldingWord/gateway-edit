@@ -10,8 +10,9 @@ import localforage from "localforage";
 import * as isEqual from "deep-equal";
 
 const databaseName = 'tWordsDatabase'
-const tWordsIndex = 'tWordsIndex';
-const tWordsTsv = 'tWordsTsv';
+const tWordsIndex = 'tWordsIndex'
+const tWordsTsv = 'tWordsTsv'
+const tWordsUSFM = 'tWordsUsfm'
 const chunkSize = 1000
 const maxTwordsHours = 8;
 
@@ -248,15 +249,16 @@ export async function loadTwls(resource, owner, repo, bookID){
           })
 
           if (!data) {
-            continue;
+            continue
           }
 
           const bookObject = usfmjs.toJSON(data);
           // console.log('bookObject', bookObject)
           await delay(500) // add pause for UI operations
-          mergeOlData(twls, bookObject);
+          mergeOlData(twls, bookObject)
 
           await saveToStorage(tWordsTsv, book, { time: new Date(), twls })
+          await saveToStorage(tWordsUSFM, book, { time: new Date(), bookObject })
         } else {
           console.log(`loadTwls() - found cached data for ${owner}/${olBibleRepo}/${book}`)
         }
@@ -512,55 +514,98 @@ function pushUnique(array, item) {
 
 async function fetchChecksByIndex(checksToLookUp, checksDb) {
   const checksFound = {}
-  let checkChunkLoaded
+  let checkChunkLoaded = null
   let checkChunk
-  checksToLookUp.sort((a, b) => a - b)
 
-  for (const index of checksToLookUp) {
-    const chunkOffset = index % chunkSize
-    const chunkId = (index - chunkOffset) / chunkSize
-    const chunkKey = `${chunkId * chunkSize}`;
-    if (chunkKey !== checkChunkLoaded) {
-      checkChunk = await readFromStorage(checksDb, chunkKey)
+  if (checksToLookUp?.length) {
+    checksToLookUp.sort((a, b) => a - b)
+    for (const index of checksToLookUp) {
+      const chunkOffset = index % chunkSize
+      const chunkId = (index - chunkOffset) / chunkSize
+      const chunkKey = `${chunkId * chunkSize}`;
+      if (chunkKey !== checkChunkLoaded) {
+        checkChunk = await readFromStorage(checksDb, chunkKey)
+        if (checkChunk) {
+          checkChunkLoaded = chunkKey
+        }
+      }
       if (checkChunk) {
-        checkChunkLoaded = chunkKey
+        checksFound[index] = checkChunk[chunkOffset]
       }
     }
-    if (checkChunk) {
-      checksFound[index] = checkChunk[chunkOffset]
-    }
-  }
 
-  return checksFound
+    return checksFound
+  }
+  return null
 }
 
 export async function findQuoteMatches(bookID, chapter, verse, quote) {
   const _quoteWords = Array.isArray(quote) ? quote : (quote || '').split(' ')
   let testament = isNT(bookID) ? 'NT' : 'OT'
-  const indexName = `${testament}_quoteIndex`
   const matchedIndices = {}
   let checksToLookUp = []
 
   try {
-    const quoteIndex = await readFromStorage(tWordsIndex, indexName)
+    const quotesIndices = await getChecksForWords('quoteIndex', testament, _quoteWords)
 
-    if (quoteIndex) {
-      for (const quoteWord of _quoteWords) {
-        const _quoteWord = quoteWord.toLowerCase()
-        const checkIndices = quoteIndex[_quoteWord]
-        matchedIndices[quoteWord] = checkIndices
-        console.log(checkIndices)
-        if (checkIndices?.length) {
-          if (!checksToLookUp?.length) {
-            checksToLookUp = checkIndices
-          } else {
-            for (const check of checkIndices) {
-              if (!checkIndices.includes(check)) {
-                checksToLookUp.push(check)
-              }
-            }
+    // if (quoteIndex) {
+    //   for (const quoteWord of _quoteWords) {
+    //     const _quoteWord = quoteWord.toLowerCase()
+    //     const checkIndices = quoteIndex[_quoteWord]
+    //     if (checkIndices?.length) {
+    //       matchedIndices[quoteWord] = checkIndices
+    //       console.log(checkIndices)
+    //       if (!checksToLookUp?.length) {
+    //         checksToLookUp = checkIndices
+    //       } else {
+    //         for (const check of checkIndices) {
+    //           if (!checkIndices.includes(check)) {
+    //             checksToLookUp.push(check)
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
+    let checks = []
+    let missingWord = false
+
+    for (const quote of Object.keys(quotesIndices)) {
+      const checks_ = quotesIndices[quote]
+
+      const checkKeys = checks_ ? Object.keys(checks_) : []
+
+      if (checkKeys?.length) {
+        checkKeys.forEach(key => checks.push(checks_[key]))
+      } else {
+        missingWord = true
+      }
+    }
+
+    if (checks?.length) {
+      const { sortedChecks, sortedtWords } = getSortedListOfChecks(checks)
+      console.log(sortedtWords)
+    }
+
+    if (missingWord || !checks?.length) {
+      const data = await readFromStorage(tWordsUSFM, bookID)
+      const bookObject = data?.bookObject
+
+      if (bookObject) {
+        const strongWords = []
+
+        for (const quote of Object.keys(quotesIndices)) {
+          const vo = findWordInVerse(bookObject, chapter, verse, quote)
+          console.log(vo)
+
+          if (vo?.strongs) {
+            strongWords.push(vo.strongs)
           }
         }
+
+        const strongsIndices = await getChecksForWords('strongsIndex', testament, strongWords)
+        console.log(strongsIndices)
       }
     }
 
@@ -570,23 +615,67 @@ export async function findQuoteMatches(bookID, chapter, verse, quote) {
       const checksSorted = getSortedListOfChecks(checks, _quoteWords)
       const strongs = getStrongsFromChecks(checks)
       if (strongs?.length) {
-        const indexName = `${testament}_strongsIndex`
-        const strongsIndex = await readFromStorage(tWordsIndex, indexName)
-
-        if (strongsIndex) {
-          for (const strong of strongs) {
-            const checksToLookUp_ = strongsIndex[strong]
-            const checks_ = await fetchChecksByIndex(checksToLookUp_, checksDb)
-            console.log(checks_)
-          }
-          console.log(strongsIndex)
-        }
+        const indexKey = `strongsIndex`
+        const checks_ = await getChecksForWords(indexKey, testament, strongs)
       }
     }
   } catch (e) {
     console.warn(`findQuoteMatches(${bookID}, ${chapter}, ${verse}, ${quote} - exception`, e)
   }
   console.log('found', matchedIndices)
+}
+
+/**
+ * search through verse objects to find alignment for quote and occurrence
+ * @param verseObjects
+ * @param {string} quote
+ * @returns {string|null|*}
+ */
+function findMatch(verseObjects, quote) {
+  quote = quote.toLowerCase()
+
+  for (const vo of verseObjects) {
+    const word = vo?.text?.toLowerCase() || vo?.word?.toLowerCase()
+
+    if (word === quote) {
+      return vo
+    } else if (vo.children) {
+      const vo_ = findMatch(vo.children, quote)
+
+      if (vo_) {
+        return vo_
+      }
+    }
+  }
+  return null
+}
+
+function findWordInVerse(bookObject, chapter, verse, quote) {
+  if (quote && bookObject) {
+    const verseObjects = bookObject[chapter]?.[verse]?.verseObjects || []
+    const vo = findMatch(verseObjects, quote)
+    return vo
+  }
+}
+
+export async function getChecksForWords(indexKey, testament, wordsList) {
+  const indexName = `${testament}_${indexKey}`
+  const checksDb = `${testament}_checks`
+  const wordsIndex = await readFromStorage(tWordsIndex, indexName)
+  let checks_ = null
+  const index = {}
+
+  if (wordsIndex) {
+    for (const word of wordsList) {
+      checks_ = null
+      const checksToLookUp_ = wordsIndex[word.toLowerCase()]
+      checks_ = await fetchChecksByIndex(checksToLookUp_, checksDb)
+      console.log(checks_)
+      index[word] = checks_
+    }
+  }
+
+  return index
 }
 
 // function addWordsInOrderOfRefsCount(checksMerged, matchedQuote, bestMatches) {
@@ -642,14 +731,15 @@ export function getSortedListOfChecks(checks) {
     for (const ref of refs) {
       const _check = {
         ...check,
-        refs: [ref]
+        refs: [ref],
       }
       list.push(_check)
     }
   }
+
   // order the matches in descending order of usage
-  let sortedTWords = Object.keys(tWords).sort((a, b) => (-tWords[a]?.length + tWords[b]?.length))
-  sortedTWords = sortedTWords.map(tWord => tWords[tWord])
+  const sortedChecks = Object.keys(tWords).sort((a, b) => (-tWords[a]?.length + tWords[b]?.length))
+  const sortedtWords = sortedChecks.map(tWord => tWords[tWord])
   // const bestMatches = []
   // const unusedKeys = Object.keys(checksMerged)
   // // first priority is exact match
@@ -671,8 +761,8 @@ export function getSortedListOfChecks(checks) {
   //     diff = -(aRefsCount - bRefsCount)
   //   }
   //   return diff
-// })
+  // })
 
-  return sortedTWords;
+  return { sortedChecks, sortedtWords }
 }
 
