@@ -14,21 +14,26 @@ Book Package harmonized view.
 
 ## Staging Environment URLs
 
-- ***Production:*** https://gatewayedit.com or https://gateway-edit.netlify.app/
-- ***Develop:*** https://develop--gateway-edit.netlify.app/
-- ***Release-v0.9.0*** https://release-v0-9-0--gateway-edit.netlify.app/
-- ***Release-v1.0.0*** https://release-v1-0-0--gateway-edit.netlify.app/
+- **_Production:_** https://gatewayedit.com or https://gateway-edit.netlify.app/
+- **_Develop:_** https://develop--gateway-edit.netlify.app/
+- **_Release-v0.9.0_** https://release-v0-9-0--gateway-edit.netlify.app/
+- **_Release-v1.0.0_** https://release-v1-0-0--gateway-edit.netlify.app/
+- **_Release-v2.1.0_** https://release-v2-1-0--gateway-edit.netlify.app/
 
 ## Scripts
 
 - "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
 
 ### Running tests
+
 - Before running any tests, make sure initialized by doing:
+
 ```
 yarn
 ```
+
 - also before running cypress tests, you must create a file `cypress.env.json` with contents such as (of course replace text in `<< >>` with you user login credentials):
+
 ```
 {
   "TEST_USERNAME": <<my user name>>,
@@ -37,80 +42,101 @@ yarn
 ```
 
 #### Running Jest Unit Tests
+
 ```
 yarn run test:unit
 ```
 
 #### Running Cypress tests Interactively
+
 - in first terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
+
 ```
 yarn dev
 ```
+
 - then in second terminal, to run cypress interactively do:
+
 ```
 yarn run cypress
 ```
 
 #### Running Cypress tests headless
+
 - in terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
+
 ```
 yarn test:headless
 ```
 
 ## UI Design
+
 - Structure of the React components in this app
 
-Application (in pages/_app.js)  contains:
-* AuthContext context
-* StoreContext context:
+Application (in pages/\_app.js) contains:
+
+- AuthContext context
+- StoreContext context:
 
 Home (in pages/index.js) contains:
 <Layout>
-  <WorkspaceContainer />
+<WorkspaceContainer />
 </Layout>
 
 WorkspaceContainer component manages the Resource workspace
-* Contains Workspace component (resource workspace rcl) that contains several:
-    * ScriptureCard components
-    * ResourceCard components
+
+- Contains Workspace component (resource workspace rcl) that contains several:
+  - ScriptureCard components
+  - ResourceCard components
 
 Layout component:
-* accesses authentication context and store context
-* Manages server selection through url variables
-* Displays Onboarding component if login is required
-* Contains the header and footer
+
+- accesses authentication context and store context
+- Manages server selection through url variables
+- Displays Onboarding component if login is required
+- Contains the header and footer
 
 BibleReference component:
-* Uses bible Reference RCL
-* Updates reference store context
+
+- Uses bible Reference RCL
+- Updates reference store context
 
 Onboarding component
-* Displays the AccountSetup component when login is required
+
+- Displays the AccountSetup component when login is required
 
 Header component:
-* Contains BibleReference component
+
+- Contains BibleReference component
 
 Footer component:
-* Shows app version/build
+
+- Shows app version/build
 
 Drawer component (hamburger menu):
-* Shows
+
+- Shows
 
 TranslationSettings component:
-* Prompts for organization and language
+
+- Prompts for organization and language
 
 ResourceCard component:
-* Card that displays translationHelps content
+
+- Card that displays translationHelps content
 
 ScriptureCard component:
-* Card that displays scripture content
+
+- Card that displays scripture content
 
 AuthContext context:
-* Initializes the authentication context (defined in gitea-react-toolkit)
+
+- Initializes the authentication context (defined in gitea-react-toolkit)
 
 StoreContext context:
-* Manages and persists application state data into local storage
 
-useLocalStorage - custom hook that persists generic application data  into local storage
+- Manages and persists application state data into local storage
+
+useLocalStorage - custom hook that persists generic application data into local storage
 
 useUserLocalStorage - custom hook that application data for logged in user into local storage
