@@ -1,7 +1,7 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 describe('App login & initial setup', () => {
   before(() => {
-    cy.visit('/?server=prod')
+    cy.visit('/?server=')
   })
 
   it('Should log in & get to the resource workspace screen successfully', () => {
@@ -12,15 +12,16 @@ describe('App login & initial setup', () => {
 
     cy.get('input[name="username"]').should('be.visible').type(USERNAME)
     cy.get('input[type="password"]').should('be.visible').type(PASSWORD)
+
+    cy.intercept('GET', `https://qa.door43.org/api/v1/users/${USERNAME}?noCache=**`).as('getUser')
+    cy.intercept('GET', `https://qa.door43.org/api/v1/users/${USERNAME}/tokens?noCache=**`).as('getToken')
+    cy.intercept('GET', 'https://qa.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
+
     cy.get('[data-test="submit-button"]').click()
 
-    cy.intercept('GET', `https://git.door43.org/api/v1/users/${USERNAME}?noCache=**`).as('getUser')
-    cy.intercept('GET', `https://git.door43.org/api/v1/users/${USERNAME}/tokens?noCache=**`).as('getToken')
-    cy.intercept('GET', 'https://git.door43.org/api/v1/user/orgs?noCache=**').as('getOrgs')
-
     cy.wait('@getUser', { requestTimeout: 15000 })
-    cy.wait('@getToken', { requestTimeout: 15000 })
-    cy.wait('@getOrgs', { requestTimeout: 15000 })
+    cy.wait('@getToken', { requestTimeout: 20000 })
+    cy.wait('@getOrgs', { requestTimeout: 25000 })
 
     cy.get('[data-cy="account-setup-title"]').contains('Account Setup').should('be.visible')
     cy.get('[data-cy="account-setup-description"]').contains('Choose your Organization and Primary Language').should('be.visible')
@@ -40,7 +41,7 @@ describe('App login & initial setup', () => {
     cy.get('[data-cy="app-setup-save-and-continue"]').contains('Save and Continue').should('be.visible').click()
 
     // Test translationNotes card is found on the screen
-    cy.wait(1000)
-    cy.get('[id="resource_card_tn"]').should('be.visible')
+    cy.wait(10000)
+    cy.get('[id="resource_card_tn"]', { timeout: 15000 }).should('be.visible')
   })
 })
