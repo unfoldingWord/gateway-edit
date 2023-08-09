@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+      components/ResourceCard.js - Documentation
+  </title>
+
+  <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+  
+
+  <!-- start Mixpanel -->
+  <script type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
+  0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+  for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
+  mixpanel.init("1919205b2da72e4da3b9b6639b444d59");</script>
+  <!-- end Mixpanel -->
+</head>
+
+<body>
+  <svg style="display: none;">
+    <defs>
+      <symbol id="linkIcon" fill="#706d77" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+  <label for="nav-trigger" class="navicon-button x">
+    <div class="navicon"></div>
+  </label>
+
+  <label for="nav-trigger" class="overlay"></label>
+
+  <div class="top-nav-wrapper">
+    <ul>
+      <li >
+        <a href="index.html">
+          
+            <svg fill="#6D6D6D" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              <path d="M0 0h24v24H0z" fill="none"/>
+            </svg>
+          
+          
+        </a>
+      </li>
+
+      
+      <li>
+        <div class="search-wrapper">
+          <svg fill="#6D6D6D" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+
+          </svg>
+          <input type="text" placeholder="Search" class="search-input">
+        </div>
+      </li>
+      
+
+    </ul>
+  </div>
+
+  <nav>
+    <h3 class="reference-title">
+      translationCore
+    </h3>
+
+    <h3>Classes</h3><ul><li id="Alert-nav"><a href="Alert.html">Alert</a></li></ul><h3 id="global-nav">Global</h3><ul><li><a href="global.html#BIBLE_BOOKS">BIBLE_BOOKS</a></li><li><a href="global.html#addNetworkDisconnectError">addNetworkDisconnectError</a></li><li><a href="global.html#doFetch">doFetch</a></li><li><a href="global.html#doLogin">doLogin</a></li><li><a href="global.html#extractGlossesFromRepoZip">extractGlossesFromRepoZip</a></li><li><a href="global.html#findBestLexicon">findBestLexicon</a></li><li><a href="global.html#getErrorMessageForResourceLink">getErrorMessageForResourceLink</a></li><li><a href="global.html#getLatestBibleRepo">getLatestBibleRepo</a></li><li><a href="global.html#getLexiconData">getLexiconData</a></li><li><a href="global.html#getLocalStorageItem">getLocalStorageItem</a></li><li><a href="global.html#getNetworkError">getNetworkError</a></li><li><a href="global.html#getRepoUrl">getRepoUrl</a></li><li><a href="global.html#getResourceMessage">getResourceMessage</a></li><li><a href="global.html#getServerFault">getServerFault</a></li><li><a href="global.html#getUserKey">getUserKey</a></li><li><a href="global.html#goToPage">goToPage</a></li><li><a href="global.html#gotoFeedback">gotoFeedback</a></li><li><a href="global.html#isServerDisconnected">isServerDisconnected</a></li><li><a href="global.html#onNetworkActionButton">onNetworkActionButton</a></li><li><a href="global.html#processNetworkError">processNetworkError</a></li><li><a href="global.html#readUserItem">readUserItem</a></li><li><a href="global.html#reloadApp">reloadApp</a></li><li><a href="global.html#setLocalStorageValue">setLocalStorageValue</a></li><li><a href="global.html#setUserItem">setUserItem</a></li><li><a href="global.html#translate">translate</a></li><li><a href="global.html#unAuthenticated">unAuthenticated</a></li><li><a href="global.html#useUserLocalStorage">useUserLocalStorage</a></li><li><a href="global.html#useWindowEvent">useWindowEvent</a></li></ul>
+  </nav>
+
+  <div id="main">
+    
+      <h1 class="page-title">
+        components/ResourceCard.js
+      </h1>
+    
+
+    
+      
+
+<section>
+  <article>
+    <pre class="prettyprint source linenums"><code>import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+import PropTypes from 'prop-types'
+import {
+  Card,
+  CardContent,
+  ErrorDialog,
+  ERROR_STATE,
+  MANIFEST_NOT_LOADED_ERROR,
+  UpdateBranchButton,
+  useBranchMerger,
+  useCardState,
+  useContent,
+  useContentUpdateProps,
+  useMasterMergeProps,
+  useTsvMerger,
+  useUserBranch,
+} from 'translation-helps-rcl'
+import { useEdit } from 'gitea-react-toolkit'
+import { getResourceErrorMessage } from 'single-scripture-rcl'
+import * as isEqual from 'deep-equal'
+import { getResourceMessage } from '@utils/resources'
+import {
+  HTTP_CONFIG,
+  RESOURCE_HTTP_CONFIG,
+  SERVER_MAX_WAIT_TIME_RETRY,
+} from '@common/constants'
+import generateEditFilePath from '@utils/generateEditFilePath'
+import getSha from '@utils/getSha'
+import { delay } from '../utils/resources'
+import { StoreContext } from '@context/StoreContext'
+
+
+export default function ResourceCard({
+  appRef,
+  authentication,
+  chapter,
+  classes,
+  disableFilters,
+  disableNavigation,
+  errorMessage,
+  filePath,
+  hideMarkdownToggle,
+  id,
+  languageId,
+  loggedInUser,
+  onMinimize,
+  onResourceError,
+  owner,
+  projectId,
+  resourceId,
+  showSaveChangesPrompt,
+  selectedQuote,
+  server,
+  setCurrentCheck,
+  setSavedChanges,
+  title,
+  updateTaDetails,
+  useUserLocalStorage,
+  verse,
+  viewMode,
+}) {
+  const basicReference = {
+    chapter,
+    verse,
+    projectId,
+  }
+  const [content, setContent] = useState('')
+  const [saved, setSaved] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
+  const [fetchConfig, setFetchConfig] = useState({
+    basicReference,
+    config: HTTP_CONFIG,
+    readyToFetch: false,
+  })
+  const cardResourceId = (resourceId === 'twl') &amp;&amp; (viewMode === 'markdown') ? 'tw' : resourceId
+
+  function updateTempContent(c) {
+    setContent(c)
+    setSavedChanges(cardResourceId, false)
+  }
+
+  // If content changes then set whether it's saved or not.
+  useEffect(() => {
+    if (content) {
+      setSaved(false)
+    } else {
+      setSaved(true)
+    }
+  }, [content])
+
+  // Useful to clear content and saved state when chapter and verse changes.
+  useEffect(() => {
+    setContent('')
+    setSaved(true)
+  }, [chapter, verse, filePath])
+
+  // Useful to clear content when selectedQuote.quote and selectedQuote.occurrence change, so that tw clears the content value on selection.
+  useEffect(() => {
+    if (cardResourceId == 'tw') {
+      setContent('')
+    }
+  }, [cardResourceId, selectedQuote?.quote, selectedQuote?.occurrence])
+
+  const {
+    state: {
+      branchDetermined,
+      contentRef,
+      listRef,
+      usingUserBranch,
+      userEditBranchName,
+      workingResourceBranch,
+    },
+    actions: {
+      startEdit,
+      finishEdit,
+    },
+  } = useUserBranch({
+    owner,
+    server,
+    appRef,
+    languageId,
+    cardId: id,
+    loggedInUser,
+    authentication,
+    cardResourceId,
+    onResourceError,
+    useUserLocalStorage,
+  })
+
+  // update fetch configuration if changed
+  useEffect(() => {
+    const config = usingUserBranch ? RESOURCE_HTTP_CONFIG : HTTP_CONFIG
+
+    config.noCache = true // force no caching
+
+    const newFetchConfig = {
+      reference: basicReference,
+      config: config,
+      readyToFetch: branchDetermined,
+    }
+
+    if (!isEqual(fetchConfig, newFetchConfig)) {
+      console.log(`ResourceCard() fetchConfig changed to`, { sha, newFetchConfig })
+      setFetchConfig(newFetchConfig)
+    }
+  }, [basicReference, branchDetermined, usingUserBranch])
+
+  const _reference = fetchConfig?.reference
+  const {
+    fetchResponse,
+    items,
+    markdown,
+    reloadResource,
+    resource,
+    resourceStatus,
+    tsvs,
+  } = useContent({
+    chapter: _reference?.chapter,
+    contentRef,
+    filePath,
+    httpConfig: fetchConfig?.config,
+    languageId,
+    loggedInUser,
+    listRef,
+    onResourceError,
+    owner,
+    projectId: _reference?.projectId,
+    readyToFetch: fetchConfig?.readyToFetch,
+    ref: workingResourceBranch,
+    resourceId,
+    server,
+    useUserLocalStorage,
+    verse: _reference?.verse,
+    viewMode,
+  })
+
+  const repo = `${languageId}_${cardResourceId}`
+  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
+  const {
+    state: {
+      mergeStatus: mergeToMaster,
+      updateStatus: mergeFromMaster,
+    },
+  } = _useBranchMerger;
+
+  const updateButtonProps = useContentUpdateProps({
+    isSaving,
+    useBranchMerger: _useBranchMerger,
+    onUpdate: () => {
+      delay(500).then(() => reloadResource())
+    }
+  })
+
+  const {
+    callUpdateUserBranch,
+    isErrorDialogOpen,
+    onCloseErrorDialog,
+    isLoading: isUpdateLoading,
+    dialogMessage,
+    dialogTitle,
+    dialogLink,
+    dialogLinkTooltip
+  } = updateButtonProps;
+
+  const onMerge = () => {
+    finishEdit()
+    delay(500).then(() => {
+      reloadResource()
+    })
+  }
+
+  const { isLoading: isMergeLoading, callMergeUserBranch } = useMasterMergeProps({
+    useBranchMerger: _useBranchMerger,
+    onMerge,
+  })
+
+  useEffect(() => {
+    if (isUpdateLoading) {
+      setCardsLoadingUpdate(prevCardsLoading => [...prevCardsLoading, cardResourceId])
+    } else {
+      setCardsLoadingUpdate(prevCardsLoading => prevCardsLoading.filter(cardId => cardId !== cardResourceId))
+    }
+  }, [isUpdateLoading])
+
+  useEffect(() => {
+    if (isMergeLoading) {
+      setCardsLoadingMerge(prevCardsLoading => [...prevCardsLoading, cardResourceId])
+    } else {
+      setCardsLoadingMerge(prevCardsLoading => prevCardsLoading.filter(cardId => cardId !== cardResourceId))
+    }
+  }, [isMergeLoading])
+
+  useEffect(() => {
+    if (cardResourceId) {
+      updateMergeState(
+        cardResourceId,
+        mergeFromMaster,
+        mergeToMaster,
+        callUpdateUserBranch,
+        callMergeUserBranch,
+      )
+    }
+  },[cardResourceId, mergeFromMaster, mergeToMaster])
+
+  const {
+    state: {
+      item, headers, filters, fontSize, itemIndex, markdownView,
+    },
+    actions: {
+      setFilters, setFontSize, setItemIndex, setMarkdownView,
+    },
+  } = useCardState({
+    id,
+    items,
+    verse,
+    chapter,
+    setCurrentCheck,
+    projectId,
+    selectedQuote,
+    useUserLocalStorage,
+    resourceId: cardResourceId,
+  })
+
+  const sha = getSha({
+    item, fetchResponse, cardResourceId,
+  })
+  const editFilePath = generateEditFilePath({
+    item,
+    resource,
+    filePath,
+    projectId,
+    cardResourceId,
+  })
+
+  const {
+    error: saveError,
+    isError: isSaveError,
+    isEditing,
+    onSaveEdit,
+  } = useEdit({
+    sha,
+    owner,
+    content,
+    config: {
+      cache: { maxAge: 0 },
+      ...authentication?.config,
+      token: authentication?.token,
+      timeout: SERVER_MAX_WAIT_TIME_RETRY,
+    },
+    author: loggedInUser,
+    token: authentication?.token,
+    branch: workingResourceBranch,
+    filepath: editFilePath,
+    repo: `${languageId}_${cardResourceId}`,
+    dontCreateBranch: true,
+  })
+
+  useEffect(() => { // when we get a save saveError
+    if (saveError &amp;&amp; isSaveError) {
+      console.log(`save error`, saveError)
+      onResourceError &amp;&amp; onResourceError(null, false, null, `Error saving ${languageId}_${cardResourceId} ${saveError}`, true)
+    }
+  }, [saveError, isSaveError])
+
+  // useEffect(() => {
+  //   console.log(`ResourceCard() sha changed to`, { sha, resource })
+  // }, [sha])
+
+  const { onTsvEdit } = useTsvMerger({
+    tsvs,
+    verse,
+    chapter,
+    itemIndex,
+    setContent: updateTempContent,
+  })
+
+  // useEffect(() => {
+  //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
+  // }, [chapter, verse, projectId])
+
+  const {
+    actions: {
+      updateMergeState,
+      setCardsSaving,
+      setCardsLoadingUpdate,
+      setCardsLoadingMerge,
+    }
+  } = useContext(StoreContext)
+
+  useEffect(() => {
+    if (updateTaDetails) {
+      const {
+        Quote, OrigQuote, Occurrence, Reference, SupportReference = null,
+      } = item || {}
+      updateTaDetails(SupportReference)
+      setCurrentCheck({
+        quote: Quote || OrigQuote,
+        occurrence: Occurrence,
+        SupportReference,
+        reference: Reference,
+      })
+    }
+  }, [item])
+
+  useEffect(() => {
+    const error = resourceStatus?.[ERROR_STATE]
+
+    if (error) { // if error was found do callback
+      const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
+      const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
+      onResourceError &amp;&amp; onResourceError(message, isAccessError, resourceStatus)
+    }
+  }, [resourceStatus?.[ERROR_STATE]])
+
+  const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
+
+  async function handleSaveEdit() {
+    // Save edit, if successful trigger resource reload and set saved to true.
+    setIsSaving(true) &amp;&amp; setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
+    const saveEdit = async (branch) => {
+      console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
+      const success = await onSaveEdit(branch)
+
+      if (success) {
+        setSaved(true)
+        setSavedChanges(cardResourceId, true)
+        delay(500).then(() => {
+          console.info('handleSaveEdit() Reloading resource')
+          reloadResource()
+        })
+      } else {
+        console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
+      }
+      setIsSaving(false) &amp;&amp; setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
+    }
+
+    // If not using user branch create it then save the edit.
+    if (!usingUserBranch) {
+      console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
+      const branch = await startEdit()
+      if (branch) {
+        saveEdit(branch)
+      } else { // if error on branch creation
+        onResourceError &amp;&amp; onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
+      }
+    } else {// Else just save the edit.
+      await saveEdit()
+    }
+  }
+
+  // Add/Remove resources to/from the array to enable or disable edit mode.
+  const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
+  const editable = editableResources.includes(cardResourceId)
+
+  const onRenderToolbar = ({ items }) => {
+    const newItems = [...items]
+
+    newItems.push(
+      &lt;>
+        &lt;UpdateBranchButton {...updateButtonProps} isLoading={isUpdateLoading || isSaving}/>
+        &lt;ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={ isUpdateLoading || isSaving } link={dialogLink} linkTooltip={dialogLinkTooltip} />
+      &lt;/>
+    )
+
+    return newItems
+  }
+
+  return (
+    &lt;Card
+      cardResourceId={cardResourceId}
+      classes={classes}
+      disableFilters={disableFilters}
+      disableNavigation={disableNavigation}
+      editable={editable}
+      filters={filters}
+      fontSize={fontSize}
+      headers={headers}
+      hideMarkdownToggle={hideMarkdownToggle}
+      id={id}
+      items={items}
+      itemIndex={itemIndex}
+      markdownView={markdownView}
+      onMinimize={onMinimize ? () => onMinimize(id) : null}
+      onRenderToolbar={onRenderToolbar}
+      onSaveEdit={handleSaveEdit}
+      title={title}
+      saved={saved || isEditing}
+      setContent={setContent}
+      setFilters={setFilters}
+      setFontSize={setFontSize}
+      setItemIndex={setItemIndex}
+      setMarkdownView={setMarkdownView}
+      showSaveChangesPrompt={showSaveChangesPrompt}
+    >
+      &lt;CardContent
+        cardResourceId={cardResourceId}
+        editable={editable}
+        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        filters={filters}
+        fontSize={fontSize}
+        id={`${id}_content`}
+        item={item}
+        items={items}
+        languageId={languageId}
+        markdown={(cardResourceId === 'ta' || cardResourceId === 'tw') &amp;&amp; content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
+        markdownView={markdownView}
+        onEdit={updateTempContent}
+        onTsvEdit={onTsvEdit}
+        selectedQuote={selectedQuote}
+        setContent={setContent}
+        setCurrentCheck={setCurrentCheck}
+        showSaveChangesPrompt={showSaveChangesPrompt}
+        updateTaDetails={updateTaDetails}
+        viewMode={viewMode}
+      />
+    &lt;/Card>
+  )
+}
+
+ResourceCard.defaultProps = {
+  errorMessage: null,
+  title: '',
+}
+
+ResourceCard.propTypes = {
+  id: PropTypes.string,
+  viewMode: PropTypes.string,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  chapter: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  server: PropTypes.string.isRequired,
+  owner: PropTypes.string.isRequired,
+  ref: PropTypes.string.isRequired,
+  languageId: PropTypes.string.isRequired,
+  resourceId: PropTypes.string.isRequired,
+  projectId: PropTypes.string.isRequired,
+  updateTaDetails: PropTypes.func,
+  setCurrentCheck: PropTypes.func,
+  filePath: PropTypes.string,
+  disableFilters: PropTypes.bool,
+  disableNavigation: PropTypes.bool,
+  hideMarkdownToggle: PropTypes.bool,
+  classes: PropTypes.object,
+  selectedQuote: PropTypes.object,
+  errorMessage: PropTypes.string,
+  useUserLocalStorage: PropTypes.func,
+  /** optional callback if error loading resource, parameter returned are:
+   *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
+   *    isAccessError - is true if this was an error trying to access file and could likely be due to network connection problem
+   *    resourceStatus - is object containing details about problems fetching resource */
+  onResourceError: PropTypes.func,
+  /** default ref for app (e.g. master) */
+  appRef: PropTypes.string,
+  /** username of the logged in user */
+  loggedInUser: PropTypes.string,
+  /** user authentication object */
+  authentication: PropTypes.object,
+  /** Set whether changes are saved or not so that the saved changes prompts opens when necessary. */
+  setSavedChanges: PropTypes.func,
+  /** Shows a unsaved changes prompt if there's any. */
+  showSaveChangesPrompt: PropTypes.func,
+  /** function to minimize the card (optional) */
+  onMinimize: PropTypes.func,
+}
+</code></pre>
+  </article>
+</section>
+
+    
+
+
+  </div>
+
+  <br class="clear">
+
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a>
+  </footer>
+
+  <script src="scripts/linenumber.js"></script>
+  <script src="scripts/pagelocation.js"></script>
+
+  
+  <script>
+    $(function () {
+      window.docsearch({
+        apiKey: 'f12d46ccb502a9c723d200abe3e3befd',
+        indexName: 'translation_core',
+        inputSelector: '.search-input',
+        debug: false, // Set debug to true if you want to inspect the dropdown
+        algoliaOptions: {
+          hitsPerPage: 7
+        }
+      });
+    });
+  </script>
+  
+
+</body>
+</html>

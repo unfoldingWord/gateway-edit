@@ -1,0 +1,834 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+      components/WorkspaceContainer.js - Documentation
+  </title>
+
+  <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+  
+
+  <!-- start Mixpanel -->
+  <script type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
+  0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+  for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
+  mixpanel.init("1919205b2da72e4da3b9b6639b444d59");</script>
+  <!-- end Mixpanel -->
+</head>
+
+<body>
+  <svg style="display: none;">
+    <defs>
+      <symbol id="linkIcon" fill="#706d77" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+  <label for="nav-trigger" class="navicon-button x">
+    <div class="navicon"></div>
+  </label>
+
+  <label for="nav-trigger" class="overlay"></label>
+
+  <div class="top-nav-wrapper">
+    <ul>
+      <li >
+        <a href="index.html">
+          
+            <svg fill="#6D6D6D" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              <path d="M0 0h24v24H0z" fill="none"/>
+            </svg>
+          
+          
+        </a>
+      </li>
+
+      
+      <li>
+        <div class="search-wrapper">
+          <svg fill="#6D6D6D" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+
+          </svg>
+          <input type="text" placeholder="Search" class="search-input">
+        </div>
+      </li>
+      
+
+    </ul>
+  </div>
+
+  <nav>
+    <h3 class="reference-title">
+      translationCore
+    </h3>
+
+    <h3>Classes</h3><ul><li id="Alert-nav"><a href="Alert.html">Alert</a></li></ul><h3 id="global-nav">Global</h3><ul><li><a href="global.html#BIBLE_BOOKS">BIBLE_BOOKS</a></li><li><a href="global.html#addNetworkDisconnectError">addNetworkDisconnectError</a></li><li><a href="global.html#doFetch">doFetch</a></li><li><a href="global.html#doLogin">doLogin</a></li><li><a href="global.html#extractGlossesFromRepoZip">extractGlossesFromRepoZip</a></li><li><a href="global.html#findBestLexicon">findBestLexicon</a></li><li><a href="global.html#getErrorMessageForResourceLink">getErrorMessageForResourceLink</a></li><li><a href="global.html#getLatestBibleRepo">getLatestBibleRepo</a></li><li><a href="global.html#getLexiconData">getLexiconData</a></li><li><a href="global.html#getLocalStorageItem">getLocalStorageItem</a></li><li><a href="global.html#getNetworkError">getNetworkError</a></li><li><a href="global.html#getRepoUrl">getRepoUrl</a></li><li><a href="global.html#getResourceMessage">getResourceMessage</a></li><li><a href="global.html#getServerFault">getServerFault</a></li><li><a href="global.html#getUserKey">getUserKey</a></li><li><a href="global.html#goToPage">goToPage</a></li><li><a href="global.html#gotoFeedback">gotoFeedback</a></li><li><a href="global.html#isServerDisconnected">isServerDisconnected</a></li><li><a href="global.html#onNetworkActionButton">onNetworkActionButton</a></li><li><a href="global.html#processNetworkError">processNetworkError</a></li><li><a href="global.html#readUserItem">readUserItem</a></li><li><a href="global.html#reloadApp">reloadApp</a></li><li><a href="global.html#setLocalStorageValue">setLocalStorageValue</a></li><li><a href="global.html#setUserItem">setUserItem</a></li><li><a href="global.html#translate">translate</a></li><li><a href="global.html#unAuthenticated">unAuthenticated</a></li><li><a href="global.html#useUserLocalStorage">useUserLocalStorage</a></li><li><a href="global.html#useWindowEvent">useWindowEvent</a></li></ul>
+  </nav>
+
+  <div id="main">
+    
+      <h1 class="page-title">
+        components/WorkspaceContainer.js
+      </h1>
+    
+
+    
+      
+
+<section>
+  <article>
+    <pre class="prettyprint source linenums"><code>import {
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import * as isEqual from 'deep-equal'
+import {
+  MinimizedCardsListUI,
+  useMinimizedCardsState,
+  Workspace,
+} from 'resource-workspace-rcl'
+import { makeStyles } from '@material-ui/core/styles'
+import {
+  fixOccurrence,
+  getVersesForRef,
+  NT_ORIG_LANG,
+  NT_ORIG_LANG_BIBLE,
+  ORIGINAL_SOURCE,
+  OT_ORIG_LANG,
+  OT_ORIG_LANG_BIBLE,
+  ScriptureCard,
+  splitUrl,
+  TARGET_LITERAL,
+  TARGET_SIMPLIFIED,
+  useScripture,
+} from 'single-scripture-rcl'
+import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
+import ResourceCard from '@components/ResourceCard'
+import {
+  getLatestBibleRepo,
+  getResourceBibles,
+} from '@utils/resources'
+import { StoreContext } from '@context/StoreContext'
+import { isNT } from '@common/BooksOfTheBible'
+import { getLanguage } from '@common/languages'
+import CircularProgress from '@components/CircularProgress'
+import {
+  addNetworkDisconnectError,
+  onNetworkActionButton,
+  processNetworkError,
+  reloadApp,
+} from '@utils/network'
+import { useRouter } from 'next/router'
+import { HTTP_CONFIG } from '@common/constants'
+import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import WordAlignerDialog from '@components/WordAlignerDialog'
+import useLexicon from '@hooks/useLexicon'
+import useWindowDimensions from '@hooks/useWindowDimensions'
+import { translate } from '@utils/lexiconHelpers'
+import _ from 'lodash'
+import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
+
+const useStyles = makeStyles(() => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 0,
+    margin: '0 1px !important',
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'transparent',
+  },
+  dragIndicator: {},
+}))
+const wordAlignmentScreenRatio = 0.7
+const wordAlignmentMaxHeightPx = 1000
+
+function WorkspaceContainer() {
+  const router = useRouter()
+  const classes = useStyles()
+  const [state, _setState] = useState({
+    currentVerseReference: null,
+    originalScriptureBookObjects: null,
+    networkError: null,
+    scriptureReference: {},
+    wordAlignerStatus: null,
+    workspaceReady: false,
+  })
+
+  const {
+    currentVerseReference,
+    networkError,
+    originalScriptureBookObjects,
+    scriptureReference,
+    wordAlignerStatus,
+    workspaceReady,
+  } = state
+
+  function setState(newState) {
+    _setState(prevState => ({ ...prevState, ...newState }))
+  }
+
+  const { height } = useWindowDimensions()
+
+  const wordAlignerHeight = useMemo(() => {
+    let _height = wordAlignmentScreenRatio * height
+
+    if (_height > wordAlignmentMaxHeightPx) {
+      _height = wordAlignmentMaxHeightPx
+    }
+
+    return _height
+  }, [height])
+
+  const {
+    state: {
+      owner,
+      server,
+      appRef,
+      taArticle,
+      languageId,
+      selectedQuote,
+      scriptureOwner,
+      bibleReference: {
+        bookId, chapter, verse,
+      },
+      supportedBibles,
+      currentLayout,
+      useUserLocalStorage,
+      loggedInUser,
+      authentication,
+      tokenNetworkError,
+      greekRepoUrl,
+      hebrewRepoUrl,
+      mainScreenRef,
+    },
+    actions: {
+      logout,
+      setQuote: _setQuote,
+      setSupportedBibles,
+      setCurrentLayout,
+      setTokenNetworkError,
+      setLastError,
+      showSaveChangesPrompt,
+      setCardsLoadingUpdate,
+      setCardsLoadingMerge,
+      setCardsSaving,
+      setGreekRepoUrl,
+      setHebrewRepoUrl,
+      setSavedChanges,
+      updateMergeState,
+      updateTaDetails,
+    },
+  } = useContext(StoreContext)
+
+  const [
+    {
+      loading, title, content, error,
+    },
+    clearContent,
+  ] = useResourceClickListener({
+    owner,
+    server,
+    ref: appRef,
+    taArticle,
+    languageId,
+    onResourceError,
+    httpConfig: HTTP_CONFIG,
+  })
+
+  const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
+    bookId,
+    languageId,
+    server,
+  })
+
+  /**
+   * clean up quote before applying
+   * @param {object} newQuote
+   */
+  function setCurrentCheck(newQuote) {
+    console.log('newQuote', newQuote)
+    let _quote = newQuote ? {
+      ...newQuote,
+      occurrence: fixOccurrence(newQuote.occurrence),
+    } : {}
+
+    if (newQuote &amp;&amp; !newQuote.reference) {
+      _quote.reference= `${chapter}:${verse}`
+    }
+
+    if (!isEqual(selectedQuote, _quote)) {
+      _setQuote(_quote)
+    }
+
+    if (!isEqual(newQuote.reference, currentVerseReference)){
+      setState( { currentVerseReference: newQuote.reference })
+    }
+  }
+
+  /**
+   * update word aligner status
+   * @param newWordAlignmentStatus
+   */
+  function setWordAlignerStatus(newWordAlignmentStatus) {
+    if (!isEqual(wordAlignerStatus, newWordAlignmentStatus)) {
+      setState({ wordAlignerStatus: newWordAlignmentStatus })
+    }
+  }
+
+  useEffect(()=>{
+    // console.log('on reference change:', { chapter, verse, bookId, currentVerseReference })
+    const reference = {
+      chapter,
+      verse,
+      bookId,
+      projectId: bookId,
+    }
+
+    if (currentVerseReference){
+      const index = currentVerseReference.indexOf(':')
+
+      if (index >= 0){
+        const chapter = currentVerseReference.substring(0,index)
+        const verse = currentVerseReference.substring(index + 1)
+        reference.chapter = chapter
+        reference.verse = verse
+      }
+    }
+
+    if (!isEqual(reference, scriptureReference)){
+      setState({ scriptureReference: reference })
+    }
+  },[chapter, verse, bookId, currentVerseReference])
+
+  /**
+   * in the case of a network error, process and display error dialog
+   * @param {string} errorMessage - optional error message returned
+   * @param {number} httpCode - http code returned
+   */
+  function processError(errorMessage, httpCode=0) {
+    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
+  }
+
+  function setNetworkError( error ) {
+    setState( { networkError: error })
+  }
+
+  /**
+   * show either tokenNetworkError or NetworkError for workspace
+   * @return {JSX.Element|null}
+   */
+  function showNetworkError() {
+    if (tokenNetworkError) { // if we had a token network error on startup
+      if (!tokenNetworkError.router) { // needed for reload of page
+        setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
+      }
+      return (
+        &lt;NetworkErrorPopup
+          networkError={tokenNetworkError}
+          setNetworkError={(error) => {
+            setTokenNetworkError(error)
+            setNetworkError(null) // clear this flag in case it was also set
+          }}
+          hideClose={true}
+          onRetry={reloadApp}
+        />
+      )
+    } else if (networkError) { // for all other workspace network errors
+      return (
+        &lt;NetworkErrorPopup
+          networkError={networkError}
+          setNetworkError={setNetworkError}
+          onActionButton={onNetworkActionButton}
+          hideClose={false}
+          /* show reload if send feedback not enabled */
+          onRetry={!networkError.actionButtonText ? reloadApp : null}
+        />
+      )
+    }
+    return null
+  }
+
+  /**
+   * process error and determine if there is a problem with connection to server
+   *  if showAnyError is true we display an error popup
+   *    the process then is to check if this is server connection problem - if so we display that message, if not we display the error returned
+   *  if showAnyError is false (default) we only display an error popup if there is a problem connecting to server
+   * @param {string} message - the error message we received fetching a resource
+   * @param {boolean} isAccessError - if false then the error type is not one that would be caused by server connection problems
+   * @param {number} resourceStatus - status code returned fetching resource
+   * @param {object} error - error object for detected error, could be a parsing error, etc.  This will take precedence over message
+   * @param {boolean} showAllErrors - if true then always show a popup error message, otherwise just show server error message if we can't talk to server
+   */
+  function onResourceError(message, isAccessError, resourceStatus, error, showAllErrors = false) {
+    if (!networkError ) { // only show if another error not already showing
+      if (showAllErrors) {
+        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
+      } else {
+        if (isAccessError) { // we only show popup for access errors
+          addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError)
+        }
+      }
+    }
+  }
+
+  useEffect(() => { // on verse navigation, clear verse spans and selections
+    // clear current verse reference and alignments
+    setState( { currentVerseReference: null, wordAlignerStatus: null })
+  }, [chapter, verse, bookId])
+
+  const commonScriptureCardConfigs = {
+    appRef,
+    authentication,
+    bookIndex: BIBLES_ABBRV_INDEX[bookId],
+    classes,
+    getLanguage,
+    getLexiconData,
+    greekRepoUrl,
+    hebrewRepoUrl,
+    httpConfig: HTTP_CONFIG,
+    isNT,
+    loggedInUser,
+    onResourceError,
+    originalLanguageOwner: scriptureOwner,
+    originalScriptureBookObjects,
+    reference: scriptureReference,
+    selectedQuote,
+    server,
+    setCardsLoadingUpdate,
+    setCardsLoadingMerge,
+    setCardsSaving,
+    setSavedChanges,
+    setWordAlignerStatus,
+    translate,
+    updateMergeState,
+    useUserLocalStorage,
+  }
+
+  const commonResourceCardConfigs = {
+    appRef,
+    authentication,
+    classes,
+    chapter,
+    languageId,
+    loggedInUser,
+    onResourceError,
+    owner,
+    server,
+    verse,
+    useUserLocalStorage,
+  }
+
+  useEffect(() => {
+    setState( { workspaceReady: false })
+
+    if (owner &amp;&amp; languageId &amp;&amp; appRef &amp;&amp; server &amp;&amp; loggedInUser) {
+      getResourceBibles({
+        bookId,
+        chapter,
+        verse,
+        resourceId: languageId === 'en' ? 'ult' : 'glt',
+        owner,
+        languageId,
+        ref: appRef,
+        server,
+      }).then(results => {
+        const { bibles, resourceLink } = results
+
+        if (bibles?.length) {
+          if (!isEqual(bibles, supportedBibles)) {
+            console.log(`found ${bibles?.length} bibles`)
+            setSupportedBibles(bibles) // TODO blm: update bible refs
+          }
+        } else {
+          console.warn(`no bibles found for ${resourceLink}`)
+        }
+        setState( { workspaceReady: true })
+      }).catch((e) => {
+        setState( { workspaceReady: true })
+        processError(e.toString())
+      })
+    }// eslint-disable-next-line
+  }, [owner, languageId, appRef, server, loggedInUser])
+
+  useEffect(() => {
+    const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
+
+    if (missingOrignalBibles) { // if we don't have a path
+      setState( { workspaceReady: false })
+      console.log(`WorkspaceContainer - waiting on latest original bible repos`)
+    }
+
+    const hebrewPromise = getLatestBibleRepo(server, 'unfoldingWord', 'hbo', 'uhb', processError)
+    const greekPromise = getLatestBibleRepo(server, 'unfoldingWord', 'el-x-koine', 'ugnt', processError)
+
+    Promise.all([hebrewPromise, greekPromise]).then( (results) => {
+      const [repoHebrew, repoGreek] = results
+      let changed = false
+
+      if (repoHebrew &amp;&amp; (repoHebrew !== hebrewRepoUrl)) {
+        setHebrewRepoUrl(repoHebrew)
+        changed = true
+      }
+
+      if (repoGreek &amp;&amp; (repoGreek !== greekRepoUrl)) {
+        setGreekRepoUrl(repoGreek)
+        changed = true
+      }
+
+      if (missingOrignalBibles &amp;&amp; repoHebrew &amp;&amp; repoGreek) {
+        console.log(`WorkspaceContainer - found original bible repos`)
+        setState( { workspaceReady: true })
+      } else if (changed) { // force redraw
+        console.log(`WorkspaceContainer - original bible repos changed, force reload`)
+        setState( { workspaceReady: false })
+        setTimeout(() => {
+          setState( { workspaceReady: true })
+        }, 500)
+      }
+    })
+  }, [])
+
+  const cards = [
+    {
+      title: 'Literal Translation',
+      type: 'scripture_card',
+      id: 'scripture_card_0',
+      cardNum: 0,
+      resource: {
+        owner,
+        languageId,
+        resourceId: TARGET_LITERAL,
+        originalLanguageOwner: scriptureOwner,
+      },
+      ...commonScriptureCardConfigs,
+    },
+    {
+      title: 'Original Source',
+      type: 'scripture_card',
+      id: 'scripture_card_1',
+      cardNum: 1,
+      resource: {
+        owner,
+        languageId,
+        resourceId: ORIGINAL_SOURCE,
+        originalLanguageOwner: scriptureOwner,
+      },
+      ...commonScriptureCardConfigs,
+    },
+    {
+      title: 'Simplified Translation',
+      type: 'scripture_card',
+      id: 'scripture_card_2',
+      cardNum: 2,
+      resource: {
+        owner,
+        languageId,
+        resourceId: TARGET_SIMPLIFIED,
+        originalLanguageOwner: scriptureOwner,
+      },
+      ...commonScriptureCardConfigs,
+    },
+    {
+      title: 'translationNotes',
+      type: 'resource_card',
+      id: 'resource_card_tn',
+      filePath: null,
+      resourceId: 'tn',
+      projectId: bookId,
+      setCurrentCheck: setCurrentCheck,
+      selectedQuote: selectedQuote,
+      updateTaDetails: updateTaDetails,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+    {
+      title: 'translationAcademy',
+      type: 'resource_card',
+      id: 'resource_card_ta',
+      resourceId: 'ta',
+      projectId: taArticle?.projectId,
+      filePath: taArticle?.filePath,
+      errorMessage: taArticle ? null : 'No article is specified in the current note.',
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+    {
+      title: 'translationWords List',
+      type: 'resource_card',
+      id: 'resource_card_twl',
+      viewMode: 'list',
+      resourceId: 'twl',
+      projectId: bookId,
+      filePath: null,
+      setCurrentCheck: setCurrentCheck,
+      selectedQuote: selectedQuote,
+      disableFilters: true,
+      disableNavigation: true,
+      hideMarkdownToggle: true,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+    {
+      title: 'translationWords Article',
+      type: 'resource_card',
+      id: 'resource_card_twa',
+      viewMode: 'markdown',
+      resourceId: 'twl',
+      projectId: bookId,
+      filePath: null,
+      setCurrentCheck: setCurrentCheck,
+      selectedQuote: selectedQuote,
+      disableFilters: true,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+    {
+      title: 'translationQuestions',
+      type: 'resource_card',
+      id: 'resource_card_tq',
+      resourceId: 'tq',
+      projectId: bookId,
+      filePath: null,
+      viewMode: 'question',
+      disableFilters: true,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      setSavedChanges: setSavedChanges,
+      showSaveChangesPrompt: showSaveChangesPrompt,
+      ...commonResourceCardConfigs,
+    },
+  ]
+
+  const {
+    visibleCards, minimizedCards, maximizeCard,
+  } = useMinimizedCardsState({
+    cards, setCurrentLayout, currentLayout, useUserLocalStorage,
+  })
+
+  const isNewTestament = isNT(bookId)
+  const originalLanguageId = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG
+  const originalScripture = {
+    reference: {
+      projectId: bookId,
+      chapter,
+      verse,
+    },
+    isNT: () => isNT(bookId),
+    resource: {
+      owner: 'unfoldingWord',
+      originalLanguageOwner: 'unfoldingWord',
+      languageId: originalLanguageId,
+      resourceId: ORIGINAL_SOURCE,
+    },
+    getLanguage: () => ({ direction: isNewTestament ? 'ltr' : 'rtl' }),
+  }
+
+  const config = {
+    server,
+    ...HTTP_CONFIG,
+  }
+
+  const { server: origServer, resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
+
+  const originalScriptureResults = useScripture({
+    ...originalScripture,
+    config: {
+      ...config,
+      server: origServer,
+    },
+    readyForFetch: !!bookId,
+    resource: {
+      ...originalScripture.resource,
+      resourceId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      projectId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
+      ref: appRef,
+    },
+    resourceLink: origResourceLink,
+    wholeBook: true,
+  })
+
+  useEffect(() => {
+    let originalScriptureBookObjects = null
+
+    if (originalScriptureResults?.bookObjects) {
+      originalScriptureBookObjects = {
+        ...originalScriptureResults?.bookObjects,
+        bookId,
+        languageId: originalLanguageId,
+      }
+    }
+
+    setState( { originalScriptureBookObjects })
+  }, [originalScriptureResults?.bookObjects])
+
+  useEffect(() => { // pre-cache glosses on verse change
+    const fetchGlossDataForVerse = async () => {
+      const verses = getVersesForRef(scriptureReference, originalScriptureBookObjects, originalLanguageId)
+
+      if (verses?.length) {
+        for (const verseReference of verses) {
+          const origVerseObjects = verseReference?.verseData?.verseObjects
+
+          if (origVerseObjects) {
+            // eslint-disable-next-line no-await-in-loop
+            await fetchGlossesForVerse(origVerseObjects, originalLanguageId)
+          }
+        }
+      }
+    }
+
+    if (originalScriptureBookObjects &amp;&amp; scriptureReference?.projectId) {
+      fetchGlossDataForVerse()
+    }
+  }, [scriptureReference, originalScriptureBookObjects, originalLanguageId ])
+
+  return (
+    (!workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+      &lt;>
+        {showNetworkError()}
+        &lt;CircularProgress size={180} />
+      &lt;/>
+      :
+      &lt;>
+        &lt;MinimizedCardsListUI minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>
+        {loading || content || error ?
+          &lt;DraggableCard
+            open
+            error={error}
+            title={title}
+            loading={loading}
+            content={content}
+            onClose={() => clearContent()}
+            workspaceRef={mainScreenRef}
+          />
+          :
+          null
+        }
+        &lt;Workspace
+          rowHeight={25}
+          layout={currentLayout}
+          classes={classes}
+          gridMargin={[10, 10]}
+          onLayoutChange={(_layout, layouts) => {
+            setCurrentLayout(layouts)
+          }}
+          layoutWidths={[
+            [1, 1, 1],
+            [2, 2],
+            [1, 1.5, 1.5],
+          ]}
+          layoutHeights={[[5], [10, 10], [10, 10]]}
+          minW={3}
+          minH={4}
+          breakpoints={{
+            lg: 900,
+            sm: 680,
+            xs: 300,
+          }}
+          columns={{
+            lg: 12,
+            sm: 6,
+            xs: 3,
+          }}
+        >
+          {
+            _.map(visibleCards, (cardProps, i) =>
+              cardProps.type === 'scripture_card' ?
+                &lt;ScriptureCard key={cardProps.title} {...cardProps} />
+                :
+                &lt;ResourceCard key={cardProps.title} {...cardProps} />,
+            )
+          }
+        &lt;/Workspace>
+        &lt;WordAlignerDialog
+          alignerStatus={wordAlignerStatus}
+          height={wordAlignerHeight}
+          translate={translate}
+          getLexiconData={getLexiconData}
+        />
+
+        {(tokenNetworkError || networkError) &amp;&amp; // Do not render workspace until user logged in and we have user settings
+          &lt;>
+            {showNetworkError()}
+          &lt;/>
+        }
+      &lt;/>
+  )
+}
+
+export default WorkspaceContainer
+</code></pre>
+  </article>
+</section>
+
+    
+
+
+  </div>
+
+  <br class="clear">
+
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a>
+  </footer>
+
+  <script src="scripts/linenumber.js"></script>
+  <script src="scripts/pagelocation.js"></script>
+
+  
+  <script>
+    $(function () {
+      window.docsearch({
+        apiKey: 'f12d46ccb502a9c723d200abe3e3befd',
+        indexName: 'translation_core',
+        inputSelector: '.search-input',
+        debug: false, // Set debug to true if you want to inspect the dropdown
+        algoliaOptions: {
+          hitsPerPage: 7
+        }
+      });
+    });
+  </script>
+  
+
+</body>
+</html>

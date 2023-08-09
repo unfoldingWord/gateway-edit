@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+      common/BooksOfTheBible.js - Documentation
+  </title>
+
+  <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+  
+
+  <!-- start Mixpanel -->
+  <script type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
+  0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+  for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
+  mixpanel.init("1919205b2da72e4da3b9b6639b444d59");</script>
+  <!-- end Mixpanel -->
+</head>
+
+<body>
+  <svg style="display: none;">
+    <defs>
+      <symbol id="linkIcon" fill="#706d77" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+  <label for="nav-trigger" class="navicon-button x">
+    <div class="navicon"></div>
+  </label>
+
+  <label for="nav-trigger" class="overlay"></label>
+
+  <div class="top-nav-wrapper">
+    <ul>
+      <li >
+        <a href="index.html">
+          
+            <svg fill="#6D6D6D" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              <path d="M0 0h24v24H0z" fill="none"/>
+            </svg>
+          
+          
+        </a>
+      </li>
+
+      
+      <li>
+        <div class="search-wrapper">
+          <svg fill="#6D6D6D" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+
+          </svg>
+          <input type="text" placeholder="Search" class="search-input">
+        </div>
+      </li>
+      
+
+    </ul>
+  </div>
+
+  <nav>
+    <h3 class="reference-title">
+      translationCore
+    </h3>
+
+    <h3>Classes</h3><ul><li id="Alert-nav"><a href="Alert.html">Alert</a></li></ul><h3 id="global-nav">Global</h3><ul><li><a href="global.html#BIBLE_BOOKS">BIBLE_BOOKS</a></li><li><a href="global.html#addNetworkDisconnectError">addNetworkDisconnectError</a></li><li><a href="global.html#doFetch">doFetch</a></li><li><a href="global.html#doLogin">doLogin</a></li><li><a href="global.html#extractGlossesFromRepoZip">extractGlossesFromRepoZip</a></li><li><a href="global.html#findBestLexicon">findBestLexicon</a></li><li><a href="global.html#getErrorMessageForResourceLink">getErrorMessageForResourceLink</a></li><li><a href="global.html#getLatestBibleRepo">getLatestBibleRepo</a></li><li><a href="global.html#getLexiconData">getLexiconData</a></li><li><a href="global.html#getLocalStorageItem">getLocalStorageItem</a></li><li><a href="global.html#getNetworkError">getNetworkError</a></li><li><a href="global.html#getRepoUrl">getRepoUrl</a></li><li><a href="global.html#getResourceMessage">getResourceMessage</a></li><li><a href="global.html#getServerFault">getServerFault</a></li><li><a href="global.html#getUserKey">getUserKey</a></li><li><a href="global.html#goToPage">goToPage</a></li><li><a href="global.html#gotoFeedback">gotoFeedback</a></li><li><a href="global.html#isServerDisconnected">isServerDisconnected</a></li><li><a href="global.html#onNetworkActionButton">onNetworkActionButton</a></li><li><a href="global.html#processNetworkError">processNetworkError</a></li><li><a href="global.html#readUserItem">readUserItem</a></li><li><a href="global.html#reloadApp">reloadApp</a></li><li><a href="global.html#setLocalStorageValue">setLocalStorageValue</a></li><li><a href="global.html#setUserItem">setUserItem</a></li><li><a href="global.html#translate">translate</a></li><li><a href="global.html#unAuthenticated">unAuthenticated</a></li><li><a href="global.html#useUserLocalStorage">useUserLocalStorage</a></li><li><a href="global.html#useWindowEvent">useWindowEvent</a></li></ul>
+  </nav>
+
+  <div id="main">
+    
+      <h1 class="page-title">
+        common/BooksOfTheBible.js
+      </h1>
+    
+
+    
+      
+
+<section>
+  <article>
+    <pre class="prettyprint source linenums"><code>/**
+ * Nested version of the books of the bible object.
+ */
+export const BIBLE_BOOKS = {
+  oldTestament: {
+    gen: 'Genesis',
+    exo: 'Exodus',
+    lev: 'Leviticus',
+    num: 'Numbers',
+    deu: 'Deuteronomy',
+    jos: 'Joshua',
+    jdg: 'Judges',
+    rut: 'Ruth',
+    '1sa': '1 Samuel',
+    '2sa': '2 Samuel',
+    '1ki': '1 Kings',
+    '2ki': '2 Kings',
+    '1ch': '1 Chronicles',
+    '2ch': '2 Chronicles',
+    ezr: 'Ezra',
+    neh: 'Nehemiah',
+    est: 'Esther',
+    job: 'Job',
+    psa: 'Psalms',
+    pro: 'Proverbs',
+    ecc: 'Ecclesiastes',
+    sng: 'Song of Solomon',
+    isa: 'Isaiah',
+    jer: 'Jeremiah',
+    lam: 'Lamentations',
+    ezk: 'Ezekiel',
+    dan: 'Daniel',
+    hos: 'Hosea',
+    jol: 'Joel',
+    amo: 'Amos',
+    oba: 'Obadiah',
+    jon: 'Jonah',
+    mic: 'Micah',
+    nam: 'Nahum',
+    hab: 'Habakkuk',
+    zep: 'Zephaniah',
+    hag: 'Haggai',
+    zec: 'Zechariah',
+    mal: 'Malachi',
+  },
+  newTestament: {
+    mat: 'Matthew',
+    mrk: 'Mark',
+    luk: 'Luke',
+    jhn: 'John',
+    act: 'Acts',
+    rom: 'Romans',
+    '1co': '1 Corinthians',
+    '2co': '2 Corinthians',
+    gal: 'Galatians',
+    eph: 'Ephesians',
+    php: 'Philippians',
+    col: 'Colossians',
+    '1th': '1 Thessalonians',
+    '2th': '2 Thessalonians',
+    '1ti': '1 Timothy',
+    '2ti': '2 Timothy',
+    tit: 'Titus',
+    phm: 'Philemon',
+    heb: 'Hebrews',
+    jas: 'James',
+    '1pe': '1 Peter',
+    '2pe': '2 Peter',
+    '1jn': '1 John',
+    '2jn': '2 John',
+    '3jn': '3 John',
+    jud: 'Jude',
+    rev: 'Revelation',
+  },
+}
+
+export const NT_BOOKS = Object.keys(BIBLE_BOOKS.newTestament);
+export const OT_BOOKS = Object.keys(BIBLE_BOOKS.oldTestament);
+
+export const BIBLES_ABBRV_INDEX = {
+  gen: '01',
+  exo: '02',
+  lev: '03',
+  num: '04',
+  deu: '05',
+  jos: '06',
+  jdg: '07',
+  rut: '08',
+  '1sa': '09',
+  '2sa': '10',
+  '1ki': '11',
+  '2ki': '12',
+  '1ch': '13',
+  '2ch': '14',
+  ezr: '15',
+  neh: '16',
+  est: '17',
+  job: '18',
+  psa: '19',
+  pro: '20',
+  ecc: '21',
+  sng: '22',
+  isa: '23',
+  jer: '24',
+  lam: '25',
+  ezk: '26',
+  dan: '27',
+  hos: '28',
+  jol: '29',
+  amo: '30',
+  oba: '31',
+  jon: '32',
+  mic: '33',
+  nam: '34',
+  hab: '35',
+  zep: '36',
+  hag: '37',
+  zec: '38',
+  mal: '39',
+  mat: '41',
+  mrk: '42',
+  luk: '43',
+  jhn: '44',
+  act: '45',
+  rom: '46',
+  '1co': '47',
+  '2co': '48',
+  gal: '49',
+  eph: '50',
+  php: '51',
+  col: '52',
+  '1th': '53',
+  '2th': '54',
+  '1ti': '55',
+  '2ti': '56',
+  tit: '57',
+  phm: '58',
+  heb: '59',
+  jas: '60',
+  '1pe': '61',
+  '2pe': '62',
+  '1jn': '63',
+  '2jn': '64',
+  '3jn': '65',
+  jud: '66',
+  rev: '67',
+}
+
+export const ALL_BIBLE_BOOKS = {
+  ...BIBLE_BOOKS.oldTestament,
+  ...BIBLE_BOOKS.newTestament,
+}
+
+export const TN_FILENAMES = {
+  gen: '_tn_01-GEN',
+  exo: '_tn_02-EXO',
+  lev: '_tn_03-LEV',
+  num: '_tn_04-NUM',
+  deu: '_tn_05-DEU',
+  jos: '_tn_06-JOS',
+  jdg: '_tn_07-JDG',
+  rut: '_tn_08-RUT',
+  '1sa': '_tn_09-1SA',
+  '2sa': '_tn_10-2SA',
+  '1ki': '_tn_11-1KI',
+  '2ki': '_tn_12-2KI',
+  '1ch': '_tn_13-1CH',
+  '2ch': '_tn_14-2CH',
+  ezr: '_tn_15-EZR',
+  neh: '_tn_16-NEH',
+  est: '_tn_17-EST',
+  job: '_tn_18-JOB',
+  psa: '_tn_19-PSA',
+  pro: '_tn_20-PRO',
+  ecc: '_tn_21-ECC',
+  sng: '_tn_22-SNG',
+  isa: '_tn_23-ISA',
+  jer: '_tn_24-JER',
+  lam: '_tn_25-LAM',
+  ezk: '_tn_26-EZK',
+  dan: '_tn_27-DAN',
+  hos: '_tn_28-HOS',
+  jol: '_tn_29-JOL',
+  amo: '_tn_30-AMO',
+  oba: '_tn_31-OBA',
+  jon: '_tn_32-JON',
+  mic: '_tn_33-MIC',
+  nam: '_tn_34-NAM',
+  hab: '_tn_35-HAB',
+  zep: '_tn_36-ZEP',
+  hag: '_tn_37-HAG',
+  zec: '_tn_38-ZEC',
+  mal: '_tn_39-MAL',
+  mat: '_tn_41-MAT',
+  mrk: '_tn_42-MRK',
+  luk: '_tn_43-LUK',
+  jhn: '_tn_44-JHN',
+  act: '_tn_45-ACT',
+  rom: '_tn_46-ROM',
+  '1co': '_tn_47-1CO',
+  '2co': '_tn_48-2CO',
+  gal: '_tn_49-GAL',
+  eph: '_tn_50-EPH',
+  php: '_tn_51-PHP',
+  col: '_tn_52-COL',
+  '1th': '_tn_53-1TH',
+  '2th': '_tn_54-2TH',
+  '1ti': '_tn_55-1TI',
+  '2ti': '_tn_56-2TI',
+  tit: '_tn_57-TIT',
+  phm: '_tn_58-PHM',
+  heb: '_tn_59-HEB',
+  jas: '_tn_60-JAS',
+  '1pe': '_tn_61-1PE',
+  '2pe': '_tn_62-2PE',
+  '1jn': '_tn_63-1JN',
+  '2jn': '_tn_64-2JN',
+  '3jn': '_tn_65-3JN',
+  jud: '_tn_66-JUD',
+  rev: '_tn_67-REV',
+}
+
+export function isNT(bookId) {
+  return NT_BOOKS.includes(bookId)
+}
+</code></pre>
+  </article>
+</section>
+
+    
+
+
+  </div>
+
+  <br class="clear">
+
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a>
+  </footer>
+
+  <script src="scripts/linenumber.js"></script>
+  <script src="scripts/pagelocation.js"></script>
+
+  
+  <script>
+    $(function () {
+      window.docsearch({
+        apiKey: 'f12d46ccb502a9c723d200abe3e3befd',
+        indexName: 'translation_core',
+        inputSelector: '.search-input',
+        debug: false, // Set debug to true if you want to inspect the dropdown
+        algoliaOptions: {
+          hitsPerPage: 7
+        }
+      });
+    });
+  </script>
+  
+
+</body>
+</html>
