@@ -19,6 +19,10 @@ Book Package harmonized view.
 - ***Release-v0.9.0*** https://release-v0-9-0--gateway-edit.netlify.app/
 - ***Release-v1.0.0*** https://release-v1-0-0--gateway-edit.netlify.app/
 
+## Documentation
+
+- [jsdocs](./docs/gateway-edit/index.html)
+
 ## Scripts
 
 - "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
