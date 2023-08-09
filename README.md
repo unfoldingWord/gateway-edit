@@ -21,7 +21,7 @@ Book Package harmonized view.
 
 ## Documentation
 
-- [jsdocs](./docs/gateway-edit/index.html)
+- [JS-Docs](./docs/gateway-edit/index.html)
 
 ## Scripts
 
