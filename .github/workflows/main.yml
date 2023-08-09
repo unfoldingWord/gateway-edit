@@ -30,14 +30,14 @@ jobs:
 
       # and run all Cypress tests
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           headless: true
           record: true
           build: yarn build
           start: yarn start
           wait-on: "http://localhost:3000"
-          wait-on-timeout: 360
+          wait-on-timeout: 600
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       - name: Save Cypress Videos
