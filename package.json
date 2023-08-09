@@ -21,7 +21,9 @@
     "precombine:reports": "yarn copy:reports && mkdir .nyc_output || true",
     "combine:reports": "npx nyc merge reports && mv coverage.json .nyc_output/out.json",
     "prereport:combined": "yarn combine:reports",
-    "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage"
+    "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
+    "doc": "jsdoc -c jsdoc/jsdoc.json",
+    "dochelp": "jsdoc --help"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -86,11 +88,13 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^5.2.0",
     "jest": "^27.3.1",
+    "jsdoc": "^4.0.2",
     "nyc": "^15.1.0",
     "prettier": "^2.2.1",
     "prop-types": "^15.7.2",
     "react-icons": "^4.8.0",
-    "start-server-and-test": "^1.14.0"
+    "start-server-and-test": "^1.14.0",
+    "taffydb": "^2.7.3"
   },
   "nyc": {
     "report-dir": "cypress-coverage"

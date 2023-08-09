@@ -1,0 +1,30 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc"]
+  },
+  "source": {
+    "includePattern": ".jsx?$",
+    "include": ["src/", "package.json", "README.md"],
+    "excludePattern": "(node_modules/|docs|__mocks__|__tests__)"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "opts": {
+    "destination": "./docs/",
+    "encoding": "utf8",
+    "private": true,
+    "recurse": true,
+    "verbose": true,
+    "template": "jsdoc/template"
+  },
+  "templates": {
+    "referenceTitle": "translationCore",
+    "search": {
+      "apiKey": "f12d46ccb502a9c723d200abe3e3befd",
+      "indexName": "translation_core",
+      "hitsPerPage": 7
+    }
+  }
+}
