@@ -18,8 +18,12 @@ jobs:
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+
       # Install NPM dependencies, cache them correctly
 
       - name: Get versions
@@ -61,15 +65,22 @@ jobs:
 
       - name: parsing jsdocs
         run: yarn run doc
-        continue-on-error: true
         # TODO - maybe in future after we fix up the jsdoc errors, we can remove this line:
+        continue-on-error: true
 
       - name: jsdocs update
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           file_pattern: 'docs/*'
           commit_message: Apply jsdocs update
+          skip_fetch: true
+          skip_checkout: true
 
+      - uses: actions/upload-artifact@v1
+        name: Upload jsdocs
+        with:
+          name: jsdocs
+          path: ./docs/
 
   upload-to-codecov:
     needs: [tests-run]
