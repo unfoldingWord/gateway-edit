@@ -22,8 +22,8 @@ Book Package harmonized view.
 ## Documentation
 
 ### JS-Docs generated documentation:
-- last deployed to GitHub pages: [deployed JS-Docs](https://unfoldingword.github.io/gateway-edit/gateway-edit/index.html)
-- lasted local: [local JS-Docs](./docs/gateway-edit/index.html)
+- last deployed on GitHub pages: [deployed JS-Docs](https://unfoldingword.github.io/gateway-edit/gateway-edit/index.html)
+- current local: [local JS-Docs](./docs/gateway-edit/index.html)
 
 ## Scripts
 
