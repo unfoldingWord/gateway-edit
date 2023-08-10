@@ -4,10 +4,10 @@
 [![CI Status](https://github.com/unfoldingWord/gateway-edit/workflows/Run%20Cypress%20and%20Jest%20Tests/badge.svg)](https://github.com/unfoldingWord/gateway-edit/actions)
 
 Main:
-[![Current Verison](https://img.shields.io/github/package-json/v/unfoldingWord/gateway-edit/main)](https://github.com/unfoldingWord/gateway-edit/tags)
+[![Current Version](https://img.shields.io/github/package-json/v/unfoldingWord/gateway-edit/main)](https://github.com/unfoldingWord/gateway-edit/tags)
 [![codecov](https://codecov.io/gh/unfoldingWord/gateway-edit/branch/main/graph/badge.svg?token=0HTP1JR1UL)](https://codecov.io/gh/unfoldingWord/gateway-edit)
 Develop:
-[![Current Verison](https://img.shields.io/github/package-json/v/unfoldingWord/gateway-edit/develop)](https://github.com/unfoldingWord/gateway-edit/tags)
+[![Current Version](https://img.shields.io/github/package-json/v/unfoldingWord/gateway-edit/develop)](https://github.com/unfoldingWord/gateway-edit/tags)
 [![codecov](https://codecov.io/gh/unfoldingWord/gateway-edit/branch/develop/graph/badge.svg?token=0HTP1JR1UL)](https://codecov.io/gh/unfoldingWord/gateway-edit)
 
 Book Package harmonized view.
@@ -22,7 +22,7 @@ Book Package harmonized view.
 ## Documentation
 
 ### JS-Docs generated documentation:
-- last deployed to github pages: [deployed JS-Docs](https://unfoldingword.github.io/gateway-edit/gateway-edit/index.html)
+- last deployed to GitHub pages: [deployed JS-Docs](https://unfoldingword.github.io/gateway-edit/gateway-edit/index.html)
 - lasted local: [local JS-Docs](./docs/gateway-edit/index.html)
 
 ## Scripts
@@ -119,4 +119,4 @@ StoreContext context:
 
 useLocalStorage - custom hook that persists generic application data  into local storage
 
-useUserLocalStorage - custom hook that application data for logged in user into local storage
+useUserLocalStorage - custom hook that application data for logged-in user into local storage
