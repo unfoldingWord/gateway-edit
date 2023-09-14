@@ -48,6 +48,7 @@ import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
+import { getBuildId } from '@utils/build'
 import _ from 'lodash'
 import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
 
@@ -65,6 +66,9 @@ const useStyles = makeStyles(() => ({
 }))
 const wordAlignmentScreenRatio = 0.7
 const wordAlignmentMaxHeightPx = 1000
+
+const buildId = getBuildId()
+console.log(`Gateway Edit App Version`, buildId)
 
 function WorkspaceContainer() {
   const router = useRouter()
