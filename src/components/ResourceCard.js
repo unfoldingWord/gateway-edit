@@ -70,11 +70,6 @@ export default function ResourceCard({
   }
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
-  const [fetchConfig, setFetchConfig] = useState({
-    basicReference,
-    config: HTTP_CONFIG,
-    readyToFetch: false,
-  })
   const [isSaving, setIsSaving] = useState(false)
   const [fetchConfig, setFetchConfig] = useState({
     basicReference,
@@ -135,18 +130,6 @@ export default function ResourceCard({
     onResourceError,
     useUserLocalStorage,
   })
-
-  useEffect(() => {
-    if (cardResourceId) {
-      updateMergeState(
-        cardResourceId,
-        mergeFromMaster,
-        mergeToMaster,
-        mergeFromMasterIntoUserBranch,
-        mergeToMasterFromUserBranch,
-      )
-    }
-  },[cardResourceId, mergeFromMaster, mergeToMaster])
 
   // update fetch configuration if changed
   useEffect(() => {
@@ -470,11 +453,9 @@ export default function ResourceCard({
         selectedQuote={selectedQuote}
         setContent={setContent}
         setCurrentCheck={setCurrentCheck}
+        showSaveChangesPrompt={showSaveChangesPrompt}
         updateTaDetails={updateTaDetails}
         viewMode={viewMode}
-        showSaveChangesPrompt={showSaveChangesPrompt}
-        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
-        markdown={(cardResourceId == 'ta' || cardResourceId == 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
       />
     </Card>
   )

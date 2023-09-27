@@ -584,12 +584,7 @@ function WorkspaceContainer() {
       ref: appRef,
     },
     resourceLink: origResourceLink,
-    config: {
-      ...config,
-      server: origServer,
-    },
     wholeBook: true,
-    readyForFetch: !!bookId,
   })
 
   useEffect(() => {
