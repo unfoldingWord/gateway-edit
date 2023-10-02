@@ -185,14 +185,16 @@ export default function ResourceCard({
       mergeStatus: mergeToMaster,
       updateStatus: mergeFromMaster,
     },
+    actions: {
+      checkUpdateStatus,
+      checkMergeStatus
+    }
   } = _useBranchMerger;
 
   const updateButtonProps = useContentUpdateProps({
     isSaving,
     useBranchMerger: _useBranchMerger,
-    onUpdate: () => {
-      delay(500).then(() => reloadResource())
-    }
+    onUpdate: () => reloadResource(),
   })
 
   const {
@@ -206,16 +208,9 @@ export default function ResourceCard({
     dialogLinkTooltip
   } = updateButtonProps;
 
-  const onMerge = () => {
-    finishEdit()
-    delay(500).then(() => {
-      reloadResource()
-    })
-  }
-
   const { isLoading: isMergeLoading, callMergeUserBranch } = useMasterMergeProps({
     useBranchMerger: _useBranchMerger,
-    onMerge,
+    onMerge: () => finishEdit(),
   })
 
   useEffect(() => {
@@ -246,6 +241,21 @@ export default function ResourceCard({
       )
     }
   },[cardResourceId, mergeFromMaster, mergeToMaster])
+
+  // User has made changes and save is finished, so reload and check merge status
+  useEffect(() => {
+    const reloadContent = async () => {
+      console.info("handleSaveEdit() Reloading resource");
+      const hasReloaded = await reloadResource();
+      if (hasReloaded) {
+        await checkUpdateStatus()
+        checkMergeStatus()
+      }
+    }
+    if (!isSaving && content) {
+      reloadContent()
+    }
+  }, [isSaving]);
 
   const {
     state: {
@@ -369,10 +379,6 @@ export default function ResourceCard({
       if (success) {
         setSaved(true)
         setSavedChanges(cardResourceId, true)
-        delay(500).then(() => {
-          console.info('handleSaveEdit() Reloading resource')
-          reloadResource()
-        })
       } else {
         console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
       }
