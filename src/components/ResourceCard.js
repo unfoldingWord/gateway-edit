@@ -229,6 +229,11 @@ export default function ResourceCard({
       cardId to the list of cardsIds that are loading their update status.
 
       @kintsoogi could you explain why we need to do this?
+
+      @Noah Yes, this state is specifically for the app level update & merge
+      buttons. In the header, the update button will show if it's loading if
+      there are any cards loading in the "cardsLoadingUpdate" state.
+      Same for the merge button.
   */
   useEffect(() => {
     if (isUpdateLoading) {
@@ -252,6 +257,11 @@ export default function ResourceCard({
       application-wide update/merge state & actions.
 
       @kintsoogi could you explain why we need to do this?
+
+      @Noah Yes, this updates the 'mergeStatusForCards" object, which contains
+      merge/update status for all cards within gatewayEdit. This object is used
+      in the useMergeCardsProps & useUpdateCardsProps, which handle state/actions
+      for the app-level merging and updating
   */
   useEffect(() => {
     if (cardResourceId) {
@@ -408,9 +418,21 @@ export default function ResourceCard({
 
       @kintsoogi could you explain a bit more here:
         1. why not trigger the reload directly from this function instead of using a stateful flag?
-        2. Could you write out what the update/merge state machine look like? 
+        2. Could you write out what the update/merge state machine look like?
         3. What are false merge/update states? Could you give examples?
-    
+
+      @noah
+        1. Great question. That was what I initially did, but the save function here
+           also creates a user branch if there is none, and the function to reload
+           does not have the updated user branch on which to call reload. If called
+           here after creating a user branch, it will try to reload the main branch.
+        2. I have this written out in useBranchMerger!
+        3. I use those words to refer to the situation where we poke DCS with a
+           check update/merge function call while it's still processing the last
+           commit. In this case, it returns a false conflict.
+           So, it would return an object that contains:
+            {mergeable: false, conflict: true, ...}
+
   */
   async function handleSaveEdit() {
     // Save edit, if successful trigger resource reload and set saved to true.

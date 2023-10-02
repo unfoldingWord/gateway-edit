@@ -1,5 +1,18 @@
 import { useMemo, useState } from 'react'
 
+/*
+  TODO 547:
+    This hook looks at the mergeStatusForCards state, which contains all update
+    statuses for cards, and returns the props that should be used for app-level
+    updateBranchButton and errorDialog
+
+    It maintains an object (cardMergeGroupings... see intialCMG) that contains
+    properties that describe card state and values that would contain the cardIDs
+    for each (cards with conflicts, cards ready for merge, etc.)
+
+    It also returns updateMergeableCards, a function that will merge all cards that
+    are able to be merged.
+*/
 export default function useUpdateCardsProps({ mergeStatusForCards } = {}) {
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
 
