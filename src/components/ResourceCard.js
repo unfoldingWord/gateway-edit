@@ -227,6 +227,8 @@ export default function ResourceCard({
     TODO 547:
       If updateStatus for this resource is loading, then add this
       cardId to the list of cardsIds that are loading their update status.
+
+      @kintsoogi could you explain why we need to do this?
   */
   useEffect(() => {
     if (isUpdateLoading) {
@@ -248,6 +250,8 @@ export default function ResourceCard({
     TODO 547:
       Whenever mergeFrom/ToMaster status is changed, then update the
       application-wide update/merge state & actions.
+
+      @kintsoogi could you explain why we need to do this?
   */
   useEffect(() => {
     if (cardResourceId) {
@@ -401,6 +405,12 @@ export default function ResourceCard({
       be false, which then triggers our content reload. This is important because
       we are checking update/merge state after reload so that we don't get false
       merge/update states.
+
+      @kintsoogi could you explain a bit more here:
+        1. why not trigger the reload directly from this function instead of using a stateful flag?
+        2. Could you write out what the update/merge state machine look like? 
+        3. What are false merge/update states? Could you give examples?
+    
   */
   async function handleSaveEdit() {
     // Save edit, if successful trigger resource reload and set saved to true.
