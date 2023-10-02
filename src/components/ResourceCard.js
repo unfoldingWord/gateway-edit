@@ -179,6 +179,8 @@ export default function ResourceCard({
   })
 
   const repo = `${languageId}_${cardResourceId}`
+
+  // TODO 547: See translation-helps-rcl for useBranchMerger explanation
   const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
   const {
     state: {
@@ -191,6 +193,7 @@ export default function ResourceCard({
     }
   } = _useBranchMerger;
 
+  // TODO 547: See translation-helps-rcl for useContentUpdateProps explanation
   const updateButtonProps = useContentUpdateProps({
     isSaving,
     useBranchMerger: _useBranchMerger,
@@ -208,11 +211,23 @@ export default function ResourceCard({
     dialogLinkTooltip
   } = updateButtonProps;
 
+  /*
+    TODO 547:
+      See translation-helps-rcl for useBranchMerger explanation
+
+      onMerge, we finishEdit(), which changes our state to use the main branch
+      instead of the user branch, causing our resource to reload
+  */
   const { isLoading: isMergeLoading, callMergeUserBranch } = useMasterMergeProps({
     useBranchMerger: _useBranchMerger,
     onMerge: () => finishEdit(),
   })
 
+  /*
+    TODO 547:
+      If updateStatus for this resource is loading, then add this
+      cardId to the list of cardsIds that are loading their update status.
+  */
   useEffect(() => {
     if (isUpdateLoading) {
       setCardsLoadingUpdate(prevCardsLoading => [...prevCardsLoading, cardResourceId])
@@ -229,6 +244,11 @@ export default function ResourceCard({
     }
   }, [isMergeLoading])
 
+  /*
+    TODO 547:
+      Whenever mergeFrom/ToMaster status is changed, then update the
+      application-wide update/merge state & actions.
+  */
   useEffect(() => {
     if (cardResourceId) {
       updateMergeState(
@@ -241,6 +261,7 @@ export default function ResourceCard({
     }
   },[cardResourceId, mergeFromMaster, mergeToMaster])
 
+  // TODO 547 IMPORTANT: This is where we check update/merge status after save & reload!
   // User has made changes and save is finished, so reload and check merge status
   useEffect(() => {
     const reloadContent = async () => {
@@ -368,6 +389,19 @@ export default function ResourceCard({
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
+  /*
+    TODO 547 IMPORTANT:
+      This is the function that is called when the user presses save (called in
+      Card component in translation-helps-rcl).
+
+      The main funcitonality here is the onSaveEdit() function, which comes from
+      the useEdit() hook from gitea-react-toolkit
+
+      When this function finishes, we update saving state of our application to
+      be false, which then triggers our content reload. This is important because
+      we are checking update/merge state after reload so that we don't get false
+      merge/update states.
+  */
   async function handleSaveEdit() {
     // Save edit, if successful trigger resource reload and set saved to true.
     setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
