@@ -412,7 +412,9 @@ export default function ResourceCard({
       the useEdit() hook from gitea-react-toolkit
 
       When this function finishes, we update saving state of our application to
-      be false, which then triggers our content reload. This is important because
+      be false, which then triggers our content reload. 
+  
+      This is important because
       we are checking update/merge state after reload so that we don't get false
       merge/update states.
 
@@ -433,6 +435,28 @@ export default function ResourceCard({
            So, it would return an object that contains:
             {mergeable: false, conflict: true, ...}
 
+      @kintsoogi
+        1. great. I think we should not that here in the code. I think also
+        this would be a great refactor point since there is so much side-effect
+        entanglement (we have a single function that has a primary purpose but
+        also performs multiple side effects)
+        3. I'm a bit confused.
+
+          > it's still processing
+        is 'it' refering to the function call or DCS?
+
+          > it returns a false conflict ... it would return...
+        I'm not sure what the 'it' refers to here.
+
+          > the last commit
+        Where does this commit get created? 
+
+        I think it would be helpful if we document the architecture of how gE
+        interacts with a git repository.
+
+          > after reload
+
+        After what reloads? 
   */
   async function handleSaveEdit() {
     // Save edit, if successful trigger resource reload and set saved to true.
