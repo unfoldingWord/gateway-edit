@@ -234,6 +234,10 @@ export default function ResourceCard({
     }
   }, [isMergeLoading])
 
+  // TODO 510: This is where we are adding in ugnt/uhb into our merge state.
+  // We can change this to check if ugnt or uhb.
+  // QUESTION: Could this be an opportunity to check something besides resourceID?
+  //  - We can use title instead of resourceID returned from GITEA
   useEffect(() => {
     if (cardResourceId) {
       updateMergeState(
