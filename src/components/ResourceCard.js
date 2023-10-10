@@ -238,6 +238,7 @@ export default function ResourceCard({
     if (cardResourceId) {
       updateMergeState(
         cardResourceId,
+        title,
         mergeFromMaster,
         mergeToMaster,
         callUpdateUserBranch,

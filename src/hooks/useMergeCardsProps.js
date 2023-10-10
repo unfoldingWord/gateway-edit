@@ -59,14 +59,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
   const blocked = !cardsToMerge?.length && !cardsWithNoMergeNeeded?.length
 
   const getCardNameFromId = cardId => {
-    if (cardId === 'tw') return "Translation Words Article"
-    if (cardId === 'ult') return "Unfolding Word Literal Text"
-    if (cardId === 'ust') return "Unfolding Word Simplified Text"
-    if (cardId === 'twl') return "Translation Word List"
-    if (cardId === 'tn') return "Translation Notes"
-    if (cardId === 'ta') return "Translation Academy"
-    if (cardId === 'tq') return "Translation Questions"
-    return cardId
+    return mergeStatusForCards[cardId].title
   }
 
   const renderCardNamesFromIds = cardIds => {
