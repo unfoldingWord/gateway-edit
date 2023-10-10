@@ -8,7 +8,6 @@ import { APP_NAME } from '@common/constants'
 import AppHead from '@components/AppHead'
 import theme from '../src/theme'
 import '@styles/globals.css'
-import { BranchMergerProvider } from 'translation-helps-rcl';
 
 export default function Application({ Component, pageProps }) {
   useEffect(() => {
@@ -27,11 +26,9 @@ export default function Application({ Component, pageProps }) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <AuthContextProvider>
-          <BranchMergerProvider>
-            <StoreContextProvider>
-              <Component {...pageProps} />
-            </StoreContextProvider>
-          </BranchMergerProvider>
+          <StoreContextProvider>
+            <Component {...pageProps} />
+          </StoreContextProvider>
         </AuthContextProvider>
       </ThemeProvider>
     </>
@@ -39,9 +36,6 @@ export default function Application({ Component, pageProps }) {
 }
 
 Application.propTypes = {
-  Component: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.func,
-  ]),
+  Component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   pageProps: PropTypes.object,
 }

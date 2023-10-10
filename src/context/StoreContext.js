@@ -8,19 +8,39 @@ import useLocalStorage from '@hooks/useLocalStorage'
 import * as useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
-import { useBranchMergerContext } from 'translation-helps-rcl'
 
 export const StoreContext = createContext({})
 
 export default function StoreContextProvider(props) {
-  const {
-    state: { mergeStatusForCards },
-    actions: {
-      updateMergeState,
-      getMergeFromMasterStatus,
-      callMergeFromMasterForCards,
-    },
-  } = useBranchMergerContext()
+  /*
+    The mergeStatusForCards state contains the merge status to and from the main branch
+    for each resource and scripture card. This is used in `useMergeCardsProps` and
+    `useUpdateCardsProps` so that we can tell the user which cards cards are needing merge,
+    having conflicts, etc. This state is also used to call an app-wide merge to/from main
+    branch when the user clicks on the update button in the app header and the merge my work
+    button in the hamburger menu.
+  */
+  const [mergeStatusForCards, setMergeStatusForCards] = useState({})
+  function updateMergeState(
+    cardId,
+    title,
+    mergeFromMaster,
+    mergeToMaster,
+    mergeFromMasterIntoUserBranch,
+    mergeToMasterFromUserBranch
+  ) {
+    console.log('updateMergeState', { cardId, mergeFromMaster, mergeToMaster })
+    setMergeStatusForCards(oldMergeStatusForCards => ({
+      ...oldMergeStatusForCards,
+      [cardId]: {
+        title,
+        mergeFromMaster,
+        mergeToMaster,
+        mergeFromMasterIntoUserBranch,
+        mergeToMasterFromUserBranch,
+      },
+    }))
+  }
 
   const {
     state: {
@@ -156,8 +176,6 @@ export default function StoreContextProvider(props) {
       checkUnsavedChanges,
       showSaveChangesPrompt,
       updateMergeState,
-      getMergeFromMasterStatus,
-      callMergeFromMasterForCards,
     },
   }
 
