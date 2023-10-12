@@ -51,7 +51,7 @@
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "2.1.4",
     "scripture-resources-rcl": "file:.yalc/scripture-resources-rcl",
-    "single-scripture-rcl": "3.4.11",
+    "single-scripture-rcl": "3.4.12",
     "tailwindcss": "^2.0.4",
     "tc-ui-toolkit": "5.3.3",
     "translation-helps-rcl": "file:.yalc/translation-helps-rcl",
