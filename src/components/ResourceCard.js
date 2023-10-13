@@ -16,9 +16,16 @@ import {
   useContent,
   useContentUpdateProps,
   useMasterMergeProps,
-  useTsvMerger,
   useUserBranch,
 } from 'translation-helps-rcl'
+import {
+  useTsvData,
+  useAddTsv,
+  tsvRowUtils,
+  AddRowButton,
+  AddRowDialog,
+  AddRowForm
+} from 'scripture-tsv'
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import * as isEqual from 'deep-equal'
@@ -311,7 +318,7 @@ export default function ResourceCard({
   //   console.log(`ResourceCard() sha changed to`, { sha, resource })
   // }, [sha])
 
-  const { onTsvEdit } = useTsvMerger({
+  const { onTsvAdd, onTsvEdit } = useTsvData({
     tsvs,
     verse,
     chapter,
@@ -393,8 +400,64 @@ export default function ResourceCard({
     }
   }
 
+  const columnsFilter = ['Reference', 'Chapter', 'Verse', 'SupportReference'];
+
+  /**
+   * Adds a row to a TSV (Tab-Separated Values) data set.
+   *
+   * @param {Object} row - The row to be added. Must contain a 'Reference' field formatted as 'chapter:verse'.
+   *
+   * @throws {Error} Throws an error if the 'Reference' field is not in the correct 'chapter:verse' format.
+   *
+   * @todo Consider adding more validation for TSV properties as currently since it's quite generic.
+   */
+  const addRowToTsv = row => {
+    const { Reference: reference, ...rest } = row
+    try {
+      const { chapter: inputChapter, verse: inputVerse } =
+        tsvRowUtils.getChapterVerse(reference)
+        if (inputChapter !== chapter || inputVerse !== verse) {
+          // Todo: Do we then change the app's reference? Maybe yes
+          onTsvAdd(row, inputChapter, inputVerse, 0)
+          return
+        }
+        onTsvAdd(row, chapter, verse, itemIndex)
+    } catch (error) {
+      console.error(
+        'Input reference in new row is not of type chapter:verse',
+        error
+      )
+    }
+  }
+
+  const {
+    isAddRowDialogOpen,
+    openAddRowDialog,
+    closeAddRowDialog,
+    submitRowEdits,
+    newRow,
+    changeRowValue,
+    columnsFilterOptions
+  } = useAddTsv({
+    tsvs,
+    chapter,
+    verse,
+    itemIndex,
+    columnsFilter,
+    addRowToTsv
+  });
+
+  const TsvForm = (
+    <AddRowForm
+      newRow={newRow}
+      changeRowValue={changeRowValue}
+      columnsFilterOptions={columnsFilterOptions}
+    />
+  );
+
   // Add/Remove resources to/from the array to enable or disable edit mode.
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
+  const tsvResources = ['tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
   const onRenderToolbar = ({ items }) => {
@@ -406,6 +469,20 @@ export default function ResourceCard({
         <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={ isUpdateLoading || isSaving } link={dialogLink} linkTooltip={dialogLinkTooltip} />
       </>
     )
+
+    if (tsvResources.includes(cardResourceId)) {
+      newItems.push(
+        <>
+          <AddRowButton onClick={openAddRowDialog} />
+          <AddRowDialog
+            open={isAddRowDialogOpen}
+            onClose={closeAddRowDialog}
+            onSubmit={submitRowEdits}
+            tsvForm={TsvForm}
+          />
+        </>
+      )
+    }
 
     return newItems
   }
