@@ -30,6 +30,7 @@ function BibleReferenceComponent(props) {
     initialVerse: verse,
     onChange: onReferenceChange,
     onPreChange: () => checkUnsavedChanges(),
+    addChapterFront: true,
   })
 
   useEffect(() => {
