@@ -10012,10 +10012,26 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.13-beta.10:
-  version "3.4.13-beta.10"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.13-beta.10.tgz#bce811510b79a58f9fe3993670a7e484eab3763b"
-  integrity sha512-3N3OBwmcQ3XRnf07JtOta0ciDMvhqsKgneyGpWvU7Acoh8Jjtbh46E3JVZV24I/nrw6l7MIrW1GXF+PckdxG3A==
+single-scripture-rcl@/Users/blm0/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.4.13-beta.31.tgz:
+  version "3.4.13-beta.31"
+  uid "64794202717f257ae161be6c26d62ac13879a728"
+  resolved "/Users/blm0/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.4.13-beta.31.tgz#64794202717f257ae161be6c26d62ac13879a728"
+  dependencies:
+    "@types/react" "^17.0.0"
+    "@types/react-dom" "^17.0.0"
+    deep-equal "^2.0.5"
+    diff "^5.1.0"
+    lodash "^4.17.21"
+    react-docgen-typescript "^1.20.5"
+    source-map-loader "^1.1.3"
+    styled-components "^5.2.1"
+    ts-loader "^8.0.12"
+    typescript "^5.2.2"
+    uw-quote-helpers "0.0.1-beta.15"
+
+"single-scripture-rcl@file:../single-scripture-rcl/single-scripture-rcl-v3.4.13-beta.31.tgz":
+  version "3.4.13-beta.31"
+  resolved "file:../single-scripture-rcl/single-scripture-rcl-v3.4.13-beta.31.tgz#64794202717f257ae161be6c26d62ac13879a728"
   dependencies:
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
