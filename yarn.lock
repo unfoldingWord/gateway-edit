@@ -3271,10 +3271,10 @@ bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
 
-bible-reference-rcl@1.2.3-beta.6:
-  version "1.2.3-beta.6"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.3-beta.6.tgz#30ef4f2d798bbb24e0bca9c296e33463c3947435"
-  integrity sha512-GNNq75YI1enrYL+zlyfKl39e8uClxCUJnEqOPJASM4Ozw4u809pCiVGnAvwI97ybb2/QlzlTEVrhNB/AtA/Dww==
+bible-reference-rcl@1.2.3-beta.7:
+  version "1.2.3-beta.7"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.3-beta.7.tgz#3143dfc8fea6b1974f46b3bf07ceeea9fe56ebc1"
+  integrity sha512-uN0BW4EmeitL1WP6C3kZN2FoUEISZ89AERTYDlbQkpTeDfw+CSugAvvB77319xNP8It1nfgFyIx7T5mNNVw66w==
   dependencies:
     "@emotion/react" "^11.11.0"
     "@emotion/styled" "^11.11.0"
@@ -10011,22 +10011,6 @@ simple-swizzle@^0.2.2:
   integrity sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==
   dependencies:
     is-arrayish "^0.3.1"
-
-single-scripture-rcl@/Users/blm0/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.4.14-beta.3.tgz:
-  version "3.4.14-beta.3"
-  resolved "/Users/blm0/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.4.14-beta.3.tgz#a2c072f0a9ed3310036913d58f8743e25ec55211"
-  dependencies:
-    "@types/react" "^17.0.0"
-    "@types/react-dom" "^17.0.0"
-    deep-equal "^2.0.5"
-    diff "^5.1.0"
-    lodash "^4.17.21"
-    react-docgen-typescript "^1.20.5"
-    source-map-loader "^1.1.3"
-    styled-components "^5.2.1"
-    ts-loader "^8.0.12"
-    typescript "^5.2.2"
-    uw-quote-helpers "0.0.1-beta.15"
 
 single-scripture-rcl@3.4.13-beta.38:
   version "3.4.13-beta.38"
