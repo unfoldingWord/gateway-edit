@@ -57,6 +57,7 @@ export default function WordAlignerDialog({
   }
 
   const alignerData = alignerStatus?.state?.alignerData
+  const errorMessage = alignerData?.errorMessage
 
   useEffect(() => { // set initial aligned state
     if (alignerData) {
@@ -104,28 +105,36 @@ export default function WordAlignerDialog({
           </span>
         </DialogTitle>
         <div style={{ width : `95%`, margin: '10px' }} >
-          <WordAligner
-            style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
-            verseAlignments={alignerData?.alignments || null}
-            targetWords={alignerData?.wordBank || null}
-            translate={translate}
-            contextId={{ reference: alignerStatus?.state?.reference || {} }}
-            targetLanguage={alignerStatus?.state?.targetLanguage}
-            targetLanguageFont={''}
-            sourceLanguage={alignerStatus?.state?.sourceLanguage}
-            showPopover={showPopover}
-            lexicons={{}}
-            loadLexiconEntry={getLexiconData}
-            onChange={onAlignmentChange}
-          />
+          {(!errorMessage && alignerData?.alignments) ?
+            <WordAligner
+              style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
+              verseAlignments={alignerData?.alignments || null}
+              targetWords={alignerData?.wordBank || null}
+              translate={translate}
+              contextId={{ reference: alignerStatus?.state?.reference || {} }}
+              targetLanguage={alignerStatus?.state?.targetLanguage}
+              targetLanguageFont={''}
+              sourceLanguage={alignerStatus?.state?.sourceLanguage}
+              showPopover={showPopover}
+              lexicons={{}}
+              loadLexiconEntry={getLexiconData}
+              onChange={onAlignmentChange}
+            />
+            : // if error, then show message
+            <div style={{ textAlign: 'center', fontSize: '1.5em', fontStyle: 'italic', fontWeight: 'bold' }}>
+              { errorMessage || '' }
+            </div>
+          }
         </div>
         <span style={{ width : `95%`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
           <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={cancelAlignment}>
             Cancel
           </Button>
-          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
-            Accept
-          </Button>
+          {!errorMessage && // only show this button if there is no error
+            <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
+              Accept
+            </Button>
+          }
         </span>
       </Dialog>
       {/** Lexicon Popup dialog */}
