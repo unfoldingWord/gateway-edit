@@ -32,6 +32,7 @@ export default function WordAlignerDialog({
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
   const [lexiconData, setLexiconData] = useState(null)
+  const [resetAlignments, setResetAlignments] = useState(false)
 
   /**
    * called on every alignment change.  We save this new alignment state so that it can be applied if user clicks accept.
@@ -83,6 +84,18 @@ export default function WordAlignerDialog({
     setAlignmentChange(null)
   }
 
+  function doReset() {
+    console.log('WordAlignerDialog() - reset Alignments Clicked')
+    setResetAlignments(true)
+  }
+
+  useEffect(() => {
+    if (resetAlignments) {
+      console.log('WordAligner() - clearing reset Alignments Toggle')
+      setResetAlignments(false)
+    }
+  }, [resetAlignments])
+
   return (
     <>
       <Dialog
@@ -117,11 +130,15 @@ export default function WordAlignerDialog({
             lexicons={{}}
             loadLexiconEntry={getLexiconData}
             onChange={onAlignmentChange}
+            resetAlignments={resetAlignments}
           />
         </div>
         <span style={{ width : `95%`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
           <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={cancelAlignment}>
             Cancel
+          </Button>
+          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={doReset}>
+            Reset
           </Button>
           <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
             Accept

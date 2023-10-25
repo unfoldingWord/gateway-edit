@@ -2169,6 +2169,11 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@react-hookz/deep-equal@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@react-hookz/deep-equal/-/deep-equal-1.0.4.tgz#68a71f36cbc88724b3ce6f4036183778b6e7f282"
+  integrity sha512-N56fTrAPUDz/R423pag+n6TXWbvlBZDtTehaGFjK0InmN+V2OFWLE/WmORhmn6Ce7dlwH5+tQN1LJFw3ngTJVg==
+
 "@rollup/plugin-terser@^0.4.1":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-terser/-/plugin-terser-0.4.3.tgz#c2bde2fe3a85e45fa68a454d48f4e73e57f98b30"
@@ -10007,13 +10012,13 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-"single-scripture-rcl@file:../single-scripture-rcl/single-scripture-rcl-v3.4.14-beta.3.tgz":
-  version "3.4.14-beta.3"
-  resolved "file:../single-scripture-rcl/single-scripture-rcl-v3.4.14-beta.3.tgz#a2c072f0a9ed3310036913d58f8743e25ec55211"
+"single-scripture-rcl@file:../single-scripture-rcl/single-scripture-rcl-v3.4.14-beta.5.tgz":
+  version "3.4.14-beta.5"
+  resolved "file:../single-scripture-rcl/single-scripture-rcl-v3.4.14-beta.5.tgz#be33c66eb67d7bb585b1a96b1d33da74602812e3"
   dependencies:
+    "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
-    deep-equal "^2.0.5"
     diff "^5.1.0"
     lodash "^4.17.21"
     react-docgen-typescript "^1.20.5"
