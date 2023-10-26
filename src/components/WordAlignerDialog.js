@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import PropTypes from 'prop-types'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -7,6 +11,11 @@ import { WordAligner } from 'word-aligner-rcl'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
+import {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from '@mui/material'
 import PopoverComponent from './PopoverComponent'
 
 const alignmentIconStyle = { marginLeft:'50px' }
@@ -32,6 +41,8 @@ export default function WordAlignerDialog({
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
   const [lexiconData, setLexiconData] = useState(null)
+  const [resetAlignments, setResetAlignments] = useState(false)
+  const [showResetWarning, setShowResetWarning] = useState(false)
 
   /**
    * called on every alignment change.  We save this new alignment state so that it can be applied if user clicks accept.
@@ -84,6 +95,21 @@ export default function WordAlignerDialog({
     setAlignmentChange(null)
   }
 
+  function doReset() {
+    console.log('WordAlignerDialog() - reset Alignments Clicked')
+    setShowResetWarning(false)
+    setResetAlignments(true)
+  }
+
+  useEffect(() => {
+    if (resetAlignments) {
+      console.log('WordAligner() - clearing reset Alignments Toggle')
+      setResetAlignments(false)
+    }
+  }, [resetAlignments])
+
+  const enableResetWarning = useMemo( () => (showResetWarning && !!alignerData), [showResetWarning && !!alignerData])
+
   return (
     <>
       <Dialog
@@ -130,11 +156,12 @@ export default function WordAlignerDialog({
           <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={cancelAlignment}>
             Cancel
           </Button>
-          {!errorMessage && // only show this button if there is no error
-            <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
-              Accept
-            </Button>
-          }
+          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={() => setShowResetWarning(true)}>
+            Reset
+          </Button>
+          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
+            Accept
+          </Button>
         </span>
       </Dialog>
       {/** Lexicon Popup dialog */}
@@ -145,6 +172,23 @@ export default function WordAlignerDialog({
         positionCoord={lexiconData?.positionCoord}
         onClosePopover={() => setLexiconData(null)}
       />
+
+      <Dialog open={enableResetWarning} onClose={() => setShowResetWarning(false)} aria-labelledby="reset-warn-dialog">
+        <DialogTitle id="form-dialog-title">{'Warning'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {'Are you sure you want to clear all alignments?'}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowResetWarning(false)} color="primary">
+            No
+          </Button>
+          <Button onClick={doReset} color="secondary">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
