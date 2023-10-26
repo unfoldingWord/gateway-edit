@@ -19,7 +19,7 @@ function BibleReferenceComponent(props) {
       bibleReference: {
         bookId, chapter, verse,
       },
-      supportedBibles,
+      supportedBibles
     },
     actions: { onReferenceChange, checkUnsavedChanges },
   } = useContext(StoreContext)
@@ -29,6 +29,8 @@ function BibleReferenceComponent(props) {
     initialChapter: chapter,
     initialVerse: verse,
     onChange: onReferenceChange,
+    //TODO: remove this hardcoded value and put it somewhere where config sits
+    addOBS: true,
     onPreChange: () => checkUnsavedChanges(),
     addChapterFront: 'front',
   })
