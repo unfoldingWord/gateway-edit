@@ -35,7 +35,7 @@
     "@mui/styles": "^5.8.7",
     "@sendgrid/mail": "^7.4.2",
     "autoprefixer": "^10.1.0",
-    "bible-reference-rcl": "1.2.3-beta.7",
+    "bible-reference-rcl": "1.2.3-beta.2",
     "core-js": "^3.8.3",
     "deep-equal": "^2.0.5",
     "gitea-react-toolkit": "2.2.6",
