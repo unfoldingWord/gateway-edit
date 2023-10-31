@@ -145,6 +145,7 @@ export default function WordAlignerDialog({
               lexicons={{}}
               loadLexiconEntry={getLexiconData}
               onChange={onAlignmentChange}
+              resetAlignments={resetAlignments}
             />
             : // if error, then show message
             <div style={{ textAlign: 'center', fontSize: '1.5em', fontStyle: 'italic', fontWeight: 'bold' }}>
@@ -156,12 +157,16 @@ export default function WordAlignerDialog({
           <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={cancelAlignment}>
             Cancel
           </Button>
-          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={() => setShowResetWarning(true)}>
-            Reset
-          </Button>
-          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
-            Accept
-          </Button>
+          {!errorMessage && // only show these buttons if there is no error
+            <>
+              <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={() => setShowResetWarning(true)}>
+                Reset
+              </Button>
+              <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
+                Accept
+              </Button>
+            </>
+          }
         </span>
       </Dialog>
       {/** Lexicon Popup dialog */}

@@ -52,13 +52,13 @@
     "resource-workspace-rcl": "2.1.4",
     "scripture-resources-rcl": "5.4.1",
     "scripture-tsv": "0.2.0",
-    "single-scripture-rcl": "3.4.13",
+    "single-scripture-rcl": "3.4.14-beta.9",
     "tailwindcss": "^2.0.4",
     "tc-ui-toolkit": "5.3.3",
     "translation-helps-rcl": "3.5.11",
     "use-deep-compare-effect": "^1.3.1",
     "word-aligner": "^1.0.0",
-    "word-aligner-rcl": "1.0.3"
+    "word-aligner-rcl": "1.0.4-beta.4"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
