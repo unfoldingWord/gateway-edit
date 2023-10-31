@@ -3276,10 +3276,10 @@ bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
 
-bible-reference-rcl@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.2.tgz#93e636a540ac1e5837f528e16e84f5fb3483b290"
-  integrity sha512-7OiRXwQDT4XB/tId+t/IXGTF4UMcs7zVg5x1JrwhLktg5NmZa9RXovTol2WtZUZ55AMRxMYj3OX9kx+iVuydKQ==
+bible-reference-rcl@1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.3.tgz#fccc2d578582a8cc7eccb32ac0c2333ddf57f8c8"
+  integrity sha512-OHpAiLtLHSZbnzwGhmv2Kgn9ArciQWZsBm7yHEg9+d4pAw/AcrHv8NF9uF786mZ9/WAqdK1CshWVxTqkEWS/NQ==
   dependencies:
     "@emotion/react" "^11.11.0"
     "@emotion/styled" "^11.11.0"
@@ -10012,10 +10012,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.14-beta.6:
-  version "3.4.14-beta.6"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.14-beta.6.tgz#407f70160fce19f35ebe6e7b715609d99ec327dd"
-  integrity sha512-x0DoC3u5+Z8qnSEUPVUne2/ZZVCzt2qrLM2wr2noCN6I44oSad5T5ladPwrf0ORnQOqE0a2sqHzUH4f4PWkO2A==
+single-scripture-rcl@3.4.14-beta.9:
+  version "3.4.14-beta.9"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.14-beta.9.tgz#510705cf32272e12132ed0a51f14e96204b24621"
+  integrity sha512-QEkbVW530jWHnWO9DLvy65iRehozfOqiEnIaGvLSgLB37p4n1PAHFLpT2ui27O7dyWzxMt9ttA1tIrxCVyRMWQ==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
@@ -11581,10 +11581,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.0.4-beta.3:
-  version "1.0.4-beta.3"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.0.4-beta.3.tgz#2234d2b133b23b64c151fb33b48edc84cd117ae6"
-  integrity sha512-r6LpE9dflIrjhUN6jg5biV1U3kLCYQ7PNXmYrX+8NUnZPkpl6ZB+pq8l/7mVW+BZPLNX5qcyJ9xlcz7H4eExXQ==
+word-aligner-rcl@1.0.4-beta.4:
+  version "1.0.4-beta.4"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.0.4-beta.4.tgz#8acaeb7392eff46192509abb4616e1e2327485e6"
+  integrity sha512-JEmrOqu9X/VIeVnj8TMUYgGZCeHadNzNm3RXdS5l2fwOv/2vuirfacWwnnwvXGnXD7zvqQdxXLnHCshWxsxfIg==
   dependencies:
     bible-reference-range "^1.1.0"
     file-loader "^6.2.0"
