@@ -19,13 +19,17 @@ import {
   useUserBranch,
 } from 'translation-helps-rcl'
 import {
+  tsvRowUtils,
+  tsvDataActions,
   useTsvData,
   useAddTsv,
-  tsvRowUtils,
   AddRowButton,
   AddRowDialog,
-  AddRowForm
+  AddRowForm,
+
 } from 'scripture-tsv'
+const { getChapterVerse } = tsvRowUtils
+const { tsvsObjectToFileString } = tsvDataActions
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import * as isEqual from 'deep-equal'
@@ -366,12 +370,12 @@ export default function ResourceCard({
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
-  async function handleSaveEdit() {
+  async function handleSaveEdit(newContent='') {
     // Save edit, if successful trigger resource reload and set saved to true.
     setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
-    const saveEdit = async (branch) => {
+    const saveEdit = async (branch, newContent) => {
       console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
-      const success = await onSaveEdit(branch)
+      const success = await onSaveEdit(branch, newContent)
 
       if (success) {
         setSaved(true)
@@ -391,12 +395,12 @@ export default function ResourceCard({
       console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
       const branch = await startEdit()
       if (branch) {
-        saveEdit(branch)
+        saveEdit(branch, newContent)
       } else { // if error on branch creation
         onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
       }
     } else {// Else just save the edit.
-      await saveEdit()
+      await saveEdit(null, newContent)
     }
   }
 
@@ -412,16 +416,17 @@ export default function ResourceCard({
    * @todo Consider adding more validation for TSV properties as currently since it's quite generic.
    */
   const addRowToTsv = row => {
-    const { Reference: reference, ...rest } = row
+    const { Reference: reference } = row
     try {
       const { chapter: inputChapter, verse: inputVerse } =
-        tsvRowUtils.getChapterVerse(reference)
-        if (inputChapter !== chapter || inputVerse !== verse) {
-          // Todo: Do we then change the app's reference? Maybe yes
-          onTsvAdd(row, inputChapter, inputVerse, 0)
-          return
-        }
-        onTsvAdd(row, chapter, verse, itemIndex)
+        getChapterVerse(reference)
+
+      const newTsvs = (inputChapter !== chapter || inputVerse !== verse)
+      // Todo: Do we then change the app's reference? Maybe yes
+        ? onTsvAdd(row, inputChapter, inputVerse, 0)
+        : onTsvAdd(row, chapter, verse, itemIndex)
+
+      handleSaveEdit(tsvsObjectToFileString(newTsvs))
     } catch (error) {
       console.error(
         'Input reference in new row is not of type chapter:verse',
