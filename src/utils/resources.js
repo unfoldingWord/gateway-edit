@@ -24,6 +24,7 @@ export async function getResource({
   ref,
   server,
 }) {
+  //${scripture.owner}/${scripture.languageId}/${scripture.resourceId}/${ref}
   const resourceLink = getResourceLink({
     owner,
     languageId,
@@ -73,6 +74,7 @@ export async function getResourceBibles(resourceRef) {
   const resource = await getResource(resourceRef)
 
   if (resource?.manifest?.projects) {
+    /* @todo remove resource manifest */
     bibles = resource.manifest.projects.map((item) => (item.identifier))
   } else {
     console.log(`getResourceBibles() response`, resource?.manifestHttpResponse)
