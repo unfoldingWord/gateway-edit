@@ -9898,6 +9898,20 @@ scripture-resources-rcl@5.4.1:
     word-aligner "^1.0.0"
     xregexp "^4.1.1"
 
+scripture-tsv@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-0.1.4.tgz#64631b0b5a62f7704f80e2a1cc15afa00eb2f5e6"
+  integrity sha512-KSN8nWZWTm7rriWbkMyzTV3Dfgr2caN3IztIn1npW0wvD8nq5caYKmB7kSUF+DsKgEswLZt91ZbXRzld1zwSaQ==
+  dependencies:
+    "@emotion/react" "^11.9.3"
+    "@emotion/styled" "^11.9.3"
+    "@mui/icons-material" "^5.8.4"
+    "@mui/material" "^5.8.7"
+    "@mui/styles" "^5.8.7"
+    lodash.clonedeep "^4.5.0"
+    tsv "^0.2.0"
+    use-deep-compare-effect "^1.8.1"
+
 "semver@2 || 3 || 4 || 5", semver@^5.5.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
@@ -10861,10 +10875,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.5.7:
-  version "3.5.7"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.7.tgz#56d03601a3f090b4a93366d555d1ae886cf71d67"
-  integrity sha512-9YrwlsHVfeZ2El3w8AkJt01gxVoFoYVS3IGkabxTniCGLcy2ApEoP9RmyYWo/SttlaMDtlQa/oAXroRf/pxhLA==
+translation-helps-rcl@3.5.9:
+  version "3.5.9"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.9.tgz#3da0db5c6278996f62d5215e3833af4a57d0f925"
+  integrity sha512-Qr6Wsy3WLsOZh4eq8GQhWeZd4FANzgyc9JPGZQ4W1uUv7KJWFy233h0CXLLXgzzjt83tiuAoQd0SBxaG6VGtIw==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
@@ -11232,7 +11246,7 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-use-deep-compare-effect@^1.3.1, use-deep-compare-effect@^1.6.1:
+use-deep-compare-effect@^1.3.1, use-deep-compare-effect@^1.6.1, use-deep-compare-effect@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/use-deep-compare-effect/-/use-deep-compare-effect-1.8.1.tgz#ef0ce3b3271edb801da1ec23bf0754ef4189d0c6"
   integrity sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q==
