@@ -350,16 +350,42 @@ function WorkspaceContainer() {
     setState( { workspaceReady: false })
 
     if (owner && languageId && appRef && server && loggedInUser) {
-      getResourceBibles({
+      /*
+      @todo add comments from mclean about why we're making a single call here
+      */
+      const getCanonicalResources = getResourceBibles({
         bookId,
         chapter,
         verse,
+        /**
+        @todo 'ult' might be confusing for developers, could we create constants for these hardcoded values to
+        give more meaning to them?
+        @todo replace 'obs' with 'ult' 
+        */
         resourceId: languageId === 'en' ? 'ult' : 'glt',
         owner,
         languageId,
         ref: appRef,
         server,
-      }).then(results => {
+      })
+
+      const obsResources =  getResourceBibles({
+        bookId,
+        chapter,
+        verse,
+        /**
+        @todo 'ult' might be confusing for developers, could we create constants for these hardcoded values to
+        give more meaning to them?
+        @todo replace 'obs' with 'ult' 
+        */
+        resourceId: 'obs',
+        owner,
+        languageId,
+        ref: appRef,
+        server,
+      })      
+
+      Promise.all([getCanonicalResources, obsResources]).then(arrayOfResults => arrayOfResults.flat()).then(results => {
         const { bibles, resourceLink } = results
 
         if (bibles?.length) {
@@ -372,6 +398,7 @@ function WorkspaceContainer() {
         }
         setState( { workspaceReady: true })
       }).catch((e) => {
+        console.log('failed to get bibles', e)
         setState( { workspaceReady: true })
         processError(e.toString())
       })
@@ -439,6 +466,19 @@ function WorkspaceContainer() {
         owner,
         languageId,
         resourceId: ORIGINAL_SOURCE,
+        originalLanguageOwner: scriptureOwner,
+      },
+      ...commonScriptureCardConfigs,
+    },
+    {
+      title: 'Open Bible Story',
+      type: 'scripture_card',
+      id: 'scripture_card_3',
+      cardNum: 3,
+      resource: {
+        owner,
+        languageId,
+        resourceId: 'obs',
         originalLanguageOwner: scriptureOwner,
       },
       ...commonScriptureCardConfigs,

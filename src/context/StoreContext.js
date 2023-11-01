@@ -80,7 +80,7 @@ export default function StoreContextProvider(props) {
   const [scriptureOwner, setScriptureOwner] = useState('unfoldingWord')
   const [appRef, setAppRef] = useUserLocalStorage('appRef', 'master') // default for app
   const [bibleReference, setBibleReference] = useUserLocalStorage('bibleReference', {
-    bookId: 'mat',
+    bookId: 'obs',
     chapter: '1',
     verse: '1',
   })
