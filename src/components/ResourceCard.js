@@ -88,6 +88,7 @@ export default function ResourceCard({
     readyToFetch: false,
   })
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+  const IS_RESOURCE_TSV = ['tn', 'tq', 'twl'].includes(cardResourceId)
 
   function updateTempContent(c) {
     setContent(c)
@@ -322,14 +323,6 @@ export default function ResourceCard({
   //   console.log(`ResourceCard() sha changed to`, { sha, resource })
   // }, [sha])
 
-  const { onTsvAdd, onTsvEdit } = useTsvData({
-    tsvs,
-    verse,
-    chapter,
-    itemIndex,
-    setContent: updateTempContent,
-  })
-
   // useEffect(() => {
   //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
   // }, [chapter, verse, projectId])
@@ -436,6 +429,10 @@ export default function ResourceCard({
     }
   }
 
+  const { onTsvAdd, onTsvEdit } = IS_RESOURCE_TSV
+    ? useTsvData({ tsvs, verse, chapter, itemIndex, setContent: updateTempContent })
+    : {}
+
   const {
     isAddRowDialogOpen,
     openAddRowDialog,
@@ -444,38 +441,36 @@ export default function ResourceCard({
     newRow,
     changeRowValue,
     columnsFilterOptions
-  } = useAddTsv({
-    tsvs,
-    chapter,
-    verse,
-    itemIndex,
-    columnsFilter,
-    addRowToTsv
-  });
+  } = IS_RESOURCE_TSV
+    ? useAddTsv({ tsvs, chapter, verse, itemIndex, columnsFilter, addRowToTsv })
+    : {}
 
-  const TsvForm = (
-    <AddRowForm
-      newRow={newRow}
-      changeRowValue={changeRowValue}
-      columnsFilterOptions={columnsFilterOptions}
-    />
-  );
+  const TsvForm = IS_RESOURCE_TSV
+    ? (
+        <AddRowForm
+          newRow={newRow}
+          changeRowValue={changeRowValue}
+          columnsFilterOptions={columnsFilterOptions}
+        />
+      )
+    : null
 
-  const TsvActionButtons = (
-    <>
-      <AddRowButton onClick={openAddRowDialog} />
-      <AddRowDialog
-        open={isAddRowDialogOpen}
-        onClose={closeAddRowDialog}
-        onSubmit={submitRowEdits}
-        tsvForm={TsvForm}
-      />
-    </>
-  )
+  const TsvActionButtons = IS_RESOURCE_TSV
+    ? (
+        <>
+          <AddRowButton onClick={openAddRowDialog} />
+          <AddRowDialog
+            open={isAddRowDialogOpen}
+            onClose={closeAddRowDialog}
+            onSubmit={submitRowEdits}
+            tsvForm={TsvForm}
+          />
+        </>
+      )
+    : null
 
   // Add/Remove resources to/from the array to enable or disable edit mode.
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
-  const tsvResources = ['tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
   const onRenderToolbar = ({ items }) => {
@@ -488,7 +483,7 @@ export default function ResourceCard({
       </>
     )
 
-    if (cardResourceId !== 'twl' && tsvResources.includes(cardResourceId)) {
+    if (cardResourceId !== 'twl' && IS_RESOURCE_TSV) {
       newItems.push(TsvActionButtons)
     }
 
