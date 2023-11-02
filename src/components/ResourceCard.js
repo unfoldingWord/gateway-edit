@@ -430,6 +430,9 @@ export default function ResourceCard({
     }
   }
 
+  //TODO: investigate if there is a better long term fix for this
+  const _tsvs = (cardResourceId !== 'ta') ? tsvs : null // make sure useAddTsv doesn't crash on 'ta'
+
   const {
     isAddRowDialogOpen,
     openAddRowDialog,
@@ -439,7 +442,7 @@ export default function ResourceCard({
     changeRowValue,
     columnsFilterOptions
   } = useAddTsv({
-    tsvs,
+    tsvs: _tsvs,
     chapter,
     verse,
     itemIndex,
