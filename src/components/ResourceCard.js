@@ -19,13 +19,17 @@ import {
   useUserBranch,
 } from 'translation-helps-rcl'
 import {
+  tsvRowUtils,
+  tsvDataActions,
   useTsvData,
   useAddTsv,
-  tsvRowUtils,
   AddRowButton,
   AddRowDialog,
-  AddRowForm
+  AddRowForm,
+
 } from 'scripture-tsv'
+const { getChapterVerse } = tsvRowUtils
+const { tsvsObjectToFileString } = tsvDataActions
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import * as isEqual from 'deep-equal'
@@ -84,6 +88,7 @@ export default function ResourceCard({
     readyToFetch: false,
   })
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
+  const isResourceTsv = ['tn', 'tq', 'twl'].includes(cardResourceId)
 
   function updateTempContent(c) {
     setContent(c)
@@ -318,14 +323,6 @@ export default function ResourceCard({
   //   console.log(`ResourceCard() sha changed to`, { sha, resource })
   // }, [sha])
 
-  const { onTsvAdd, onTsvEdit } = useTsvData({
-    tsvs,
-    verse,
-    chapter,
-    itemIndex,
-    setContent: updateTempContent,
-  })
-
   // useEffect(() => {
   //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
   // }, [chapter, verse, projectId])
@@ -366,12 +363,12 @@ export default function ResourceCard({
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
-  async function handleSaveEdit() {
+  async function handleSaveEdit(newContent='') {
     // Save edit, if successful trigger resource reload and set saved to true.
     setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
-    const saveEdit = async (branch) => {
+    const saveEdit = async (branch, newContent) => {
       console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
-      const success = await onSaveEdit(branch)
+      const success = await onSaveEdit(branch, newContent)
 
       if (success) {
         setSaved(true)
@@ -391,12 +388,12 @@ export default function ResourceCard({
       console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
       const branch = await startEdit()
       if (branch) {
-        saveEdit(branch)
+        saveEdit(branch, newContent)
       } else { // if error on branch creation
         onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
       }
     } else {// Else just save the edit.
-      await saveEdit()
+      await saveEdit(null, newContent)
     }
   }
 
@@ -412,16 +409,19 @@ export default function ResourceCard({
    * @todo Consider adding more validation for TSV properties as currently since it's quite generic.
    */
   const addRowToTsv = row => {
-    const { Reference: reference, ...rest } = row
+    const { Reference: reference } = row
     try {
       const { chapter: inputChapter, verse: inputVerse } =
-        tsvRowUtils.getChapterVerse(reference)
-        if (inputChapter !== chapter || inputVerse !== verse) {
-          // Todo: Do we then change the app's reference? Maybe yes
-          onTsvAdd(row, inputChapter, inputVerse, 0)
-          return
-        }
-        onTsvAdd(row, chapter, verse, itemIndex)
+        getChapterVerse(reference)
+
+      // Todo: Do we then change the app's reference? Maybe yes
+      const isNewRowInDifferentRef = inputChapter !== Number(chapter) || inputVerse !== Number(verse)
+      const newTsvs = isNewRowInDifferentRef
+        ? onTsvAdd(row, inputChapter, inputVerse, 0)
+        : onTsvAdd(row, chapter, verse, itemIndex)
+
+      handleSaveEdit(tsvsObjectToFileString(newTsvs))
+      setItemIndex(itemIndex + 1)
     } catch (error) {
       console.error(
         'Input reference in new row is not of type chapter:verse',
@@ -429,6 +429,10 @@ export default function ResourceCard({
       )
     }
   }
+
+  const { onTsvAdd, onTsvEdit } = isResourceTsv
+    ? useTsvData({ tsvs, verse, chapter, itemIndex, setContent: updateTempContent })
+    : {}
 
   const {
     isAddRowDialogOpen,
@@ -438,38 +442,36 @@ export default function ResourceCard({
     newRow,
     changeRowValue,
     columnsFilterOptions
-  } = useAddTsv({
-    tsvs,
-    chapter,
-    verse,
-    itemIndex,
-    columnsFilter,
-    addRowToTsv
-  });
+  } = isResourceTsv
+    ? useAddTsv({ tsvs, chapter, verse, itemIndex, columnsFilter, addRowToTsv })
+    : {}
 
-  const TsvForm = (
-    <AddRowForm
-      newRow={newRow}
-      changeRowValue={changeRowValue}
-      columnsFilterOptions={columnsFilterOptions}
-    />
-  );
+  const TsvForm = isResourceTsv
+    ? (
+        <AddRowForm
+          newRow={newRow}
+          changeRowValue={changeRowValue}
+          columnsFilterOptions={columnsFilterOptions}
+        />
+      )
+    : null
 
-  const TsvActionButtons = (
-    <>
-      <AddRowButton onClick={openAddRowDialog} />
-      <AddRowDialog
-        open={isAddRowDialogOpen}
-        onClose={closeAddRowDialog}
-        onSubmit={submitRowEdits}
-        tsvForm={TsvForm}
-      />
-    </>
-  )
+  const TsvActionButtons = isResourceTsv
+    ? (
+        <>
+          <AddRowButton onClick={openAddRowDialog} />
+          <AddRowDialog
+            open={isAddRowDialogOpen}
+            onClose={closeAddRowDialog}
+            onSubmit={submitRowEdits}
+            tsvForm={TsvForm}
+          />
+        </>
+      )
+    : null
 
   // Add/Remove resources to/from the array to enable or disable edit mode.
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
-  const tsvResources = ['tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
   const onRenderToolbar = ({ items }) => {
@@ -482,7 +484,7 @@ export default function ResourceCard({
       </>
     )
 
-    if (cardResourceId !== 'twl' && tsvResources.includes(cardResourceId)) {
+    if (cardResourceId !== 'twl' && isResourceTsv) {
       newItems.push(TsvActionButtons)
     }
 
@@ -534,6 +536,7 @@ export default function ResourceCard({
         selectedQuote={selectedQuote}
         setContent={setContent}
         setCurrentCheck={setCurrentCheck}
+        setItemIndex={setItemIndex}
         showSaveChangesPrompt={showSaveChangesPrompt}
         updateTaDetails={updateTaDetails}
         viewMode={viewMode}
