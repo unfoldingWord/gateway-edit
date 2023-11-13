@@ -11600,10 +11600,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.0.4-beta.7:
-  version "1.0.4-beta.7"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.0.4-beta.7.tgz#a6ce51ef5b83396e9c9acfae9a551f42817b8486"
-  integrity sha512-S14LNB57Cz6eXvn2lMlQcxwDtFxcLdjSSJMdpiQDYIEZuA8Kvzuob+smU4M9XLFneLaT0GiJTAxs/NYEFLtzwA==
+word-aligner-rcl@1.0.4-beta.8:
+  version "1.0.4-beta.8"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.0.4-beta.8.tgz#90708a7c34a20b04a627ec88ed0604591d988d6f"
+  integrity sha512-uY/SkJYX5VyVM1Xo1G7yDJqdtuaz1XVRhJtr5Dyg0SBBNaVfeoHccQ8iScCGXmE+yOVq78yGNtwgl9y7YhyoAA==
   dependencies:
     bible-reference-range "^1.1.0"
     file-loader "^6.2.0"
