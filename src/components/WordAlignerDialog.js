@@ -108,12 +108,12 @@ export default function WordAlignerDialog({
     setShowResetWarning(false)
     const alignmentData_ = AlignmentHelpers.resetAlignments(alignerData?.alignments, alignerData?.wordBank)
 
-    setAlignerData({ // this causes word aligner to redraw
+    setAlignerData({ // this causes word aligner to redraw with empty alignments
       alignments: alignmentData_.verseAlignments,
       wordBank: alignmentData_.targetWords,
     })
 
-    const latestChange = alignmentChange || {};
+    const latestChange = alignmentChange || {}
     const alignmentChange_ = {
       ...latestChange, // keep old data
       ...alignmentData_, // merge in reset alignment data
