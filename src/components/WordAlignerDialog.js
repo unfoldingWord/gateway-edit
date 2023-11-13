@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
-import { WordAligner } from 'word-aligner-rcl'
+import { AlignmentHelpers, WordAligner } from 'word-aligner-rcl'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
@@ -38,11 +38,17 @@ export default function WordAlignerDialog({
   translate,
   getLexiconData,
 }) {
+  const [alignerData, setAlignerData] = useState(null)
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
   const [lexiconData, setLexiconData] = useState(null)
-  const [resetAlignments, setResetAlignments] = useState(false)
   const [showResetWarning, setShowResetWarning] = useState(false)
+
+  const alignerData_ = alignerStatus?.state?.alignerData
+
+  useEffect(() => {
+    setAlignerData(alignerData_)
+  }, [alignerData_])
 
   /**
    * called on every alignment change.  We save this new alignment state so that it can be applied if user clicks accept.
@@ -50,7 +56,7 @@ export default function WordAlignerDialog({
    * @param {object} results
    */
   function onAlignmentChange(results) {
-    const onAlignmentsChange = alignerStatus?.actions?.onAlignmentsChange;
+    const onAlignmentsChange = alignerStatus?.actions?.onAlignmentsChange
     const alignmentComplete = onAlignmentsChange?.(results)
     setAlignmentChange(results) // save the most recent change
     setAligned(alignmentComplete) // update alignment complete status
@@ -67,7 +73,6 @@ export default function WordAlignerDialog({
     })
   }
 
-  const alignerData = alignerStatus?.state?.alignerData
   const errorMessage = alignerData?.errorMessage
 
   useEffect(() => { // set initial aligned state
@@ -95,18 +100,27 @@ export default function WordAlignerDialog({
     setAlignmentChange(null)
   }
 
+  /**
+   * reset all the alignments
+   */
   function doReset() {
     console.log('WordAlignerDialog() - reset Alignments Clicked')
     setShowResetWarning(false)
-    setResetAlignments(true)
-  }
+    const alignmentData_ = AlignmentHelpers.resetAlignments(alignerData?.alignments, alignerData?.wordBank)
 
-  useEffect(() => {
-    if (resetAlignments) {
-      console.log('WordAligner() - clearing reset Alignments Toggle')
-      setResetAlignments(false)
+    setAlignerData({ // this causes word aligner to redraw
+      alignments: alignmentData_.verseAlignments,
+      wordBank: alignmentData_.targetWords,
+    })
+
+    const latestChange = alignmentChange || {};
+    const alignmentChange_ = {
+      ...latestChange, // keep old data
+      ...alignmentData_, // merge in reset alignment data
     }
-  }, [resetAlignments])
+
+    setAlignmentChange(alignmentChange_) // clear the last alignment changes in case user next does save
+  }
 
   const enableResetWarning = useMemo( () => (showResetWarning && !!alignerData), [showResetWarning && !!alignerData])
 
@@ -145,7 +159,6 @@ export default function WordAlignerDialog({
               lexicons={{}}
               loadLexiconEntry={getLexiconData}
               onChange={onAlignmentChange}
-              resetAlignments={resetAlignments}
             />
             : // if error, then show message
             <div style={{ textAlign: 'center', fontSize: '1.5em', fontStyle: 'italic', fontWeight: 'bold' }}>
