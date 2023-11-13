@@ -9898,10 +9898,10 @@ scripture-resources-rcl@5.4.1:
     word-aligner "^1.0.0"
     xregexp "^4.1.1"
 
-scripture-tsv@0.2.0-beta:
-  version "0.2.0-beta"
-  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-0.2.0-beta.tgz#de00e10b93af7d96008d5bda1a4519f4e05991f8"
-  integrity sha512-eAMp3gfY7Q4raL6GrUnTssr35Wb6cLWMPTq5Htr5Q0xZe8miXggqS7c2JRhY9bBe8YtMeitJWQ97QeNQx6cAzQ==
+scripture-tsv@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-0.2.0.tgz#8be6b1ac2658d693f74f16691d80b3214a9fe741"
+  integrity sha512-COlgLIr8kzeJ+m+2lWsa/IQODF0rhGsY1kuLWdu9zsGOE+FXdYiLy4D2dNEsrR1OVO2m58CMHLfSmHPg+XscTg==
   dependencies:
     "@emotion/react" "^11.9.3"
     "@emotion/styled" "^11.9.3"

@@ -88,7 +88,7 @@ export default function ResourceCard({
     readyToFetch: false,
   })
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
-  const IS_RESOURCE_TSV = ['tn', 'tq', 'twl'].includes(cardResourceId)
+  const isResourceTsv = ['tn', 'tq', 'twl'].includes(cardResourceId)
 
   function updateTempContent(c) {
     setContent(c)
@@ -414,8 +414,9 @@ export default function ResourceCard({
       const { chapter: inputChapter, verse: inputVerse } =
         getChapterVerse(reference)
 
-      const newTsvs = (inputChapter !== Number(chapter) || inputVerse !== Number(verse))
       // Todo: Do we then change the app's reference? Maybe yes
+      const isNewRowInDifferentRef = inputChapter !== Number(chapter) || inputVerse !== Number(verse)
+      const newTsvs = isNewRowInDifferentRef
         ? onTsvAdd(row, inputChapter, inputVerse, 0)
         : onTsvAdd(row, chapter, verse, itemIndex)
 
@@ -429,7 +430,7 @@ export default function ResourceCard({
     }
   }
 
-  const { onTsvAdd, onTsvEdit } = IS_RESOURCE_TSV
+  const { onTsvAdd, onTsvEdit } = isResourceTsv
     ? useTsvData({ tsvs, verse, chapter, itemIndex, setContent: updateTempContent })
     : {}
 
@@ -441,11 +442,11 @@ export default function ResourceCard({
     newRow,
     changeRowValue,
     columnsFilterOptions
-  } = IS_RESOURCE_TSV
+  } = isResourceTsv
     ? useAddTsv({ tsvs, chapter, verse, itemIndex, columnsFilter, addRowToTsv })
     : {}
 
-  const TsvForm = IS_RESOURCE_TSV
+  const TsvForm = isResourceTsv
     ? (
         <AddRowForm
           newRow={newRow}
@@ -455,7 +456,7 @@ export default function ResourceCard({
       )
     : null
 
-  const TsvActionButtons = IS_RESOURCE_TSV
+  const TsvActionButtons = isResourceTsv
     ? (
         <>
           <AddRowButton onClick={openAddRowDialog} />
@@ -483,7 +484,7 @@ export default function ResourceCard({
       </>
     )
 
-    if (cardResourceId !== 'twl' && IS_RESOURCE_TSV) {
+    if (cardResourceId !== 'twl' && isResourceTsv) {
       newItems.push(TsvActionButtons)
     }
 
