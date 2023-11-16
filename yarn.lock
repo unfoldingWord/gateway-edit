@@ -5751,10 +5751,10 @@ gitea-react-toolkit@2.2.1:
     use-deep-compare-effect "^1.3.1"
     utf8 "3.0.0"
 
-gitea-react-toolkit@2.4.0-beta:
-  version "2.4.0-beta"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.4.0-beta.tgz#6d40a3cd0d908a1b8dec206893f9d1f9e55ba694"
-  integrity sha512-Yj3n8j9NK319o4D+EUNsWLVId3V+ZA91jGKuWa8TPFm+b9X8mHzOA2fhAGEeZgKRNCj9QynjN960BJwrqqXVBw==
+gitea-react-toolkit@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.4.0.tgz#0d34e23785d9a5b7d97562938abec2c14f26fd41"
+  integrity sha512-WYhTxhL0AOKKqYZtVkGJLvLn74LnqIkAtPJ4Wn2Gp3M8T4oVNR2ippIq952wl2/jvUdTP0mavNhtoGFvczgr3g==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -10031,10 +10031,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.15-beta.17:
-  version "3.4.15-beta.17"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.15-beta.17.tgz#efcd7e1a2499d8991efed0695e3ca2b7e13c2581"
-  integrity sha512-u24alCsyu5T9WaD0/NBbSaLEyAfpEzBes7GYmPa5J3uoGy40uZ7o30kO27c//UK03R5XSnNsyeoe99hMinfzdA==
+single-scripture-rcl@3.4.15-beta.25:
+  version "3.4.15-beta.25"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.15-beta.25.tgz#b2e233362726bda6c7247fddc597812c2acad218"
+  integrity sha512-Lp4Oyn6oYdXPsPUX0SrTBGV0Lb0uC+nPMdtYBBKljn1chAJnTBf4dQaCjueZ9vSc/MAtdnJs6vXgcmMi7YubMQ==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
