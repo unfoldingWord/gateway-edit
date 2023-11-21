@@ -9898,10 +9898,10 @@ scripture-resources-rcl@5.4.1:
     word-aligner "^1.0.0"
     xregexp "^4.1.1"
 
-scripture-tsv@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-0.2.1.tgz#9dcaffbe445018994efe0f288f057658e82620b5"
-  integrity sha512-NyX5qIL3kVKhzcwdUh8Zt6Dt5VJTeQAu6ydkCHRK8qw6bNmJQgve0LzVHqGUawcwnCpU51vSLqASnGRkPrvPGA==
+scripture-tsv@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-0.3.0.tgz#057152de97423ad6047e840bb16f306a18a7971d"
+  integrity sha512-zsAR2dJa/P0nYykPvxUu78ZjMLbMWB+0i4xedwSUTQjJePqH+FMj7K6Ze1zmEjRRnYuA32ZYNw3N/2Jg0ds+rA==
   dependencies:
     "@emotion/react" "^11.9.3"
     "@emotion/styled" "^11.9.3"
@@ -10875,10 +10875,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.5.11:
-  version "3.5.11"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.11.tgz#3bf1eaa81e136468b2e6dd3853ea30ca14ee63ac"
-  integrity sha512-bNVl6Kwgwk2ufNSIBYtnF47x3fki+c5kwOkDyytJlihCdZqhp2LkifvB8u10dOqwVnlPSW2bz6502dwlMGCcEQ==
+translation-helps-rcl@3.5.12:
+  version "3.5.12"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.12.tgz#e58427750877c72162aa713fba4033b0e79b40de"
+  integrity sha512-uXj4uWrePiSf2F7eYWauVb1+qp5Rjexu2BYkAe7rGJotG9Z4RI6nbbK56mlG+XHGlbnRkLkIGSZJXOdFDpi8AQ==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"

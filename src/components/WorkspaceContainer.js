@@ -188,8 +188,8 @@ function WorkspaceContainer() {
       _setQuote(_quote)
     }
 
-    if (newQuote && !isEqual(newQuote.reference, currentVerseReference)){
-      setState( { currentVerseReference: newQuote.reference })
+    if (_quote && !isEqual(_quote.reference, currentVerseReference)){
+      setState( { currentVerseReference: _quote.reference })
     }
   }
 

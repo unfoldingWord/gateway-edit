@@ -26,7 +26,8 @@ import {
   AddRowButton,
   AddRowDialog,
   AddRowForm,
-
+  DeleteRowButton,
+  DeleteRowDialog
 } from 'scripture-tsv'
 const { getChapterVerse } = tsvRowUtils
 const { tsvsObjectToFileString } = tsvDataActions
@@ -82,6 +83,7 @@ export default function ResourceCard({
   const [content, setContent] = useState('')
   const [saved, setSaved] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [isTsvDeleteDialogOpen, setIsTsvDeleteDialogOpen] = useState(false)
   const [fetchConfig, setFetchConfig] = useState({
     basicReference,
     config: HTTP_CONFIG,
@@ -264,7 +266,7 @@ export default function ResourceCard({
       item, headers, filters, fontSize, itemIndex, markdownView,
     },
     actions: {
-      setFilters, setFontSize, setItemIndex, setMarkdownView,
+      setFilters, setFontSize, setItemIndex, setItemIndexPure, setMarkdownView,
     },
   } = useCardState({
     id,
@@ -421,7 +423,7 @@ export default function ResourceCard({
         : onTsvAdd(row, chapter, verse, itemIndex)
 
       handleSaveEdit(tsvsObjectToFileString(newTsvs))
-      setItemIndex(itemIndex + 1)
+      if (itemIndex !== 0) setItemIndexPure(itemIndex + 1)
     } catch (error) {
       console.error(
         'Input reference in new row is not of type chapter:verse',
@@ -430,7 +432,14 @@ export default function ResourceCard({
     }
   }
 
-  const { onTsvAdd, onTsvEdit } = isResourceTsv
+  const deleteTsvRow = () => {
+    const newTsvs = onTsvDelete(itemIndex)
+    handleSaveEdit(tsvsObjectToFileString(newTsvs))
+    setIsTsvDeleteDialogOpen(false)
+    if (itemIndex !== 0) setItemIndexPure(itemIndex - 1)
+  }
+
+  const { getTsvRow, onTsvAdd, onTsvDelete, onTsvEdit } = isResourceTsv
     ? useTsvData({ tsvs, verse, chapter, itemIndex, setContent: updateTempContent })
     : {}
 
@@ -465,6 +474,14 @@ export default function ResourceCard({
             onClose={closeAddRowDialog}
             onSubmit={submitRowEdits}
             tsvForm={TsvForm}
+          />
+
+          <DeleteRowButton onClick={() => setIsTsvDeleteDialogOpen(true)} />
+          <DeleteRowDialog
+            open={isTsvDeleteDialogOpen}
+            onClose={() => setIsTsvDeleteDialogOpen(false)}
+            onSubmit={deleteTsvRow}
+            currentRow={getTsvRow(itemIndex)}
           />
         </>
       )
@@ -536,7 +553,8 @@ export default function ResourceCard({
         selectedQuote={selectedQuote}
         setContent={setContent}
         setCurrentCheck={setCurrentCheck}
-        setItemIndex={setItemIndex}
+        setItemIndex={setItemIndexPure}
+        shouldDisableClick={isAddRowDialogOpen || isTsvDeleteDialogOpen}
         showSaveChangesPrompt={showSaveChangesPrompt}
         updateTaDetails={updateTaDetails}
         viewMode={viewMode}
