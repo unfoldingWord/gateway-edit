@@ -9877,12 +9877,12 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.4.1:
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.4.1.tgz#41a0cbe609961bae085b562accc22e967631d79d"
-  integrity sha512-57gfn/SkUvW8AmWj1BiVxWaqAP0vYIlaLNQ2VTvgLUe7KPoSOX2aBCMPOVJEqWb9EwCO/FMFa09T+WVKJjfdsg==
+scripture-resources-rcl@5.5.6:
+  version "5.5.6"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.5.6.tgz#d8d81e346f680d5b29c1aa6ec1e64f2d3627e32b"
+  integrity sha512-buJGDTyiLtKr0rO2YxHvSZQzmRKufbhH3ghtoZ4FxzOHBNpWvYT6S3CGTLLoaiObkxplNl9ga/or9vAy1+Ixsw==
   dependencies:
-    bible-reference-range "^1.0.1"
+    bible-reference-range "^1.1.0"
     deep-freeze "^0.0.1"
     gitea-react-toolkit "2.2.1"
     js-yaml-parser "^1.0.0"
@@ -9894,7 +9894,8 @@ scripture-resources-rcl@5.4.1:
     string-punctuation-tokenizer "2.1.2"
     tc-ui-toolkit "^5.3.3"
     use-deep-compare-effect "^1.3.1"
-    usfm-js "3.4.0"
+    usfm-js "^3.4.2"
+    uw-quote-helpers "^1.0.0"
     word-aligner "^1.0.0"
     xregexp "^4.1.1"
 
@@ -10031,10 +10032,9 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.15:
-  version "3.4.15"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.15.tgz#d16b2b0ba748717ddf5c5b79970b33b82baba849"
-  integrity sha512-7rM/9ZKniCCvYHuDvdufWr1HOiwG+wT6WtcpKbhBiK2OnRX82kwuM82qiJUa+6O+dYB+3W+PxITd5PthOCVA5w==
+"single-scripture-rcl@file:../single-scripture-rcl/single-scripture-rcl-v3.4.16-beta.5.tgz":
+  version "3.4.16-beta.5"
+  resolved "file:../single-scripture-rcl/single-scripture-rcl-v3.4.16-beta.5.tgz#f27649e6664541093cebfdbc2f8317bfbadca968"
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
@@ -11273,14 +11273,7 @@ use@^3.1.0:
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
 
-usfm-js@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/usfm-js/-/usfm-js-3.4.0.tgz#d3a00634b7219163b2bf41dc9dd83d976ec7ef26"
-  integrity sha512-8pCtMxzb/E3/4PPLLpf9KK10vza1I1/4tZJaDhJ+ycTGfg5JfT6GmDTxYFd6Nw81sbS0CVoyyG89a5ff6yHCzA==
-  dependencies:
-    lodash.clonedeep "^4.5.0"
-
-usfm-js@3.4.2:
+usfm-js@3.4.2, usfm-js@^3.4.2:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/usfm-js/-/usfm-js-3.4.2.tgz#a4232cffe38c9f521246b007a4045648cbcf419a"
   integrity sha512-i5nGxGwFhkOWd7xgfVWQ6GTkCpksfy5AUIwNJcwanTn3ua5J1nwl3pjApCDA6x1B++8ICkcQMUt0FB/bkKdE2g==
@@ -11366,6 +11359,16 @@ uw-quote-helpers@0.0.1-beta.15:
   version "0.0.1-beta.15"
   resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-0.0.1-beta.15.tgz#55f62791ededc71108cb84ab4387118c01fd0d64"
   integrity sha512-2SF0ynJbrFs8BorkEkfNgv2ew+bp9Zs2SasRYSe/vUQt+6vP1m/c9UaBOze7giasJ3TtLDVOD4p5KwWYSrytzA==
+  dependencies:
+    bible-reference-range "^1.1.0"
+    string-punctuation-tokenizer "^2.2.0"
+    tsv-groupdata-parser "1.1.0-beta.4"
+    xregexp "^5.1.1"
+
+uw-quote-helpers@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-1.0.0.tgz#cc684523c7686ac45d63cdc9d4348db6641f25d5"
+  integrity sha512-VT6fh6w+oEjb/YBczNahmZ7dnC7rM4wbRifcOsNQWnlntunDnCNrS8AhbWFEt7X+jn/NmLYXYqsUPeKd+R8NBQ==
   dependencies:
     bible-reference-range "^1.1.0"
     string-punctuation-tokenizer "^2.2.0"
