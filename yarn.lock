@@ -9877,10 +9877,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.5.7-beta.4:
-  version "5.5.7-beta.4"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.5.7-beta.4.tgz#88cdcddc85589be3c565caf91901a32427c3f7b6"
-  integrity sha512-SE1d6tZAZTYfy/+t7y5f0ZFcJCeMcVisdZfrMnTaV1ZGirDbMoEGK4fOSHJZy2WSwILCPi9h46ihEdEmzPfzPQ==
+scripture-resources-rcl@5.5.7-beta.5:
+  version "5.5.7-beta.5"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.5.7-beta.5.tgz#9e0a4ea810e6dae4fa62c6001e507e942daadc54"
+  integrity sha512-NMvOvAJne0h5g1XCJ46zaDophYt7Rxw4hlLxu7GbgxxrIeYsUA/cbBk1ziTNz4VnqDGIJmwN2Pe57ZuiEKn/nQ==
   dependencies:
     bible-reference-range "^1.1.0"
     deep-freeze "^0.0.1"
@@ -9895,7 +9895,7 @@ scripture-resources-rcl@5.5.7-beta.4:
     tc-ui-toolkit "^5.3.3"
     use-deep-compare-effect "^1.3.1"
     usfm-js "^3.4.2"
-    uw-quote-helpers " 1.0.1-beta.6"
+    uw-quote-helpers "1.0.1-beta.6"
     word-aligner "^1.0.0"
     xregexp "^4.1.1"
 
@@ -11348,7 +11348,7 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-"uw-quote-helpers@ 1.0.1-beta.6":
+uw-quote-helpers@1.0.1-beta.6:
   version "1.0.1-beta.6"
   resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-1.0.1-beta.6.tgz#aa36af87336caed7c686c5ae3a92696aa1b305fe"
   integrity sha512-B6ZvFdkuH1UcJIGFG3uG4k/avRqG2eyJj8PbX3wkMjFIaOwQMCvc2rELJO8glatwgxuNBDwSkWmMuH2srsKp7A==
