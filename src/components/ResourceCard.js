@@ -465,48 +465,52 @@ export default function ResourceCard({
       )
     : null
 
-  const TsvActionButtons = isResourceTsv
+  const AddTsvButton = isResourceTsv
     ? (
-        <>
-          <AddRowButton onClick={openAddRowDialog} />
-          <AddRowDialog
-            open={isAddRowDialogOpen}
-            onClose={closeAddRowDialog}
-            onSubmit={submitRowEdits}
-            tsvForm={TsvForm}
-          />
-
-          <DeleteRowButton onClick={() => setIsTsvDeleteDialogOpen(true)} />
-          <DeleteRowDialog
-            open={isTsvDeleteDialogOpen}
-            onClose={() => setIsTsvDeleteDialogOpen(false)}
-            onSubmit={deleteTsvRow}
-            currentRow={getTsvRow(itemIndex)}
-          />
-        </>
-      )
+      <>
+        <AddRowButton onClick={openAddRowDialog} />
+        <AddRowDialog
+          open={isAddRowDialogOpen}
+          onClose={closeAddRowDialog}
+          onSubmit={submitRowEdits}
+          tsvForm={TsvForm}
+        />
+      </>
+    )
     : null
+
+  const DeleteTsvButton = isResourceTsv
+    ? (
+      <>
+        <DeleteRowButton onClick={() => setIsTsvDeleteDialogOpen(true)} />
+        <DeleteRowDialog
+          open={isTsvDeleteDialogOpen}
+          onClose={() => setIsTsvDeleteDialogOpen(false)}
+          onSubmit={deleteTsvRow}
+          currentRow={getTsvRow(itemIndex)}
+        />
+      </>
+    )
+    : null
+
+  const TsvAddAndDeleteButtons = <>{AddTsvButton}{DeleteTsvButton}</>
 
   // Add/Remove resources to/from the array to enable or disable edit mode.
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
-  const onRenderToolbar = ({ items }) => {
-    const newItems = [...items]
-
-    newItems.push(
-      <>
+  const onRenderToolbar = ({ items: toolbarItems }) =>
+    [...toolbarItems
+    , (<>
         <UpdateBranchButton {...updateButtonProps} isLoading={isUpdateLoading || isSaving}/>
         <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={ isUpdateLoading || isSaving } link={dialogLink} linkTooltip={dialogLinkTooltip} />
-      </>
-    )
-
-    if (cardResourceId !== 'twl' && isResourceTsv) {
-      newItems.push(TsvActionButtons)
-    }
-
-    return newItems
-  }
+      </>)
+    // If no items, only add add button to header for all tsv resources
+    // If TSVs, only add button to header if no items. Else will display in table
+    , isResourceTsv && !items?.length ? AddTsvButton
+      : isResourceTsv && cardResourceId !== 'twl' ? TsvAddAndDeleteButtons
+      : (<></>)
+    ]
 
   return (
     <Card
@@ -549,7 +553,7 @@ export default function ResourceCard({
         markdownView={markdownView}
         onEdit={updateTempContent}
         onTsvEdit={onTsvEdit}
-        twlActionButtons={TsvActionButtons}
+        twlActionButtons={TsvAddAndDeleteButtons}
         selectedQuote={selectedQuote}
         setContent={setContent}
         setCurrentCheck={setCurrentCheck}
