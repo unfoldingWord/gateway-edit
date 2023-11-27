@@ -497,35 +497,18 @@ export default function ResourceCard({
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
-  const onRenderToolbar = ({ items: toolbarItems }) => {
-    const newToolbarItems = [...toolbarItems]
-
-    newToolbarItems.push(
-      <>
+  const onRenderToolbar = ({ items: toolbarItems }) => 
+    [...toolbarItems
+    , (<>
         <UpdateBranchButton {...updateButtonProps} isLoading={isUpdateLoading || isSaving}/>
         <ErrorDialog title={dialogTitle} content={dialogMessage} open={isErrorDialogOpen} onClose={onCloseErrorDialog} isLoading={ isUpdateLoading || isSaving } link={dialogLink} linkTooltip={dialogLinkTooltip} />
-      </>
-    )
-
+      </>)
     // If no items, only add add button to header for all tsv resources
     // If TSVs, only add button to header if no items. Else will display in table
-    if (isResourceTsv) {
-      if (!items?.length) {
-        newToolbarItems.push(AddTsvButton)
-        return newToolbarItems
-      }
-      if (cardResourceId !== 'twl') {
-        newToolbarItems.push(
-          <>
-            {AddTsvButton}
-            {DeleteTsvButton}
-          </>
-        )
-      }
-    }
-
-    return newToolbarItems
-  }
+    , isResourceTsv && !items?.length ? AddTsvButton
+      : isResourceTsv && cardResourceId !== 'twl' ? (<>{AddTsvButton}{DeleteTsvButton}</>)
+      : (<></>)
+    ]
 
   return (
     <Card
