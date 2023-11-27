@@ -2,9 +2,9 @@
   "name": "gateway-edit",
   "version": "2.1.0",
   "scripts": {
-    "dev": "bash -c \"source ./scripts/set-env.sh && cross-env NODE_OPTIONS=--max_old_space_size=4096 next\"",
-    "build": "bash -c \"source ./scripts/set-env.sh && cross-env NODE_OPTIONS=--max_old_space_size=4096 next build\"",
-    "start": "bash -c \"source ./scripts/set-env.sh && cross-env NODE_OPTIONS=--max_old_space_size=4096 next start\"",
+    "dev": "bash -c \"source ./scripts/set-env.sh && next\"",
+    "build": "bash -c \"source ./scripts/set-env.sh && next build\"",
+    "start": "bash -c \"source ./scripts/set-env.sh && next start\"",
     "export": "next export",
     "postinstall": "husky install",
     "increment-build": "bash scripts/increment-build.sh && git add -A",

@@ -32,3 +32,28 @@ set_env_var $ENV_FILE NEXT_PUBLIC_BUILD_BRANCH $BRANCH
 set_env_var $ENV_FILE NEXT_PUBLIC_BUILD_CONTEXT $CONTEXT
 
 echo "Environment file new contents: $(cat $ENV_FILE)"
+
+function semMajorVersion() {
+  sed -Ee 's/^v([0-9]+)\..*$/\1/'
+}
+
+function nodeOptions() {
+  nodeMajorVersion=$(node --version | semMajorVersion)
+
+  maxOldSpaceSize="--max_old_space_size=4096"
+  openSSLLegacyProvider="--openssl-legacy-provider"
+
+  if [[ $nodeMajorVersion -gt "16" ]]; then
+    echo "$maxOldSpaceSize $openSSLLegacyProvider"
+  else
+    echo "$maxOldSpaceSize"
+  fi
+}
+
+# NOTE: This code and its transcient dependencies will
+# not be needed once we upgrade node verions universally.
+
+# export these variable so that the process executed
+# in the package.json.scripts file will inherit them
+export NODE_OPTIONS="$(nodeOptions)"
+
