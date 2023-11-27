@@ -493,11 +493,13 @@ export default function ResourceCard({
     )
     : null
 
+  const TsvAddAndDeleteButtons = <>{AddTsvButton}{DeleteTsvButton}</>
+
   // Add/Remove resources to/from the array to enable or disable edit mode.
   const editableResources = ['tw', 'ta', 'tn', 'tq', 'twl']
   const editable = editableResources.includes(cardResourceId)
 
-  const onRenderToolbar = ({ items: toolbarItems }) => 
+  const onRenderToolbar = ({ items: toolbarItems }) =>
     [...toolbarItems
     , (<>
         <UpdateBranchButton {...updateButtonProps} isLoading={isUpdateLoading || isSaving}/>
@@ -506,7 +508,7 @@ export default function ResourceCard({
     // If no items, only add add button to header for all tsv resources
     // If TSVs, only add button to header if no items. Else will display in table
     , isResourceTsv && !items?.length ? AddTsvButton
-      : isResourceTsv && cardResourceId !== 'twl' ? (<>{AddTsvButton}{DeleteTsvButton}</>)
+      : isResourceTsv && cardResourceId !== 'twl' ? TsvAddAndDeleteButtons
       : (<></>)
     ]
 
@@ -551,12 +553,7 @@ export default function ResourceCard({
         markdownView={markdownView}
         onEdit={updateTempContent}
         onTsvEdit={onTsvEdit}
-        twlActionButtons={
-          <>
-            {AddTsvButton}
-            {DeleteTsvButton}
-          </>
-        }
+        twlActionButtons={TsvAddAndDeleteButtons}
         selectedQuote={selectedQuote}
         setContent={setContent}
         setCurrentCheck={setCurrentCheck}
