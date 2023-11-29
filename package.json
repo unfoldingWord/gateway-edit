@@ -1,6 +1,6 @@
 {
   "name": "gateway-edit",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "scripts": {
     "dev": "bash -c \"source ./scripts/set-env.sh && next\"",
     "build": "bash -c \"source ./scripts/set-env.sh && next build\"",
