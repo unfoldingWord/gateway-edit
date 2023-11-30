@@ -549,7 +549,7 @@ function WorkspaceContainer() {
   const originalLanguageId = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG
   const originalScripture = {
     reference: {
-      projectId: bookId,
+      bookId,
       chapter,
       verse,
     },
