@@ -576,7 +576,7 @@ function WorkspaceContainer() {
       ...config,
       server: origServer,
     },
-    readyForFetch: !!bookId,
+    readyForFetch: !!bookId && !!server,
     resource: {
       ...originalScripture.resource,
       resourceId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
