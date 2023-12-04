@@ -416,14 +416,13 @@ export default function ResourceCard({
       const { chapter: inputChapter, verse: inputVerse } =
         getChapterVerse(reference)
 
-      // Todo: Do we then change the app's reference? Maybe yes
       const isNewRowInDifferentRef = inputChapter !== Number(chapter) || inputVerse !== Number(verse)
       const newTsvs = isNewRowInDifferentRef
         ? onTsvAdd(row, inputChapter, inputVerse, 0)
         : onTsvAdd(row, chapter, verse, itemIndex)
 
       handleSaveEdit(tsvsObjectToFileString(newTsvs))
-      if (itemIndex !== 0) setItemIndexPure(itemIndex + 1)
+      setItemIndexPure(itemIndex + 1)
     } catch (error) {
       console.error(
         'Input reference in new row is not of type chapter:verse',
