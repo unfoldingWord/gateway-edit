@@ -549,7 +549,7 @@ function WorkspaceContainer() {
   const originalLanguageId = isNewTestament ? NT_ORIG_LANG : OT_ORIG_LANG
   const originalScripture = {
     reference: {
-      projectId: bookId,
+      bookId,
       chapter,
       verse,
     },
@@ -568,15 +568,12 @@ function WorkspaceContainer() {
     ...HTTP_CONFIG,
   }
 
-  const { server: origServer, resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
+  const { resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
 
   const originalScriptureResults = useScripture({
     ...originalScripture,
-    config: {
-      ...config,
-      server: origServer,
-    },
-    readyForFetch: !!bookId,
+    config,
+    readyForFetch: !!bookId && !!server,
     resource: {
       ...originalScripture.resource,
       resourceId: isNewTestament ? NT_ORIG_LANG_BIBLE : OT_ORIG_LANG_BIBLE,
