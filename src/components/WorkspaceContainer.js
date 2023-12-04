@@ -568,14 +568,11 @@ function WorkspaceContainer() {
     ...HTTP_CONFIG,
   }
 
-  const { server: origServer, resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
+  const { resourceLink: origResourceLink } = useMemo(() => splitUrl(isNewTestament ? greekRepoUrl : hebrewRepoUrl), [isNewTestament, greekRepoUrl, hebrewRepoUrl])
 
   const originalScriptureResults = useScripture({
     ...originalScripture,
-    config: {
-      ...config,
-      server: origServer,
-    },
+    config,
     readyForFetch: !!bookId && !!server,
     resource: {
       ...originalScripture.resource,
