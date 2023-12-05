@@ -51,7 +51,7 @@
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "2.1.4",
     "scripture-resources-rcl": "5.5.8",
-    "scripture-tsv": "0.3.0",
+    "scripture-tsv": "0.4.0",
     "single-scripture-rcl": "3.4.17",
     "tailwindcss": "^2.0.4",
     "tc-ui-toolkit": "5.3.3",
