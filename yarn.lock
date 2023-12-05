@@ -2421,9 +2421,9 @@
     "@types/react" "^17"
 
 "@types/react-dom@^17.0.0":
-  version "17.0.25"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.25.tgz#e0e5b3571e1069625b3a3da2b279379aa33a0cb5"
-  integrity sha512-urx7A7UxkZQmThYA4So0NelOVjx3V4rNFVJwp0WZlbIK5eM4rNJDiN3R/E9ix0MBh6kAEojk/9YL+Te6D9zHNA==
+  version "17.0.22"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.22.tgz#34317e08be27b33fa9e7cdb56125b22538261bad"
+  integrity sha512-wHt4gkdSMb4jPp1vc30MLJxoWGsZs88URfmt3FRXoOEYrrqK3I8IuZLE/uFBb4UT6MRfI0wXFu4DS7LS0kUC7Q==
   dependencies:
     "@types/react" "^17"
 
@@ -2467,9 +2467,9 @@
     csstype "^3.0.2"
 
 "@types/react@^17.0.0":
-  version "17.0.71"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.71.tgz#3673d446ad482b1564e44bf853b3ab5bcbc942c4"
-  integrity sha512-lfqOu9mp16nmaGRrS8deS2Taqhd5Ih0o92Te5Ws6I1py4ytHBcXLqh0YIqVsViqwVI5f+haiFM6hju814BzcmA==
+  version "17.0.69"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.69.tgz#245a0cf2f5b0fb1d645691d3083e3c7d4409b98f"
+  integrity sha512-klEeru//GhiQvXUBayz0Q4l3rKHWsBR/EUOhOeow6hK2jV7MlO44+8yEk6+OtPeOlRfnpUnrLXzGK+iGph5aeg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -9877,10 +9877,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.5.8:
-  version "5.5.8"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.5.8.tgz#edca70cb18f8c02b1c9c195a43bb3e8044fa6a09"
-  integrity sha512-RC82kGdA8jaclxwABRXFJkw9Bh5Ig3juBJY+vig8qsVLEU6EiHSuB5htz8BxkNPVUw7y5wpxxJeCb0rEATmEJA==
+scripture-resources-rcl@5.5.9-beta.2:
+  version "5.5.9-beta.2"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.5.9-beta.2.tgz#f999232797c1da19bce3bd188fe9531c684862c9"
+  integrity sha512-Q+K4cC/pwkUVG3Y4U5uDMwxr2WvyodhQC+eDYxXpEJU56rkrQlyqPusju2Tobpz94YdixAEht5P5HESywcnT/g==
   dependencies:
     bible-reference-range "^1.1.0"
     deep-freeze "^0.0.1"
@@ -10032,10 +10032,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.17:
-  version "3.4.17"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.17.tgz#365bbf6ac349fdfc839ba646171ff3936533047d"
-  integrity sha512-uJ07dhxxaXVNAsed1SIVT7qLId+59MNvz5RjFUXoYJCXS73XoJnJXrqAgLEjiU7Q1F/+bQAYjFRSkNzKVo9CyQ==
+single-scripture-rcl@3.4.15:
+  version "3.4.15"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.15.tgz#d16b2b0ba748717ddf5c5b79970b33b82baba849"
+  integrity sha512-7rM/9ZKniCCvYHuDvdufWr1HOiwG+wT6WtcpKbhBiK2OnRX82kwuM82qiJUa+6O+dYB+3W+PxITd5PthOCVA5w==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
@@ -10047,6 +10047,7 @@ single-scripture-rcl@3.4.17:
     styled-components "^5.2.1"
     ts-loader "^8.0.12"
     typescript "^5.2.2"
+    uw-quote-helpers "0.0.1-beta.15"
 
 sisteransi@^1.0.5:
   version "1.0.5"
@@ -11055,9 +11056,9 @@ typedarray-to-buffer@^3.1.5:
     is-typedarray "^1.0.0"
 
 typescript@^5.2.2:
-  version "5.3.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.2.tgz#00d1c7c1c46928c5845c1ee8d0cc2791031d4c43"
-  integrity sha512-6l+RyNy7oAHDfxC4FzSJcz9vnjTKxrLpDG5M2Vu4SHRVNg6xzqZp6LYSR9zjqQTu8DU/f5xwxUdADOkbrIX2gQ==
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.2.2.tgz#5ebb5e5a5b75f085f22bc3f8460fba308310fa78"
+  integrity sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==
 
 ua-parser-js@^0.7.30:
   version "0.7.34"
@@ -11347,6 +11348,16 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uw-quote-helpers@0.0.1-beta.15:
+  version "0.0.1-beta.15"
+  resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-0.0.1-beta.15.tgz#55f62791ededc71108cb84ab4387118c01fd0d64"
+  integrity sha512-2SF0ynJbrFs8BorkEkfNgv2ew+bp9Zs2SasRYSe/vUQt+6vP1m/c9UaBOze7giasJ3TtLDVOD4p5KwWYSrytzA==
+  dependencies:
+    bible-reference-range "^1.1.0"
+    string-punctuation-tokenizer "^2.2.0"
+    tsv-groupdata-parser "1.1.0-beta.4"
+    xregexp "^5.1.1"
 
 uw-quote-helpers@^1.1.0:
   version "1.1.0"

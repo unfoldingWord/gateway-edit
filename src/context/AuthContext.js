@@ -48,18 +48,23 @@ export default function AuthContextProvider(props) {
           const httpCode = response?.status || 0
 
           if (httpCode !== 200) {
-            console.log(`TranslationSettings - error fetching user info, status code ${httpCode}`)
+            console.log(`getAuth() - error fetching user info, status code ${httpCode}`)
 
             if (unAuthenticated(httpCode)) {
-              console.log(`TranslationSettings - user not authenticated, going to login`)
+              console.error(`getAuth() - user not authenticated, going to login`)
               logout()
             } else {
               processError(null, httpCode)
             }
           }
         }).catch(e => {
-          console.warn(`TranslationSettings - hard error fetching user info, error=`, e)
-          processError(e)
+          if (e.toString().includes('401')) { // check if 401 code in exception
+            console.error(`getAuth() - user token expired`)
+            logout()
+          } else {
+            console.warn(`getAuth() - hard error fetching user info, error=`, e)
+            processError(e)
+          }
         })
     }
     return auth
