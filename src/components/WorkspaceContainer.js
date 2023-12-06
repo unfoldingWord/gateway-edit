@@ -387,15 +387,7 @@ function WorkspaceContainer() {
 
       Promise.all([getCanonicalResources, obsResources]).then(arrayOfResults => arrayOfResults.flat()).then(results => {
         // const { bibles, resourceLink } = results
-        const combinedBibles = []
-
-        if (results?.length) {
-          results.forEach(result => {
-            if (result?.bibles) {
-              Array.prototype.push.apply(combinedBibles, result?.bibles)
-            }
-          })
-        }
+        const combinedBibles = results.flatMap(({bibles}) => bibles)
 
         if (combinedBibles?.length) {
           if (!isEqual(combinedBibles, supportedBibles)) {
