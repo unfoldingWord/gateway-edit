@@ -10032,10 +10032,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.15:
-  version "3.4.15"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.15.tgz#d16b2b0ba748717ddf5c5b79970b33b82baba849"
-  integrity sha512-7rM/9ZKniCCvYHuDvdufWr1HOiwG+wT6WtcpKbhBiK2OnRX82kwuM82qiJUa+6O+dYB+3W+PxITd5PthOCVA5w==
+single-scripture-rcl@3.4.17:
+  version "3.4.17"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.17.tgz#365bbf6ac349fdfc839ba646171ff3936533047d"
+  integrity sha512-uJ07dhxxaXVNAsed1SIVT7qLId+59MNvz5RjFUXoYJCXS73XoJnJXrqAgLEjiU7Q1F/+bQAYjFRSkNzKVo9CyQ==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
@@ -10047,7 +10047,6 @@ single-scripture-rcl@3.4.15:
     styled-components "^5.2.1"
     ts-loader "^8.0.12"
     typescript "^5.2.2"
-    uw-quote-helpers "0.0.1-beta.15"
 
 sisteransi@^1.0.5:
   version "1.0.5"
@@ -11348,16 +11347,6 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
-
-uw-quote-helpers@0.0.1-beta.15:
-  version "0.0.1-beta.15"
-  resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-0.0.1-beta.15.tgz#55f62791ededc71108cb84ab4387118c01fd0d64"
-  integrity sha512-2SF0ynJbrFs8BorkEkfNgv2ew+bp9Zs2SasRYSe/vUQt+6vP1m/c9UaBOze7giasJ3TtLDVOD4p5KwWYSrytzA==
-  dependencies:
-    bible-reference-range "^1.1.0"
-    string-punctuation-tokenizer "^2.2.0"
-    tsv-groupdata-parser "1.1.0-beta.4"
-    xregexp "^5.1.1"
 
 uw-quote-helpers@^1.1.0:
   version "1.1.0"
