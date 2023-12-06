@@ -360,7 +360,7 @@ function WorkspaceContainer() {
         /**
         @todo 'ult' might be confusing for developers, could we create constants for these hardcoded values to
         give more meaning to them?
-        @todo replace 'obs' with 'ult' 
+        @todo replace 'obs' with 'ult'
         */
         resourceId: languageId === 'en' ? 'ult' : 'glt',
         owner,
@@ -369,32 +369,41 @@ function WorkspaceContainer() {
         server,
       })
 
-      const obsResources =  getResourceBibles({
+      const obsResources = getResourceBibles({
         bookId,
         chapter,
         verse,
         /**
         @todo 'ult' might be confusing for developers, could we create constants for these hardcoded values to
         give more meaning to them?
-        @todo replace 'obs' with 'ult' 
+        @todo replace 'obs' with 'ult'
         */
         resourceId: 'obs',
         owner,
         languageId,
         ref: appRef,
         server,
-      })      
+      })
 
       Promise.all([getCanonicalResources, obsResources]).then(arrayOfResults => arrayOfResults.flat()).then(results => {
-        const { bibles, resourceLink } = results
+        // const { bibles, resourceLink } = results
+        const combinedBibles = []
 
-        if (bibles?.length) {
-          if (!isEqual(bibles, supportedBibles)) {
-            console.log(`found ${bibles?.length} bibles`)
-            setSupportedBibles(bibles) // TODO blm: update bible refs
+        if (results?.length) {
+          results.forEach(result => {
+            if (result?.bibles) {
+              Array.prototype.push.apply(combinedBibles, result?.bibles)
+            }
+          })
+        }
+
+        if (combinedBibles?.length) {
+          if (!isEqual(combinedBibles, supportedBibles)) {
+            console.log(`found ${combinedBibles?.length} bibles`)
+            setSupportedBibles(combinedBibles) // TODO blm: update bible refs
           }
         } else {
-          console.warn(`no bibles found for ${resourceLink}`)
+          console.warn(`no bibles found for ${results[0]?.resourceLink}`)
         }
         setState( { workspaceReady: true })
       }).catch((e) => {
