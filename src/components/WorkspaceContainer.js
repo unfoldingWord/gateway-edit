@@ -481,16 +481,15 @@ function WorkspaceContainer() {
     },
     {
       title: 'Open Bible Story',
-      type: 'scripture_card',
-      id: 'scripture_card_3',
-      cardNum: 3,
-      resource: {
-        owner,
-        languageId,
-        resourceId: 'obs',
-        originalLanguageOwner: scriptureOwner,
-      },
-      ...commonScriptureCardConfigs,
+      type: 'resource_card',
+      id: 'resource_card_obs',
+      resourceId: 'obs',
+      projectId: bookId,
+      filePath: null,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      ...commonResourceCardConfigs,
+
     },
     {
       title: 'Simplified Translation',
