@@ -73,7 +73,7 @@ yarn test:headless
 
 - Structure of the React components in this app
 
-Application (in pages/\_app.js) contains:
+Application (in pages/\App.jsx) contains:
 
 - AuthContext context
 - StoreContext context:

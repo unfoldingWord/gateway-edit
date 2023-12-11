@@ -24,7 +24,7 @@ import {
 } from '@utils/network'
 import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
-import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import NetworkErrorPopUp from '@components/NetworkErrorPopUp'
 import CircularProgress from './CircularProgress'
 
 const useStyles = makeStyles(theme => ({
@@ -154,7 +154,7 @@ export default function TranslationSettings({ authentication }) {
   return (
     <>
       {!!networkError && (
-        <NetworkErrorPopup
+        <NetworkErrorPopUp
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}

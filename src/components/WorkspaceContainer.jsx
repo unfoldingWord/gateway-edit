@@ -43,7 +43,7 @@ import {
 } from '@utils/network'
 import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
-import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import NetworkErrorPopUp from '@components/NetworkErrorPopUp'
 import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
@@ -251,7 +251,7 @@ function WorkspaceContainer() {
         setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
       }
       return (
-        <NetworkErrorPopup
+        <NetworkErrorPopUp
           networkError={tokenNetworkError}
           setNetworkError={(error) => {
             setTokenNetworkError(error)
@@ -263,7 +263,7 @@ function WorkspaceContainer() {
       )
     } else if (networkError) { // for all other workspace network errors
       return (
-        <NetworkErrorPopup
+        <NetworkErrorPopUp
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}

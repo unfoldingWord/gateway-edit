@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { NETWORK_ERROR, RETRY } from '@common/constants'
-import ErrorPopup from '@components/ErrorPopUp'
+import ErrorPopUp from '@components/ErrorPopUp'
 import SaveIcon from '@material-ui/icons/Save'
 
-export default function NetworkErrorPopup(
+export default function NetworkErrorPopUp(
   {
     networkError,
     setNetworkError,
@@ -21,7 +21,7 @@ export default function NetworkErrorPopup(
   const closeButtonDefault = !retryDefault // otherwise close button is default
 
   return (
-    <ErrorPopup
+    <ErrorPopUp
       title={title}
       message={networkError.errorMessage}
       dimBackground={dimBackground}
@@ -42,13 +42,13 @@ export default function NetworkErrorPopup(
   )
 }
 
-NetworkErrorPopup.defaultProps = {
+NetworkErrorPopUp.defaultProps = {
   title: NETWORK_ERROR,
   hideClose: false,
   dimBackground: true,
 }
 
-NetworkErrorPopup.propTypes = {
+NetworkErrorPopUp.propTypes = {
   /** On close event handler */
   onClose: PropTypes.func,
   /** custom title text */

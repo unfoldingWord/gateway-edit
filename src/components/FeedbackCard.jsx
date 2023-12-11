@@ -11,11 +11,11 @@ import { getBuildId } from '@utils/build'
 import { getLocalStorageItem, getUserKey } from '@hooks/useUserLocalStorage'
 import { processNetworkError } from '@utils/network'
 import { CLOSE, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
-import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import NetworkErrorPopUp from '@components/NetworkErrorPopUp'
 import PropTypes from 'prop-types'
 import useFeedbackData from '@hooks/useFeedbackData'
 
-// FeedbackCard.js renders feedback content that is placed in FeedbackPopup
+// FeedbackCard.jsx renders feedback content that is placed in FeedbackPopup
 
 /**
  * show message bar with alert
@@ -372,7 +372,7 @@ const FeedbackCard = ({
         </div>
       </div>
       { !!state.networkError &&
-        <NetworkErrorPopup
+        <NetworkErrorPopUp
           networkError={state.networkError}
           setNetworkError={actions.setNetworkError}
           closeButtonStr={CLOSE}

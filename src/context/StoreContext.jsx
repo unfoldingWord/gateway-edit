@@ -5,7 +5,7 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
-import * as useULS from '@hooks/useUserLocalStorage'
+import useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
 
@@ -63,7 +63,7 @@ export default function StoreContextProvider(props) {
    * @return {any[]}
    */
   function useUserLocalStorage(key, initialValue) {
-    return useULS.useUserLocalStorage(username, key, initialValue)
+    return useULS(username, key, initialValue)
   }
 
   const [mainScreenRef, setMainScreenRef] = useState(null)

@@ -63,10 +63,10 @@ export default function Layout({
       let serverID_ = params.server.toUpperCase() === QA ? QA : PROD
       let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
       if (params.server?.length === 0){
-        server_ = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
+        server_ = (import.meta.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
         serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
       }
-      
+
       if (server !== server_) {
         console.log(`_app.js - On init switching server to: ${serverID_}, url server param '${params.server}', old server ${server}, reloading page`)
         setServer(server_) // persist server selection in localstorage
