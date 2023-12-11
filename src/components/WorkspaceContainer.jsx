@@ -19,6 +19,7 @@ import {
   ORIGINAL_SOURCE,
   OT_ORIG_LANG,
   OT_ORIG_LANG_BIBLE,
+  // ScriptureCard,
   splitUrl,
   TARGET_LITERAL,
   TARGET_SIMPLIFIED,
