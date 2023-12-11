@@ -19,7 +19,6 @@ import {
   ORIGINAL_SOURCE,
   OT_ORIG_LANG,
   OT_ORIG_LANG_BIBLE,
-  ScriptureCard,
   splitUrl,
   TARGET_LITERAL,
   TARGET_SIMPLIFIED,
@@ -671,7 +670,7 @@ function WorkspaceContainer() {
           {
             _.map(visibleCards, (cardProps, i) =>
               cardProps.type === 'scripture_card' ?
-                <ScriptureCard key={cardProps.title} {...cardProps} />
+                { /* <ScriptureCard key={cardProps.title} {...cardProps} /> */ }
                 :
                 <ResourceCard key={cardProps.title} {...cardProps} />,
             )

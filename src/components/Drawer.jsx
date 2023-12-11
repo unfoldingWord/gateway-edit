@@ -16,7 +16,7 @@ import List from '@material-ui/core/List'
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined'
 import { MergeBranchButton, MergeDialog, ErrorDialog } from 'translation-helps-rcl'
 import { StoreContext } from '@context/StoreContext'
-import useMergeCardsProps from '../hooks/useMergeCardsProps'
+import useMergeCardsProps from '@hooks/useMergeCardsProps'
 // TODO: Enable buttons once ready to fully implement functionality
 // import DashboardIcon from '@material-ui/icons/Dashboard'
 // import Crop54Icon from '@material-ui/icons/Crop54'

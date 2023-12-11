@@ -12,7 +12,7 @@ import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
 import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
-import useUpdateCardsProps from '../hooks/useUpdateCardsProps'
+import useUpdateCardsProps from '@hooks/useUpdateCardsProps'
 import { UpdateBranchButton, ErrorDialog } from 'translation-helps-rcl'
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'

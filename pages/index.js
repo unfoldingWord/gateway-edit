@@ -1,6 +1,6 @@
-import dynamic from 'next/dynamic'
+// import dynamic from 'next/dynamic'
 // import Layout from '@components/Layout'
-import WorkspaceContainer from '@components/WorkspaceContainer'
+// import WorkspaceContainer from '@components/WorkspaceContainer'
 // import CircularProgress from '@components/CircularProgress'
 
 // const WorkspaceContainer = dynamic(
@@ -11,10 +11,10 @@ import WorkspaceContainer from '@components/WorkspaceContainer'
 //   },
 // )
 
-const Home = () => (
-  <Layout>
-    <WorkspaceContainer />
-  </Layout>
-)
-
-export default Home
+// const Home = () => (
+//   <Layout>
+//     <WorkspaceContainer />
+//   </Layout>
+// )
+//
+// export default Home
