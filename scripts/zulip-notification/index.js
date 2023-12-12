@@ -22,7 +22,7 @@ function getEnvironment(netlifyConfig, packageJson) {
   const environment = netlifyConfig.build.environment
   const deployUrl = environment.DEPLOY_PRIME_URL
   const branchName = environment.BRANCH
-  const pullBranch = import.meta.env.BRANCH
+  const pullBranch = process.env.BRANCH
   const appName = packageJson.name
   const version = packageJson.version
   const appFullName = `${appName} v${version}`
@@ -38,8 +38,8 @@ function getEnvironment(netlifyConfig, packageJson) {
 
 async function zulipNotify(appName, branchName, content) {
   try {
-    const token = import.meta.env.ZULIP_TOKEN
-    const username = import.meta.env.ZULIP_USER
+    const token = process.env.ZULIP_TOKEN
+    const username = process.env.ZULIP_USER
 
     const data = {
       to: 'SOFTWARE - UR/github',
