@@ -19,7 +19,7 @@ import {
   ORIGINAL_SOURCE,
   OT_ORIG_LANG,
   OT_ORIG_LANG_BIBLE,
-  // ScriptureCard,
+  ScriptureCard,
   splitUrl,
   TARGET_LITERAL,
   TARGET_SIMPLIFIED,
@@ -41,7 +41,6 @@ import {
   processNetworkError,
   reloadApp,
 } from '@utils/network'
-import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopUp from '@components/NetworkErrorPopUp'
 import WordAlignerDialog from '@components/WordAlignerDialog'
@@ -71,7 +70,6 @@ const buildId = getBuildId()
 console.log(`Gateway Edit App Version`, buildId)
 
 function WorkspaceContainer() {
-  const router = useRouter()
   const classes = useStyles()
   const [state, _setState] = useState({
     currentVerseReference: null,
@@ -145,6 +143,7 @@ function WorkspaceContainer() {
       setSavedChanges,
       updateMergeState,
       updateTaDetails,
+      setPage
     },
   } = useContext(StoreContext)
 
@@ -234,7 +233,7 @@ function WorkspaceContainer() {
    * @param {number} httpCode - http code returned
    */
   function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
+    processNetworkError(errorMessage, httpCode, logout, setPage, setNetworkError, setLastError )
   }
 
   function setNetworkError( error ) {
@@ -247,8 +246,8 @@ function WorkspaceContainer() {
    */
   function showNetworkError() {
     if (tokenNetworkError) { // if we had a token network error on startup
-      if (!tokenNetworkError.router) { // needed for reload of page
-        setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
+      if (!tokenNetworkError.setPage) { // needed for reload of page
+        setTokenNetworkError({ ...tokenNetworkError, setPage }) // make sure setPage is set
       }
       return (
         <NetworkErrorPopUp
@@ -290,10 +289,10 @@ function WorkspaceContainer() {
   function onResourceError(message, isAccessError, resourceStatus, error, showAllErrors = false) {
     if (!networkError ) { // only show if another error not already showing
       if (showAllErrors) {
-        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
+        processNetworkError(error || message, resourceStatus, logout, setPage, setNetworkError, setLastError, setLastError)
       } else {
         if (isAccessError) { // we only show popup for access errors
-          addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError)
+          addNetworkDisconnectError(error || message, 0, logout, setPage, setNetworkError, setLastError)
         }
       }
     }
@@ -671,7 +670,7 @@ function WorkspaceContainer() {
           {
             _.map(visibleCards, (cardProps, i) =>
               cardProps.type === 'scripture_card' ?
-                { /* <ScriptureCard key={cardProps.title} {...cardProps} /> */ }
+                <ScriptureCard key={cardProps.title} {...cardProps} />
                 :
                 <ResourceCard key={cardProps.title} {...cardProps} />,
             )

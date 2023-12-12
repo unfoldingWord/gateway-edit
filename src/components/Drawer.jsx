@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { useRouter } from 'next/router'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -9,7 +8,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import SettingsIcon from '@material-ui/icons/Settings'
 import BugReportIcon from '@material-ui/icons/BugReport'
-import DoneAllIcon from '@material-ui/icons/DoneAll';
+import DoneAllIcon from '@material-ui/icons/DoneAll'
 import IconButton from '@material-ui/core/IconButton'
 import ListItem from '@material-ui/core/ListItem'
 import List from '@material-ui/core/List'
@@ -34,13 +33,22 @@ export default function Drawer({
   checkUnsavedChanges,
   showFeedback,
 }) {
-  const router = useRouter()
+  const {
+    state: {
+      mergeStatusForCards,
+      cardsSaving,
+      cardsLoadingMerge,
+    },
+    actions: {
+      setPage,
+    }
+  } = useContext(StoreContext)
 
   async function onSettingsClick() {
     const okToContinue = await checkUnsavedChanges()
 
     if (okToContinue) {
-      router.push('/settings')
+      setPage('/settings')
       onClose()
     }
   }
@@ -48,16 +56,8 @@ export default function Drawer({
   function onFeedbackClick() {
     onClose()
     showFeedback && showFeedback()
+
   }
-
-  const {
-    state: {
-      mergeStatusForCards,
-      cardsSaving,
-      cardsLoadingMerge,
-    },
-  } = useContext(StoreContext)
-
   const mergeButtonProps = useMergeCardsProps({ mergeStatusForCards, isMerging: cardsLoadingMerge?.length });
 
   const {

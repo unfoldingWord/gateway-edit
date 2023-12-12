@@ -5,8 +5,8 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import StoreContextProvider from '@context/StoreContext'
 import AuthContextProvider from '@context/AuthContext'
 // import { APP_NAME } from '@common/constants'
-// import '@styles/globals.css'
-// import WorkspaceContainer from '@components/WorkspaceContainer'
+import '@styles/globals.css'
+import WorkspaceContainer from '@components/WorkspaceContainer'
 import Layout from '@components/Layout'
 import theme from '../theme'
 
@@ -27,7 +27,7 @@ export default function Application() {
       <AuthContextProvider>
         <StoreContextProvider>
           <Layout>
-            {/*<WorkspaceContainer />*/}
+            <WorkspaceContainer />
           </Layout>
         </StoreContextProvider>
       </AuthContextProvider>

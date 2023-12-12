@@ -1,6 +1,5 @@
 import { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
@@ -44,16 +43,16 @@ export default function Header({
   mergeStatusForCards,
 }) {
   const classes = useStyles()
-  const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
   const { actions: { logout } } = useContext(AuthContext)
   const {
     state: {
       cardsSaving,
-      cardsLoadingUpdate
+      cardsLoadingUpdate,
     },
     actions: {
       checkUnsavedChanges,
+      setPage,
     }
   } = useContext(StoreContext)
 
@@ -104,7 +103,7 @@ export default function Header({
             <Typography
               variant='h6'
               className={classes.title}
-              onClick={() => router.push('/')}
+              onClick={() => setPage('/')}
             >
               {title}
             </Typography>
