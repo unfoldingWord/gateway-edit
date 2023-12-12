@@ -8,14 +8,12 @@ import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
 import { APP_NAME, BASE_URL, PROD, QA, QA_BASE_URL } from '@common/constants'
 import useValidateAccountSettings from '@hooks/useValidateAccountSettings'
-import { useRouter } from 'next/router'
 
 export default function Layout({
   children,
   showChildren,
   title = APP_NAME,
 }) {
-  const router = useRouter()
   const mainScreenRef = useRef(null)
   const [feedback, setFeedback_] = useState(null) // contains feedback data
   const {
@@ -57,23 +55,29 @@ export default function Layout({
   }, [ mainScreenRef?.current ])
 
   useEffect(() => {
-    const params = router?.query
+    const parsedUrl = new URL(window.location.href)
+    const params = parsedUrl.searchParams
 
-    if (typeof params?.server === 'string') { // if URL param given
-      let serverID_ = params.server.toUpperCase() === QA ? QA : PROD
+    if (typeof params.get('server') === 'string') { // if URL param given
+      let serverID_ = params.get('server').toUpperCase() === QA ? QA : PROD
       let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
-      if (params.server?.length === 0){
+
+      if (params.get('server')?.length === 0){
         server_ = (import.meta.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
         serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
       }
 
       if (server !== server_) {
-        console.log(`_app.js - On init switching server to: ${serverID_}, url server param '${params.server}', old server ${server}, reloading page`)
+        console.log(
+          `_app.js - On init switching server to: ${serverID_}, url server param '${params.get(
+            'server',
+          )}', old server ${server}, reloading page`,
+        )
         setServer(server_) // persist server selection in localstorage
-        router.push(`/?server=${serverID_}`) // reload page
+        window.location.assign(`${window.location.host}/?server=${serverID_}`) // reload page
       }
     }
-  }, [router?.query]) // TRICKY query property not loaded on first pass, so watch for change
+  }, [])
 
   const buildId = useMemo(getBuildId, [])
   useValidateAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup)
