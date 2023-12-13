@@ -90,7 +90,7 @@ export default function Layout({
       let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
 
       if (params.get('server')?.length === 0){
-        server_ = (import.meta.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
+        server_ = (import.meta.env.VITE_NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
         serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
       }
 

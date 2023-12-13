@@ -22,7 +22,7 @@ export const AuthContext = createContext({})
 export default function AuthContextProvider(props) {
   const [authentication, setAuthentication] = useState(null)
   const [networkError, setNetworkError] = useState(null)
-  const defaultServer = (import.meta.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
+  const defaultServer = (import.meta.env.VITE_NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
   const [server, setServer] = useLocalStorage(SERVER_KEY, defaultServer)
 
   /**
