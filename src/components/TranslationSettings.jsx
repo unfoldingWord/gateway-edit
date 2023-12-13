@@ -36,7 +36,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function TranslationSettings({
   authentication,
-  setPage,
 }) {
   const { actions: { logout } } = useContext(AuthContext)
   const classes = useStyles()
@@ -55,6 +54,7 @@ export default function TranslationSettings({
       setOwner: setOrganization,
       setLanguageId,
       setLastError,
+      setPage,
     },
   } = useContext(StoreContext)
 
