@@ -8,7 +8,7 @@ import useLocalStorage from '@hooks/useLocalStorage'
 import useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
-import { parsePage } from '@utils/pages'
+import { parsePage, reloadPage } from '@utils/pages'
 
 export const StoreContext = createContext({})
 
@@ -110,10 +110,10 @@ export default function StoreContextProvider(props) {
   function setPage(path) {
     const parsed = parsePage(path)
 
-    if (parsed?.page === '/') {
-      window.location.assign(path) // load page
+    if (parsed?.pageId === '/') {
+      reloadPage(parsed.pageId, parsed.params)
     } else {
-      setPage_(path)
+      setPage_(parsed)
     }
   }
 

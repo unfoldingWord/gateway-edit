@@ -1,12 +1,11 @@
 import { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { StoreContext } from '@context/StoreContext'
+import { HOME_PAGE } from '@common/constants'
 
 export default function ErrorPage({ statusCode }) {
   const {
-    actions: {
-      setPage
-    },
+    actions: { setPage },
   } = useContext(StoreContext)
 
   if (statusCode) {
@@ -17,7 +16,7 @@ export default function ErrorPage({ statusCode }) {
 
   const handleClick = (e) => {
     e.preventDefault()
-    setPage('/')
+    setPage(HOME_PAGE)
   }
 
   return (

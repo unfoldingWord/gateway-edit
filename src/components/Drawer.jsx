@@ -40,7 +40,7 @@ export default function Drawer({
       cardsLoadingMerge,
     },
     actions: {
-      setPage,
+      setShowAccountSetup,
     }
   } = useContext(StoreContext)
 
@@ -48,7 +48,7 @@ export default function Drawer({
     const okToContinue = await checkUnsavedChanges()
 
     if (okToContinue) {
-      setPage('/settings')
+      setShowAccountSetup(true)
       onClose()
     }
   }

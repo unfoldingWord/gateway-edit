@@ -12,7 +12,9 @@ import { AuthContext } from '@context/AuthContext'
 import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
 import useUpdateCardsProps from '@hooks/useUpdateCardsProps'
+import { HOME_PAGE } from '@common/constants'
 import { UpdateBranchButton, ErrorDialog } from 'translation-helps-rcl'
+
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -103,7 +105,7 @@ export default function Header({
             <Typography
               variant='h6'
               className={classes.title}
-              onClick={() => setPage('/')}
+              onClick={() => setPage(HOME_PAGE)}
             >
               {title}
             </Typography>

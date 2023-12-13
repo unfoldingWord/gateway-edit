@@ -6,10 +6,20 @@ import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
-import { APP_NAME, BASE_URL, PROD, QA, QA_BASE_URL } from '@common/constants'
+import {
+  APP_NAME,
+  BASE_URL,
+  // ERROR_PAGE,
+  // FEEDBACK_PAGE,
+  HOME_PAGE,
+  PROD,
+  QA,
+  QA_BASE_URL,
+  SETTINGS_PAGE,
+} from '@common/constants'
 import useValidateAccountSettings from '@hooks/useValidateAccountSettings'
 import SettingsPage from '@components/SettingsPage'
-import { parsePage } from '@utils/pages'
+import { reloadPage } from '@utils/pages'
 
 export default function Layout({
   children,
@@ -58,6 +68,20 @@ export default function Layout({
   }, [ mainScreenRef?.current ])
 
   useEffect(() => {
+    if (page?.pageId) {
+      switch (page.pageId) {
+      case HOME_PAGE:
+        reloadPage(page.pageId, page.params)
+        break
+
+      case SETTINGS_PAGE:
+        showAccountSetup(true)
+        break
+      }
+    }
+  }, [ page ])
+
+  useEffect(() => {
     const parsedUrl = new URL(window.location.href)
     const params = parsedUrl.searchParams
 
@@ -77,7 +101,7 @@ export default function Layout({
           )}', old server ${server}, reloading page`,
         )
         setServer(server_) // persist server selection in localstorage
-        window.location.assign(`${window.location.host}/?server=${serverID_}`) // reload page
+        reloadPage('/', `server=${serverID_}`)
       }
     }
   }, [])
@@ -90,13 +114,11 @@ export default function Layout({
    * @returns {*|JSX.Element}
    */
   function getDisplayPage() {
-    const parsed = parsePage(page)
-
     if (showChildren || (authentication && !showAccountSetup)) {
       return children
     }
 
-    if ((authentication && showAccountSetup) || (parsed?.page === '/settings')) {
+    if (authentication && showAccountSetup) {
       return (
         <SettingsPage/>
       )

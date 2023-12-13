@@ -9,6 +9,7 @@ import {
   BASE_URL,
   CHECKING_SERVER,
   FEEDBACK_PAGE,
+  HOME_PAGE,
   HTTP_GET_MAX_WAIT_TIME,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
@@ -193,7 +194,7 @@ export function unAuthenticated(httpCode) {
  */
 export function reloadApp(networkError) {
   setLocalStorageValue(SERVER_CHECK_SECOND_TRY_KEY, true) // we will do longer wait on retry
-  goToPage(networkError?.setPage, '/')
+  goToPage(networkError?.setPage, HOME_PAGE)
 }
 
 /**
