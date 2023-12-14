@@ -237,9 +237,8 @@ const FeedbackCard = ({
     let res
 
     try {
-      const fetchPromise = fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const fetchPromise = fetch("./.netlify/functions/feedback", {
+        method: "POST",
         body: JSON.stringify({
           name: state.name,
           email: state.email,
@@ -247,7 +246,7 @@ const FeedbackCard = ({
           message: state.message,
           extraData,
         }),
-      })
+      });
       const timeout = new Promise((_r, rej) => {
         const TIMEOUT_ERROR = `Network Timeout Error ${HTTP_GET_MAX_WAIT_TIME}ms`
         return setTimeout(() => rej(TIMEOUT_ERROR), HTTP_GET_MAX_WAIT_TIME)

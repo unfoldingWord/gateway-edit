@@ -3,7 +3,7 @@
   publish = "out"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+  package = "@netlify/plugin-emails"
 
 [[plugins]]
   package = "/scripts/zulip-notification"
