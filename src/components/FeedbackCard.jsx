@@ -14,7 +14,6 @@ import { CLOSE, HTTP_GET_MAX_WAIT_TIME } from '@common/constants'
 import NetworkErrorPopUp from '@components/NetworkErrorPopUp'
 import PropTypes from 'prop-types'
 import useFeedbackData from '@hooks/useFeedbackData'
-import sendFeedback from '../common/sendFeedback'
 
 // FeedbackCard.jsx renders feedback content that is placed in FeedbackPopup
 
@@ -235,21 +234,45 @@ const FeedbackCard = ({
       helpsCardSettings,
     })
 
-    const { name, email, message, category } = state
-    try {
-      const response = await sendFeedback({
-        name,
-        email,
-        message,
-        category,
-        extraData,
-      })
+    let res
 
-      console.log(`onSubmitFeedback() response: ${JSON.stringify(response)}`)
-    } catch (error) {
-      console.warn(`onSubmitFeedback() errorMessage`, error)
-      processError(error)
+    try {
+      const fetchPromise = fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: state.name,
+          email: state.email,
+          category: state.category,
+          message: state.message,
+          extraData,
+        }),
+      })
+      const timeout = new Promise((_r, rej) => {
+        const TIMEOUT_ERROR = `Network Timeout Error ${HTTP_GET_MAX_WAIT_TIME}ms`
+        return setTimeout(() => rej(TIMEOUT_ERROR), HTTP_GET_MAX_WAIT_TIME)
+      })
+      res = await Promise.race([fetchPromise, timeout])
+    } catch (e) {
+      console.warn(`onSubmitFeedback() - failure calling '/api/feedback'`, e)
+      processError(e)
+      actions.setSubmitting(false)
+      actions.setShowSuccess(false)
       actions.setShowError(true)
+      return
+    }
+
+    const response = await res.json()
+
+    if (res.status === 200) {
+      actions.setShowSuccess(true)
+    } else {
+      const error = response.error
+      console.warn(`onSubmitFeedback() - error response = ${JSON.stringify(error)}`)
+      const httpCode = parseInt(error.code, 10)
+      const errorMessage = error.message + '.'
+      actions.setShowError(true)
+      processError(errorMessage, httpCode)
     }
 
     actions.setSubmitting(false)
