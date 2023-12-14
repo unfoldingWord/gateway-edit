@@ -93,9 +93,7 @@ yarn test:headless
 - accesses authentication context and store context
 - Manages server selection through url variables
 - Displays Onboarding component if login is required
-- displayes settings page if selected
-- displays error page if selected
-- displays feedback page if selected
+- displays the settings page if selected
 - Contains the header and footer
 
 **WorkspaceContainer** component manages the workspace containing the resource cards

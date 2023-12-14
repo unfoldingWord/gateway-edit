@@ -9,8 +9,6 @@ import { getBuildId } from '@utils/build'
 import {
   APP_NAME,
   BASE_URL,
-  // ERROR_PAGE,
-  // FEEDBACK_PAGE,
   HOME_PAGE,
   PROD,
   QA,
