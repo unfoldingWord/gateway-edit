@@ -1,5 +1,6 @@
 /// <reference types="jest" />
-import { parsePage } from '../pages'
+import { jest } from '@jest/globals'
+// const { parsePage } = require('../pages')
 
 const tests = [
   {

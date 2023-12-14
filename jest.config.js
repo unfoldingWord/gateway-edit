@@ -1,8 +1,10 @@
 module.exports = {
+  'preset': 'vite-jest',
   'roots': ['<rootDir>'],
   // 'transform': { '^.+\\.ts?$': 'ts-jest' },
   'moduleFileExtensions': [
     'js',
+    'jsx',
     'ts',
   ],
   'coveragePathIgnorePatterns': [
