@@ -9,18 +9,9 @@ export default defineConfig({
   define: {
     'process.platform': JSON.stringify(process.platform),
   },
-  // esbuild: {
-  //   loader: "jsx",
-  //   include: [
-  //     // Add these lines to allow all .js files to contain JSX
-  //     "src/**/*.js",
-  //     "node_modules/**/*.js",
-  //
-  //     // Add these lines to allow all .ts files to contain JSX
-  //     // "src/**/*.ts",
-  //     // "node_modules/**/*.ts",
-  //   ],
-  // },
+  build: {
+    outDir: path.resolve(__dirname, 'out'), // compile to out folder
+  },
   plugins: [react()],
   resolve: {
     alias: {
