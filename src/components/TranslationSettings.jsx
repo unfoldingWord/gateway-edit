@@ -22,9 +22,8 @@ import {
   processNetworkError,
   reloadApp,
 } from '@utils/network'
-import { useRouter } from 'next/router'
 import { AuthContext } from '@context/AuthContext'
-import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import NetworkErrorPopUp from '@components/NetworkErrorPopUp'
 import CircularProgress from './CircularProgress'
 
 const useStyles = makeStyles(theme => ({
@@ -35,8 +34,9 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function TranslationSettings({ authentication }) {
-  const router = useRouter()
+export default function TranslationSettings({
+  authentication,
+}) {
   const { actions: { logout } } = useContext(AuthContext)
   const classes = useStyles()
   const [organizations, setOrganizations] = useState([])
@@ -54,6 +54,7 @@ export default function TranslationSettings({ authentication }) {
       setOwner: setOrganization,
       setLanguageId,
       setLastError,
+      setPage,
     },
   } = useContext(StoreContext)
 
@@ -67,7 +68,7 @@ export default function TranslationSettings({ authentication }) {
       error,
       httpCode,
       logout,
-      router,
+      setPage,
       setNetworkError,
       setLastError,
       setOrgErrorMessage
@@ -154,7 +155,7 @@ export default function TranslationSettings({ authentication }) {
   return (
     <>
       {!!networkError && (
-        <NetworkErrorPopup
+        <NetworkErrorPopUp
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
@@ -206,12 +207,13 @@ export default function TranslationSettings({ authentication }) {
                 {organizations.length === 0
                   ? null
                   : languages.map(
-                      ({ languageId, languageName, localized }, i) => (
-                        <MenuItem key={`${languageId}-${i}`} value={languageId}>
-                          {`${languageId} - ${languageName} - ${localized}`}
-                        </MenuItem>
-                      )
-                    )}
+                    ({ languageId, languageName, localized }, i) => (
+                      <MenuItem key={`${languageId}-${i}`} value={languageId}>
+                        {`${languageId} - ${languageName} - ${localized}`}
+                      </MenuItem>
+                    )
+                  )
+                }
               </Select>
             </FormControl>
           </div>

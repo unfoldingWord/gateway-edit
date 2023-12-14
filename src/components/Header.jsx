@@ -1,6 +1,5 @@
 import { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
@@ -12,8 +11,10 @@ import BibleReference from '@components/BibleReference'
 import { AuthContext } from '@context/AuthContext'
 import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
-import useUpdateCardsProps from '../hooks/useUpdateCardsProps'
+import useUpdateCardsProps from '@hooks/useUpdateCardsProps'
+import { HOME_PAGE } from '@common/constants'
 import { UpdateBranchButton, ErrorDialog } from 'translation-helps-rcl'
+
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -44,16 +45,16 @@ export default function Header({
   mergeStatusForCards,
 }) {
   const classes = useStyles()
-  const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
   const { actions: { logout } } = useContext(AuthContext)
   const {
     state: {
       cardsSaving,
-      cardsLoadingUpdate
+      cardsLoadingUpdate,
     },
     actions: {
       checkUnsavedChanges,
+      setPage,
     }
   } = useContext(StoreContext)
 
@@ -104,7 +105,7 @@ export default function Header({
             <Typography
               variant='h6'
               className={classes.title}
-              onClick={() => router.push('/')}
+              onClick={() => setPage(HOME_PAGE)}
             >
               {title}
             </Typography>

@@ -14,7 +14,7 @@ import {
   processNetworkError,
   unAuthenticated,
 } from '@utils/network'
-import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import NetworkErrorPopUp from '@components/NetworkErrorPopUp'
 import useLocalStorage from '@hooks/useLocalStorage'
 
 export const AuthContext = createContext({})
@@ -22,7 +22,7 @@ export const AuthContext = createContext({})
 export default function AuthContextProvider(props) {
   const [authentication, setAuthentication] = useState(null)
   const [networkError, setNetworkError] = useState(null)
-  const defaultServer = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
+  const defaultServer = (import.meta.env.VITE_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
   const [server, setServer] = useLocalStorage(SERVER_KEY, defaultServer)
 
   /**
@@ -130,7 +130,7 @@ export default function AuthContextProvider(props) {
         {props.children}
       </AuthenticationContextProvider>
       { !!networkError &&
-        <NetworkErrorPopup
+        <NetworkErrorPopUp
           networkError={networkError}
           setNetworkError={setNetworkError}
           closeButtonStr={CLOSE}

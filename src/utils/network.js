@@ -9,6 +9,7 @@ import {
   BASE_URL,
   CHECKING_SERVER,
   FEEDBACK_PAGE,
+  HOME_PAGE,
   HTTP_GET_MAX_WAIT_TIME,
   LOCAL_NETWORK_DISCONNECTED_ERROR,
   LOGIN,
@@ -124,12 +125,12 @@ export async function getNetworkError(error, httpCode ) {
  * @param {string|Error} error - initial error message message or object
  * @param {number} httpCode - http code returned
  * @param {function} logout - invalidate current login
- * @param {object} router - to change to different web page
+ * @param {function} setPage - to change to different web page
  * @param {function} setNetworkError - callback to toggle display of error popup
  * @param {function} setLastError - callback to save error details
  * @param {function} setErrorMessage - optional callback to apply error message
  */
-export async function processNetworkError(error, httpCode, logout, router,
+export async function processNetworkError(error, httpCode, logout, setPage,
                                           setNetworkError, setLastError, setErrorMessage,
 ) {
   // TRICKY we need to show an initial message because there may be delays checking for server connection.
@@ -138,15 +139,15 @@ export async function processNetworkError(error, httpCode, logout, router,
   const initialShownError = {
     errorMessage: initialMessage + CHECKING_SERVER,
     lastError: error,
-    router: router,
-    logout: logout,
+    setPage,
+    logout,
   }
   setNetworkError && setNetworkError(initialShownError) // clear until processing finished
   const errorObj = await getNetworkError(error, httpCode)
   setErrorMessage && setErrorMessage(errorObj.errorMessage)
   setLastError && setLastError(errorObj.lastError) // error info to attach to sendmail
   // add params needed for button actions
-  errorObj.router = router
+  errorObj.setPage = setPage
   errorObj.logout = logout
   setNetworkError && setNetworkError(errorObj) // this triggers network error popup
 }
@@ -156,12 +157,12 @@ export async function processNetworkError(error, httpCode, logout, router,
  * @param {string|Error} error - initial error message message or object
  * @param {number} httpCode - http code returned
  * @param {function} logout - invalidate current login
- * @param {object} router - to change to different web page
+ * @param {function} setPage - to change to different web page
  * @param {function} setNetworkError - callback to toggle display of error popup
  * @param {function} setLastError - callback to save error details
  * @param {function} setErrorMessage - optional callback to apply error message
  */
-export async function addNetworkDisconnectError(error, httpCode, logout, router,
+export async function addNetworkDisconnectError(error, httpCode, logout, setPage,
                                                 setNetworkError, setLastError, setErrorMessage,
 ) {
   const errorObj = await getNetworkError(error, httpCode)
@@ -173,7 +174,7 @@ export async function addNetworkDisconnectError(error, httpCode, logout, router,
   setErrorMessage && setErrorMessage(errorObj.errorMessage)
   setLastError && setLastError(errorObj.lastError) // error info to attach to sendmail
   // add params needed for button actions
-  errorObj.router = router
+  errorObj.setPage = setPage
   errorObj.logout = logout
   setNetworkError && setNetworkError(errorObj) // this triggers network error popup
 }
@@ -193,16 +194,16 @@ export function unAuthenticated(httpCode) {
  */
 export function reloadApp(networkError) {
   setLocalStorageValue(SERVER_CHECK_SECOND_TRY_KEY, true) // we will do longer wait on retry
-  networkError?.router?.reload()
+  goToPage(networkError?.setPage, HOME_PAGE)
 }
 
 /**
  * go to specific page
- * @param {object} router - to change to different web page
+ * @param {function} setPage - to change to different web page
  * @param {string} page - URL to redirect to
  */
-export function goToPage(router, page) {
-  router?.push(page)
+export function goToPage(setPage, page) {
+  setPage?.push(page)
 }
 
 /**
@@ -210,7 +211,7 @@ export function goToPage(router, page) {
  * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
  */
 function gotoFeedback(networkError) {
-  goToPage(networkError?.router, FEEDBACK_PAGE)
+  goToPage(networkError?.setPage, FEEDBACK_PAGE)
 }
 
 /**

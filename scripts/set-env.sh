@@ -27,9 +27,9 @@ set_env_var() {
 }
 
 # Call the function to set the environment variables
-set_env_var $ENV_FILE NEXT_PUBLIC_BUILD_NUMBER $BUILD_NUMBER
-set_env_var $ENV_FILE NEXT_PUBLIC_BUILD_BRANCH $BRANCH
-set_env_var $ENV_FILE NEXT_PUBLIC_BUILD_CONTEXT $CONTEXT
+set_env_var $ENV_FILE VITE_PUBLIC_BUILD_NUMBER $BUILD_NUMBER
+set_env_var $ENV_FILE VITE_PUBLIC_BUILD_BRANCH $BRANCH
+set_env_var $ENV_FILE VITE_PUBLIC_BUILD_CONTEXT $CONTEXT
 
 echo "Environment file new contents: $(cat $ENV_FILE)"
 

@@ -1,5 +1,5 @@
+//TODO: remove - this is no longer needed as the head is now set in index.html in project folder
 import React from 'react'
-import Head from 'next/head'
 import { string } from 'prop-types'
 
 const defaultDescription = ''
@@ -7,7 +7,7 @@ const defaultOGURL = ''
 const defaultOGImage = ''
 
 const AppHead = props => (
-  <Head>
+  <head>
     <meta charSet='UTF-8' />
     <title>{props.title || ''}</title>
     <meta
@@ -31,7 +31,7 @@ const AppHead = props => (
     <meta property='og:image' content={props.ogImage || defaultOGImage} />
     <meta property='og:image:width' content='1200' />
     <meta property='og:image:height' content='630' />
-  </Head>
+  </head>
 )
 
 AppHead.propTypes = {

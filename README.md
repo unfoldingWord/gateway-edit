@@ -73,70 +73,77 @@ yarn test:headless
 
 - Structure of the React components in this app
 
-Application (in pages/\_app.js) contains:
+**Startup** is main.jsx which renders the Application (App)
+
+**Application** (App.jsx) contains:
 
 - AuthContext context
 - StoreContext context:
 
-Home (in pages/index.js) contains:
-<Layout>
-<WorkspaceContainer />
-</Layout>
+  <AuthContextProvider>
+    <StoreContextProvider>
+      <Layout>
+        <WorkspaceContainer />
+      </Layout>
+    </StoreContextProvider>
+  </AuthContextProvider>
 
-WorkspaceContainer component manages the Resource workspace
-
-- Contains Workspace component (resource workspace rcl) that contains several:
-  - ScriptureCard components
-  - ResourceCard components
-
-Layout component:
+**Layout** component:
 
 - accesses authentication context and store context
 - Manages server selection through url variables
 - Displays Onboarding component if login is required
+- displays the settings page if selected
 - Contains the header and footer
 
-BibleReference component:
+**WorkspaceContainer** component manages the workspace containing the resource cards
+
+- Contains Workspace component (resource workspace rcl) that contains several cards of type:
+  - ScriptureCard components
+  - ResourceCard components
+
+**BibleReference** component:
 
 - Uses bible Reference RCL
 - Updates reference store context
 
-Onboarding component
+**Onboarding** component
 
 - Displays the AccountSetup component when login is required
 
-Header component:
+**Header** component:
 
 - Contains BibleReference component
 
-Footer component:
+**Footer** component:
 
 - Shows app version/build
 
-Drawer component (hamburger menu):
+**Drawer** component (hamburger menu):
 
 - Shows
 
-TranslationSettings component:
+**TranslationSettings** component:
 
 - Prompts for organization and language
 
-ResourceCard component:
+**ResourceCard** component:
 
 - Card that displays translationHelps content
 
-ScriptureCard component:
+**ScriptureCard** component:
 
 - Card that displays scripture content
 
-AuthContext context:
+**AuthContext** context:
 
 - Initializes the authentication context (defined in gitea-react-toolkit)
 
 StoreContext context:
 
-- Manages and persists application state data into local storage
+- Manages and persists the rest of the application state data into local storage
 
 useLocalStorage - custom hook that persists generic application data into local storage
 
 useUserLocalStorage - custom hook that application data for logged in user into local storage
+
