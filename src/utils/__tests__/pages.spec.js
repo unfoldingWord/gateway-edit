@@ -1,4 +1,5 @@
 /// <reference types="jest" />
+import { describe, it, expect } from 'vitest'
 import { parsePage } from '../pages'
 
 const tests = [
