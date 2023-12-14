@@ -1,6 +1,7 @@
 /// <reference types="jest" />
-import '@testing-library/jest-dom'
-//import { render, screen } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+// import '@testing-library/jest-dom'
+//import { render, screen } from '@testing-library/reacqt'
 
 import { getOriginalLanguageStr } from '../lexiconHelpers'
 const GREEK = 'Greek'
@@ -10,7 +11,7 @@ describe('persistence.getOriginalLanguageStr', () => {
   it('isNT true should return Greek',() => {
     // when
     const isNT = true
-    const expected = GREEK
+    const expected = GREEKq
 
     // then
     const results = getOriginalLanguageStr(isNT)
