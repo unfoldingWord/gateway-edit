@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import { string } from 'prop-types'
 
 const defaultDescription = ''

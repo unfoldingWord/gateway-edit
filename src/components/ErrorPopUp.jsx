@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button'
 import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
 import { CANCEL } from '@common/constants'
 
-export default function ErrorPopup(
+export default function ErrorPopUp(
   {
     onClose,
     title,
@@ -91,7 +91,7 @@ export default function ErrorPopup(
   )
 }
 
-ErrorPopup.defaultProps = {
+ErrorPopUp.defaultProps = {
   id: `error_popup`,
   actionButtonStr: '',
   startIcon: null,
@@ -102,7 +102,7 @@ ErrorPopup.defaultProps = {
   dimBackground: true,
 }
 
-ErrorPopup.propTypes = {
+ErrorPopUp.propTypes = {
   /** On close event handler */
   onClose: PropTypes.func,
   /** title Content */

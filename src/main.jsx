@@ -1,0 +1,14 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './components/App.jsx'
+// import './index.css'
+
+const rootNode_ = document.getElementById('root');
+
+ReactDOM.render(
+  <React.StrictMode >
+    <App />
+  </React.StrictMode>
+  ,
+  rootNode_
+)

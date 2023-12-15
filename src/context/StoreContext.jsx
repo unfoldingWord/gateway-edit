@@ -5,9 +5,10 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import useLocalStorage from '@hooks/useLocalStorage'
-import * as useULS from '@hooks/useUserLocalStorage'
+import useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
+import { parsePage, reloadPage } from '@utils/pages'
 
 export const StoreContext = createContext({})
 
@@ -21,6 +22,7 @@ export default function StoreContextProvider(props) {
     button in the hamburger menu.
   */
   const [mergeStatusForCards, setMergeStatusForCards] = useState({})
+
   function updateMergeState(
     cardId,
     title,
@@ -63,7 +65,7 @@ export default function StoreContextProvider(props) {
    * @return {any[]}
    */
   function useUserLocalStorage(key, initialValue) {
-    return useULS.useUserLocalStorage(username, key, initialValue)
+    return useULS(username, key, initialValue)
   }
 
   const [mainScreenRef, setMainScreenRef] = useState(null)
@@ -92,6 +94,7 @@ export default function StoreContextProvider(props) {
   const [cardsSaving, setCardsSaving] = useState([])
   const [cardsLoadingUpdate, setCardsLoadingUpdate] = useState([])
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
+  const [page, setPage_] = useState(null) // to navigate pages
 
   const {
     savedChanges,
@@ -99,6 +102,20 @@ export default function StoreContextProvider(props) {
     checkUnsavedChanges,
     showSaveChangesPrompt,
   } = useSaveChangesPrompt()
+
+  /**
+   * change the current page
+   * @param {string} path
+   */
+  function setPage(path) {
+    const parsed = parsePage(path)
+
+    if (parsed?.pageId === '/') {
+      reloadPage(parsed.pageId, parsed.params)
+    } else {
+      setPage_(parsed)
+    }
+  }
 
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)
@@ -150,6 +167,7 @@ export default function StoreContextProvider(props) {
       cardsLoadingUpdate,
       cardsLoadingMerge,
       mergeStatusForCards,
+      page,
     },
     actions: {
       logout,
@@ -176,6 +194,7 @@ export default function StoreContextProvider(props) {
       checkUnsavedChanges,
       showSaveChangesPrompt,
       updateMergeState,
+      setPage,
     },
   }
 

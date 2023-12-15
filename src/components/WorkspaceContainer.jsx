@@ -4,7 +4,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import * as isEqual from 'deep-equal'
+import isEqual from 'deep-equal'
 import {
   MinimizedCardsListUI,
   useMinimizedCardsState,
@@ -41,9 +41,8 @@ import {
   processNetworkError,
   reloadApp,
 } from '@utils/network'
-import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
-import NetworkErrorPopup from '@components/NetworkErrorPopUp'
+import NetworkErrorPopUp from '@components/NetworkErrorPopUp'
 import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
@@ -71,7 +70,6 @@ const buildId = getBuildId()
 console.log(`Gateway Edit App Version`, buildId)
 
 function WorkspaceContainer() {
-  const router = useRouter()
   const classes = useStyles()
   const [state, _setState] = useState({
     currentVerseReference: null,
@@ -145,6 +143,7 @@ function WorkspaceContainer() {
       setSavedChanges,
       updateMergeState,
       updateTaDetails,
+      setPage
     },
   } = useContext(StoreContext)
 
@@ -234,7 +233,7 @@ function WorkspaceContainer() {
    * @param {number} httpCode - http code returned
    */
   function processError(errorMessage, httpCode=0) {
-    processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
+    processNetworkError(errorMessage, httpCode, logout, setPage, setNetworkError, setLastError )
   }
 
   function setNetworkError( error ) {
@@ -247,11 +246,11 @@ function WorkspaceContainer() {
    */
   function showNetworkError() {
     if (tokenNetworkError) { // if we had a token network error on startup
-      if (!tokenNetworkError.router) { // needed for reload of page
-        setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
+      if (!tokenNetworkError.setPage) { // needed for reload of page
+        setTokenNetworkError({ ...tokenNetworkError, setPage }) // make sure setPage is set
       }
       return (
-        <NetworkErrorPopup
+        <NetworkErrorPopUp
           networkError={tokenNetworkError}
           setNetworkError={(error) => {
             setTokenNetworkError(error)
@@ -263,7 +262,7 @@ function WorkspaceContainer() {
       )
     } else if (networkError) { // for all other workspace network errors
       return (
-        <NetworkErrorPopup
+        <NetworkErrorPopUp
           networkError={networkError}
           setNetworkError={setNetworkError}
           onActionButton={onNetworkActionButton}
@@ -290,10 +289,10 @@ function WorkspaceContainer() {
   function onResourceError(message, isAccessError, resourceStatus, error, showAllErrors = false) {
     if (!networkError ) { // only show if another error not already showing
       if (showAllErrors) {
-        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
+        processNetworkError(error || message, resourceStatus, logout, setPage, setNetworkError, setLastError, setLastError)
       } else {
         if (isAccessError) { // we only show popup for access errors
-          addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError)
+          addNetworkDisconnectError(error || message, 0, logout, setPage, setNetworkError, setLastError)
         }
       }
     }

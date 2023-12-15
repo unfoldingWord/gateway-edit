@@ -7,7 +7,10 @@ export const QA_BASE_URL = 'https://qa.door43.org'
 export const QA = 'QA'
 export const PROD = 'PROD'
 export const TOKEN_ID = 'gatewayEdit'
+export const ERROR_PAGE = '/error'
 export const FEEDBACK_PAGE = '/feedback'
+export const HOME_PAGE = '/'
+export const SETTINGS_PAGE = '/settings'
 export const SERVER_KEY = 'server'
 
 export const SERVER_MAX_WAIT_TIME_RETRY = 25000 // in milliseconds

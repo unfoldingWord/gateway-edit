@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import * as isEqual from 'deep-equal'
+import isEqual from 'deep-equal'
 
 /**
  * use hook for accessing local storage for user

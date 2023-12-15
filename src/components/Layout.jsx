@@ -6,16 +6,24 @@ import Footer from '@components/Footer'
 import Onboarding from '@components/Onboarding'
 import { StoreContext } from '@context/StoreContext'
 import { getBuildId } from '@utils/build'
-import { APP_NAME, BASE_URL, PROD, QA, QA_BASE_URL } from '@common/constants'
+import {
+  APP_NAME,
+  BASE_URL,
+  HOME_PAGE,
+  PROD,
+  QA,
+  QA_BASE_URL,
+  SETTINGS_PAGE,
+} from '@common/constants'
 import useValidateAccountSettings from '@hooks/useValidateAccountSettings'
-import { useRouter } from 'next/router'
+import SettingsPage from '@components/SettingsPage'
+import { reloadPage } from '@utils/pages'
 
 export default function Layout({
   children,
   showChildren,
   title = APP_NAME,
 }) {
-  const router = useRouter()
   const mainScreenRef = useRef(null)
   const [feedback, setFeedback_] = useState(null) // contains feedback data
   const {
@@ -43,6 +51,7 @@ export default function Layout({
       owner,
       server,
       mergeStatusForCards,
+      page,
     },
     actions: {
       setCurrentLayout,
@@ -57,26 +66,69 @@ export default function Layout({
   }, [ mainScreenRef?.current ])
 
   useEffect(() => {
-    const params = router?.query
+    if (page?.pageId) {
+      switch (page.pageId) {
+      case HOME_PAGE:
+        reloadPage(page.pageId, page.params)
+        break
 
-    if (typeof params?.server === 'string') { // if URL param given
-      let serverID_ = params.server.toUpperCase() === QA ? QA : PROD
-      let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
-      if (params.server?.length === 0){
-        server_ = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
-        serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
-      }
-      
-      if (server !== server_) {
-        console.log(`_app.js - On init switching server to: ${serverID_}, url server param '${params.server}', old server ${server}, reloading page`)
-        setServer(server_) // persist server selection in localstorage
-        router.push(`/?server=${serverID_}`) // reload page
+      case SETTINGS_PAGE:
+        showAccountSetup(true)
+        break
       }
     }
-  }, [router?.query]) // TRICKY query property not loaded on first pass, so watch for change
+  }, [ page ])
+
+  useEffect(() => {
+    const parsedUrl = new URL(window.location.href)
+    const params = parsedUrl.searchParams
+
+    if (params && typeof params.get('server') === 'string') { // if URL param given
+      let serverID_ = params.get('server').toUpperCase() === QA ? QA : PROD
+      let server_ = (serverID_ === QA) ? QA_BASE_URL : BASE_URL
+
+      if (params.get('server')?.length === 0){
+        server_ = (import.meta.env.VITE_NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
+        serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
+      }
+
+      if (server !== server_) {
+        console.log(
+          `_app.js - On init switching server to: ${serverID_}, url server param '${params.get(
+            'server',
+          )}', old server ${server}, reloading page`,
+        )
+        setServer(server_) // persist server selection in localstorage
+        reloadPage('/', `server=${serverID_}`)
+      }
+    }
+  }, [])
 
   const buildId = useMemo(getBuildId, [])
   useValidateAccountSettings(authentication, showAccountSetup, languageId, owner, setShowAccountSetup)
+
+  /**
+   * determine the page to show based on state
+   * @returns {*|JSX.Element}
+   */
+  function getDisplayPage() {
+    if (showChildren || (authentication && !showAccountSetup)) {
+      return children
+    }
+
+    if (authentication && showAccountSetup) {
+      return (
+        <SettingsPage/>
+      )
+    }
+
+    return (
+      <Onboarding
+        authentication={authentication}
+        authenticationComponent={authenticationComponent}
+      />
+    )
+  }
 
   return (
     <div
@@ -92,14 +144,7 @@ export default function Layout({
         mergeStatusForCards={mergeStatusForCards}
       />
       <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
-        {showChildren || (authentication && !showAccountSetup) ? (
-          children
-        ) : (
-          <Onboarding
-            authentication={authentication}
-            authenticationComponent={authenticationComponent}
-          />
-        )}
+        {getDisplayPage()}
       </main>
       <Footer
         buildHash={buildId?.hash}
