@@ -13,7 +13,8 @@ const handler = async function (event) {
 
   //automatically generated snippet from the email preview
   //sends a request to an email handler for a subscribed email
-  await fetch(`${process.env.URL}/.netlify/functions/emails/subscribed`, {
+  // Documentation: https://docs.netlify.com/integrations/email-integration/
+  await fetch(`${process.env.URL}/.netlify/functions/emails/feedback`, {
     headers: {
       'netlify-emails-secret': process.env.NETLIFY_EMAILS_SECRET,
     },
@@ -38,7 +39,7 @@ const handler = async function (event) {
   }
 }
 
-export default handler
+export { handler }
 
 // export default async (req, res) => {
 //   let errorMessage

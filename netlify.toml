@@ -1,9 +1,7 @@
 [build]
-  command = "npm run build"
-  publish = "out"
+  command = "yarn run build"
+  publish = "dist"
 
 [[plugins]]
   package = "@netlify/plugin-emails"
 
-[[plugins]]
-  package = "/scripts/zulip-notification"

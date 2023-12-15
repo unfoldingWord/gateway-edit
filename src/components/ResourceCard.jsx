@@ -33,7 +33,7 @@ const { getChapterVerse } = tsvRowUtils
 const { tsvsObjectToFileString } = tsvDataActions
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
-import * as isEqual from 'deep-equal'
+import isEqual from 'deep-equal'
 import { getResourceMessage } from '@utils/resources'
 import {
   HTTP_CONFIG,
