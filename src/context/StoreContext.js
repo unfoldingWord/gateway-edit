@@ -15,7 +15,7 @@ export default function StoreContextProvider(props) {
   /*
     The mergeStatusForCards state contains the merge status to and from the main branch
     for each resource and scripture card. This is used in `useMergeCardsProps` and
-    `useUpdateCardsProps` so that we can tell the user which cards cards are needing merge,
+    `useUpdateCardsProps` so that we can tell the user which cards are needing merge,
     having conflicts, etc. This state is also used to call an app-wide merge to/from main
     branch when the user clicks on the update button in the app header and the merge my work
     button in the hamburger menu.

@@ -1,6 +1,8 @@
 import React, {
+  useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
@@ -16,20 +18,11 @@ import {
   DialogContent,
   DialogContentText,
 } from '@mui/material'
+import { useBoundsUpdater } from 'translation-helps-rcl'
 import PopoverComponent from './PopoverComponent'
+import { StoreContext } from '@context/StoreContext'
 
 const alignmentIconStyle = { marginLeft:'50px' }
-
-function PaperComponent(props) {
-  return (
-    <Draggable
-      handle="#draggable-aligner-dialog-title"
-      cancel={'[class*="MuiDialogContent-root"]'}
-    >
-      <Paper {...props} />
-    </Draggable>
-  )
-}
 
 // popup dialog for user to align verse
 export default function WordAlignerDialog({
@@ -43,12 +36,54 @@ export default function WordAlignerDialog({
   const [aligned, setAligned] = useState(false)
   const [lexiconData, setLexiconData] = useState(null)
   const [showResetWarning, setShowResetWarning] = useState(false)
+  const dialogRef = useRef(null) // for keeping track of  aligner dialog position
 
   const alignerData_ = alignerStatus?.state?.alignerData
+
+  const {
+    state: {
+      mainScreenRef,
+    },
+  } = useContext(StoreContext)
+
+  const {
+    state: { bounds },
+    actions: { doUpdateBounds },
+  } = useBoundsUpdater({ // keeps track of drag bounds
+    workspaceRef: mainScreenRef,
+    cardRef: dialogRef,
+    open: !!alignerData,
+    displayState: {
+      alignerData
+    },
+  })
+
+  function PaperComponent(props) { // contains the word aligner dialog
+    return (
+      <Draggable
+        handle="#draggable-aligner-dialog-title"
+        cancel={'[class*="MuiDialogContent-root"]'}
+        bounds={bounds}
+      >
+        <Paper
+          {...props}
+          ref={dialogRef}
+        />
+      </Draggable>
+    )
+  }
 
   useEffect(() => {
     setAlignerData(alignerData_)
   }, [alignerData_])
+
+  useEffect(() => { // monitor changes in alignment dialog position and open state
+    if (alignerData &&
+      dialogRef?.current?.clientWidth &&
+      dialogRef?.current?.clientHeight) {
+      doUpdateBounds()
+    }
+  }, [dialogRef?.current, alignerData])
 
   /**
    * called on every alignment change.  We save this new alignment state so that it can be applied if user clicks accept.
@@ -132,6 +167,7 @@ export default function WordAlignerDialog({
         onClose={() => {}}
         open={!!alignerData}
         PaperComponent={PaperComponent}
+        bounds={bounds}
         aria-labelledby="draggable-aligner-dialog-title"
       >
         <DialogTitle style={{ cursor: 'move' }} id="draggable-aligner-dialog-title" >
