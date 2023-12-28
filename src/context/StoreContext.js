@@ -67,6 +67,7 @@ export default function StoreContextProvider(props) {
   }
 
   const [mainScreenRef, setMainScreenRef] = useState(null)
+  const [obsSupport, setObsSupport] = useState(false)
   const [lastError, setLastError] = useState(null)
   const [owner, setOwner] = useUserLocalStorage('owner', '')
   const [languageId, setLanguageId] = useUserLocalStorage('languageId', '')
@@ -150,6 +151,7 @@ export default function StoreContextProvider(props) {
       cardsLoadingUpdate,
       cardsLoadingMerge,
       mergeStatusForCards,
+      obsSupport,
     },
     actions: {
       logout,
@@ -176,6 +178,7 @@ export default function StoreContextProvider(props) {
       checkUnsavedChanges,
       showSaveChangesPrompt,
       updateMergeState,
+      setObsSupport,
     },
   }
 

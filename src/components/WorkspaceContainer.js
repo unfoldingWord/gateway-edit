@@ -145,6 +145,7 @@ function WorkspaceContainer() {
       setSavedChanges,
       updateMergeState,
       updateTaDetails,
+      setObsSupport,
     },
   } = useContext(StoreContext)
 
@@ -348,12 +349,48 @@ function WorkspaceContainer() {
 
   useEffect(() => {
     setState( { workspaceReady: false })
+    setObsSupport(false)
 
-    if (owner && languageId && appRef && server && loggedInUser) {
+    /**
+     * check for presence of valid OBS repo
+     */
+    function checkForObsRepo() {
+      // fetch OBS resource for GL
       getResourceBibles({
         bookId,
         chapter,
         verse,
+        resourceId: 'obs',
+        owner,
+        languageId,
+        ref: appRef,
+        server,
+      }).then(results => {
+        const { bibles, resourceLink } = results
+        let foundObs = false
+
+        if (bibles?.length > 0) {
+          console.log(`found OBS for ${resourceLink}`)
+          foundObs = true
+        } else {
+          console.warn(`no projects for ${resourceLink}`)
+        }
+        setObsSupport(foundObs)
+      }).catch((e) => {
+        console.log(`could not fetch OBS translation for  ${{languageId, owner, server}}`)
+        setObsSupport(false)
+      })
+    }
+
+    if (owner && languageId && appRef && server && loggedInUser) {
+      /**
+       * open the literal bible for current GL so we can find out which books are finished
+       */
+      getResourceBibles({
+        bookId,
+        chapter,
+        verse,
+        // for en GL, we use the ULT translation, other GLs use the GLT
         resourceId: languageId === 'en' ? 'ult' : 'glt',
         owner,
         languageId,
@@ -371,8 +408,10 @@ function WorkspaceContainer() {
           console.warn(`no bibles found for ${resourceLink}`)
         }
         setState( { workspaceReady: true })
+        checkForObsRepo()
       }).catch((e) => {
         setState( { workspaceReady: true })
+        console.error(`could not fetch literal translation for  ${{languageId, owner, server}}`)
         processError(e.toString())
       })
     }// eslint-disable-next-line
@@ -416,46 +455,65 @@ function WorkspaceContainer() {
     })
   }, [])
 
+  const scriptureCards = (bookId === 'obs') ?
+    [ // if doing OBS, show that in place of scripture cards
+      {
+        title: 'Open Bible Story',
+        type: 'resource_card',
+        id: 'resource_card_obs',
+        resourceId: 'obs',
+        projectId: bookId,
+        filePath: null,
+        loggedInUser: loggedInUser,
+        authentication: authentication,
+        ...commonResourceCardConfigs,
+      },
+    ]
+    :
+    [ // not doing OBS, so show regular scripture cards
+      {
+        title: 'Literal Translation',
+        type: 'scripture_card',
+        id: 'scripture_card_0',
+        cardNum: 0,
+        resource: {
+          owner,
+          languageId,
+          resourceId: TARGET_LITERAL,
+          originalLanguageOwner: scriptureOwner,
+        },
+        ...commonScriptureCardConfigs,
+      },
+      {
+        title: 'Original Source',
+        type: 'scripture_card',
+        id: 'scripture_card_1',
+        cardNum: 1,
+        resource: {
+          owner,
+          languageId,
+          resourceId: ORIGINAL_SOURCE,
+          originalLanguageOwner: scriptureOwner,
+        },
+        ...commonScriptureCardConfigs,
+      },
+      {
+        title: 'Simplified Translation',
+        type: 'scripture_card',
+        id: 'scripture_card_2',
+        cardNum: 2,
+        resource: {
+          owner,
+          languageId,
+          resourceId: TARGET_SIMPLIFIED,
+          originalLanguageOwner: scriptureOwner,
+        },
+        ...commonScriptureCardConfigs,
+      },
+    ]
+
   const cards = [
-    {
-      title: 'Literal Translation',
-      type: 'scripture_card',
-      id: 'scripture_card_0',
-      cardNum: 0,
-      resource: {
-        owner,
-        languageId,
-        resourceId: TARGET_LITERAL,
-        originalLanguageOwner: scriptureOwner,
-      },
-      ...commonScriptureCardConfigs,
-    },
-    {
-      title: 'Original Source',
-      type: 'scripture_card',
-      id: 'scripture_card_1',
-      cardNum: 1,
-      resource: {
-        owner,
-        languageId,
-        resourceId: ORIGINAL_SOURCE,
-        originalLanguageOwner: scriptureOwner,
-      },
-      ...commonScriptureCardConfigs,
-    },
-    {
-      title: 'Simplified Translation',
-      type: 'scripture_card',
-      id: 'scripture_card_2',
-      cardNum: 2,
-      resource: {
-        owner,
-        languageId,
-        resourceId: TARGET_SIMPLIFIED,
-        originalLanguageOwner: scriptureOwner,
-      },
-      ...commonScriptureCardConfigs,
-    },
+    ...scriptureCards,
     {
       title: 'translationNotes',
       type: 'resource_card',
