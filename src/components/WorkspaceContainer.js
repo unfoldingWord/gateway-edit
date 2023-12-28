@@ -376,9 +376,11 @@ function WorkspaceContainer() {
           console.warn(`no projects for ${resourceLink}`)
         }
         setObsSupport(foundObs)
+        setState( { workspaceReady: true })
       }).catch((e) => {
         console.log(`could not fetch OBS translation for  ${{languageId, owner, server}}`)
         setObsSupport(false)
+        setState( { workspaceReady: true })
       })
     }
 
@@ -407,7 +409,6 @@ function WorkspaceContainer() {
         } else {
           console.warn(`no bibles found for ${resourceLink}`)
         }
-        setState( { workspaceReady: true })
         checkForObsRepo()
       }).catch((e) => {
         setState( { workspaceReady: true })
