@@ -91,6 +91,7 @@ export default function ResourceCard({
   })
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
   const isResourceTsv = ['tn', 'tq', 'twl'].includes(cardResourceId)
+  const isObs = projectId === 'obs'
 
   function updateTempContent(c) {
     setContent(c)
@@ -129,19 +130,20 @@ export default function ResourceCard({
       workingResourceBranch,
     },
     actions: {
-      startEdit,
       finishEdit,
+      startEdit,
     },
   } = useUserBranch({
+    appRef,
+    authentication,
+    cardId: id,
+    cardResourceId,
+    isObs,
+    languageId,
+    loggedInUser,
+    onResourceError,
     owner,
     server,
-    appRef,
-    languageId,
-    cardId: id,
-    loggedInUser,
-    authentication,
-    cardResourceId,
-    onResourceError,
     useUserLocalStorage,
   })
 
