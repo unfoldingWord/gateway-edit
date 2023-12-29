@@ -3276,10 +3276,10 @@ bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
 
-bible-reference-rcl@1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.3.tgz#fccc2d578582a8cc7eccb32ac0c2333ddf57f8c8"
-  integrity sha512-OHpAiLtLHSZbnzwGhmv2Kgn9ArciQWZsBm7yHEg9+d4pAw/AcrHv8NF9uF786mZ9/WAqdK1CshWVxTqkEWS/NQ==
+bible-reference-rcl@1.2.4-beta.2:
+  version "1.2.4-beta.2"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.4-beta.2.tgz#225067506ffc6cac657374548fcd548fff071fa5"
+  integrity sha512-lpf7oOskkMlaFCl2yCyoUxZFgtAoStSqIhRiK30zYIKXdXUv4d5M3D3PFlt2zAyAqLA0ZvueA5lQn78wqllCOQ==
   dependencies:
     "@emotion/react" "^11.11.0"
     "@emotion/styled" "^11.11.0"
@@ -10863,10 +10863,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.5.15:
-  version "3.5.15"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.15.tgz#e7e1f2cd4e2c35e6fda36937298aef343ddc1e51"
-  integrity sha512-RbGDhGrKso1G8SlvlP/Nw6yQWesph3qasvZsskW8dCAHyD/X97m/6VVxPetIUeHULIkQuzgomrg87L9wnoflkQ==
+translation-helps-rcl@3.5.17-beta.2:
+  version "3.5.17-beta.2"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.17-beta.2.tgz#1456ab98e18d96573d3c208aa40525dd92f70109"
+  integrity sha512-MrzejP76pyIswRYqywzN1dJ+1z3lLR4YKiVaEUwdjlOedJrJtkaW30tGdS2FMlTvdDmKPvlF6yRJ93Ky639ZOw==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
