@@ -46,6 +46,7 @@
 */
 * {
   font-family: Ezra, Noto Sans;
+  line-height: 2.0em;
 }
 
 @tailwind components;
