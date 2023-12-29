@@ -349,7 +349,7 @@ function WorkspaceContainer() {
 
   useEffect(() => {
     setState( { workspaceReady: false })
-    setObsSupport(false)
+    setObsSupport(true) // default to true until actual determination is made - since this will not hurt anything and will be smoother if user was last viewing OBS
 
     /**
      * check for presence of valid OBS repo

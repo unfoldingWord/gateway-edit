@@ -67,7 +67,7 @@ export default function StoreContextProvider(props) {
   }
 
   const [mainScreenRef, setMainScreenRef] = useState(null)
-  const [obsSupport, setObsSupport] = useState(false)
+  const [obsSupport, setObsSupport] = useState(true) // default to true until actual determination is made - since this will not hurt anything and will be smoother if user was last viewing OBS
   const [lastError, setLastError] = useState(null)
   const [owner, setOwner] = useUserLocalStorage('owner', '')
   const [languageId, setLanguageId] = useUserLocalStorage('languageId', '')
