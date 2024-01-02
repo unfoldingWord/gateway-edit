@@ -20,6 +20,7 @@ function BibleReferenceComponent(props) {
         bookId, chapter, verse,
       },
       supportedBibles,
+      obsSupport,
     },
     actions: { onReferenceChange, checkUnsavedChanges },
   } = useContext(StoreContext)
@@ -29,6 +30,7 @@ function BibleReferenceComponent(props) {
     initialChapter: chapter,
     initialVerse: verse,
     onChange: onReferenceChange,
+    addOBS: obsSupport,
     onPreChange: () => checkUnsavedChanges(),
     addChapterFront: 'front',
   })
@@ -44,10 +46,22 @@ function BibleReferenceComponent(props) {
 
   useEffect(() => {
     if (supportedBibles?.length) {
-      actions.applyBooksFilter(supportedBibles)
+      let supportedBibles_ = supportedBibles
+
+      if (obsSupport) { // make sure obs is in list
+        if (!supportedBibles.includes('obs')) {
+          supportedBibles_ = [
+            ...supportedBibles,
+            'obs',
+          ]
+        }
+      }
+      actions.applyBooksFilter(supportedBibles_)
+    } else if (obsSupport) { // if only obs support
+      actions.applyBooksFilter(['obs'])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supportedBibles])
+  }, [supportedBibles, obsSupport])
 
   return (
     <BibleReference

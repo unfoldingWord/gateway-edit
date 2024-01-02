@@ -3276,10 +3276,10 @@ bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
 
-bible-reference-rcl@1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.3.tgz#fccc2d578582a8cc7eccb32ac0c2333ddf57f8c8"
-  integrity sha512-OHpAiLtLHSZbnzwGhmv2Kgn9ArciQWZsBm7yHEg9+d4pAw/AcrHv8NF9uF786mZ9/WAqdK1CshWVxTqkEWS/NQ==
+bible-reference-rcl@1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.2.4.tgz#2a88cf5112306ae4808e3d54b784f095cfa9faf3"
+  integrity sha512-H00Vq5UrdIuEPyatn7RQIWO4yH4TKBYVEvkzJ6s9qQRTW+z5dCK0oK0mT+5+7LC6rPMNdHYbpbUmODja361Fkw==
   dependencies:
     "@emotion/react" "^11.11.0"
     "@emotion/styled" "^11.11.0"
@@ -10863,10 +10863,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.5.15:
-  version "3.5.15"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.15.tgz#e7e1f2cd4e2c35e6fda36937298aef343ddc1e51"
-  integrity sha512-RbGDhGrKso1G8SlvlP/Nw6yQWesph3qasvZsskW8dCAHyD/X97m/6VVxPetIUeHULIkQuzgomrg87L9wnoflkQ==
+translation-helps-rcl@3.5.16:
+  version "3.5.16"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.5.16.tgz#ec78d6303545170f8d89208724c49dbe7125f3b9"
+  integrity sha512-SyBzGTvJAITm3mHFkGK4T+3hWsCj87825kePUqyXwyIXC+/cl9vt+85Z6q3pXgqidnThllTpL7mNkb8IQBHn5g==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"

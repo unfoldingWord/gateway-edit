@@ -24,6 +24,7 @@ export async function getResource({
   ref,
   server,
 }) {
+  // resourceLink will be in format: ${scripture.owner}/${scripture.languageId}/${scripture.resourceId}/${ref}
   const resourceLink = getResourceLink({
     owner,
     languageId,

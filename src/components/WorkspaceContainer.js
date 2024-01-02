@@ -145,6 +145,7 @@ function WorkspaceContainer() {
       setSavedChanges,
       updateMergeState,
       updateTaDetails,
+      setObsSupport,
     },
   } = useContext(StoreContext)
 
@@ -348,12 +349,51 @@ function WorkspaceContainer() {
 
   useEffect(() => {
     setState( { workspaceReady: false })
+    setObsSupport(true) // default to true until actual determination is made - since this will be smoother if user was last viewing OBS
+
+    /**
+     * check for presence of valid OBS repo
+     */
+    function checkForObsRepo() {
+      getResourceBibles({ // fetch OBS resource for GL
+        bookId,
+        chapter,
+        verse,
+        resourceId: 'obs',
+        owner,
+        languageId,
+        ref: appRef,
+        server,
+      }).then(results => {
+        const { bibles: projects, resourceLink, httpCode } = results
+        let foundObs = false
+
+        if (httpCode) {
+          console.warn(`OBS not valid - got invalid http code ${httpCode} ${resourceLink}`)
+        } else if (projects?.length > 0) {
+          console.log(`found OBS for ${resourceLink}`)
+          foundObs = true
+        } else {
+          console.warn(`OBS not valid - no projects for ${resourceLink}`)
+        }
+        setObsSupport(foundObs)
+      }).catch((e) => {
+        console.log(`could not fetch OBS translation for  ${{languageId, owner, server}}`)
+        setObsSupport(false)
+      })
+    }
 
     if (owner && languageId && appRef && server && loggedInUser) {
+      checkForObsRepo()
+
+      /**
+       * open the literal bible for current GL to find out which books have content
+       */
       getResourceBibles({
         bookId,
         chapter,
         verse,
+        // for en GL, we use the ULT translation, other GLs use the GLT
         resourceId: languageId === 'en' ? 'ult' : 'glt',
         owner,
         languageId,
@@ -373,6 +413,7 @@ function WorkspaceContainer() {
         setState( { workspaceReady: true })
       }).catch((e) => {
         setState( { workspaceReady: true })
+        console.error(`could not fetch literal translation for  ${{languageId, owner, server}}`)
         processError(e.toString())
       })
     }// eslint-disable-next-line
@@ -416,7 +457,21 @@ function WorkspaceContainer() {
     })
   }, [])
 
-  const cards = [
+  const firstCard = (bookId === 'obs') ?
+    // if doing OBS, show OBS resource card in place of first scripture card
+    {
+      title: 'Open Bible Story',
+      type: 'resource_card',
+      id: 'resource_card_obs',
+      resourceId: 'obs',
+      projectId: bookId,
+      filePath: null,
+      loggedInUser: loggedInUser,
+      authentication: authentication,
+      ...commonResourceCardConfigs,
+    }
+    :
+    // if not doing OBS, show regular first scripture card
     {
       title: 'Literal Translation',
       type: 'scripture_card',
@@ -429,7 +484,10 @@ function WorkspaceContainer() {
         originalLanguageOwner: scriptureOwner,
       },
       ...commonScriptureCardConfigs,
-    },
+    }
+
+  const cards = [
+    firstCard,
     {
       title: 'Original Source',
       type: 'scripture_card',
