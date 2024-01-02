@@ -387,7 +387,7 @@ function WorkspaceContainer() {
       checkForObsRepo()
 
       /**
-       * open the literal bible for current GL to find out which books are finished
+       * open the literal bible for current GL to find out which books have content
        */
       getResourceBibles({
         bookId,
