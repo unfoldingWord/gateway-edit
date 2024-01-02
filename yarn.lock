@@ -9899,16 +9899,11 @@ scripture-resources-rcl@5.5.9:
     word-aligner "^1.0.0"
     xregexp "^4.1.1"
 
-scripture-tsv@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-0.4.0.tgz#429f51fba672c26c9588eaee0ce6cf0977095f1e"
-  integrity sha512-bP5LR9XNiuHgVFUNLlPWSxlotU4RXRrKaxl2G1NDOT28nj2tVeczOguCT00NsjvJ8pGC0LotK9UPdGe3a6Uiog==
+scripture-tsv@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-1.0.0.tgz#a96963f59c66bb0a44e19f329613800a700d6fa7"
+  integrity sha512-XloKmu869ol0CIWWSQtAAXu7thikQ4xsUgrs8lalnkgH5/gZksHTVvqT1QDAYqE8I4tyZzkW7IB/kI8DH+pTpw==
   dependencies:
-    "@emotion/react" "^11.9.3"
-    "@emotion/styled" "^11.9.3"
-    "@mui/icons-material" "^5.8.4"
-    "@mui/material" "^5.8.7"
-    "@mui/styles" "^5.8.7"
     lodash.clonedeep "^4.5.0"
     tsv "^0.2.0"
     use-deep-compare-effect "^1.8.1"
