@@ -458,7 +458,7 @@ function WorkspaceContainer() {
   }, [])
 
   const firstCard = (bookId === 'obs') ?
-    // if doing OBS, show that in place of scripture cards
+    // if doing OBS, show OBS resource card in place of first scripture card
     {
       title: 'Open Bible Story',
       type: 'resource_card',
@@ -471,7 +471,7 @@ function WorkspaceContainer() {
       ...commonResourceCardConfigs,
     }
     :
-    // not doing OBS, so show regular scripture card
+    // if not doing OBS, show regular first scripture card
     {
       title: 'Literal Translation',
       type: 'scripture_card',
