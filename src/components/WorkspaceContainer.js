@@ -349,14 +349,13 @@ function WorkspaceContainer() {
 
   useEffect(() => {
     setState( { workspaceReady: false })
-    setObsSupport(true) // default to true until actual determination is made - since this will not hurt anything and will be smoother if user was last viewing OBS
+    setObsSupport(true) // default to true until actual determination is made - since this will be smoother if user was last viewing OBS
 
     /**
      * check for presence of valid OBS repo
      */
     function checkForObsRepo() {
-      // fetch OBS resource for GL
-      getResourceBibles({
+      getResourceBibles({ // fetch OBS resource for GL
         bookId,
         chapter,
         verse,
@@ -366,27 +365,29 @@ function WorkspaceContainer() {
         ref: appRef,
         server,
       }).then(results => {
-        const { bibles, resourceLink } = results
+        const { bibles: projects, resourceLink, httpCode } = results
         let foundObs = false
 
-        if (bibles?.length > 0) {
+        if (httpCode) {
+          console.warn(`OBS not valid - got invalid http code ${httpCode} ${resourceLink}`)
+        } else if (projects?.length > 0) {
           console.log(`found OBS for ${resourceLink}`)
           foundObs = true
         } else {
-          console.warn(`no projects for ${resourceLink}`)
+          console.warn(`OBS not valid - no projects for ${resourceLink}`)
         }
         setObsSupport(foundObs)
-        setState( { workspaceReady: true })
       }).catch((e) => {
         console.log(`could not fetch OBS translation for  ${{languageId, owner, server}}`)
         setObsSupport(false)
-        setState( { workspaceReady: true })
       })
     }
 
     if (owner && languageId && appRef && server && loggedInUser) {
+      checkForObsRepo()
+
       /**
-       * open the literal bible for current GL so we can find out which books are finished
+       * open the literal bible for current GL to find out which books are finished
        */
       getResourceBibles({
         bookId,
@@ -409,7 +410,7 @@ function WorkspaceContainer() {
         } else {
           console.warn(`no bibles found for ${resourceLink}`)
         }
-        checkForObsRepo()
+        setState( { workspaceReady: true })
       }).catch((e) => {
         setState( { workspaceReady: true })
         console.error(`could not fetch literal translation for  ${{languageId, owner, server}}`)
