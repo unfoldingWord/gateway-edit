@@ -128,6 +128,7 @@ function WorkspaceContainer() {
       greekRepoUrl,
       hebrewRepoUrl,
       mainScreenRef,
+      enableObsSupport,
     },
     actions: {
       logout,
@@ -349,7 +350,7 @@ function WorkspaceContainer() {
 
   useEffect(() => {
     setState( { workspaceReady: false })
-    setObsSupport(true) // default to true until actual determination is made - since this will be smoother if user was last viewing OBS
+    setObsSupport(enableObsSupport) // default to enableObsSupport
 
     /**
      * check for presence of valid OBS repo
@@ -384,7 +385,7 @@ function WorkspaceContainer() {
     }
 
     if (owner && languageId && appRef && server && loggedInUser) {
-      checkForObsRepo()
+      enableObsSupport && checkForObsRepo() // if OBS is enabled, check for OBS repo
 
       /**
        * open the literal bible for current GL to find out which books have content
