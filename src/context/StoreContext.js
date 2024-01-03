@@ -1,6 +1,7 @@
 import React, {
   createContext,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
@@ -67,7 +68,12 @@ export default function StoreContextProvider(props) {
   }
 
   const [mainScreenRef, setMainScreenRef] = useState(null)
-  const [obsSupport, setObsSupport] = useState(true) // default to true until actual determination is made - since this will not hurt anything and will be smoother if user was last viewing OBS
+  // this is initially set to off for general users, but to enable for development set flag (<user>_enableObs) to true in local storage
+  const [enableObsSupport, setEnableObsSupport] = useUserLocalStorage(
+    'enableObs',
+    false,
+  )
+  const [obsSupport, setObsSupport] = useState(enableObsSupport) // default to enable state until actual determination is made
   const [lastError, setLastError] = useState(null)
   const [owner, setOwner] = useUserLocalStorage('owner', '')
   const [languageId, setLanguageId] = useUserLocalStorage('languageId', '')
@@ -100,6 +106,14 @@ export default function StoreContextProvider(props) {
     checkUnsavedChanges,
     showSaveChangesPrompt,
   } = useSaveChangesPrompt()
+
+  useEffect(() => {
+    // when enableObsSupport changes state (likely from reading from local storage),
+    //    then set the default value for OBS
+    if (enableObsSupport !== obsSupport) {
+      setObsSupport(enableObsSupport)
+    }
+  }, [enableObsSupport])
 
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)
@@ -152,6 +166,7 @@ export default function StoreContextProvider(props) {
       cardsLoadingMerge,
       mergeStatusForCards,
       obsSupport,
+      enableObsSupport,
     },
     actions: {
       logout,
