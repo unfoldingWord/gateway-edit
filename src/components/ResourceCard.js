@@ -332,6 +332,11 @@ export default function ResourceCard({
   // }, [chapter, verse, projectId])
 
   const {
+    state: {
+      bibleReference: {
+        bookId,
+      },
+    },
     actions: {
       updateMergeState,
       setCardsSaving,
@@ -420,8 +425,8 @@ export default function ResourceCard({
 
       const isNewRowInDifferentRef = inputChapter !== Number(chapter) || inputVerse !== Number(verse)
       const newTsvs = isNewRowInDifferentRef
-        ? onTsvAdd(row, inputChapter, inputVerse, 0)
-        : onTsvAdd(row, chapter, verse, itemIndex)
+        ? onTsvAdd(row, inputChapter, inputVerse, bookId, 0)
+        : onTsvAdd(row, chapter, verse, bookId, itemIndex)
 
       handleSaveEdit(tsvsObjectToFileString(newTsvs))
       setItemIndexPure(itemIndex + 1)
