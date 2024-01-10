@@ -429,7 +429,7 @@ export default function ResourceCard({
         : onTsvAdd(row, chapter, verse, bookId, itemIndex)
 
       handleSaveEdit(tsvsObjectToFileString(newTsvs))
-      setItemIndexPure(itemIndex + 1)
+      if (!!items.length) setItemIndexPure(itemIndex + 1)
     } catch (error) {
       console.error(
         'Input reference in new row is not of type chapter:verse',

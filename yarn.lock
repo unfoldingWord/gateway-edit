@@ -9905,10 +9905,10 @@ scripture-resources-rcl@5.5.9:
     word-aligner "^1.0.0"
     xregexp "^4.1.1"
 
-scripture-tsv@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-1.0.2.tgz#337b26ef2e75be16017623e59959b88c23f3f655"
-  integrity sha512-xYjt0FQnmjVjjFhC3iFNIPFQd/byOesk3noirWGE1RpBxDdKb7kaNkPxhwhHNvL3FGHW4BS3HzLklH94LmWYgw==
+scripture-tsv@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/scripture-tsv/-/scripture-tsv-1.0.3.tgz#d7ba50e810fd88c4e17c940303970f7cd833a18c"
+  integrity sha512-rNAEdhV5Ru/05WBmnwilpCJajxx2suEVQ9hHVQJ6LNIpeVH5D0r5wM5XjEeZQa/p2AEAChBvG73r4o7+pLxhsQ==
   dependencies:
     lodash.clonedeep "^4.5.0"
     tsv "^0.2.0"
