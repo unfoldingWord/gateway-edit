@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
-import Paper from 'translation-helps-rcl/dist/components/Paper'
+import { Paper } from 'translation-helps-rcl'
 import SaveIcon from '@material-ui/icons/Save'
 import { StoreContext } from '@context/StoreContext'
 import TranslationSettings from '@components/TranslationSettings'
