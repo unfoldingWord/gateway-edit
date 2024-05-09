@@ -6,6 +6,8 @@ import React, {
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
+import cloneDeep from 'lodash.clonedeep'
+import * as isEqual from 'deep-equal'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
@@ -21,6 +23,7 @@ import {
 import { useBoundsUpdater } from 'translation-helps-rcl'
 import PopoverComponent from './PopoverComponent'
 import { StoreContext } from '@context/StoreContext'
+import WordAlignerArea from './WordAlignerArea';
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
@@ -31,10 +34,11 @@ export default function WordAlignerDialog({
   translate,
   getLexiconData,
 }) {
-  const [alignerData, setAlignerData] = useState(null)
+  const [currentAlignerData, setCurrentAlignerData] = useState(null)
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
   const [lexiconData, setLexiconData] = useState(null)
+  const [dialogState, setDialogState] = useState({})
   const [showResetWarning, setShowResetWarning] = useState(false)
   const dialogRef = useRef(null) // for keeping track of  aligner dialog position
 
@@ -52,9 +56,9 @@ export default function WordAlignerDialog({
   } = useBoundsUpdater({ // keeps track of drag bounds
     workspaceRef: mainScreenRef,
     cardRef: dialogRef,
-    open: !!alignerData,
+    open: !!currentAlignerData,
     displayState: {
-      alignerData
+      alignerData: currentAlignerData
     },
   })
 
@@ -74,16 +78,49 @@ export default function WordAlignerDialog({
   }
 
   useEffect(() => {
-    setAlignerData(alignerData_)
+    // see if alignment data has changed
+    const alignments = alignerData_?.alignments || null;
+    const wordBank = alignerData_?.wordBank || null;
+    const show = alignerData_?.showDialog;
+    const verseAlignments_ = dialogState?.verseAlignments || null;
+    const targetWords_ = dialogState?.targetWords || null;
+    const changedTW = !isEqual(wordBank, targetWords_);
+    if (changedTW) {
+      // const differences = diff(wordBank, targetWords_);
+      console.log("targetWords differences")
+    }
+    const changedVA = !isEqual(alignments, verseAlignments_);
+    if (changedVA) {
+      // const differences = diff(verseAlignments, verseAlignments_);
+      console.log("verseAlignments differences")
+    }
+    const showDialog = !!(alignments && wordBank);
+    const changedShow = (!show !== !showDialog)
+
+    if (changedTW || changedVA || changedShow) {
+      const verseAlignments = cloneDeep(alignments);
+      const targetWords = cloneDeep(wordBank);
+      setDialogState({
+        verseAlignments,
+        targetWords,
+        showDialog,
+      })
+    }
+
+    setCurrentAlignerData(cloneDeep(alignerData_))
   }, [alignerData_])
 
+  useEffect(() => {
+    console.log('WordAlignerDialog: initialized')
+  }, [])
+
   useEffect(() => { // monitor changes in alignment dialog position and open state
-    if (alignerData &&
+    if (currentAlignerData &&
       dialogRef?.current?.clientWidth &&
       dialogRef?.current?.clientHeight) {
       doUpdateBounds()
     }
-  }, [dialogRef?.current, alignerData])
+  }, [dialogRef?.current, currentAlignerData])
 
   /**
    * called on every alignment change.  We save this new alignment state so that it can be applied if user clicks accept.
@@ -91,10 +128,10 @@ export default function WordAlignerDialog({
    * @param {object} results
    */
   function onAlignmentChange(results) {
-    const onAlignmentsChange = alignerStatus?.actions?.onAlignmentsChange
-    const alignmentComplete = onAlignmentsChange?.(results)
-    setAlignmentChange(results) // save the most recent change
-    setAligned(alignmentComplete) // update alignment complete status
+    // const onAlignmentsChange = alignerStatus?.actions?.onAlignmentsChange
+    // const alignmentComplete = onAlignmentsChange?.(results)
+    // setAlignmentChange(results) // save the most recent change
+    setAligned(false) // update alignment complete status
   }
 
   function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
@@ -108,13 +145,13 @@ export default function WordAlignerDialog({
     })
   }
 
-  const errorMessage = alignerData?.errorMessage
+  const errorMessage = currentAlignerData?.errorMessage
 
   useEffect(() => { // set initial aligned state
-    if (alignerData) {
+    if (currentAlignerData) {
       setAligned(!!alignerStatus?.state?.aligned)
     }
-  }, [alignerData, alignerStatus])
+  }, [currentAlignerData, alignerStatus])
 
   const {
     projectId,
@@ -135,17 +172,26 @@ export default function WordAlignerDialog({
     setAlignmentChange(null)
   }
 
+  function setShowDialog(show) {
+    const _dialogState = {
+      ...dialogState,
+      showDialog: !!show,
+    }
+    setDialogState(_dialogState)
+  }
+
   /**
    * reset all the alignments
    */
   function doReset() {
     console.log('WordAlignerDialog() - reset Alignments Clicked')
-    setShowResetWarning(false)
-    const alignmentData_ = AlignmentHelpers.resetAlignments(alignerData?.alignments, alignerData?.wordBank)
+    setShowDialog(false) // momentarily hide the dialog
+    const alignmentData_ = AlignmentHelpers.resetAlignments(dialogState?.verseAlignments, dialogState?.targetWords)
 
-    setAlignerData({ // this causes word aligner to redraw with empty alignments
-      alignments: alignmentData_.verseAlignments,
-      wordBank: alignmentData_.targetWords,
+    setDialogState({ // this causes word aligner to redraw with empty alignments
+      verseAlignments: alignmentData_.verseAlignments,
+      targetWords: alignmentData_.targetWords,
+      showDialog: true,
     })
 
     const latestChange = alignmentChange || {}
@@ -157,7 +203,9 @@ export default function WordAlignerDialog({
     setAlignmentChange(alignmentChange_) // clear the last alignment changes in case user next does save
   }
 
-  const enableResetWarning = useMemo( () => (showResetWarning && !!alignerData), [showResetWarning && !!alignerData])
+  const showDialog = !!dialogState?.showDialog;
+  const haveAlignerData = !!(dialogState?.verseAlignments && dialogState?.targetWords)
+  const enableResetWarning = useMemo( () => (showDialog && haveAlignerData), [showDialog, haveAlignerData])
 
   return (
     <>
@@ -165,43 +213,28 @@ export default function WordAlignerDialog({
         fullWidth={true}
         maxWidth={'lg'}
         onClose={() => {}}
-        open={!!alignerData}
+        open={!!showDialog}
         PaperComponent={PaperComponent}
         bounds={bounds}
         aria-labelledby="draggable-aligner-dialog-title"
       >
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-aligner-dialog-title" >
-          <span>
-            {`Aligning: ${title}`}
-            {aligned? (
-              <RxLink2 style={alignmentIconStyle} id='valid_icon' color='#BBB' />
-            ) : (
-              <RxLinkBreak2 style={alignmentIconStyle} id='invalid_icon' color='#000' />
-            )}
-          </span>
-        </DialogTitle>
-        <div style={{ width : `95%`, margin: '10px' }} >
-          {(!errorMessage && alignerData?.alignments) ?
-            <WordAligner
-              style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
-              verseAlignments={alignerData?.alignments || null}
-              targetWords={alignerData?.wordBank || null}
-              translate={translate}
-              contextId={{ reference: alignerStatus?.state?.reference || {} }}
-              targetLanguage={alignerStatus?.state?.targetLanguage}
-              targetLanguageFont={''}
-              sourceLanguage={alignerStatus?.state?.sourceLanguage}
-              showPopover={showPopover}
-              lexicons={{}}
-              loadLexiconEntry={getLexiconData}
-              onChange={onAlignmentChange}
-            />
-            : // if error, then show message
-            <div style={{ textAlign: 'center', fontSize: '1.5em', fontStyle: 'italic', fontWeight: 'bold' }}>
-              { errorMessage || '' }
-            </div>
-          }
-        </div>
+        <WordAlignerArea
+          aligned={!!alignerStatus?.state?.aligned}
+          alignmentIconStyle={alignmentIconStyle}
+          title={title}
+          style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
+          verseAlignments={dialogState?.verseAlignments}
+          targetWords={dialogState?.targetWords}
+          translate={translate}
+          contextId={{ reference: alignerStatus?.state?.reference || {} }}
+          targetLanguage={alignerStatus?.state?.targetLanguage}
+          targetLanguageFont={''}
+          sourceLanguage={alignerStatus?.state?.sourceLanguage}
+          showPopover={showPopover}
+          lexiconCache={{}}
+          loadLexiconEntry={getLexiconData}
+        />
+
         <span style={{ width : `95%`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
           <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={cancelAlignment}>
             Cancel
