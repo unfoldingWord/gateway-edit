@@ -29,10 +29,15 @@ export default function WordAlignerArea({
 }) {
   const [aligned_, setAligned] = useState(aligned)
   const [alignmentChange, setAlignmentChange] = useState(null)
-  const [currentAlignerData, setCurrentAlignerData] = useState(null)
-
-  const alignments = currentAlignerData?.alignments || null;
-  const wordBank = currentAlignerData?.wordBank || null;
+  const alignerData_ =
+    targetWords && verseAlignments
+  ?
+    {
+      targetWords,
+      verseAlignments
+    }
+  :
+      null;
 
   useEffect(() => {
     console.log('WordAlignerArea: initialized')
@@ -40,26 +45,24 @@ export default function WordAlignerArea({
 
   useEffect(() => {
     // see if alignment data has changed
-    const alignments = alignerData_?.alignments || null;
-    const wordBank = alignerData_?.wordBank || null;
     const show = alignerData_?.showDialog;
     const verseAlignments_ = dialogState?.verseAlignments || null;
     const targetWords_ = dialogState?.targetWords || null;
-    const changedTW = !isEqual(wordBank, targetWords_);
+    const changedTW = !isEqual(targetWords, targetWords_);
     if (changedTW) {
       // const differences = diff(wordBank, targetWords_);
       console.log("targetWords differences")
     }
-    const changedVA = !isEqual(alignments, verseAlignments_);
+    const changedVA = !isEqual(verseAlignments_, verseAlignments_);
     if (changedVA) {
       // const differences = diff(verseAlignments, verseAlignments_);
       console.log("verseAlignments differences")
     }
-    const showDialog = !!(alignments && wordBank);
+    const showDialog = !!(verseAlignments_ && targetWords);
     const changedShow = (!show !== !showDialog)
 
     if (changedTW || changedVA || changedShow) {
-      const verseAlignments = cloneDeep(alignments);
+      const verseAlignments = cloneDeep(verseAlignments_);
       const targetWords = cloneDeep(wordBank);
       setDialogState({
         verseAlignments,
@@ -88,7 +91,7 @@ export default function WordAlignerArea({
       // const differences = diff(wordBank, targetWords_);
       console.log("wordBank differences")
     }
-    const changedVA = !isEqual(alignments_, alignments);
+    const changedVA = !isEqual(alignments_, verseAlignments_);
     if (changedVA) {
       // const differences = diff(verseAlignments, verseAlignments_);
       console.log("alignments differences")
