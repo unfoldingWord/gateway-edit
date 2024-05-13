@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import { AlignmentHelpers, WordAligner } from 'word-aligner-rcl'
+import * as isEqual from "deep-equal";
+import cloneDeep from "lodash.clonedeep";
 
 // popup dialog for user to align verse
 export default function WordAlignerArea({
@@ -16,21 +18,58 @@ export default function WordAlignerArea({
   sourceLanguage,
   sourceLanguageFont,
   sourceFontSizePercent,
+  style,
   targetLanguage,
   targetLanguageFont,
   targetFontSizePercent,
   title,
   translate,
-  verseAlignments,
   targetWords,
-  style,
+  verseAlignments,
 }) {
   const [aligned_, setAligned] = useState(aligned)
   const [alignmentChange, setAlignmentChange] = useState(null)
+  const [currentAlignerData, setCurrentAlignerData] = useState(null)
+
+  const alignments = currentAlignerData?.alignments || null;
+  const wordBank = currentAlignerData?.wordBank || null;
 
   useEffect(() => {
     console.log('WordAlignerArea: initialized')
   }, [])
+
+  useEffect(() => {
+    // see if alignment data has changed
+    const alignments = alignerData_?.alignments || null;
+    const wordBank = alignerData_?.wordBank || null;
+    const show = alignerData_?.showDialog;
+    const verseAlignments_ = dialogState?.verseAlignments || null;
+    const targetWords_ = dialogState?.targetWords || null;
+    const changedTW = !isEqual(wordBank, targetWords_);
+    if (changedTW) {
+      // const differences = diff(wordBank, targetWords_);
+      console.log("targetWords differences")
+    }
+    const changedVA = !isEqual(alignments, verseAlignments_);
+    if (changedVA) {
+      // const differences = diff(verseAlignments, verseAlignments_);
+      console.log("verseAlignments differences")
+    }
+    const showDialog = !!(alignments && wordBank);
+    const changedShow = (!show !== !showDialog)
+
+    if (changedTW || changedVA || changedShow) {
+      const verseAlignments = cloneDeep(alignments);
+      const targetWords = cloneDeep(wordBank);
+      setDialogState({
+        verseAlignments,
+        targetWords,
+        showDialog,
+      })
+    }
+
+    setCurrentAlignerData(cloneDeep(alignerData_))
+  }, [alignerData_])
 
   useEffect(() => {
     if (aligned !== aligned_) {
@@ -38,6 +77,31 @@ export default function WordAlignerArea({
       setAligned(aligned)
     }
   }, [aligned])
+
+  useEffect(() => {
+    // see if verse alignment data has changed
+    const alignments_ = verseAlignments || null;
+    const wordBank_ = targetWords || null;
+
+    const changedTW = !isEqual(wordBank_, wordBank);
+    if (changedTW) {
+      // const differences = diff(wordBank, targetWords_);
+      console.log("wordBank differences")
+    }
+    const changedVA = !isEqual(alignments_, alignments);
+    if (changedVA) {
+      // const differences = diff(verseAlignments, verseAlignments_);
+      console.log("alignments differences")
+    }
+    if (changedTW || changedVA) {
+      const alignments = cloneDeep(alignments_);
+      const wordBank = cloneDeep(wordBank_);
+      setCurrentAlignerData({
+        alignments,
+        wordBank,
+      })
+    }
+  }, [targetWords, verseAlignments,])
 
 
   function onAlignmentChange(results) {
@@ -76,6 +140,7 @@ export default function WordAlignerArea({
           onChange={onAlignmentChange}
         />
       </div>
+
     </>
   )
 }

@@ -34,7 +34,6 @@ export default function WordAlignerDialog({
   translate,
   getLexiconData,
 }) {
-  const [currentAlignerData, setCurrentAlignerData] = useState(null)
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
   const [lexiconData, setLexiconData] = useState(null)
@@ -43,6 +42,7 @@ export default function WordAlignerDialog({
   const dialogRef = useRef(null) // for keeping track of  aligner dialog position
 
   const alignerData_ = alignerStatus?.state?.alignerData
+  const showDialog = !!(alignerData_?.alignments && alignerData_?.wordBank)
 
   const {
     state: {
@@ -56,9 +56,9 @@ export default function WordAlignerDialog({
   } = useBoundsUpdater({ // keeps track of drag bounds
     workspaceRef: mainScreenRef,
     cardRef: dialogRef,
-    open: !!currentAlignerData,
+    open: !!showDialog,
     displayState: {
-      alignerData: currentAlignerData
+      alignerData: alignerData_
     },
   })
 
@@ -77,50 +77,18 @@ export default function WordAlignerDialog({
     )
   }
 
-  useEffect(() => {
-    // see if alignment data has changed
-    const alignments = alignerData_?.alignments || null;
-    const wordBank = alignerData_?.wordBank || null;
-    const show = alignerData_?.showDialog;
-    const verseAlignments_ = dialogState?.verseAlignments || null;
-    const targetWords_ = dialogState?.targetWords || null;
-    const changedTW = !isEqual(wordBank, targetWords_);
-    if (changedTW) {
-      // const differences = diff(wordBank, targetWords_);
-      console.log("targetWords differences")
-    }
-    const changedVA = !isEqual(alignments, verseAlignments_);
-    if (changedVA) {
-      // const differences = diff(verseAlignments, verseAlignments_);
-      console.log("verseAlignments differences")
-    }
-    const showDialog = !!(alignments && wordBank);
-    const changedShow = (!show !== !showDialog)
-
-    if (changedTW || changedVA || changedShow) {
-      const verseAlignments = cloneDeep(alignments);
-      const targetWords = cloneDeep(wordBank);
-      setDialogState({
-        verseAlignments,
-        targetWords,
-        showDialog,
-      })
-    }
-
-    setCurrentAlignerData(cloneDeep(alignerData_))
-  }, [alignerData_])
 
   useEffect(() => {
     console.log('WordAlignerDialog: initialized')
   }, [])
 
   useEffect(() => { // monitor changes in alignment dialog position and open state
-    if (currentAlignerData &&
+    if (alignerData_ &&
       dialogRef?.current?.clientWidth &&
       dialogRef?.current?.clientHeight) {
       doUpdateBounds()
     }
-  }, [dialogRef?.current, currentAlignerData])
+  }, [dialogRef?.current, alignerData_])
 
   /**
    * called on every alignment change.  We save this new alignment state so that it can be applied if user clicks accept.
@@ -203,9 +171,7 @@ export default function WordAlignerDialog({
     setAlignmentChange(alignmentChange_) // clear the last alignment changes in case user next does save
   }
 
-  const showDialog = !!dialogState?.showDialog;
-  const haveAlignerData = !!(dialogState?.verseAlignments && dialogState?.targetWords)
-  const enableResetWarning = useMemo( () => (showDialog && haveAlignerData), [showDialog, haveAlignerData])
+  const enableResetWarning = false; // useMemo( () => (showDialog && haveAlignerData), [showDialog, haveAlignerData])
 
   return (
     <>
@@ -221,15 +187,15 @@ export default function WordAlignerDialog({
         <WordAlignerArea
           aligned={!!alignerStatus?.state?.aligned}
           alignmentIconStyle={alignmentIconStyle}
-          title={title}
+          title={title || ''}
           style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
-          verseAlignments={dialogState?.verseAlignments}
-          targetWords={dialogState?.targetWords}
+          verseAlignments={dialogState?.verseAlignments || []}
+          targetWords={dialogState?.targetWords || []}
           translate={translate}
           contextId={{ reference: alignerStatus?.state?.reference || {} }}
-          targetLanguage={alignerStatus?.state?.targetLanguage}
+          targetLanguage={alignerStatus?.state?.targetLanguage || ''}
           targetLanguageFont={''}
-          sourceLanguage={alignerStatus?.state?.sourceLanguage}
+          sourceLanguage={alignerStatus?.state?.sourceLanguage || ''}
           showPopover={showPopover}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
