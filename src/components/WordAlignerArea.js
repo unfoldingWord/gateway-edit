@@ -45,17 +45,10 @@ export default function WordAlignerArea({
     const verseAlignments_ = initialAlignment?.verseAlignments;
     const targetWords_ = initialAlignment?.targetWords;
     const changedTW = !isEqual(targetWords, targetWords_);
-    if (changedTW) {
-      // const differences = diff(targetWords, targetWords_);
-      console.log("targetWords differences")
-    }
     const changedVA = !isEqual(verseAlignments, verseAlignments_);
-    if (changedVA) {
-      // const differences = diff(verseAlignments, verseAlignments_);
-      console.log("verseAlignments differences")
-    }
 
     if (changedTW || changedVA) {
+      console.log('WordAlignerArea: alignment data changed')
       const newAlignment = {
         verseAlignments,
         targetWords,

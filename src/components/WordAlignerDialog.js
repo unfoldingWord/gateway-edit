@@ -100,13 +100,6 @@ export default function WordAlignerDialog({
 
   const errorMessage = alignerStatus?.state?.errorMessage
 
-  useEffect(() => { // set initial aligned state
-    if (shouldShowDialog) {
-      console.log('WordAlignerDialog: set initial aligned state')
-      setAligned(!!alignerStatus?.state?.aligned)
-    }
-  }, [shouldShowDialog, alignerStatus])
-
   const {
     projectId,
     chapter,
