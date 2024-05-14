@@ -7,22 +7,11 @@ import React, {
 import PropTypes from 'prop-types'
 import cloneDeep from 'lodash.clonedeep'
 import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import { AlignmentHelpers } from 'word-aligner-rcl'
-import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
-import {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-} from '@mui/material'
 import { useBoundsUpdater } from 'translation-helps-rcl'
-import PopoverComponent from './PopoverComponent'
 import { StoreContext } from '@context/StoreContext'
 import WordAlignerArea from './WordAlignerArea';
-
-const alignmentIconStyle = { marginLeft:'50px' }
 
 // popup dialog for user to align verse
 export default function WordAlignerDialog({
@@ -31,7 +20,6 @@ export default function WordAlignerDialog({
   translate,
   getLexiconData,
 }) {
-  const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
   const [dialogState, setDialogState_] = useState({})
   const dialogRef = useRef(null) // for keeping track of  aligner dialog position
@@ -110,18 +98,6 @@ export default function WordAlignerDialog({
     }
   }, [currentInstance, alignerData_])
 
-  /**
-   * called on every alignment change.  We save this new alignment state so that it can be applied if user clicks accept.
-   *   We also update the aligned status so that the UI can be updated dynamically
-   * @param {object} results
-   */
-  function onAlignmentChange(results) {
-    console.log('WordAlignerDialog: onAlignmentChange')
-    const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(results?.targetWords, results?.verseAlignments);
-    setAlignmentChange(results) // save the most recent change
-    setAligned(alignmentComplete) // update alignment complete status
-  }
-
   const errorMessage = alignerStatus?.state?.errorMessage
 
   useEffect(() => { // set initial aligned state
@@ -148,14 +124,6 @@ export default function WordAlignerDialog({
     setDialogState_(dialogState_)
   }
 
-  function setShowDialog(show) {
-    console.log('WordAlignerDialog: setShowDialog', show)
-    const _dialogState = {
-      showDialog: !!show,
-    }
-    setDialogState(_dialogState);
-  }
-
   return (
     <>
       <Dialog
@@ -170,7 +138,6 @@ export default function WordAlignerDialog({
         <WordAlignerArea
           aligned={aligned}
           alignmentActions={alignerStatus?.actions}
-          alignmentIconStyle={alignmentIconStyle}
           errorMessage={errorMessage}
           title={title || ''}
           style={{ maxHeight: `${height}px`, overflowY: 'auto' }}

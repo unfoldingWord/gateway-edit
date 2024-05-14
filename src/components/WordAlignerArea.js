@@ -9,8 +9,6 @@ import Button from "@mui/material/Button";
 import PopoverComponent from "./PopoverComponent";
 import Dialog from "@mui/material/Dialog";
 import {DialogActions, DialogContent, DialogContentText} from "@mui/material";
-import Draggable from "react-draggable";
-import Paper from "@mui/material/Paper";
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
@@ -18,7 +16,6 @@ const alignmentIconStyle = { marginLeft:'50px' }
 export default function WordAlignerArea({
   aligned,
   alignmentActions,
-  alignmentIconStyle,
   contextId,
   errorMessage,
   lexiconCache,
@@ -38,13 +35,34 @@ export default function WordAlignerArea({
 }) {
   const [aligned_, setAligned] = useState(aligned)
   const [alignmentChange, setAlignmentChange] = useState(null)
+  const [initialAlignment, setInitialAlignment] = useState(null)
   const [lexiconData, setLexiconData] = useState(null)
   const [showResetWarning, setShowResetWarning] = useState(false)
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
 
   useEffect(() => {
-    console.log('WordAlignerArea: initialized')
-  }, [])
+    // see if alignment data has changed
+    const verseAlignments_ = initialAlignment?.verseAlignments;
+    const targetWords_ = initialAlignment?.targetWords;
+    const changedTW = !isEqual(targetWords, targetWords_);
+    if (changedTW) {
+      // const differences = diff(targetWords, targetWords_);
+      console.log("targetWords differences")
+    }
+    const changedVA = !isEqual(verseAlignments, verseAlignments_);
+    if (changedVA) {
+      // const differences = diff(verseAlignments, verseAlignments_);
+      console.log("verseAlignments differences")
+    }
+
+    if (changedTW || changedVA) {
+      const newAlignment = {
+        verseAlignments,
+        targetWords,
+      }
+      setInitialAlignment(cloneDeep(newAlignment))
+    }
+  }, [targetWords, verseAlignments])
 
   useEffect(() => {
     if (aligned !== aligned_) {
@@ -54,8 +72,6 @@ export default function WordAlignerArea({
   }, [aligned])
 
   function onAlignmentChange(results) {
-    // const onAlignmentsChange = alignerStatus?.actions?.onAlignmentsChange
-    // const alignmentComplete = onAlignmentsChange?.(results)
     const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(results.targetWords, results.verseAlignments);
     setAlignmentChange(results) // save the most recent change
     setAligned(alignmentComplete) // update alignment complete status
@@ -80,21 +96,18 @@ export default function WordAlignerArea({
    */
   function doReset() {
     console.log('WordAlignerDialog: doReset')
-    // setShowDialog(false) // momentarily hide the dialog
-    // const alignmentData_ = AlignmentHelpers.resetAlignments(showDialog?.verseAlignments, showDialog?.targetWords)
-    //
-    // const showDialog = true;
-    // const dialogState_ = {
-    //   ...alignmentData_, // merge in reset alignment data
-    //   showDialog,
-    // }
-    //
-    // setDialogState(dialogState_); // this causes word aligner to redraw with empty alignments
-    // setAlignmentChange(cloneDeep(alignmentData_)) // clear the last alignment changes in case user next does save
+    const alignmentData_ = AlignmentHelpers.resetAlignments(initialAlignment?.verseAlignments, initialAlignment?.targetWords)
+    setInitialAlignment(cloneDeep(alignmentData_))
+    const alignmentChange_ = {
+      ...alignmentChange,
+      targetWords: alignmentData_?.targetWords,
+      verseAlignments: alignmentData_?.verseAlignments,
+    }
+    setAlignmentChange(cloneDeep(alignmentChange_))
+    setShowResetWarning(false)
   }
 
   function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
-    // TODO: make show popover pretty and fix positioning
     console.log(`showPopover`, rawData)
     setLexiconData({
       PopoverTitle,
@@ -122,8 +135,8 @@ export default function WordAlignerArea({
       <div style={{width: `95%`, margin: '10px'}}>
         <WordAligner
           style={style}
-          verseAlignments={verseAlignments}
-          targetWords={targetWords}
+          verseAlignments={initialAlignment?.verseAlignments || []}
+          targetWords={initialAlignment?.targetWords ||[]}
           translate={translate}
           contextId={contextId}
           targetLanguage={targetLanguage}
