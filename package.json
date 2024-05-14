@@ -40,7 +40,6 @@
     "autoprefixer": "^10.1.0",
     "bible-reference-rcl": "1.4.0",
     "core-js": "^3.8.3",
-    "deep-diff": "^1.0.2",
     "deep-equal": "^2.0.5",
     "gitea-react-toolkit": "2.4.0",
     "localforage": "^1.9.0",
