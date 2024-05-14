@@ -34,13 +34,12 @@ export default function WordAlignerDialog({
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
   const [lexiconData, setLexiconData] = useState(null)
-  const [dialogState, setDialogState] = useState(false)
+  const [dialogState, setDialogState_] = useState({})
   const [showResetWarning, setShowResetWarning] = useState(false)
   const dialogRef = useRef(null) // for keeping track of  aligner dialog position
 
   const alignerData_ = alignerStatus?.state?.alignerData || null
-  const shouldShowDialog = !!(alignerData_?.verseAlignments && alignerData_?.targetWords)
-
+  const shouldShowDialog = !!(alignerData_?.alignments && alignerData_?.wordBank)
   const currentShowDialog = !!dialogState?.showDialog
 
   const {
@@ -80,11 +79,11 @@ export default function WordAlignerDialog({
     console.log('WordAlignerDialog: aligner data changed')
     if (currentShowDialog !== shouldShowDialog) {
       console.log('WordAlignerDialog: aligner visible state changed')
-      setShowDialog(shouldShowDialog)
-      setDialogState(cloneDeep({
+      const dialogState_ = {
         ...alignerData_,
         showDialog: shouldShowDialog,
-      }))
+      };
+      setDialogState(dialogState_)
     }
   }, [alignerData_])
 
@@ -102,11 +101,6 @@ export default function WordAlignerDialog({
       </Draggable>
     )
   }
-
-
-  useEffect(() => {
-    console.log('WordAlignerDialog: initialized')
-  }, [])
 
   const currentInstance = dialogRef?.current;
   useEffect(() => { // monitor changes in alignment dialog position and open state
@@ -157,6 +151,15 @@ export default function WordAlignerDialog({
   } = alignerStatus?.state?.reference || {}
   const title = `${projectId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
 
+  function setDialogState(newState) {
+    const dialogState_ = cloneDeep(
+      {
+        ...dialogState,
+        ...newState,
+      }
+    )
+    setDialogState_(dialogState_)
+  }
   function cancelAlignment() {
     console.log('WordAlignerDialog: cancelAlignment')
     const cancelAlignment = alignerStatus?.actions?.cancelAlignment
@@ -174,10 +177,9 @@ export default function WordAlignerDialog({
   function setShowDialog(show) {
     console.log('WordAlignerDialog: setShowDialog', show)
     const _dialogState = {
-      ...dialogState,
       showDialog: !!show,
     }
-    setDialogState(cloneDeep(_dialogState));
+    setDialogState(_dialogState);
   }
 
   /**
@@ -190,12 +192,11 @@ export default function WordAlignerDialog({
 
     const showDialog = true;
     const dialogState_ = {
-      ...dialogState, // keep old data
       ...alignmentData_, // merge in reset alignment data
       showDialog,
     }
 
-    setDialogState(cloneDeep(dialogState_)); // this causes word aligner to redraw with empty alignments
+    setDialogState(dialogState_); // this causes word aligner to redraw with empty alignments
     setAlignmentChange(cloneDeep(alignmentData_)) // clear the last alignment changes in case user next does save
   }
 
@@ -217,8 +218,8 @@ export default function WordAlignerDialog({
           alignmentIconStyle={alignmentIconStyle}
           title={title || ''}
           style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
-          verseAlignments={dialogState?.verseAlignments || []}
-          targetWords={dialogState?.targetWords || []}
+          verseAlignments={dialogState?.alignments || []}
+          targetWords={dialogState?.wordBank || []}
           translate={translate}
           contextId={{ reference: alignerStatus?.state?.reference || {} }}
           targetLanguage={alignerStatus?.state?.targetLanguage || ''}
