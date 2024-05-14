@@ -5,7 +5,6 @@ import React, {
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
-import cloneDeep from 'lodash.clonedeep'
 import Dialog from '@mui/material/Dialog'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
@@ -21,12 +20,11 @@ export default function WordAlignerDialog({
   getLexiconData,
 }) {
   const [aligned, setAligned] = useState(false)
-  const [dialogState, setDialogState_] = useState({})
+  const [showDialog, setShowDialog] = useState({})
   const dialogRef = useRef(null) // for keeping track of  aligner dialog position
 
   const alignerData_ = alignerStatus?.state?.alignerData || null
   const shouldShowDialog = !!(alignerData_?.alignments && alignerData_?.wordBank)
-  const currentShowDialog = !!dialogState?.showDialog
 
   const {
     state: {
@@ -37,9 +35,9 @@ export default function WordAlignerDialog({
   const boundsParams = { // keeps track of drag bounds
     workspaceRef: mainScreenRef,
     cardRef: dialogRef,
-    open: !!currentShowDialog,
+    open: !!showDialog,
     displayState: {
-      alignerData: currentShowDialog
+      alignerData: showDialog
     },
   };
   const {
@@ -63,13 +61,9 @@ export default function WordAlignerDialog({
 
   useEffect(() => {
     console.log('WordAlignerDialog: aligner data changed')
-    if (currentShowDialog !== shouldShowDialog) {
+    if (showDialog !== shouldShowDialog) {
       console.log('WordAlignerDialog: aligner visible state changed')
-      const dialogState_ = {
-        ...alignerData_,
-        showDialog: shouldShowDialog,
-      };
-      setDialogState(dialogState_)
+      setShowDialog(shouldShowDialog)
     }
   }, [alignerData_])
 
@@ -107,23 +101,13 @@ export default function WordAlignerDialog({
   } = alignerStatus?.state?.reference || {}
   const title = `${projectId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
 
-  function setDialogState(newState) {
-    const dialogState_ = cloneDeep(
-      {
-        ...dialogState,
-        ...newState,
-      }
-    )
-    setDialogState_(dialogState_)
-  }
-
   return (
     <>
       <Dialog
         fullWidth={true}
         maxWidth={'lg'}
         onClose={() => {}}
-        open={!!currentShowDialog}
+        open={!!showDialog}
         PaperComponent={PaperComponent}
         bounds={bounds}
         aria-labelledby="draggable-aligner-dialog-title"
@@ -134,8 +118,8 @@ export default function WordAlignerDialog({
           errorMessage={errorMessage}
           title={title || ''}
           style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
-          verseAlignments={dialogState?.alignments || []}
-          targetWords={dialogState?.wordBank || []}
+          verseAlignments={alignerData_?.alignments || []}
+          targetWords={alignerData_?.wordBank || []}
           translate={translate}
           contextId={{ reference: alignerStatus?.state?.reference || {} }}
           targetLanguage={alignerStatus?.state?.targetLanguage || ''}
