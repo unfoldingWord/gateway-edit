@@ -33,9 +33,7 @@ export default function WordAlignerDialog({
 }) {
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [aligned, setAligned] = useState(false)
-  const [lexiconData, setLexiconData] = useState(null)
   const [dialogState, setDialogState_] = useState({})
-  const [showResetWarning, setShowResetWarning] = useState(false)
   const dialogRef = useRef(null) // for keeping track of  aligner dialog position
 
   const alignerData_ = alignerStatus?.state?.alignerData || null
@@ -124,17 +122,6 @@ export default function WordAlignerDialog({
     setAligned(alignmentComplete) // update alignment complete status
   }
 
-  function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
-    // TODO: make show popover pretty and fix positioning
-    console.log(`showPopover`, rawData)
-    setLexiconData({
-      PopoverTitle,
-      wordDetails,
-      positionCoord,
-      rawData,
-    })
-  }
-
   const errorMessage = alignerStatus?.state?.errorMessage
 
   useEffect(() => { // set initial aligned state
@@ -160,19 +147,6 @@ export default function WordAlignerDialog({
     )
     setDialogState_(dialogState_)
   }
-  function cancelAlignment() {
-    console.log('WordAlignerDialog: cancelAlignment')
-    const cancelAlignment = alignerStatus?.actions?.cancelAlignment
-    cancelAlignment?.()
-    setAlignmentChange(null)
-  }
-
-  function saveAlignment() {
-    console.log('WordAlignerDialog: saveAlignment')
-    const saveAlignment = alignerStatus?.actions?.saveAlignment
-    saveAlignment?.(alignmentChange)
-    setAlignmentChange(null)
-  }
 
   function setShowDialog(show) {
     console.log('WordAlignerDialog: setShowDialog', show)
@@ -181,26 +155,6 @@ export default function WordAlignerDialog({
     }
     setDialogState(_dialogState);
   }
-
-  /**
-   * reset all the alignments
-   */
-  function doReset() {
-    console.log('WordAlignerDialog: doReset')
-    setShowDialog(false) // momentarily hide the dialog
-    const alignmentData_ = AlignmentHelpers.resetAlignments(showDialog?.verseAlignments, showDialog?.targetWords)
-
-    const showDialog = true;
-    const dialogState_ = {
-      ...alignmentData_, // merge in reset alignment data
-      showDialog,
-    }
-
-    setDialogState(dialogState_); // this causes word aligner to redraw with empty alignments
-    setAlignmentChange(cloneDeep(alignmentData_)) // clear the last alignment changes in case user next does save
-  }
-
-  const enableResetWarning = (currentShowDialog && showResetWarning);
 
   return (
     <>
@@ -215,7 +169,9 @@ export default function WordAlignerDialog({
       >
         <WordAlignerArea
           aligned={aligned}
+          alignmentActions={alignerStatus?.actions}
           alignmentIconStyle={alignmentIconStyle}
+          errorMessage={errorMessage}
           title={title || ''}
           style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
           verseAlignments={dialogState?.alignments || []}
@@ -225,51 +181,10 @@ export default function WordAlignerDialog({
           targetLanguage={alignerStatus?.state?.targetLanguage || ''}
           targetLanguageFont={''}
           sourceLanguage={alignerStatus?.state?.sourceLanguage || ''}
-          showPopover={showPopover}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
         />
 
-        <span style={{ width : `95%`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-          <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={cancelAlignment}>
-            Cancel
-          </Button>
-          {!errorMessage && // only show these buttons if there is no error
-            <>
-              <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={() => setShowResetWarning(true)}>
-                Reset
-              </Button>
-              <Button variant="outlined" style={{ margin: '10px 100px' }} onClick={saveAlignment}>
-                Accept
-              </Button>
-            </>
-          }
-        </span>
-      </Dialog>
-      {/** Lexicon Popup dialog */}
-      <PopoverComponent
-        popoverVisibility={lexiconData}
-        title={lexiconData?.PopoverTitle || ''}
-        bodyText={lexiconData?.wordDetails || ''}
-        positionCoord={lexiconData?.positionCoord}
-        onClosePopover={() => setLexiconData(null)}
-      />
-
-      <Dialog open={enableResetWarning} onClose={() => setShowResetWarning(false)} aria-labelledby="reset-warn-dialog">
-        <DialogTitle id="form-dialog-title">{'Warning'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {'Are you sure you want to clear all alignments?'}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowResetWarning(false)} color="primary">
-            No
-          </Button>
-          <Button onClick={doReset} color="secondary">
-            Yes
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   )
