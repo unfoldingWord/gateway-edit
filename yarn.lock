@@ -11100,14 +11100,15 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.0.4.tgz#254bc6b980680827df8e679f26bec4bc05972be0"
-  integrity sha512-uq8mZLLOo18rNqo4MsM4mD9iSSyRH2BwG1+2dqGlNu5A89B6YPii5e6XoN6CMazSA5OQKa3zqtcBftkowe1L/Q==
+word-aligner-rcl@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.1.0.tgz#45e1d1fb0c6de9941f4dc394accd4a829df095ee"
+  integrity sha512-BSdYnxuNrc1jwm6auV8aFT3zkbp2RScVPrpSA3GNwek8hzxi0kLXGwioQg1U6ztrt3i45yF42CtkSRVZXBesRg==
   dependencies:
     bible-reference-range "^1.1.0"
+    deep-equal "^2.0.5"
     file-loader "^6.2.0"
-    lodash "^4.17.21"
+    lodash.clonedeep "^4.5.0"
     string-punctuation-tokenizer "2.2.0"
     usfm-js "3.4.2"
     word-aligner "1.0.2"
