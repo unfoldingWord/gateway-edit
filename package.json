@@ -54,7 +54,7 @@
     "react-icons": "^4.8.0",
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "2.1.4",
-    "scripture-resources-rcl": "5.5.9",
+    "scripture-resources-rcl": "5.5.10-beta",
     "scripture-tsv": "1.2.0",
     "single-scripture-rcl": "3.4.19",
     "tailwindcss": "^2.0.4",
