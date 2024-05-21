@@ -9425,10 +9425,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.5.10:
-  version "5.5.10"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.5.10.tgz#0d4615d7d8908321cf983d6971db1189c6d720bc"
-  integrity sha512-IOWHNl82NidXMsgohYL/ulZgJplQY3LOfRmqTtHZogZjSFC8EhuC43cCaT0/UddCo73lY1WxTeSCHd0HxaAxPQ==
+scripture-resources-rcl@5.5.12:
+  version "5.5.12"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.5.12.tgz#789c89ec02ba5cd94c6688d4cc5cccfcee58a81d"
+  integrity sha512-/+0cTeU/gWUNTDqmM0/gZIf4T2h1mj3FE8whdYbITT9N4F7pQhmugHZmS25lbJVw99LGf00g+nH3Wi5UsPTY2w==
   dependencies:
     bible-reference-range "^1.1.0"
     deep-freeze "^0.0.1"
@@ -9443,7 +9443,7 @@ scripture-resources-rcl@5.5.10:
     tc-ui-toolkit "^5.3.3"
     use-deep-compare-effect "^1.3.1"
     usfm-js "^3.4.2"
-    uw-quote-helpers "^1.1.3"
+    uw-quote-helpers "1.1.4"
     word-aligner "^1.0.0"
     xregexp "^4.1.1"
 
@@ -10827,10 +10827,10 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-uw-quote-helpers@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-1.1.3.tgz#5dcd1db549a5381482810cb0f9b882afc00ed252"
-  integrity sha512-g2mLrgva67pwNVLtydLgGsllBodWu6IwFBTOtk4ozJOoYLsZ52kAA+7C/2sE+1ywWVJeVRFBYcSbv+9EaNo+Jg==
+uw-quote-helpers@1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/uw-quote-helpers/-/uw-quote-helpers-1.1.4.tgz#a1a806f3a93ad327a27a822d36325611c6e5cd4a"
+  integrity sha512-QPZm5aGAJl8c99QTPZs0uJRm93GMVXPTNDZwK+YO+ks8GChljpjWmn4bGjmsSb1QHiPnIjdFGImF29mnS6F5Kg==
   dependencies:
     bible-reference-range "^1.1.1"
     string-punctuation-tokenizer "^2.2.0"
