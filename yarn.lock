@@ -2915,10 +2915,10 @@ bible-reference-range@^1.1.1:
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.1.tgz#9438bb870f853439fa92afe61a04fab53922ab91"
   integrity sha512-rEHpdcTrlJcLP/KuSl5hJjPND3EBD67m81hvDrSbZ48xyE1r6V7qgxUacDY2ZfT6nu1pBTkc6JizH9a+m3LMRQ==
 
-bible-reference-rcl@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.4.0.tgz#6e97b87ca8f04307067949d602dad61d35214ac5"
-  integrity sha512-VDpz9uXhXTs7EfkLgtKdPaA/K5IKJadKjTKx3U0hV7m8mjL8NI6eK3P5PU+w/RJyVmnAhZg/QIoUEWnlRxWduA==
+bible-reference-rcl@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/bible-reference-rcl/-/bible-reference-rcl-1.4.1.tgz#251834fc943192229492e3abb46e10bced2d5bec"
+  integrity sha512-VNWlEl1dtb6Ah2JL1ptSXpLYoWWIOtQUGuSGyO1ADYVOld+80WY9YGlg7QQiaIBkC4saiVJwn69usPWTAcrxpg==
   dependencies:
     "@emotion/react" "^11.11.0"
     "@emotion/styled" "^11.11.0"
@@ -10376,10 +10376,10 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.6.2:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.6.2.tgz#5c606a2aafeb67e218b0d4701f64bb03a768637a"
-  integrity sha512-UVuhEjI75GfxMaVk5xMo2AlTIcyDvHtPHWmaUjZ99L5vOnokuIF+9TYlXbbmylUJn/5JT8Ywjl6dPL+K9SYr3A==
+translation-helps-rcl@3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.6.3.tgz#70f4231d5e0e112a0baef58fd09437c9e0b4a533"
+  integrity sha512-KBtoyZ8LzbJ+H2CG9Kaj1JX5yZnrr0XZbsTRDErEzgQMcJ5Hs4Cp5CTddnOQZJQ4xi7NaVVNJBQ88EE0FPQhxA==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
