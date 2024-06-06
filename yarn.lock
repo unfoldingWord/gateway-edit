@@ -9603,10 +9603,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.22:
-  version "3.4.22"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.22.tgz#1c4499fd9dee7d15121adbb422da2a218c97c418"
-  integrity sha512-H2HVPyLGdAKIj5rQ1c7XaXuD6Nfe8hky/Ifx92C1wdNAzYTNXIAfr7yKEl8NJ40ZNFhykJnssZIywYHZ9hhnEQ==
+single-scripture-rcl@3.4.23-beta:
+  version "3.4.23-beta"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.23-beta.tgz#76c5d0788884ac06e07a10caf98acee98107afa4"
+  integrity sha512-Re9ozTk0MjuotJmJUkytzyndqqc2CdVwVvHVAsCctjHe7/BdyzNorxH/r4u7LyBAPHPqMZ/+Gip94H0Gu2Xlsw==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
