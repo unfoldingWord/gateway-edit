@@ -40,7 +40,7 @@ describe('Test Languages',()=>{
     }
   });
 
-   test('getLanguages() verify no dupes among language codes.', () => {
+  test('getLanguages() verify no dupes among language codes.', () => {
     let languages = Languages.getLanguages();
     let localLanguageCodes = languages.map(language => language.languageId);
 
@@ -54,7 +54,27 @@ describe('Test Languages',()=>{
     }
 
     expect(dupsFound).toBeLessThan(1);
-    expect(sorted.length).toBeGreaterThan(2000);
+    expect(sorted.length).toBeGreaterThan(minimumLangCount);
+  });
+
+  test('getGatewayLanguages() verify no dupes among language codes.', async () => {
+    let languages = await Languages.getGatewayLanguages();
+    let localLanguageCodes = languages.map(language => language.languageId);
+
+    const sorted = localLanguageCodes.sort();
+    let dupsFound = 0;
+
+    for ( let idx = 1; idx < sorted.length; idx++ ) {
+      if ( sorted[idx] == sorted[idx-1]) {
+        dupsFound++;
+      }
+    }
+
+    expect(dupsFound).toBeLessThan(1);
+    const minimumGwLangs = 40;
+    const maximumGwLangs = 100;
+    expect(sorted.length).toBeGreaterThan(minimumGwLangs);
+    expect(sorted.length).not.toBeGreaterThan(maximumGwLangs);
   });
 
   describe('getLanguage()',()=>{
