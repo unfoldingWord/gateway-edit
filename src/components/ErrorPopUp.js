@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
-import DraggableCard from 'translation-helps-rcl/dist/components/DraggableCard'
+import { DraggableCard } from 'translation-helps-rcl'
 import { CANCEL } from '@common/constants'
 
 export default function ErrorPopup(
