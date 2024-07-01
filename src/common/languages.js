@@ -2,7 +2,10 @@ import languagesJSON from './languages.json'
 
 export const getLanguage = ({ languageId }) => {
   let _language
-  const language = languagesJSON.filter(object => object.lc === languageId)[0]
+  languageId = languageId.toLowerCase()
+  const language = languagesJSON.find(object => {
+    return object.lc?.toLowerCase() === languageId // compare lower case
+  })
   _language = formatLanguage({ language })
   return _language
 }
