@@ -35,7 +35,7 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       - name: Save Cypress Videos
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Cypress Videos
           path: ./cypress/videos/
@@ -47,7 +47,7 @@ jobs:
       # Combine test coverage reports
       - name: Combine Cypress & Jest coverage reports
         run: yarn report:combined
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: ./coverage/lcov.info
@@ -59,6 +59,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
