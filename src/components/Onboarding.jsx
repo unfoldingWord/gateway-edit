@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import dynamic from 'next/dynamic'
 import { Paper } from 'translation-helps-rcl'
 import CircularProgress from '@components/CircularProgress'
+import createDynamicComponent from '@utils/dynamicImport'
 
-const AccountSetup = dynamic(() => import('@components/AccountSetup'), {
-  loading: () => <CircularProgress size={180} />,
+const AccountSetup = createDynamicComponent(() => import('@components/AccountSetup'), {
+  loading: () => <CircularProgress size={180} />
 })
 
 function Onboarding({ authentication, authenticationComponent }) {

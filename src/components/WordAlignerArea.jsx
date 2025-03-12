@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import { AlignmentHelpers, WordAligner } from 'word-aligner-rcl'
-import * as isEqual from "deep-equal";
+import isEqual from "deep-equal";
 import cloneDeep from "lodash.clonedeep";
 import Button from "@mui/material/Button";
 import PopoverComponent from "./PopoverComponent";

@@ -4,7 +4,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import * as isEqual from 'deep-equal'
+import isEqual from 'deep-equal'
 import {
   MinimizedCardsListUI,
   useMinimizedCardsState,
