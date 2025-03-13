@@ -11,6 +11,9 @@ const DEFAULT_FILTERS = {
   errors: true
 };
 
+// Helper to check if we're in a browser environment
+const isBrowser = typeof window !== 'undefined';
+
 /**
  * DebugProvider component that initializes and manages the debug logger
  * This component should be mounted at the application root level to ensure
@@ -19,10 +22,14 @@ const DEFAULT_FILTERS = {
 export default function DebugProvider({ children }) {
   const [isEnabled, setIsEnabled] = useState(false);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const debugLogger = DebugLogger.getInstance();
+
+  // Only initialize the debugLogger in browser environments
+  const debugLogger = isBrowser ? DebugLogger.getInstance() : null;
 
   // Check if debug mode was previously enabled in localStorage
   useEffect(() => {
+    if (!isBrowser) return;
+
     const debugEnabled = localStorage.getItem('debugModeEnabled') === 'true';
 
     // Load saved filters from localStorage or use defaults
@@ -51,6 +58,8 @@ export default function DebugProvider({ children }) {
 
   // Set up a listener for debug mode changes
   useEffect(() => {
+    if (!isBrowser) return;
+
     const handleDebugModeChange = (event) => {
       if (event.key === 'debugModeEnabled') {
         const enabled = event.newValue === 'true';
