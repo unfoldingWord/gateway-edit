@@ -25,11 +25,13 @@ export default function Application({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <AuthContextProvider>
-          <StoreContextProvider>
-            <Component {...pageProps} />
-          </StoreContextProvider>
-        </AuthContextProvider>
+        <DebugProvider>
+          <AuthContextProvider>
+            <StoreContextProvider>
+              <Component {...pageProps} />
+            </StoreContextProvider>
+          </AuthContextProvider>
+        </DebugProvider>
       </ThemeProvider>
     </>
   )
