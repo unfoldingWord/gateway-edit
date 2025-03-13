@@ -18,6 +18,8 @@ import { MergeBranchButton, MergeDialog, ErrorDialog } from 'translation-helps-r
 import { StoreContext } from '@context/StoreContext'
 import useMergeCardsProps from '../hooks/useMergeCardsProps'
 import { useAppNavigation } from '../hooks/useAppNavigation'
+import DebugDrawer from '../debug/DebugDrawer'
+import Divider from '@material-ui/core/Divider'
 
 // TODO: Enable buttons once ready to fully implement functionality
 // import DashboardIcon from '@material-ui/icons/Dashboard'
@@ -135,82 +137,9 @@ export default function Drawer({
           <ListItemText primary={'Reset Resource Layout'} />
         </ListItem>
       </List>
-      {/* <div className='mx-4 mt-2 m-1'>
-        <Button variant='outlined' startIcon={<FolderIcon />}>
-          Save Current Layout
-        </Button>
-      </div>
-      <List disablePadding>
-        <ListItem button key={'Templates Gallery'}>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary={'Templates Gallery'} />
-        </ListItem>
-        <ListItem button key={'Resource Gallery'}>
-          <ListItemIcon>
-            <Crop54Icon />
-          </ListItemIcon>
-          <ListItemText primary={'Resource Gallery'} />
-        </ListItem>
-      </List>
       <Divider />
-      <div className='text-gray-500 px-4 pt-2.5 text-xs'>Recently Used</div>
-      <List disablePadding>
-        <ListItem button key={'Translation Notes'}>
-          <ListItemIcon>
-            <Crop54Icon />
-          </ListItemIcon>
-          <ListItemText primary={'Translation Notes'} />
-        </ListItem>
-        <ListItem button key={'My Review Process'}>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary={'My Review Process'} />
-        </ListItem>
-        <ListItem button key={'Translation Words'}>
-          <ListItemIcon>
-            <Crop54Icon />
-          </ListItemIcon>
-          <ListItemText primary={'Translation Words'} />
-        </ListItem>
-      </List>
+      <DebugDrawer />
       <Divider />
-      <div className='text-gray-500 px-4 pt-2.5 text-xs'>Bookmarked</div>
-      <List disablePadding>
-        <ListItem button key={'Translation Flow'}>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary={'Translation Flow'} />
-        </ListItem>
-        <ListItem button key={'Academy Articles'}>
-          <ListItemIcon>
-            <Crop54Icon />
-          </ListItemIcon>
-          <ListItemText primary={'Academy Articles'} />
-        </ListItem>
-        <ListItem button key={'My Notes Setup'}>
-          <ListItemIcon>
-            <Crop54Icon />
-          </ListItemIcon>
-          <ListItemText primary={'My Notes Setup'} />
-        </ListItem>
-        <ListItem button key={'All the Scripture'}>
-          <ListItemIcon>
-            <Crop54Icon />
-          </ListItemIcon>
-          <ListItemText primary={'All the Scripture'} />
-        </ListItem>
-        <ListItem button key={'My Book Package Flow'}>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary={'My Book Package Flow'} />
-        </ListItem>
-      </List>
-      <Divider /> */}
       <List disablePadding>
         <ListItem
           button

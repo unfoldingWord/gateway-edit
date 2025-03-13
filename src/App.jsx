@@ -53,19 +53,6 @@ function App() {
           </StoreContextProvider>
         </AuthContextProvider>
       </ThemeProvider>
-      {/* <DebugPanel
-        config={{
-          userActions: {
-            enabled: true,
-            trackScroll: false, // Disable scroll tracking
-            ignoreElements: [
-              '.no-track'
-            ],
-          },
-          initialFilters: ['error', 'network', 'user-action'], // Start with error and network events filtered
-          enableConsole: true, // Disable console logging
-        }}
-      /> */}
     </>
   )
 }
