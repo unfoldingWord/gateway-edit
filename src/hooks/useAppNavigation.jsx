@@ -1,25 +1,33 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
+import { useIsBrowser } from './useIsBrowser'
 
 export function useAppNavigation() {
-  const isNextJs = typeof window !== 'undefined' && window.__NEXT_DATA__
+  const isBrowser = useIsBrowser()
+  const isNextJs = isBrowser && window.__NEXT_DATA__
   const nextRouter = isNextJs ? useRouter() : null
-  const [currentPath, setCurrentPath] = useState(window.location.pathname)
+  const [currentPath, setCurrentPath] = useState('/')
 
   useEffect(() => {
-    if (!isNextJs) {
+    if (isBrowser) {
+      setCurrentPath(window.location.pathname)
+    }
+  }, [isBrowser])
+
+  useEffect(() => {
+    if (!isNextJs && isBrowser) {
       const handlePopState = () => {
         setCurrentPath(window.location.pathname)
       }
       window.addEventListener('popstate', handlePopState)
       return () => window.removeEventListener('popstate', handlePopState)
     }
-  }, [isNextJs])
+  }, [isNextJs, isBrowser])
 
   const navigate = (path) => {
     if (isNextJs) {
       nextRouter.push(path)
-    } else {
+    } else if (isBrowser) {
       window.history.pushState({}, '', path)
       setCurrentPath(path)
     }
