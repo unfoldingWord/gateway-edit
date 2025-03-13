@@ -15,9 +15,15 @@ import TouchAppIcon from '@material-ui/icons/TouchApp';
 import SpeedIcon from '@material-ui/icons/Speed';
 import StorageIcon from '@material-ui/icons/Storage';
 import ErrorIcon from '@material-ui/icons/Error';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 import { DebugLogger } from './DebugLogger';
 
 // Default filter settings
@@ -30,11 +36,25 @@ const DEFAULT_FILTERS = {
   errors: true
 };
 
+// Event type options for display filtering
+const EVENT_TYPES = [
+  { value: 'all', label: 'All Events' },
+  { value: 'console', label: 'Console Logs' },
+  { value: 'network', label: 'Network Requests' },
+  { value: 'user-action', label: 'User Actions' },
+  { value: 'performance', label: 'Performance' },
+  { value: 'storage', label: 'Storage' },
+  { value: 'error', label: 'Errors' }
+];
+
 export default function DebugDrawer() {
   const [isEnabled, setIsEnabled] = useState(false);
   const [eventCount, setEventCount] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const [showDisplayFilters, setShowDisplayFilters] = useState(false);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [displayFilter, setDisplayFilter] = useState('all');
+  const [filteredCount, setFilteredCount] = useState(0);
   const debugLogger = DebugLogger.getInstance();
 
   // Initialize state from localStorage
@@ -48,8 +68,14 @@ export default function DebugDrawer() {
       if (savedFilters) {
         setFilters(savedFilters);
       }
+
+      // Load saved display filter
+      const savedDisplayFilter = localStorage.getItem('debugDisplayFilter');
+      if (savedDisplayFilter) {
+        setDisplayFilter(savedDisplayFilter);
+      }
     } catch (e) {
-      console.error('Error loading debug filters:', e);
+      console.error('Error loading debug settings:', e);
     }
 
     if (debugEnabled) {
@@ -62,11 +88,20 @@ export default function DebugDrawer() {
     let interval;
     if (isEnabled) {
       interval = setInterval(() => {
-        setEventCount(debugLogger.getEvents().length);
+        const allEvents = debugLogger.getEvents();
+        setEventCount(allEvents.length);
+
+        // Update filtered count based on display filter
+        if (displayFilter === 'all') {
+          setFilteredCount(allEvents.length);
+        } else {
+          const filtered = allEvents.filter(event => event.type === displayFilter);
+          setFilteredCount(filtered.length);
+        }
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isEnabled]);
+  }, [isEnabled, displayFilter]);
 
   const handleToggle = () => {
     if (!isEnabled) {
@@ -98,6 +133,27 @@ export default function DebugDrawer() {
     });
   };
 
+  const handleResetFilters = () => {
+    setFilters(DEFAULT_FILTERS);
+    localStorage.setItem('debugFilters', JSON.stringify(DEFAULT_FILTERS));
+
+    // Update logger config with default values
+    debugLogger.setConfig({
+      enableConsole: DEFAULT_FILTERS.console,
+      enableNetwork: DEFAULT_FILTERS.network,
+      enableUserActions: DEFAULT_FILTERS.userActions,
+      enablePerformance: DEFAULT_FILTERS.performance,
+      enableStorage: DEFAULT_FILTERS.storage,
+      enableErrorTracking: DEFAULT_FILTERS.errors
+    });
+  };
+
+  const handleDisplayFilterChange = (event) => {
+    const value = event.target.value;
+    setDisplayFilter(value);
+    localStorage.setItem('debugDisplayFilter', value);
+  };
+
   const handleExport = () => {
     const logs = debugLogger.exportLogs();
     const blob = new Blob([logs], { type: 'application/json' });
@@ -114,10 +170,15 @@ export default function DebugDrawer() {
   const handleClear = () => {
     debugLogger.clearEvents();
     setEventCount(0);
+    setFilteredCount(0);
   };
 
   const toggleFiltersView = () => {
     setShowFilters(!showFilters);
+  };
+
+  const toggleDisplayFiltersView = () => {
+    setShowDisplayFilters(!showDisplayFilters);
   };
 
   return (
@@ -128,7 +189,12 @@ export default function DebugDrawer() {
         </ListItemIcon>
         <ListItemText
           primary="Debug Mode"
-          secondary={isEnabled ? `${eventCount} events captured` : 'Disabled'}
+          secondary={isEnabled
+            ? displayFilter === 'all'
+              ? `${eventCount} events captured`
+              : `${filteredCount} ${EVENT_TYPES.find(t => t.value === displayFilter)?.label || ''} events`
+            : 'Disabled'
+          }
         />
         <ListItemSecondaryAction>
           <Switch
@@ -146,7 +212,7 @@ export default function DebugDrawer() {
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
-            <ListItemText primary="Filter Settings" />
+            <ListItemText primary="Capture Settings" />
             {showFilters ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
 
@@ -234,6 +300,42 @@ export default function DebugDrawer() {
                     onChange={() => handleFilterToggle('errors')}
                   />
                 </ListItemSecondaryAction>
+              </ListItem>
+
+              <ListItem button onClick={handleResetFilters} style={{ paddingLeft: 32 }}>
+                <ListItemIcon>
+                  <RestoreIcon />
+                </ListItemIcon>
+                <ListItemText primary="Reset All Filters" />
+              </ListItem>
+            </List>
+          </Collapse>
+
+          <ListItem button onClick={toggleDisplayFiltersView}>
+            <ListItemIcon>
+              <FilterListIcon />
+            </ListItemIcon>
+            <ListItemText primary="Display Filter" />
+            {showDisplayFilters ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+
+          <Collapse in={showDisplayFilters} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem style={{ paddingLeft: 32 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="display-filter-label">Show Events</InputLabel>
+                  <Select
+                    labelId="display-filter-label"
+                    value={displayFilter}
+                    onChange={handleDisplayFilterChange}
+                  >
+                    {EVENT_TYPES.map(type => (
+                      <MenuItem key={type.value} value={type.value}>
+                        {type.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </ListItem>
             </List>
           </Collapse>
