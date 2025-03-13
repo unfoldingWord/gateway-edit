@@ -8,6 +8,7 @@ import { APP_NAME } from '@common/constants'
 import AppHead from '@components/AppHead'
 import theme from '../src/theme'
 import '@styles/globals.css'
+import DebugProvider from '../src/debug/DebugProvider'
 
 export default function Application({ Component, pageProps }) {
   useEffect(() => {
