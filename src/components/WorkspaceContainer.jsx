@@ -3,6 +3,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from 'react'
 import isEqual from 'deep-equal'
 import {
@@ -51,6 +52,8 @@ import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
 import _ from 'lodash'
 import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
+import Snackbar from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -69,6 +72,23 @@ const wordAlignmentMaxHeightPx = 1000
 
 const buildId = getBuildId()
 console.log(`Gateway Edit App Version`, buildId)
+
+const OFFLINE_TIMEOUT = 5000; // Move timeout constant outside component
+
+// Move these handlers outside the component
+const handleError = (event) => {
+  console.warn(`[WorkspaceContainer] Error:`, {
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+    error: event.error?.stack,
+  })
+}
+
+const handleOnline = () => {
+  console.warn('[WorkspaceContainer] Online')
+}
 
 function WorkspaceContainer() {
   const router = useRouter()
@@ -278,6 +298,64 @@ function WorkspaceContainer() {
     return null
   }
 
+  const [offlineTimer, setOfflineTimer] = useState(null);
+  const [showOnlineAlert, setShowOnlineAlert] = useState(false);
+
+  // Use useCallback for the offline handler since it needs access to component state
+  const handleOffline = useCallback(() => {
+    console.warn('[WorkspaceContainer] Offline');
+    // Clear any existing timer first
+    if (offlineTimer) {
+      clearTimeout(offlineTimer);
+    }
+
+    // Set new timer
+    const timer = setTimeout(() => {
+      // Pass required parameters to processNetworkError
+      processNetworkError(
+        'Network connection lost',
+        0,
+        logout,
+        router,
+        setNetworkError,
+        setLastError
+      );
+    }, OFFLINE_TIMEOUT);
+
+    setOfflineTimer(timer);
+  }, [offlineTimer, logout, router, setNetworkError, setLastError]); // Remove OFFLINE_TIMEOUT from deps, add required function deps
+
+  // Update the online handler to show notification
+  const handleOnlineWithCleanup = useCallback(() => {
+    handleOnline();
+    if (offlineTimer) {
+      clearTimeout(offlineTimer);
+      setOfflineTimer(null);
+    }
+    setShowOnlineAlert(true);
+  }, [offlineTimer]);
+
+  // Handle closing the Snackbar
+  const handleCloseAlert = useCallback(() => {
+    setShowOnlineAlert(false);
+  }, []);
+
+  // Effect for event listeners
+  useEffect(() => {
+    window.addEventListener('error', handleError);
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnlineWithCleanup);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnlineWithCleanup);
+      if (offlineTimer) {
+        clearTimeout(offlineTimer);
+      }
+    };
+  }, [handleOffline, handleOnlineWithCleanup, offlineTimer]);
+
   /**
    * process error and determine if there is a problem with connection to server
    *  if showAnyError is true we display an error popup
@@ -290,15 +368,30 @@ function WorkspaceContainer() {
    * @param {boolean} showAllErrors - if true then always show a popup error message, otherwise just show server error message if we can't talk to server
    */
   function onResourceError(message, isAccessError, resourceStatus, error, showAllErrors = false) {
+
     if (!networkError ) { // only show if another error not already showing
       if (showAllErrors) {
-        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
+        console.warn(`[WorkspaceContainer] Errors found:`, { message, isAccessError, resourceStatus, error, showAllErrors })
+        if(isAccessError) {
+          processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
+        }
       } else {
+        console.warn(`[WorkspaceContainer] Errors found:`, { message, isAccessError, resourceStatus, error, showAllErrors })
         if (isAccessError) { // we only show popup for access errors
           addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError)
         }
       }
+    } else {
+      console.warn(`[WorkspaceContainer] Network Error:`, {
+        networkError: JSON.parse(JSON.stringify(networkError)),
+        message,
+        isAccessError,
+        resourceStatus,
+        error,
+        showAllErrors,
+      })
     }
+
   }
 
   useEffect(() => { // on verse navigation, clear verse spans and selections
@@ -678,77 +771,90 @@ function WorkspaceContainer() {
     }
   }, [scriptureReference, originalScriptureBookObjects, originalLanguageId ])
 
-  return (
-    (!workspaceReady) ? // Do not render workspace until user logged in and we have user settings
-      <>
-        {showNetworkError()}
-        <CircularProgress size={180} />
-      </>
-      :
-      <>
-        <MinimizedCardsListUI minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>
-        {loading || content || error ?
-          <DraggableCard
-            open
-            error={error}
-            title={title}
-            loading={loading}
-            content={content}
-            onClose={() => clearContent()}
-            workspaceRef={mainScreenRef}
-          />
-          :
-          null
-        }
-        <Workspace
-          rowHeight={25}
-          layout={currentLayout}
-          classes={classes}
-          gridMargin={[10, 10]}
-          onLayoutChange={(_layout, layouts) => {
-            setCurrentLayout(layouts)
-          }}
-          layoutWidths={[
-            [1, 1, 1],
-            [2, 2],
-            [1, 1.5, 1.5],
-          ]}
-          layoutHeights={[[5], [10, 10], [10, 10]]}
-          minW={3}
-          minH={4}
-          breakpoints={{
-            lg: 900,
-            sm: 680,
-            xs: 300,
-          }}
-          columns={{
-            lg: 12,
-            sm: 6,
-            xs: 3,
-          }}
-        >
-          {
-            _.map(visibleCards, (cardProps, i) =>
-              cardProps.type === 'scripture_card' ?
-                <ScriptureCard key={cardProps.title} {...cardProps} />
-                :
-                <ResourceCard key={cardProps.title} {...cardProps} />,
-            )
-          }
-        </Workspace>
-        <WordAlignerDialog
-          alignerStatus={wordAlignerStatus}
-          height={wordAlignerHeight}
-          translate={translate}
-          getLexiconData={getLexiconData}
+  return !workspaceReady ? ( // Do not render workspace until user logged in and we have user settings
+    <>
+      {showNetworkError()}
+      <CircularProgress size={180} />
+    </>
+  ) : (
+    <>
+      <MinimizedCardsListUI
+        minimizedCards={minimizedCards}
+        maximizeCard={maximizeCard}
+      />
+      {loading || content || error ? (
+        <DraggableCard
+          open
+          error={error}
+          title={title}
+          loading={loading}
+          content={content}
+          onClose={() => clearContent()}
+          workspaceRef={mainScreenRef}
         />
+      ) : null}
+      <Workspace
+        rowHeight={25}
+        layout={currentLayout}
+        classes={classes}
+        gridMargin={[10, 10]}
+        onLayoutChange={(_layout, layouts) => {
+          setCurrentLayout(layouts)
+        }}
+        layoutWidths={[
+          [1, 1, 1],
+          [2, 2],
+          [1, 1.5, 1.5],
+        ]}
+        layoutHeights={[[5], [10, 10], [10, 10]]}
+        minW={3}
+        minH={4}
+        breakpoints={{
+          lg: 900,
+          sm: 680,
+          xs: 300,
+        }}
+        columns={{
+          lg: 12,
+          sm: 6,
+          xs: 3,
+        }}
+      >
+        {_.map(visibleCards, (cardProps, i) =>
+          cardProps.type === 'scripture_card' ? (
+            <ScriptureCard key={cardProps.title} {...cardProps} />
+          ) : (
+            <ResourceCard key={cardProps.title} {...cardProps} />
+          )
+        )}
+      </Workspace>
+      <WordAlignerDialog
+        alignerStatus={wordAlignerStatus}
+        height={wordAlignerHeight}
+        translate={translate}
+        getLexiconData={getLexiconData}
+      />
 
-        {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
-          <>
-            {showNetworkError()}
-          </>
-        }
-      </>
+      {(tokenNetworkError || networkError) && ( // Do not render workspace until user logged in and we have user settings
+        <>{showNetworkError()}</>
+      )}
+
+      <Snackbar
+        open={showOnlineAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          elevation={6}
+          variant='filled'
+          severity='success'
+        >
+          Connection restored
+        </Alert>
+      </Snackbar>
+    </>
   )
 }
 

@@ -17,6 +17,8 @@ import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined'
 import { MergeBranchButton, MergeDialog, ErrorDialog } from 'translation-helps-rcl'
 import { StoreContext } from '@context/StoreContext'
 import useMergeCardsProps from '../hooks/useMergeCardsProps'
+import { useAppNavigation } from '../hooks/useAppNavigation'
+
 // TODO: Enable buttons once ready to fully implement functionality
 // import DashboardIcon from '@material-ui/icons/Dashboard'
 // import Crop54Icon from '@material-ui/icons/Crop54'
@@ -34,13 +36,13 @@ export default function Drawer({
   checkUnsavedChanges,
   showFeedback,
 }) {
-  const router = useRouter()
+  const { navigate } = useAppNavigation()
 
   async function onSettingsClick() {
     const okToContinue = await checkUnsavedChanges()
 
     if (okToContinue) {
-      router.push('/settings')
+      navigate('/settings')
       onClose()
     }
   }

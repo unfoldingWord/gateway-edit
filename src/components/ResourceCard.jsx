@@ -318,18 +318,11 @@ export default function ResourceCard({
 
   useEffect(() => { // when we get a save saveError
     if (saveError && isSaveError) {
+      console.warn(`ResourceCard() saveError`, { saveError, isSaveError })
       console.log(`save error`, saveError)
-      onResourceError && onResourceError(null, false, null, `Error saving ${languageId}_${cardResourceId} ${saveError}`, true)
+      onResourceError && onResourceError(null, true, null, `Error saving ${languageId}_${cardResourceId} ${saveError}`, true)
     }
   }, [saveError, isSaveError])
-
-  // useEffect(() => {
-  //   console.log(`ResourceCard() sha changed to`, { sha, resource })
-  // }, [sha])
-
-  // useEffect(() => {
-  //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
-  // }, [chapter, verse, projectId])
 
   const {
     state: {
@@ -364,6 +357,7 @@ export default function ResourceCard({
     const error = resourceStatus?.[ERROR_STATE]
 
     if (error) { // if error was found do callback
+      console.warn(`ResourceCard() resourceStatus error`, { resourceStatus })
       const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
       const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
       onResourceError && onResourceError(message, isAccessError, resourceStatus)
@@ -388,6 +382,12 @@ export default function ResourceCard({
         })
       } else {
         console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
+        const message =
+          getResourceErrorMessage(resourceStatus) +
+          ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
+        const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
+        onResourceError &&
+          onResourceError(message, isAccessError, resourceStatus)
       }
       setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
     }
@@ -399,6 +399,7 @@ export default function ResourceCard({
       if (branch) {
         saveEdit(branch, newContent)
       } else { // if error on branch creation
+        console.warn(`ResourceCard() handleSaveEdit() error creating edit branch`, { sha, resource })
         onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
       }
     } else {// Else just save the edit.
@@ -518,13 +519,14 @@ export default function ResourceCard({
       : (<></>)
     ]
 
+  console.log({markdownView, editable})
   return (
     <Card
       cardResourceId={cardResourceId}
       classes={classes}
       disableFilters={disableFilters}
       disableNavigation={disableNavigation}
-      editable={editable}
+      editable={editable && markdownView}
       filters={filters}
       fontSize={fontSize}
       headers={headers}
@@ -547,15 +549,22 @@ export default function ResourceCard({
     >
       <CardContent
         cardResourceId={cardResourceId}
-        editable={editable}
-        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        editable={editable && markdownView}
+        errorMessage={
+          isEditing ? 'Saving Resource...' : message || errorMessage
+        }
         filters={filters}
         fontSize={fontSize}
         id={`${id}_content`}
         item={item}
         items={items}
         languageId={languageId}
-        markdown={(cardResourceId === 'ta' || cardResourceId === 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
+        markdown={
+          (cardResourceId === 'ta' || cardResourceId === 'tw') &&
+          content.length > 0
+            ? content
+            : markdown
+        } // Adding content value to maintain edit changes even when switching between markdown and html views on tA.
         markdownView={markdownView}
         onEdit={updateTempContent}
         onTsvEdit={onTsvEdit}

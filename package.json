@@ -55,6 +55,7 @@
     "react-dom": "18",
     "react-draggable": "^4.4.5",
     "react-icons": "^4.8.0",
+    "react-json-view": "^1.21.3",
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "2.1.4",
     "scripture-resources-rcl": "5.5.15",
