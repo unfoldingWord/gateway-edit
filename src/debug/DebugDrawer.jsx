@@ -17,6 +17,7 @@ import StorageIcon from '@material-ui/icons/Storage';
 import ErrorIcon from '@material-ui/icons/Error';
 import RestoreIcon from '@material-ui/icons/Restore';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -25,6 +26,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { DebugLogger } from './DebugLogger';
+import DebugLogViewer from './DebugLogViewer';
 
 // Default filter settings
 const DEFAULT_FILTERS = {
@@ -32,7 +34,7 @@ const DEFAULT_FILTERS = {
   network: true,
   userActions: true,
   performance: true,
-  storage: true,
+  storage: false,
   errors: true
 };
 
@@ -55,6 +57,7 @@ export default function DebugDrawer() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [displayFilter, setDisplayFilter] = useState('all');
   const [filteredCount, setFilteredCount] = useState(0);
+  const [logViewerOpen, setLogViewerOpen] = useState(false);
   const debugLogger = DebugLogger.getInstance();
 
   // Initialize state from localStorage
@@ -181,180 +184,203 @@ export default function DebugDrawer() {
     setShowDisplayFilters(!showDisplayFilters);
   };
 
+  const openLogViewer = () => {
+    setLogViewerOpen(true);
+  };
+
+  const closeLogViewer = () => {
+    setLogViewerOpen(false);
+  };
+
   return (
-    <List disablePadding>
-      <ListItem>
-        <ListItemIcon>
-          <BugReportIcon />
-        </ListItemIcon>
-        <ListItemText
-          primary="Debug Mode"
-          secondary={isEnabled
-            ? displayFilter === 'all'
-              ? `${eventCount} events captured`
-              : `${filteredCount} ${EVENT_TYPES.find(t => t.value === displayFilter)?.label || ''} events`
-            : 'Disabled'
-          }
-        />
-        <ListItemSecondaryAction>
-          <Switch
-            edge="end"
-            checked={isEnabled}
-            onChange={handleToggle}
-            inputProps={{ 'aria-label': 'Toggle debug mode' }}
+    <>
+      <List disablePadding>
+        <ListItem>
+          <ListItemIcon>
+            <BugReportIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="Debug Mode"
+            secondary={isEnabled
+              ? displayFilter === 'all'
+                ? `${eventCount} events captured`
+                : `${filteredCount} ${EVENT_TYPES.find(t => t.value === displayFilter)?.label || ''} events`
+              : 'Disabled'
+            }
           />
-        </ListItemSecondaryAction>
-      </ListItem>
+          <ListItemSecondaryAction>
+            <Switch
+              edge="end"
+              checked={isEnabled}
+              onChange={handleToggle}
+              inputProps={{ 'aria-label': 'Toggle debug mode' }}
+            />
+          </ListItemSecondaryAction>
+        </ListItem>
 
-      {isEnabled && (
-        <>
-          <ListItem button onClick={toggleFiltersView}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Capture Settings" />
-            {showFilters ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
+        {isEnabled && (
+          <>
+            <ListItem button onClick={toggleFiltersView}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Capture Settings" />
+              {showFilters ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
 
-          <Collapse in={showFilters} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button onClick={() => handleFilterToggle('console')} style={{ paddingLeft: 32 }}>
-                <ListItemIcon>
-                  <CodeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Console Logs" />
-                <ListItemSecondaryAction>
-                  <Switch
-                    edge="end"
-                    checked={filters.console}
-                    onChange={() => handleFilterToggle('console')}
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
+            <Collapse in={showFilters} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button onClick={() => handleFilterToggle('console')} style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <CodeIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Console Logs" />
+                  <ListItemSecondaryAction>
+                    <Switch
+                      edge="end"
+                      checked={filters.console}
+                      onChange={() => handleFilterToggle('console')}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
 
-              <ListItem button onClick={() => handleFilterToggle('network')} style={{ paddingLeft: 32 }}>
-                <ListItemIcon>
-                  <NetworkCheckIcon />
-                </ListItemIcon>
-                <ListItemText primary="Network Requests" />
-                <ListItemSecondaryAction>
-                  <Switch
-                    edge="end"
-                    checked={filters.network}
-                    onChange={() => handleFilterToggle('network')}
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
+                <ListItem button onClick={() => handleFilterToggle('network')} style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <NetworkCheckIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Network Requests" />
+                  <ListItemSecondaryAction>
+                    <Switch
+                      edge="end"
+                      checked={filters.network}
+                      onChange={() => handleFilterToggle('network')}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
 
-              <ListItem button onClick={() => handleFilterToggle('userActions')} style={{ paddingLeft: 32 }}>
-                <ListItemIcon>
-                  <TouchAppIcon />
-                </ListItemIcon>
-                <ListItemText primary="User Actions" />
-                <ListItemSecondaryAction>
-                  <Switch
-                    edge="end"
-                    checked={filters.userActions}
-                    onChange={() => handleFilterToggle('userActions')}
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
+                <ListItem button onClick={() => handleFilterToggle('userActions')} style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <TouchAppIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="User Actions" />
+                  <ListItemSecondaryAction>
+                    <Switch
+                      edge="end"
+                      checked={filters.userActions}
+                      onChange={() => handleFilterToggle('userActions')}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
 
-              <ListItem button onClick={() => handleFilterToggle('performance')} style={{ paddingLeft: 32 }}>
-                <ListItemIcon>
-                  <SpeedIcon />
-                </ListItemIcon>
-                <ListItemText primary="Performance" />
-                <ListItemSecondaryAction>
-                  <Switch
-                    edge="end"
-                    checked={filters.performance}
-                    onChange={() => handleFilterToggle('performance')}
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
+                <ListItem button onClick={() => handleFilterToggle('performance')} style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <SpeedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Performance" />
+                  <ListItemSecondaryAction>
+                    <Switch
+                      edge="end"
+                      checked={filters.performance}
+                      onChange={() => handleFilterToggle('performance')}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
 
-              <ListItem button onClick={() => handleFilterToggle('storage')} style={{ paddingLeft: 32 }}>
-                <ListItemIcon>
-                  <StorageIcon />
-                </ListItemIcon>
-                <ListItemText primary="Storage" />
-                <ListItemSecondaryAction>
-                  <Switch
-                    edge="end"
-                    checked={filters.storage}
-                    onChange={() => handleFilterToggle('storage')}
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
+                <ListItem button onClick={() => handleFilterToggle('storage')} style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <StorageIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Storage" />
+                  <ListItemSecondaryAction>
+                    <Switch
+                      edge="end"
+                      checked={filters.storage}
+                      onChange={() => handleFilterToggle('storage')}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
 
-              <ListItem button onClick={() => handleFilterToggle('errors')} style={{ paddingLeft: 32 }}>
-                <ListItemIcon>
-                  <ErrorIcon />
-                </ListItemIcon>
-                <ListItemText primary="Errors" />
-                <ListItemSecondaryAction>
-                  <Switch
-                    edge="end"
-                    checked={filters.errors}
-                    onChange={() => handleFilterToggle('errors')}
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
+                <ListItem button onClick={() => handleFilterToggle('errors')} style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <ErrorIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Errors" />
+                  <ListItemSecondaryAction>
+                    <Switch
+                      edge="end"
+                      checked={filters.errors}
+                      onChange={() => handleFilterToggle('errors')}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
 
-              <ListItem button onClick={handleResetFilters} style={{ paddingLeft: 32 }}>
-                <ListItemIcon>
-                  <RestoreIcon />
-                </ListItemIcon>
-                <ListItemText primary="Reset All Filters" />
-              </ListItem>
-            </List>
-          </Collapse>
+                <ListItem button onClick={handleResetFilters} style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <RestoreIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Reset All Filters" />
+                </ListItem>
+              </List>
+            </Collapse>
 
-          <ListItem button onClick={toggleDisplayFiltersView}>
-            <ListItemIcon>
-              <FilterListIcon />
-            </ListItemIcon>
-            <ListItemText primary="Display Filter" />
-            {showDisplayFilters ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
+            <ListItem button onClick={toggleDisplayFiltersView}>
+              <ListItemIcon>
+                <FilterListIcon />
+              </ListItemIcon>
+              <ListItemText primary="Display Filter" />
+              {showDisplayFilters ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
 
-          <Collapse in={showDisplayFilters} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem style={{ paddingLeft: 32 }}>
-                <FormControl fullWidth>
-                  <InputLabel id="display-filter-label">Show Events</InputLabel>
-                  <Select
-                    labelId="display-filter-label"
-                    value={displayFilter}
-                    onChange={handleDisplayFilterChange}
-                  >
-                    {EVENT_TYPES.map(type => (
-                      <MenuItem key={type.value} value={type.value}>
-                        {type.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </ListItem>
-            </List>
-          </Collapse>
+            <Collapse in={showDisplayFilters} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem style={{ paddingLeft: 32 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="display-filter-label">Show Events</InputLabel>
+                    <Select
+                      labelId="display-filter-label"
+                      value={displayFilter}
+                      onChange={handleDisplayFilterChange}
+                    >
+                      {EVENT_TYPES.map(type => (
+                        <MenuItem key={type.value} value={type.value}>
+                          {type.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </ListItem>
+              </List>
+            </Collapse>
 
-          <ListItem button onClick={handleExport} disabled={eventCount === 0}>
-            <ListItemIcon>
-              <DownloadIcon />
-            </ListItemIcon>
-            <ListItemText primary="Export Debug Logs" />
-          </ListItem>
+            <ListItem button onClick={openLogViewer} disabled={eventCount === 0}>
+              <ListItemIcon>
+                <VisibilityIcon />
+              </ListItemIcon>
+              <ListItemText primary="View Debug Logs" />
+            </ListItem>
 
-          <ListItem button onClick={handleClear} disabled={eventCount === 0}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText primary="Clear Debug Logs" />
-          </ListItem>
-        </>
-      )}
-    </List>
+            <ListItem button onClick={handleExport} disabled={eventCount === 0}>
+              <ListItemIcon>
+                <DownloadIcon />
+              </ListItemIcon>
+              <ListItemText primary="Export Debug Logs" />
+            </ListItem>
+
+            <ListItem button onClick={handleClear} disabled={eventCount === 0}>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              <ListItemText primary="Clear Debug Logs" />
+            </ListItem>
+          </>
+        )}
+      </List>
+
+      <DebugLogViewer
+        open={logViewerOpen}
+        onClose={closeLogViewer}
+        displayFilter={displayFilter}
+      />
+    </>
   );
 }
