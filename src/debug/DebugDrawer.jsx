@@ -8,7 +8,6 @@ import Switch from '@material-ui/core/Switch';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import DownloadIcon from '@material-ui/icons/GetApp';
 import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 import { DebugLogger } from './DebugLogger';
 
 export default function DebugDrawer() {

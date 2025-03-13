@@ -4,9 +4,9 @@ import { useIsBrowser } from './useIsBrowser'
 
 export function useAppNavigation() {
   const isBrowser = useIsBrowser()
-  const isNextJs = isBrowser && window.__NEXT_DATA__
-  const nextRouter = isNextJs ? useRouter() : null
+  const router = useRouter()
   const [currentPath, setCurrentPath] = useState('/')
+  const isNextJs = isBrowser && window.__NEXT_DATA__
 
   useEffect(() => {
     if (isBrowser) {
@@ -26,7 +26,7 @@ export function useAppNavigation() {
 
   const navigate = (path) => {
     if (isNextJs) {
-      nextRouter.push(path)
+      router.push(path)
     } else if (isBrowser) {
       window.history.pushState({}, '', path)
       setCurrentPath(path)
@@ -35,7 +35,7 @@ export function useAppNavigation() {
 
   return {
     navigate,
-    currentPath: isNextJs ? nextRouter?.pathname : currentPath,
+    currentPath: isNextJs ? router?.pathname : currentPath,
     isNextJs
   }
 }
