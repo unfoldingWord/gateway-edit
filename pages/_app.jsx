@@ -8,7 +8,6 @@ import { APP_NAME } from '@common/constants'
 import AppHead from '@components/AppHead'
 import theme from '../src/theme'
 import '@styles/globals.css'
-import DebugProvider from '../src/debug/DebugProvider'
 
 export default function Application({ Component, pageProps }) {
   useEffect(() => {
@@ -26,13 +25,11 @@ export default function Application({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <DebugProvider>
           <AuthContextProvider>
             <StoreContextProvider>
               <Component {...pageProps} />
             </StoreContextProvider>
           </AuthContextProvider>
-        </DebugProvider>
       </ThemeProvider>
     </>
   )

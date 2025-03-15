@@ -11,7 +11,6 @@ import theme from './theme'
 import '@styles/globals.css'
 import { useAppNavigation } from './hooks/useAppNavigation'
 import AccountSettings from './components/AccountSettings'
-import DebugProvider from './debug/DebugProvider'
 
 function App() {
   const { currentPath, isNextJs } = useAppNavigation()
@@ -47,13 +46,11 @@ function App() {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <DebugProvider>
           <AuthContextProvider>
             <StoreContextProvider>
               <Layout>{renderContent()}</Layout>
             </StoreContextProvider>
           </AuthContextProvider>
-        </DebugProvider>
       </ThemeProvider>
     </>
   )
