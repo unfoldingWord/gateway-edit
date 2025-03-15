@@ -18,7 +18,6 @@ import { StoreContext } from '@context/StoreContext'
 import useMergeCardsProps from '../hooks/useMergeCardsProps'
 import Divider from '@material-ui/core/Divider'
 import { useAppNavigation } from '../hooks/useAppNavigation'
-import DebugDrawer from '../debug/DebugDrawer'
 
 // TODO: Enable buttons once ready to fully implement functionality
 // import DashboardIcon from '@material-ui/icons/Dashboard'
@@ -132,8 +131,6 @@ export default function Drawer({
           <ListItemText primary={'Reset Resource Layout'} />
         </ListItem>
       </List>
-      <Divider />
-      <DebugDrawer />
       <Divider />
       <List disablePadding>
         <ListItem
