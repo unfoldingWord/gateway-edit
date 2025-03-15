@@ -125,12 +125,39 @@ module.exports = {
     eqeqeq: 'off',
     'jsdoc/require-returns-type': 'warn',
     'jsdoc/valid-types': 'warn',
+    'no-unused-expressions': 'on',
+    'no-unused-vars': [
+      'error',
+      {
+        vars: 'all',
+        args: 'after-used',
+        caughtErrors: 'all',
+        ignoreRestSiblings: false,
+        reportUsedIgnorePattern: false,
+        'no-use-before-define': [
+          'error',
+          {
+            functions: true,
+            classes: true,
+            variables: true,
+            allowNamedExports: false,
+          },
+        ],
+      },
+    ],
   },
   settings: {
     react: {
       createClass: 'createReactClass', // Regex for Component Factory to use, default to "createReactClass"
       pragma: 'React', // Pragma to use, default to "React"
       version: 'detect', // React version, default to the latest React stable release
+    },
+  },
+  languageOptions: {
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
     },
   },
 }
