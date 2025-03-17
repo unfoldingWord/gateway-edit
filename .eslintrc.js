@@ -8,7 +8,7 @@ module.exports = {
     'prettier',
     'prettier/react',
     'plugin:cypress/recommended',
-    // 'next/core-web-vitals',
+    'next/core-web-vitals',
   ],
   parser: '@babel/eslint-parser',
   parserOptions: {
