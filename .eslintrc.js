@@ -8,13 +8,20 @@ module.exports = {
     'prettier',
     'prettier/react',
     'plugin:cypress/recommended',
-    'next/core-web-vitals',
+    // 'next/core-web-vitals',
   ],
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 2018,
+    sourceType: 'module',
     ecmaFeatures: {
       impliedStrict: true,
       classes: true,
+      jsx: true,
+    },
+    requireConfigFile: false,
+    babelOptions: {
+      presets: ['@babel/preset-react'],
     },
   },
   env: {
@@ -35,7 +42,7 @@ module.exports = {
   rules: {
     'array-callback-return': 'error',
     'no-await-in-loop': 'error',
-    'object-curly-newline': ['error', { multiline: true, minProperties: 3 }],
+    'object-curly-newline': 'off',
     'brace-style': ['error', '1tbs', { allowSingleLine: false }],
     'no-return-await': 'error',
     'quote-props': ['error', 'consistent'],
@@ -67,7 +74,7 @@ module.exports = {
     'no-debugger': 'warn',
     'react/prop-types': 'error',
     curly: 'error',
-    semi: ['error', 'never'],
+    semi: 'off',
     'semi-style': ['error', 'last'],
     'no-console': 'off',
     'react/jsx-uses-react': 'error',
@@ -77,7 +84,7 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     'object-curly-spacing': ['error', 'always'],
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': 'off',
     'keyword-spacing': 'error',
     'no-multi-spaces': 'error',
     'no-trailing-spaces': 'error',
@@ -125,39 +132,25 @@ module.exports = {
     eqeqeq: 'off',
     'jsdoc/require-returns-type': 'warn',
     'jsdoc/valid-types': 'warn',
-    'no-unused-expressions': 'on',
-    'no-unused-vars': [
-      'error',
-      {
-        vars: 'all',
-        args: 'after-used',
-        caughtErrors: 'all',
-        ignoreRestSiblings: false,
-        reportUsedIgnorePattern: false,
-        'no-use-before-define': [
-          'error',
-          {
-            functions: true,
-            classes: true,
-            variables: true,
-            allowNamedExports: false,
-          },
-        ],
-      },
-    ],
   },
   settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@components', './src/components'],
+          ['@context', './src/context'],
+          ['@hooks', './src/hooks'],
+          ['@styles', './src/styles'],
+          ['@common', './src/common'],
+          ['@utils', './src/utils'],
+        ],
+        extensions: ['.js', '.jsx', '.json'],
+      },
+    },
     react: {
       createClass: 'createReactClass', // Regex for Component Factory to use, default to "createReactClass"
       pragma: 'React', // Pragma to use, default to "React"
       version: 'detect', // React version, default to the latest React stable release
-    },
-  },
-  languageOptions: {
-    parserOptions: {
-      ecmaFeatures: {
-        jsx: true,
-      },
     },
   },
 }
