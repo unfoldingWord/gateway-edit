@@ -1,4 +1,4 @@
-import {
+import React, {
   useContext,
   useEffect,
   useMemo,
@@ -6,6 +6,9 @@ import {
   useCallback,
 } from 'react'
 import isEqual from 'deep-equal'
+import _ from 'lodash'
+import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import {
   MinimizedCardsListUI,
   useMinimizedCardsState,
@@ -33,7 +36,7 @@ import {
   getResourceBibles,
 } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
-import { isNT } from '@common/BooksOfTheBible'
+import { isNT, BIBLES_ABBRV_INDEX } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
@@ -42,7 +45,6 @@ import {
   processNetworkError,
   reloadApp,
 } from '@utils/network'
-import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import WordAlignerDialog from '@components/WordAlignerDialog'
@@ -50,10 +52,6 @@ import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
-import _ from 'lodash'
-import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
-import Snackbar from '@material-ui/core/Snackbar'
-import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -93,6 +91,7 @@ const handleOnline = () => {
 function WorkspaceContainer() {
   const router = useRouter()
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar()
   const [state, _setState] = useState({
     currentVerseReference: null,
     originalScriptureBookObjects: null,
@@ -259,9 +258,9 @@ function WorkspaceContainer() {
     processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
   }
 
-  function setNetworkError( error ) {
+  const setNetworkError = useCallback(( error ) => {
     setState( { networkError: error })
-  }
+  }, [])
 
   /**
    * show either tokenNetworkError or NetworkError for workspace
@@ -299,11 +298,11 @@ function WorkspaceContainer() {
   }
 
   const [offlineTimer, setOfflineTimer] = useState(null);
-  const [showOnlineAlert, setShowOnlineAlert] = useState(false);
 
   // Use useCallback for the offline handler since it needs access to component state
   const handleOffline = useCallback(() => {
     console.warn('[WorkspaceContainer] Offline');
+
     // Clear any existing timer first
     if (offlineTimer) {
       clearTimeout(offlineTimer);
@@ -323,22 +322,25 @@ function WorkspaceContainer() {
     }, OFFLINE_TIMEOUT);
 
     setOfflineTimer(timer);
-  }, [offlineTimer, logout, router, setNetworkError, setLastError]); // Remove OFFLINE_TIMEOUT from deps, add required function deps
+  }, [offlineTimer, logout, router, setNetworkError, setLastError]);
 
-  // Update the online handler to show notification
+  // Update the online handler to use notistack
   const handleOnlineWithCleanup = useCallback(() => {
     handleOnline();
+
     if (offlineTimer) {
       clearTimeout(offlineTimer);
       setOfflineTimer(null);
     }
-    setShowOnlineAlert(true);
-  }, [offlineTimer]);
 
-  // Handle closing the Snackbar
-  const handleCloseAlert = useCallback(() => {
-    setShowOnlineAlert(false);
-  }, []);
+    enqueueSnackbar('Connection restored', {
+      variant: 'success',
+      anchorOrigin: {
+        vertical: 'bottom',
+        horizontal: 'right',
+      }
+    });
+  }, [offlineTimer, enqueueSnackbar]);
 
   // Effect for event listeners
   useEffect(() => {
@@ -350,6 +352,7 @@ function WorkspaceContainer() {
       window.removeEventListener('error', handleError);
       window.removeEventListener('offline', handleOffline);
       window.removeEventListener('online', handleOnlineWithCleanup);
+
       if (offlineTimer) {
         clearTimeout(offlineTimer);
       }
@@ -368,15 +371,14 @@ function WorkspaceContainer() {
    * @param {boolean} showAllErrors - if true then always show a popup error message, otherwise just show server error message if we can't talk to server
    */
   function onResourceError(message, isAccessError, resourceStatus, error, showAllErrors = false) {
-
     if (!networkError ) { // only show if another error not already showing
       if (showAllErrors) {
         console.warn(`[WorkspaceContainer] Errors found:`, { message, isAccessError, resourceStatus, error, showAllErrors })
-        if(isAccessError) {
-          processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
-        }
+
+        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError);
       } else {
         console.warn(`[WorkspaceContainer] Errors found:`, { message, isAccessError, resourceStatus, error, showAllErrors })
+
         if (isAccessError) { // we only show popup for access errors
           addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError)
         }
@@ -391,7 +393,6 @@ function WorkspaceContainer() {
         showAllErrors,
       })
     }
-
   }
 
   useEffect(() => { // on verse navigation, clear verse spans and selections
@@ -629,7 +630,7 @@ function WorkspaceContainer() {
       type: 'resource_card',
       id: 'resource_card_ta',
       resourceId: 'ta',
-      projectId: taArticle?.projectId,
+      projectId: taArticle?.projectId ?? bookId,
       filePath: taArticle?.filePath,
       errorMessage: taArticle ? null : 'No article is specified in the current note.',
       loggedInUser: loggedInUser,
@@ -748,7 +749,7 @@ function WorkspaceContainer() {
     }
 
     setState( { originalScriptureBookObjects })
-  }, [originalScriptureResults?.bookObjects])
+  }, [bookId, originalLanguageId, originalScriptureResults?.bookObjects])
 
   useEffect(() => { // pre-cache glosses on verse change
     const fetchGlossDataForVerse = async () => {
@@ -838,22 +839,6 @@ function WorkspaceContainer() {
       {(tokenNetworkError || networkError) && ( // Do not render workspace until user logged in and we have user settings
         <>{showNetworkError()}</>
       )}
-
-      <Snackbar
-        open={showOnlineAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={handleCloseAlert}
-          elevation={6}
-          variant='filled'
-          severity='success'
-        >
-          Connection restored
-        </Alert>
-      </Snackbar>
     </>
   )
 }

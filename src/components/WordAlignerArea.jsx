@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import { AlignmentHelpers, WordAligner } from 'word-aligner-rcl'
-import isEqual from "deep-equal";
-import cloneDeep from "lodash.clonedeep";
-import Button from "@mui/material/Button";
-import PopoverComponent from "./PopoverComponent";
-import Dialog from "@mui/material/Dialog";
-import {DialogActions, DialogContent, DialogContentText} from "@mui/material";
+import isEqual from 'deep-equal';
+import cloneDeep from 'lodash.clonedeep';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import PopoverComponent from './PopoverComponent'
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
@@ -116,14 +116,14 @@ export default function WordAlignerArea({
   return (
     <>
       <DialogTitle style={{cursor: 'move'}} id="draggable-aligner-dialog-title">
-          <span>
-            {`Aligning: ${title}`}
-            {aligned_ ? (
-              <RxLink2 style={alignmentIconStyle} id='valid_icon' color='#BBB'/>
-            ) : (
-              <RxLinkBreak2 style={alignmentIconStyle} id='invalid_icon' color='#000'/>
-            )}
-          </span>
+        <span>
+          {`Aligning: ${title}`}
+          {aligned_ ? (
+            <RxLink2 style={alignmentIconStyle} id='valid_icon' color='#BBB'/>
+          ) : (
+            <RxLinkBreak2 style={alignmentIconStyle} id='invalid_icon' color='#000'/>
+          )}
+        </span>
       </DialogTitle>
       <div style={{width: `95%`, margin: '10px'}}>
         <WordAligner
@@ -142,9 +142,9 @@ export default function WordAlignerArea({
         />
       </div>
       <span style={{width: `95%`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-          <Button variant="outlined" style={{margin: '10px 100px'}} onClick={cancelAlignment}>
+        <Button variant="outlined" style={{margin: '10px 100px'}} onClick={cancelAlignment}>
             Cancel
-          </Button>
+        </Button>
         {!errorMessage && // only show these buttons if there is no error
           <>
             <Button variant="outlined" style={{margin: '10px 100px'}} onClick={() => setShowResetWarning(true)}>
@@ -155,7 +155,7 @@ export default function WordAlignerArea({
             </Button>
           </>
         }
-        </span>
+      </span>
       {/** Lexicon Popup dialog */}
       <PopoverComponent
         popoverVisibility={lexiconData}
@@ -187,7 +187,10 @@ export default function WordAlignerArea({
 
 WordAlignerArea.propTypes = {
   aligned: PropTypes.bool,
-  alignmentActions: PropTypes.func,
+  alignmentActions: PropTypes.shape({
+    cancelAlignment: PropTypes.func,
+    saveAlignment: PropTypes.func,
+  }),
   contextId: PropTypes.object.isRequired,
   errorMessage: PropTypes.string,
   lexiconCache: PropTypes.object,
@@ -196,6 +199,8 @@ WordAlignerArea.propTypes = {
   sourceLanguage: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
+  style: PropTypes.object,
+  targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,
   targetFontSizePercent: PropTypes.number,
   translate: PropTypes.func.isRequired,

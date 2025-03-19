@@ -42,8 +42,8 @@ import {
 } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
-import { delay } from '../utils/resources'
 import { StoreContext } from '@context/StoreContext'
+import { delay } from '../utils/resources'
 
 
 export default function ResourceCard({
@@ -89,6 +89,10 @@ export default function ResourceCard({
     config: HTTP_CONFIG,
     readyToFetch: false,
   })
+  const [markdownView, setMarkdownView] = useUserLocalStorage
+    ? useUserLocalStorage(`markdownView${id}`, true)
+    : useState(true)
+
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
   const isResourceTsv = ['tn', 'tq', 'twl'].includes(cardResourceId)
   const isObs = projectId === 'obs'
@@ -265,10 +269,10 @@ export default function ResourceCard({
 
   const {
     state: {
-      item, headers, filters, fontSize, itemIndex, markdownView,
+      item, headers, filters, fontSize, itemIndex,
     },
     actions: {
-      setFilters, setFontSize, setItemIndex, setItemIndexPure, setMarkdownView,
+      setFilters, setFontSize, setItemIndex, setItemIndexPure,
     },
   } = useCardState({
     id,
@@ -396,6 +400,7 @@ export default function ResourceCard({
     if (!usingUserBranch) {
       console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
       const branch = await startEdit()
+
       if (branch) {
         saveEdit(branch, newContent)
       } else { // if error on branch creation
@@ -420,6 +425,7 @@ export default function ResourceCard({
    */
   const addRowToTsv = row => {
     const { Reference: reference } = row
+
     try {
       const { chapter: inputChapter, verse: inputVerse } =
         getChapterVerse(reference)
@@ -430,7 +436,8 @@ export default function ResourceCard({
         : onTsvAdd(row, chapter, verse, bookId, itemIndex)
 
       handleSaveEdit(tsvsObjectToFileString(newTsvs))
-      if (!!items.length) setItemIndexPure(itemIndex + 1)
+
+      if (items.length) setItemIndexPure(itemIndex + 1)
     } catch (error) {
       console.error(
         'Input reference in new row is not of type chapter:verse',
@@ -519,7 +526,7 @@ export default function ResourceCard({
       : (<></>)
     ]
 
-  console.log({markdownView, editable})
+
   return (
     <Card
       cardResourceId={cardResourceId}

@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from 'react'
 import PropTypes from 'prop-types'
 import Dialog from '@mui/material/Dialog'
@@ -32,14 +33,15 @@ export default function WordAlignerDialog({
     },
   } = useContext(StoreContext)
 
-  const boundsParams = { // keeps track of drag bounds
+  const boundsParams = useMemo(() => ({ // keeps track of drag bounds
     workspaceRef: mainScreenRef,
     cardRef: dialogRef,
     open: !!showDialog,
     displayState: {
       alignerData: showDialog
     },
-  };
+  }), [mainScreenRef, dialogRef, showDialog]);
+
   const {
     state: { bounds },
     actions: { doUpdateBounds },
@@ -57,15 +59,16 @@ export default function WordAlignerDialog({
     if (alignerData_) {
       setAligned(!!alignerStatus?.state?.aligned)
     }
-  }, [alignerData_])
+  }, [alignerData_, alignerStatus?.state?.aligned])
 
   useEffect(() => {
     console.log('WordAlignerDialog: aligner data changed')
+
     if (showDialog !== shouldShowDialog) {
       console.log('WordAlignerDialog: aligner visible state changed')
       setShowDialog(shouldShowDialog)
     }
-  }, [alignerData_])
+  }, [alignerData_, shouldShowDialog, showDialog])
 
   function PaperComponent(props) { // contains the word aligner dialog
     return (
@@ -83,6 +86,7 @@ export default function WordAlignerDialog({
   }
 
   const currentInstance = dialogRef?.current;
+
   useEffect(() => { // monitor changes in alignment dialog position and open state
     if (alignerData_ &&
       currentInstance?.clientWidth &&
@@ -90,7 +94,7 @@ export default function WordAlignerDialog({
       console.log('WordAlignerDialog: updating bounds')
       doUpdateBounds()
     }
-  }, [currentInstance, alignerData_])
+  }, [currentInstance, alignerData_, doUpdateBounds])
 
   const errorMessage = alignerStatus?.state?.errorMessage
 

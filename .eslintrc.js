@@ -82,7 +82,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-prototype-builtins': 'off',
     'react/no-unescaped-entities': 'off',
-    'object-curly-spacing': ['error', 'always'],
+    'object-curly-spacing': ['warn', 'always'],
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
     'comma-dangle': 'off',
     'keyword-spacing': 'error',

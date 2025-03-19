@@ -14,9 +14,9 @@ import ListItem from '@material-ui/core/ListItem'
 import List from '@material-ui/core/List'
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined'
 import { MergeBranchButton, MergeDialog, ErrorDialog } from 'translation-helps-rcl'
+import Divider from '@material-ui/core/Divider'
 import { StoreContext } from '@context/StoreContext'
 import useMergeCardsProps from '../hooks/useMergeCardsProps'
-import Divider from '@material-ui/core/Divider'
 import { useAppNavigation } from '../hooks/useAppNavigation'
 
 // TODO: Enable buttons once ready to fully implement functionality
@@ -46,7 +46,6 @@ export default function Drawer({
 
   const {
     onClick: onMergeClick,
-    onSubmit,
     blocked: mergeBlocked,
     pending: mergePending,
     dialogMessage,
