@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { SnackbarProvider } from 'notistack'
 import StoreContextProvider from '@context/StoreContext'
 import AuthContextProvider from '@context/AuthContext'
 import { APP_NAME } from '@common/constants'
@@ -25,11 +26,19 @@ export default function Application({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+        >
           <AuthContextProvider>
             <StoreContextProvider>
               <Component {...pageProps} />
             </StoreContextProvider>
           </AuthContextProvider>
+        </SnackbarProvider>
       </ThemeProvider>
     </>
   )
