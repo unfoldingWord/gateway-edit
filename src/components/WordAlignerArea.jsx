@@ -209,18 +209,4 @@ WordAlignerArea.propTypes = {
   targetWords: PropTypes.array.isRequired,
 };
 
-// Custom comparison function to decide when to re-render
-function arePropsEqual(prevProps, nextProps) {
-  // Compare only the props that would cause visual changes
-  return prevProps.aligned === nextProps.aligned &&
-    prevProps.errorMessage === nextProps.errorMessage &&
-    prevProps.title === nextProps.title &&
-    isEqual(prevProps.verseAlignments, nextProps.verseAlignments) &&
-    isEqual(prevProps.targetWords, nextProps.targetWords) &&
-    isEqual(prevProps.contextId, nextProps.contextId) &&
-    prevProps.sourceLanguage === nextProps.sourceLanguage &&
-    isEqual(prevProps.targetLanguage, nextProps.targetLanguage);
-}
-
-export default React.memo(WordAlignerArea, arePropsEqual)
-
+export default React.memo(WordAlignerArea)

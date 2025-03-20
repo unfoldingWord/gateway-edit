@@ -89,9 +89,13 @@ export default function ResourceCard({
     config: HTTP_CONFIG,
     readyToFetch: false,
   })
-  const [markdownView, setMarkdownView] = useUserLocalStorage
-    ? useUserLocalStorage(`markdownView${id}`, true)
-    : useState(true)
+
+  const userLocalStorage =
+    useUserLocalStorage?.(`markdownView${id}`, true) || undefined
+
+  const markdownViewState = useState(true)
+
+  const [markdownView, setMarkdownView] = userLocalStorage ?? markdownViewState
 
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
   const isResourceTsv = ['tn', 'tq', 'twl'].includes(cardResourceId)
@@ -324,7 +328,7 @@ export default function ResourceCard({
     if (saveError && isSaveError) {
       console.warn(`ResourceCard() saveError`, { saveError, isSaveError })
       console.log(`save error`, saveError)
-      onResourceError && onResourceError(null, true, null, `Error saving ${languageId}_${cardResourceId} ${saveError}`, true)
+      onResourceError && onResourceError(null, false, null, `Error saving ${languageId}_${cardResourceId} ${saveError}`, true)
     }
   }, [saveError, isSaveError])
 
