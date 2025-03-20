@@ -749,7 +749,7 @@ function WorkspaceContainer() {
     }
 
     setState( { originalScriptureBookObjects })
-  }, [bookId, originalLanguageId, originalScriptureResults?.bookObjects])
+  }, [originalScriptureResults?.bookObjects])
 
   useEffect(() => { // pre-cache glosses on verse change
     const fetchGlossDataForVerse = async () => {
@@ -772,75 +772,78 @@ function WorkspaceContainer() {
     }
   }, [scriptureReference, originalScriptureBookObjects, originalLanguageId ])
 
-  return !workspaceReady ? ( // Do not render workspace until user logged in and we have user settings
-    <>
-      {showNetworkError()}
-      <CircularProgress size={180} />
-    </>
-  ) : (
-    <>
-      <MinimizedCardsListUI
-        minimizedCards={minimizedCards}
-        maximizeCard={maximizeCard}
-      />
-      {loading || content || error ? (
-        <DraggableCard
-          open
-          error={error}
-          title={title}
-          loading={loading}
-          content={content}
-          onClose={() => clearContent()}
-          workspaceRef={mainScreenRef}
+  return (
+    (!workspaceReady) ? // Do not render workspace until user logged in and we have user settings
+      <>
+        {showNetworkError()}
+        <CircularProgress size={180} />
+      </>
+      :
+      <>
+        <MinimizedCardsListUI minimizedCards={minimizedCards} maximizeCard={maximizeCard}/>
+        {loading || content || error ?
+          <DraggableCard
+            open
+            error={error}
+            title={title}
+            loading={loading}
+            content={content}
+            onClose={() => clearContent()}
+            workspaceRef={mainScreenRef}
+          />
+          :
+          null
+        }
+        <Workspace
+          rowHeight={25}
+          layout={currentLayout}
+          classes={classes}
+          gridMargin={[10, 10]}
+          onLayoutChange={(_layout, layouts) => {
+            setCurrentLayout(layouts)
+          }}
+          layoutWidths={[
+            [1, 1, 1],
+            [2, 2],
+            [1, 1.5, 1.5],
+          ]}
+          layoutHeights={[[5], [10, 10], [10, 10]]}
+          minW={3}
+          minH={4}
+          breakpoints={{
+            lg: 900,
+            sm: 680,
+            xs: 300,
+          }}
+          columns={{
+            lg: 12,
+            sm: 6,
+            xs: 3,
+          }}
+        >
+          {
+            _.map(visibleCards, (cardProps, i) =>
+              cardProps.type === 'scripture_card' ?
+                <ScriptureCard key={cardProps.title} {...cardProps} />
+                :
+                <ResourceCard key={cardProps.title} {...cardProps} />,
+            )
+          }
+        </Workspace>
+        <WordAlignerDialog
+          alignerStatus={wordAlignerStatus}
+          height={wordAlignerHeight}
+          translate={translate}
+          getLexiconData={getLexiconData}
         />
-      ) : null}
-      <Workspace
-        rowHeight={25}
-        layout={currentLayout}
-        classes={classes}
-        gridMargin={[10, 10]}
-        onLayoutChange={(_layout, layouts) => {
-          setCurrentLayout(layouts)
-        }}
-        layoutWidths={[
-          [1, 1, 1],
-          [2, 2],
-          [1, 1.5, 1.5],
-        ]}
-        layoutHeights={[[5], [10, 10], [10, 10]]}
-        minW={3}
-        minH={4}
-        breakpoints={{
-          lg: 900,
-          sm: 680,
-          xs: 300,
-        }}
-        columns={{
-          lg: 12,
-          sm: 6,
-          xs: 3,
-        }}
-      >
-        {_.map(visibleCards, (cardProps, i) =>
-          cardProps.type === 'scripture_card' ? (
-            <ScriptureCard key={cardProps.title} {...cardProps} />
-          ) : (
-            <ResourceCard key={cardProps.title} {...cardProps} />
-          )
-        )}
-      </Workspace>
-      <WordAlignerDialog
-        alignerStatus={wordAlignerStatus}
-        height={wordAlignerHeight}
-        translate={translate}
-        getLexiconData={getLexiconData}
-      />
 
-      {(tokenNetworkError || networkError) && ( // Do not render workspace until user logged in and we have user settings
-        <>{showNetworkError()}</>
-      )}
-    </>
-  )
-}
+        {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
+          <>
+            {showNetworkError()}
+          </>
+        }
+      </>
+    )
+  }
 
 export default WorkspaceContainer

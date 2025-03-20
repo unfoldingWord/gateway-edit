@@ -14,7 +14,7 @@ import { StoreContext } from '@context/StoreContext'
 import WordAlignerArea from './WordAlignerArea';
 
 // popup dialog for user to align verse
-export default function WordAlignerDialog({
+function WordAlignerDialog({
   alignerStatus,
   height,
   translate,
@@ -56,10 +56,10 @@ export default function WordAlignerDialog({
   }, [boundsParams])
 
   useEffect(() => { // set initial aligned state
-    if (alignerData_) {
+   if (alignerData_) {
       setAligned(!!alignerStatus?.state?.aligned)
     }
-  }, [alignerData_, alignerStatus?.state?.aligned])
+  }, [alignerData_])
 
   useEffect(() => {
     console.log('WordAlignerDialog: aligner data changed')
@@ -68,7 +68,7 @@ export default function WordAlignerDialog({
       console.log('WordAlignerDialog: aligner visible state changed')
       setShowDialog(shouldShowDialog)
     }
-  }, [alignerData_, shouldShowDialog, showDialog])
+  }, [alignerData_])
 
   function PaperComponent(props) { // contains the word aligner dialog
     return (
@@ -94,7 +94,7 @@ export default function WordAlignerDialog({
       console.log('WordAlignerDialog: updating bounds')
       doUpdateBounds()
     }
-  }, [currentInstance, alignerData_, doUpdateBounds])
+  }, [currentInstance, alignerData_])
 
   const errorMessage = alignerStatus?.state?.errorMessage
 
@@ -144,3 +144,5 @@ WordAlignerDialog.propTypes = {
   translate: PropTypes.func.isRequired,
   getLexiconData: PropTypes.func.isRequired,
 }
+
+export default React.memo(WordAlignerDialog)

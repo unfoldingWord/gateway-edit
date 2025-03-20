@@ -1,9 +1,7 @@
-import { useSnackbar } from 'notistack'
 import { useState, useEffect } from 'react'
 
 export default function useSaveChangesPrompt() {
   const [unsavedResources, setUnsavedResources] = useState([])
-  const { enqueueSnackbar } = useSnackbar()
   const savedChanges = !(unsavedResources.length > 0)
   const promptText = 'Changes you made may not be saved. Do you wish to continue?'
 
@@ -26,7 +24,6 @@ export default function useSaveChangesPrompt() {
 
         return newUnsavedResources
       })
-      enqueueSnackbar('Changes saved', { variant: 'success' })
     }
   }
 
