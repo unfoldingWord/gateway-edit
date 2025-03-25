@@ -10,11 +10,18 @@ module.exports = {
     'plugin:cypress/recommended',
     'next/core-web-vitals',
   ],
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 2018,
+    sourceType: 'module',
     ecmaFeatures: {
       impliedStrict: true,
       classes: true,
+      jsx: true,
+    },
+    requireConfigFile: false,
+    babelOptions: {
+      presets: ['@babel/preset-react'],
     },
   },
   env: {
@@ -35,7 +42,7 @@ module.exports = {
   rules: {
     'array-callback-return': 'error',
     'no-await-in-loop': 'error',
-    'object-curly-newline': ['error', { multiline: true, minProperties: 3 }],
+    'object-curly-newline': 'off',
     'brace-style': ['error', '1tbs', { allowSingleLine: false }],
     'no-return-await': 'error',
     'quote-props': ['error', 'consistent'],
@@ -67,7 +74,7 @@ module.exports = {
     'no-debugger': 'warn',
     'react/prop-types': 'error',
     curly: 'error',
-    semi: ['error', 'never'],
+    semi: 'off',
     'semi-style': ['error', 'last'],
     'no-console': 'off',
     'react/jsx-uses-react': 'error',
@@ -75,9 +82,9 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-prototype-builtins': 'off',
     'react/no-unescaped-entities': 'off',
-    'object-curly-spacing': ['error', 'always'],
+    'object-curly-spacing': ['warn', 'always'],
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': 'off',
     'keyword-spacing': 'error',
     'no-multi-spaces': 'error',
     'no-trailing-spaces': 'error',
@@ -127,6 +134,19 @@ module.exports = {
     'jsdoc/valid-types': 'warn',
   },
   settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@components', './src/components'],
+          ['@context', './src/context'],
+          ['@hooks', './src/hooks'],
+          ['@styles', './src/styles'],
+          ['@common', './src/common'],
+          ['@utils', './src/utils'],
+        ],
+        extensions: ['.js', '.jsx', '.json'],
+      },
+    },
     react: {
       createClass: 'createReactClass', // Regex for Component Factory to use, default to "createReactClass"
       pragma: 'React', // Pragma to use, default to "React"

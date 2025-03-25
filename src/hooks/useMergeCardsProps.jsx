@@ -1,8 +1,10 @@
+import { useSnackbar } from 'notistack'
 import { useState, useEffect, useMemo } from 'react'
 
 export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging } = {}) {
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false)
   const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     if (!isMerging) {
@@ -121,6 +123,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     )
     if (!wasMergeSuccessful) return setIsErrorDialogOpen(true)
 
+    enqueueSnackbar('Merge successful', { variant: 'success' })
   }
 
   const onSubmit = ({ mergeableCardIds, description }) => {

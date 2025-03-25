@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import * as isEqual from 'deep-equal'
+import isEqual from 'deep-equal'
 import { getFilesFromRepoZip, useRepository } from 'gitea-react-toolkit'
 import { core } from 'scripture-resources-rcl'
 import { isNT } from '@common/BooksOfTheBible'

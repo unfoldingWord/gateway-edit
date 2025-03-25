@@ -33,7 +33,7 @@ const { getChapterVerse } = tsvRowUtils
 const { tsvsObjectToFileString } = tsvDataActions
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
-import * as isEqual from 'deep-equal'
+import isEqual from 'deep-equal'
 import { getResourceMessage } from '@utils/resources'
 import {
   HTTP_CONFIG,
@@ -42,8 +42,8 @@ import {
 } from '@common/constants'
 import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
-import { delay } from '../utils/resources'
 import { StoreContext } from '@context/StoreContext'
+import { delay } from '../utils/resources'
 
 
 export default function ResourceCard({
@@ -89,6 +89,14 @@ export default function ResourceCard({
     config: HTTP_CONFIG,
     readyToFetch: false,
   })
+
+  const userLocalStorage =
+    useUserLocalStorage?.(`markdownView${id}`, true) || undefined
+
+  const markdownViewState = useState(true)
+
+  const [markdownView, setMarkdownView] = userLocalStorage ?? markdownViewState
+
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
   const isResourceTsv = ['tn', 'tq', 'twl'].includes(cardResourceId)
   const isObs = projectId === 'obs'
@@ -265,10 +273,10 @@ export default function ResourceCard({
 
   const {
     state: {
-      item, headers, filters, fontSize, itemIndex, markdownView,
+      item, headers, filters, fontSize, itemIndex,
     },
     actions: {
-      setFilters, setFontSize, setItemIndex, setItemIndexPure, setMarkdownView,
+      setFilters, setFontSize, setItemIndex, setItemIndexPure,
     },
   } = useCardState({
     id,
@@ -318,18 +326,11 @@ export default function ResourceCard({
 
   useEffect(() => { // when we get a save saveError
     if (saveError && isSaveError) {
+      console.warn(`ResourceCard() saveError`, { saveError, isSaveError })
       console.log(`save error`, saveError)
       onResourceError && onResourceError(null, false, null, `Error saving ${languageId}_${cardResourceId} ${saveError}`, true)
     }
   }, [saveError, isSaveError])
-
-  // useEffect(() => {
-  //   console.log(`ResourceCard() sha changed to`, { sha, resource })
-  // }, [sha])
-
-  // useEffect(() => {
-  //   console.log('ResourceCard verse changed', { chapter, verse, projectId })
-  // }, [chapter, verse, projectId])
 
   const {
     state: {
@@ -364,6 +365,7 @@ export default function ResourceCard({
     const error = resourceStatus?.[ERROR_STATE]
 
     if (error) { // if error was found do callback
+      console.warn(`ResourceCard() resourceStatus error`, { resourceStatus })
       const message = getResourceErrorMessage(resourceStatus) + ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
       const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
       onResourceError && onResourceError(message, isAccessError, resourceStatus)
@@ -388,6 +390,12 @@ export default function ResourceCard({
         })
       } else {
         console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
+        const message =
+          getResourceErrorMessage(resourceStatus) +
+          ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
+        const isAccessError = resourceStatus[MANIFEST_NOT_LOADED_ERROR]
+        onResourceError &&
+          onResourceError(message, isAccessError, resourceStatus)
       }
       setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
     }
@@ -396,9 +404,11 @@ export default function ResourceCard({
     if (!usingUserBranch) {
       console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
       const branch = await startEdit()
+
       if (branch) {
         saveEdit(branch, newContent)
       } else { // if error on branch creation
+        console.warn(`ResourceCard() handleSaveEdit() error creating edit branch`, { sha, resource })
         onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
       }
     } else {// Else just save the edit.
@@ -419,6 +429,7 @@ export default function ResourceCard({
    */
   const addRowToTsv = row => {
     const { Reference: reference } = row
+
     try {
       const { chapter: inputChapter, verse: inputVerse } =
         getChapterVerse(reference)
@@ -429,7 +440,8 @@ export default function ResourceCard({
         : onTsvAdd(row, chapter, verse, bookId, itemIndex)
 
       handleSaveEdit(tsvsObjectToFileString(newTsvs))
-      if (!!items.length) setItemIndexPure(itemIndex + 1)
+
+      if (items.length) setItemIndexPure(itemIndex + 1)
     } catch (error) {
       console.error(
         'Input reference in new row is not of type chapter:verse',
@@ -518,13 +530,14 @@ export default function ResourceCard({
       : (<></>)
     ]
 
+
   return (
     <Card
       cardResourceId={cardResourceId}
       classes={classes}
       disableFilters={disableFilters}
       disableNavigation={disableNavigation}
-      editable={editable}
+      editable={editable && markdownView}
       filters={filters}
       fontSize={fontSize}
       headers={headers}
@@ -547,15 +560,22 @@ export default function ResourceCard({
     >
       <CardContent
         cardResourceId={cardResourceId}
-        editable={editable}
-        errorMessage={isEditing ? 'Saving Resource...' : message || errorMessage}
+        editable={editable && markdownView}
+        errorMessage={
+          isEditing ? 'Saving Resource...' : message || errorMessage
+        }
         filters={filters}
         fontSize={fontSize}
         id={`${id}_content`}
         item={item}
         items={items}
         languageId={languageId}
-        markdown={(cardResourceId === 'ta' || cardResourceId === 'tw') && content.length > 0 ? content : markdown}// Adding content value to maintain edit changes even when switching between markdown and html views on tA.
+        markdown={
+          (cardResourceId === 'ta' || cardResourceId === 'tw') &&
+          content.length > 0
+            ? content
+            : markdown
+        } // Adding content value to maintain edit changes even when switching between markdown and html views on tA.
         markdownView={markdownView}
         onEdit={updateTempContent}
         onTsvEdit={onTsvEdit}
