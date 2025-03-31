@@ -304,8 +304,6 @@ export default function ResourceCard({
     resourceId: cardResourceId,
   })
 
-
-
   const sha = getSha({
     item, fetchResponse, cardResourceId,
   })
