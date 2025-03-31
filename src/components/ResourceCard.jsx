@@ -80,8 +80,8 @@ export default function ResourceCard({
     verse,
     projectId,
   }
-  const [content, _setContent] = useState('')
-  const [savedContent, _setSavedContent] = useState('');
+  const [content, setContent] = useState('')
+  const [savedContent, setSavedContent] = useState('');
   const [saved, setSaved] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isTsvDeleteDialogOpen, setIsTsvDeleteDialogOpen] = useState(false)
@@ -90,16 +90,6 @@ export default function ResourceCard({
     config: HTTP_CONFIG,
     readyToFetch: false,
   })
-
-  const setContent = (content) => {
-    console.log('setting content', {content})
-    _setContent(content)
-  }
-
-  const setSavedContent = (content) => {
-    console.log('setting saved content', {content})
-    _setSavedContent(content)
-  }
 
   const userLocalStorage =
     useUserLocalStorage?.(`markdownView${id}`, true) || undefined
