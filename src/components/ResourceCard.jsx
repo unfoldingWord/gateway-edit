@@ -1,4 +1,4 @@
-import {
+import React, {
   useContext,
   useEffect,
   useState,
@@ -80,7 +80,8 @@ export default function ResourceCard({
     verse,
     projectId,
   }
-  const [content, setContent] = useState('')
+  const [content, _setContent] = useState('')
+  const [savedContent, _setSavedContent] = useState('');
   const [saved, setSaved] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isTsvDeleteDialogOpen, setIsTsvDeleteDialogOpen] = useState(false)
@@ -89,6 +90,16 @@ export default function ResourceCard({
     config: HTTP_CONFIG,
     readyToFetch: false,
   })
+
+  const setContent = (content) => {
+    console.log('setting content', {content})
+    _setContent(content)
+  }
+
+  const setSavedContent = (content) => {
+    console.log('setting saved content', {content})
+    _setSavedContent(content)
+  }
 
   const userLocalStorage =
     useUserLocalStorage?.(`markdownView${id}`, true) || undefined
@@ -202,8 +213,21 @@ export default function ResourceCard({
     viewMode,
   })
 
+  useEffect(() => {
+    if (!savedContent && fetchResponse) {
+      const base64Decoded = atob(fetchResponse.data.content)
+      const utf8DecodedArray = new Uint8Array(
+        base64Decoded.split('').map(char => char.charCodeAt(0))
+      )
+      const decoder = new TextDecoder()
+      const finalString = decoder.decode(utf8DecodedArray)
+      setSavedContent(finalString)
+    }
+  }, [fetchResponse, savedContent])
+
   const repo = `${languageId}_${cardResourceId}`
-  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: userEditBranchName, tokenid: authentication?.token?.sha1 });
+  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: branchDetermined ? userEditBranchName : undefined, tokenid: authentication?.token?.sha1 });
+
   const {
     state: {
       mergeStatus: mergeToMaster,
@@ -290,6 +314,8 @@ export default function ResourceCard({
     resourceId: cardResourceId,
   })
 
+
+
   const sha = getSha({
     item, fetchResponse, cardResourceId,
   })
@@ -374,7 +400,7 @@ export default function ResourceCard({
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
-  async function handleSaveEdit(newContent='') {
+  async function handleSaveEdit(newContent = '') {
     // Save edit, if successful trigger resource reload and set saved to true.
     setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch, newContent) => {
@@ -384,6 +410,8 @@ export default function ResourceCard({
       if (success) {
         setSaved(true)
         setSavedChanges(cardResourceId, true)
+        console.log('setting saved content', content);
+        setSavedContent(content);
         delay(500).then(() => {
           console.info('handleSaveEdit() Reloading resource')
           reloadResource()
@@ -550,7 +578,7 @@ export default function ResourceCard({
       onRenderToolbar={onRenderToolbar}
       onSaveEdit={handleSaveEdit}
       title={title}
-      saved={saved || isEditing}
+      saved={saved || isEditing || savedContent === content}
       setContent={setContent}
       setFilters={setFilters}
       setFontSize={setFontSize}
