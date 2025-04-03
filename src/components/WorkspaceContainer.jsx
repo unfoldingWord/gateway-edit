@@ -1,10 +1,14 @@
-import {
+import React, {
   useContext,
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from 'react'
-import * as isEqual from 'deep-equal'
+import isEqual from 'deep-equal'
+import _ from 'lodash'
+import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import {
   MinimizedCardsListUI,
   useMinimizedCardsState,
@@ -32,7 +36,7 @@ import {
   getResourceBibles,
 } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
-import { isNT } from '@common/BooksOfTheBible'
+import { isNT, BIBLES_ABBRV_INDEX } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
@@ -41,7 +45,6 @@ import {
   processNetworkError,
   reloadApp,
 } from '@utils/network'
-import { useRouter } from 'next/router'
 import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import WordAlignerDialog from '@components/WordAlignerDialog'
@@ -49,8 +52,6 @@ import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
-import _ from 'lodash'
-import { BIBLES_ABBRV_INDEX } from '../common/BooksOfTheBible'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -70,9 +71,27 @@ const wordAlignmentMaxHeightPx = 1000
 const buildId = getBuildId()
 console.log(`Gateway Edit App Version`, buildId)
 
+const OFFLINE_TIMEOUT = 5000; // Move timeout constant outside component
+
+// Move these handlers outside the component
+const handleError = (event) => {
+  console.warn(`[WorkspaceContainer] Error:`, {
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+    error: event.error?.stack,
+  })
+}
+
+const handleOnline = () => {
+  console.warn('[WorkspaceContainer] Online')
+}
+
 function WorkspaceContainer() {
   const router = useRouter()
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar()
   const [state, _setState] = useState({
     currentVerseReference: null,
     originalScriptureBookObjects: null,
@@ -239,9 +258,9 @@ function WorkspaceContainer() {
     processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
   }
 
-  function setNetworkError( error ) {
+  const setNetworkError = useCallback(( error ) => {
     setState( { networkError: error })
-  }
+  }, [])
 
   /**
    * show either tokenNetworkError or NetworkError for workspace
@@ -278,6 +297,68 @@ function WorkspaceContainer() {
     return null
   }
 
+  const [offlineTimer, setOfflineTimer] = useState(null);
+
+  // Use useCallback for the offline handler since it needs access to component state
+  const handleOffline = useCallback(() => {
+    console.warn('[WorkspaceContainer] Offline');
+
+    // Clear any existing timer first
+    if (offlineTimer) {
+      clearTimeout(offlineTimer);
+    }
+
+    // Set new timer
+    const timer = setTimeout(() => {
+      // Pass required parameters to processNetworkError
+      processNetworkError(
+        'Network connection lost',
+        0,
+        logout,
+        router,
+        setNetworkError,
+        setLastError
+      );
+    }, OFFLINE_TIMEOUT);
+
+    setOfflineTimer(timer);
+  }, [offlineTimer, logout, router, setNetworkError, setLastError]);
+
+  // Update the online handler to use notistack
+  const handleOnlineWithCleanup = useCallback(() => {
+    handleOnline();
+
+    if (offlineTimer) {
+      clearTimeout(offlineTimer);
+      setOfflineTimer(null);
+    }
+
+    enqueueSnackbar('Connection restored', {
+      variant: 'success',
+      anchorOrigin: {
+        vertical: 'bottom',
+        horizontal: 'right',
+      }
+    });
+  }, [offlineTimer, enqueueSnackbar]);
+
+  // Effect for event listeners
+  useEffect(() => {
+    window.addEventListener('error', handleError);
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnlineWithCleanup);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnlineWithCleanup);
+
+      if (offlineTimer) {
+        clearTimeout(offlineTimer);
+      }
+    };
+  }, [handleOffline, handleOnlineWithCleanup, offlineTimer]);
+
   /**
    * process error and determine if there is a problem with connection to server
    *  if showAnyError is true we display an error popup
@@ -292,12 +373,25 @@ function WorkspaceContainer() {
   function onResourceError(message, isAccessError, resourceStatus, error, showAllErrors = false) {
     if (!networkError ) { // only show if another error not already showing
       if (showAllErrors) {
-        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError, setLastError)
+        console.warn(`[WorkspaceContainer] Errors found:`, { message, isAccessError, resourceStatus, error, showAllErrors })
+
+        processNetworkError(error || message, resourceStatus, logout, router, setNetworkError, setLastError);
       } else {
+        console.warn(`[WorkspaceContainer] Errors found:`, { message, isAccessError, resourceStatus, error, showAllErrors })
+
         if (isAccessError) { // we only show popup for access errors
           addNetworkDisconnectError(error || message, 0, logout, router, setNetworkError, setLastError)
         }
       }
+    } else {
+      console.warn(`[WorkspaceContainer] Network Error:`, {
+        networkError: JSON.parse(JSON.stringify(networkError)),
+        message,
+        isAccessError,
+        resourceStatus,
+        error,
+        showAllErrors,
+      })
     }
   }
 
@@ -536,7 +630,7 @@ function WorkspaceContainer() {
       type: 'resource_card',
       id: 'resource_card_ta',
       resourceId: 'ta',
-      projectId: taArticle?.projectId,
+      projectId: taArticle?.projectId ?? bookId,
       filePath: taArticle?.filePath,
       errorMessage: taArticle ? null : 'No article is specified in the current note.',
       loggedInUser: loggedInUser,
@@ -749,7 +843,7 @@ function WorkspaceContainer() {
           </>
         }
       </>
-  )
-}
+    )
+  }
 
 export default WorkspaceContainer

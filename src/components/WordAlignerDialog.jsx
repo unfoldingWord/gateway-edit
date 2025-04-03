@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from 'react'
 import PropTypes from 'prop-types'
 import Dialog from '@mui/material/Dialog'
@@ -13,7 +14,7 @@ import { StoreContext } from '@context/StoreContext'
 import WordAlignerArea from './WordAlignerArea';
 
 // popup dialog for user to align verse
-export default function WordAlignerDialog({
+function WordAlignerDialog({
   alignerStatus,
   height,
   translate,
@@ -32,14 +33,15 @@ export default function WordAlignerDialog({
     },
   } = useContext(StoreContext)
 
-  const boundsParams = { // keeps track of drag bounds
+  const boundsParams = useMemo(() => ({ // keeps track of drag bounds
     workspaceRef: mainScreenRef,
     cardRef: dialogRef,
     open: !!showDialog,
     displayState: {
       alignerData: showDialog
     },
-  };
+  }), [mainScreenRef, dialogRef, showDialog]);
+
   const {
     state: { bounds },
     actions: { doUpdateBounds },
@@ -54,13 +56,14 @@ export default function WordAlignerDialog({
   }, [boundsParams])
 
   useEffect(() => { // set initial aligned state
-    if (alignerData_) {
+   if (alignerData_) {
       setAligned(!!alignerStatus?.state?.aligned)
     }
   }, [alignerData_])
 
   useEffect(() => {
     console.log('WordAlignerDialog: aligner data changed')
+
     if (showDialog !== shouldShowDialog) {
       console.log('WordAlignerDialog: aligner visible state changed')
       setShowDialog(shouldShowDialog)
@@ -83,6 +86,7 @@ export default function WordAlignerDialog({
   }
 
   const currentInstance = dialogRef?.current;
+
   useEffect(() => { // monitor changes in alignment dialog position and open state
     if (alignerData_ &&
       currentInstance?.clientWidth &&
@@ -140,3 +144,5 @@ WordAlignerDialog.propTypes = {
   translate: PropTypes.func.isRequired,
   getLexiconData: PropTypes.func.isRequired,
 }
+
+export default React.memo(WordAlignerDialog)
