@@ -52,6 +52,7 @@ import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
+import TranslationSearch from "./TranslationSearch";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -692,6 +693,24 @@ function WorkspaceContainer() {
     },
   ]
 
+  if (bookId !== 'obs') {
+   cards.push(
+     {
+       title: 'translationSearch',
+       type: 'translation_search_card',
+       id: 'translation_search',
+       resourceId: 'tsrch',
+       projectId: bookId,
+       filePath: null,
+       disableFilters: true,
+       loggedInUser: loggedInUser,
+       authentication: authentication,
+       selectedQuote: selectedQuote,
+       ...commonResourceCardConfigs,
+     },
+   )
+  }
+
   const {
     visibleCards, minimizedCards, maximizeCard,
   } = useMinimizedCardsState({
@@ -802,12 +821,18 @@ function WorkspaceContainer() {
           onLayoutChange={(_layout, layouts) => {
             setCurrentLayout(layouts)
           }}
-          layoutWidths={[
-            [1, 1, 1],
-            [2, 2],
-            [1, 1.5, 1.5],
+          layoutWidths={[ // by row and then column
+            [4, 4, 4],
+            [6, 6],
+            [4, 4, 4],
+            [6],
           ]}
-          layoutHeights={[[5], [10, 10], [10, 10]]}
+          layoutHeights={[ // by row and then column
+            [5, 5, 5],
+            [5, 5],
+            [5, 5, 5],
+            [5],
+          ]}
           minW={3}
           minH={4}
           breakpoints={{
@@ -825,8 +850,10 @@ function WorkspaceContainer() {
             _.map(visibleCards, (cardProps, i) =>
               cardProps.type === 'scripture_card' ?
                 <ScriptureCard key={cardProps.title} {...cardProps} />
-                :
-                <ResourceCard key={cardProps.title} {...cardProps} />,
+                :  cardProps.type === 'translation_search_card' ?
+                  <TranslationSearch key={cardProps.title} {...cardProps} />
+                  :
+                  <ResourceCard key={cardProps.title} {...cardProps} />,
             )
           }
         </Workspace>
