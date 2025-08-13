@@ -125,10 +125,11 @@ function WordAlignerDialog({
   const targetRef = alignerData_?.scriptureConfig?.resourceLink || ''
   const [ repoLanguageId, repoBibleId ] = targetRef.split('/')
 
+  const bibleId = owner && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}_${repoBibleId}` : '';
   const contextId = {
     reference: alignerStatus?.state?.reference || {},
     tool: "wordAlignment",
-    bibleId: `${owner}/${repoLanguageId}_${repoBibleId}`
+    bibleId
   };
 
   return (

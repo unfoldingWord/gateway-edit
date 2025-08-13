@@ -45,6 +45,7 @@
     "bible-reference-rcl": "1.4.1",
     "core-js": "^3.8.3",
     "deep-equal": "^2.0.5",
+    "enhanced-word-aligner-rcl": "0.9.0-beta.15",
     "gitea-react-toolkit": "2.4.0",
     "localforage": "^1.9.0",
     "lodash.clonedeep": "^4.5.0",
@@ -67,8 +68,7 @@
     "tc-ui-toolkit": "5.3.3",
     "translation-helps-rcl": "3.6.4",
     "use-deep-compare-effect": "^1.3.1",
-    "word-aligner": "^1.0.0",
-    "enhanced-word-aligner-rcl": "0.9.0-beta.7"
+    "word-aligner": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
