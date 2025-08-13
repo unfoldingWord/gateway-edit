@@ -30,6 +30,7 @@ function WordAlignerArea({
   targetFontSizePercent,
   title,
   translate,
+  translationMemory,
   targetWords,
   verseAlignments,
 }) {
@@ -207,6 +208,7 @@ WordAlignerArea.propTypes = {
   title: PropTypes.string,
   verseAlignments: PropTypes.array.isRequired,
   targetWords: PropTypes.array.isRequired,
+  translationMemory: PropTypes.object.isRequired,
 };
 
 export default React.memo(WordAlignerArea)

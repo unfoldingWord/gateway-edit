@@ -19,6 +19,8 @@ function WordAlignerDialog({
   height,
   translate,
   getLexiconData,
+  originalBibleBookUsfm,
+  owner
 }) {
   const [aligned, setAligned] = useState(false)
   const [showDialog, setShowDialog] = useState({})
@@ -99,11 +101,35 @@ function WordAlignerDialog({
   const errorMessage = alignerStatus?.state?.errorMessage
 
   const {
-    projectId,
+    bookId,
     chapter,
     verse,
   } = alignerStatus?.state?.reference || {}
-  const title = `${projectId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
+  const title = `${bookId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
+
+  const targetBibleBookUsfm = alignerData_?.scriptureConfig?.bibleUsfm || ''
+  const translationMemory = {}
+  if (bookId) {
+    if (originalBibleBookUsfm) {
+      translationMemory.sourceUsfms = {
+        [bookId]: originalBibleBookUsfm
+      }
+    }
+    if (targetBibleBookUsfm) {
+      translationMemory.targetUsfms = {
+        [bookId]: targetBibleBookUsfm
+      }
+    }
+  }
+
+  const targetRef = alignerData_?.scriptureConfig?.resourceLink || ''
+  const [ repoLanguageId, repoBibleId ] = targetRef.split('/')
+
+  const contextId = {
+    reference: alignerStatus?.state?.reference || {},
+    tool: "wordAlignment",
+    bibleId: `${owner}/${repoLanguageId}_${repoBibleId}`
+  };
 
   return (
     <>
@@ -125,12 +151,13 @@ function WordAlignerDialog({
           verseAlignments={alignerData_?.alignments || []}
           targetWords={alignerData_?.wordBank || []}
           translate={translate}
-          contextId={{ reference: alignerStatus?.state?.reference || {} }}
+          contextId={contextId}
           targetLanguage={alignerStatus?.state?.targetLanguage || ''}
           targetLanguageFont={''}
           sourceLanguage={alignerStatus?.state?.sourceLanguage || ''}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
+          translationMemory={translationMemory}
         />
 
       </Dialog>
@@ -143,6 +170,8 @@ WordAlignerDialog.propTypes = {
   height: PropTypes.number.isRequired,
   translate: PropTypes.func.isRequired,
   getLexiconData: PropTypes.func.isRequired,
+  originalBibleBookUsfm: PropTypes.string,
+  owner: PropTypes.string,
 }
 
 export default React.memo(WordAlignerDialog)
