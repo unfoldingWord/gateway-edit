@@ -154,5 +154,15 @@
   "ithpolel": "Ithpolel",
   "ittaphal": "Ittaphal",
   "morph_missing": "Morphology not found",
-  "unsaved_changes": "You have unsaved changes."
+  "unsaved_changes": "You have unsaved changes.",
+  "suggestions.refresh_suggestions": "Refresh suggestions.",
+  "suggestions.refresh"            : "Refresh",
+  "suggestions.accept_suggestions" : "Accept all suggestions.",
+  "suggestions.accept"             : "Accept",
+  "suggestions.reject_suggestions" : "Reject all suggestions.",
+  "suggestions.reject"             : "Reject",
+  "alignments.clear_alignments"    : "Clear all alignments.",
+  "alignments.clear"              : "Clear"
 }
+
+

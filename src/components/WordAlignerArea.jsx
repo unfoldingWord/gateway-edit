@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
-import { AlignmentHelpers, WordAligner } from 'word-aligner-rcl'
+import { AlignmentHelpers, SuggestingWordAligner } from 'enhanced-word-aligner-rcl'
 import isEqual from 'deep-equal';
 import cloneDeep from 'lodash.clonedeep';
 import Button from '@mui/material/Button';
@@ -126,7 +126,7 @@ function WordAlignerArea({
         </span>
       </DialogTitle>
       <div style={{width: `95%`, margin: '10px'}}>
-        <WordAligner
+        <SuggestingWordAligner
           style={style}
           verseAlignments={initialAlignment?.verseAlignments || []}
           targetWords={initialAlignment?.targetWords ||[]}
