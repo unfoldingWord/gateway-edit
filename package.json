@@ -45,7 +45,7 @@
     "bible-reference-rcl": "1.4.1",
     "core-js": "^3.8.3",
     "deep-equal": "^2.0.5",
-    "enhanced-word-aligner-rcl": "0.9.0-beta.15",
+    "enhanced-word-aligner-rcl": "0.9.0-beta.21",
     "gitea-react-toolkit": "2.4.0",
     "localforage": "^1.9.0",
     "lodash.clonedeep": "^4.5.0",
@@ -110,7 +110,9 @@
     "react-icons": "^4.8.0",
     "start-server-and-test": "^1.14.0",
     "typescript": "^5.0.4",
-    "vite": "^6.2.1"
+    "vite": "^6.2.1",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "worker-loader": "^3.0.8"
   },
   "nyc": {
     "report-dir": "cypress-coverage"

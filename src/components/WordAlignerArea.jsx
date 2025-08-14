@@ -15,6 +15,7 @@ import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import PopoverComponent from './PopoverComponent'
 import {Label} from "react-bootstrap";
 import {delay} from "../utils/resources";
+import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer';
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
@@ -46,6 +47,7 @@ function WordAlignerArea({
   const [lexiconData, setLexiconData] = useState(null)
   const [showResetWarning, setShowResetWarning] = useState(false)
   const [startTraining, setStartTraining] = useState(false); // triggers start of training
+  const [autoTrainingCompleted, setAutoTrainingCompleted] = useState(false); // triggers start of training
   const [trained, setTrained] = useState(false);
   const [training, setTraining] = useState(false);
   const [message, setMessage] = useState('');
@@ -61,16 +63,14 @@ function WordAlignerArea({
 
   const handleSetTrainingState = (_training, trained) => {
     console.log('Updating training state: ' + _training);
-    delay(500).then(() => { // update async
-      setTraining(_training);
-      if (!_training) {
-        setStartTraining(false);
-      } else {
-        setMessage("Training ...")
-      }
-      setMessage(trained ? "Training Complete" : "")
-      setTrained(trained);
-    })
+    setTraining(_training);
+    if (!_training) {
+      setStartTraining(false);
+    } else {
+      setMessage("Training ...")
+    }
+    setMessage(trained ? "Training Complete" : "")
+    setTrained(trained);
   };
 
   const trainingStatusStr = training ? "Currently Training..." : trained ? "Trained" : "Not Trained";
@@ -152,24 +152,35 @@ function WordAlignerArea({
     suggester,
   } = useAlignmentSuggestions({
     contextId,
-    sourceLanguage,
-    targetLanguage,
+    createAlignmentTrainingWorker,
     doTraining: startTraining,
     handleSetTrainingState,
+    shown: currentShowDialog,
+    sourceLanguage,
+    targetLanguage,
   });
 
   // Effect to load translation memory when fail to load cached training Model
   useEffect(() => {
-    if (failedToLoadCachedTraining) {
-      const targetUsfmsBooks = translationMemory?.targetUsfms;
-      const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
-      if (haveCachedTrainingData) {
-        console.log('WordAlignerArea: translation memory changed, loading translation memory')
-        loadTranslationMemory(translationMemory);
-        setStartTraining(true);
+    const haveBook = contextId?.reference?.bookId;
+    if (!haveBook) {
+      if (autoTrainingCompleted) {
+        setAutoTrainingCompleted(false)
+      }
+    } else { // have a book, so check if we have cached training data
+      if (currentShowDialog) {
+        if (failedToLoadCachedTraining && !startTraining && !autoTrainingCompleted) {
+          const targetUsfmsBooks = translationMemory?.targetUsfms;
+          const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
+          if (haveCachedTrainingData) {
+            console.log('WordAlignerArea: translation memory changed, loading translation memory')
+            loadTranslationMemory(translationMemory);
+            setStartTraining(true);
+          }
+        }
       }
     }
-  }, [failedToLoadCachedTraining]);
+  }, [failedToLoadCachedTraining, contextId, currentShowDialog]);
 
   const enableResetWarning = (currentShowDialog && showResetWarning);
 

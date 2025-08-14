@@ -122,15 +122,17 @@ function WordAlignerDialog({
     }
   }
 
-  const targetRef = alignerData_?.scriptureConfig?.resourceLink || ''
-  const [ repoLanguageId, repoBibleId ] = targetRef.split('/')
+  const contextId = useMemo(() => {
+    const targetRef = alignerData_?.scriptureConfig?.resourceLink || ''
+    const [ repoLanguageId, repoBibleId ] = targetRef.split('/')
+    const bibleId = owner && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}_${repoBibleId}` : '';
 
-  const bibleId = owner && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}_${repoBibleId}` : '';
-  const contextId = {
-    reference: alignerStatus?.state?.reference || {},
-    tool: "wordAlignment",
-    bibleId
-  };
+    return {
+      reference: alignerStatus?.state?.reference || {},
+      tool: "wordAlignment",
+      bibleId
+    };
+  }, [alignerStatus?.state?.reference, owner, alignerData_?.scriptureConfig?.resourceLink]);
 
   return (
     <>
@@ -159,6 +161,7 @@ function WordAlignerDialog({
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
           translationMemory={translationMemory}
+          showingDialog={!!showDialog}
         />
 
       </Dialog>
