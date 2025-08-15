@@ -1,5 +1,5 @@
 // Import the worker - webpack's worker-loader will handle this
-import Worker from './AlignmentTrainer2.worker';
+import Worker from './AlignmentTrainerNextJS.worker';
 
 /**
  * Creates an alignment worker
@@ -7,12 +7,12 @@ import Worker from './AlignmentTrainer2.worker';
  */
 export async function createAlignmentTrainingWorker() {
   try {
-    console.log('Creating AlignmentTrainer worker...');
+    console.log('Creating AlignmentTrainerNextJS worker...');
     // Create a new worker instance - worker-loader converts this import into a constructor
     const worker = new Worker();
 
     // Log when worker is successfully created
-    console.log('AlignmentTrainer worker successfully created');
+    console.log('AlignmentTrainerNextJS worker successfully created');
     return worker;
   } catch (error) {
     console.error('Failed to create alignment worker:', error);

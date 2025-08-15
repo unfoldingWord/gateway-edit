@@ -1,6 +1,7 @@
 import { AlignmentTrainerUtils } from "enhanced-word-aligner-rcl";
 
 console.log("AlignmentTrainer2.worker.js: Worker script loaded and started", self);
+const TRAINING_RESULTS = 'trainingResults';
 
 /**
  * Processes the training data and performs word alignment training sending results back to main thread
@@ -20,7 +21,7 @@ async function processTrainingData(data) {
     } = await AlignmentTrainerUtils.createTrainedWordAlignerModel(data);
 
     self.postMessage({
-      type: 'result',
+      type: TRAINING_RESULTS,
       message: 'Worker has finished',
       trainedModel: wordAlignerModel.save(),
       trimmedVerses
@@ -28,7 +29,7 @@ async function processTrainingData(data) {
   } catch (error) {
     console.error("Worker error:", error);
     self.postMessage({
-      type: 'error',
+      type: TRAINING_RESULTS,
       message: 'There was an error while training the word map.',
       error: error.toString()
     });
