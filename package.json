@@ -1,6 +1,6 @@
 {
   "name": "gateway-edit",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "engines": {
     "node": ">=18.18.0"
   },
