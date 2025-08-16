@@ -11,3 +11,6 @@ YARN_VERSION = "1.22.4"
 
 [[plugins]]
   package = "/scripts/zulip-notification"
+
+[context.production.environment]
+NETLIFY_BUILD_IMAGE = "xenial"  # Older Ubuntu version
