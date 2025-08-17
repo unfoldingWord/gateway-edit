@@ -41,3 +41,4 @@ cypress/videos/
 
 # Local Netlify folder
 .netlify
+/out/
