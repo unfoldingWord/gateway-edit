@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.plugins.push(
       new webpack.IgnorePlugin({

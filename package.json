@@ -8,7 +8,7 @@
     "dev": "bash -c \"source ./scripts/set-env.sh && NODE_OPTIONS='--max-old-space-size=8192' next\"",
     "dev:vite": "vite",
     "dev:local": "bash ./scripts/use-local-deps.sh",
-    "build": "bash -c \"source ./scripts/set-env.sh && next build\"",
+    "build": "bash -c \"source ./scripts/set-env.sh && next build && next export\n\"",
     "build:vite": "vite build",
     "start": "bash -c \"source ./scripts/set-env.sh && next start\"",
     "start:vite": "vite preview",

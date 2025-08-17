@@ -1,9 +1,9 @@
 [build.environment]
-NODE_VERSION = "20.12.0"
+NODE_VERSION = "20.12.2"
 YARN_VERSION = "1.22.4"
 
 [build]
-  command = "yarn build"
+  command = "yarn install --frozen-lockfile && yarn build"
   publish = "out"
 
 [[plugins]]
@@ -11,6 +11,3 @@ YARN_VERSION = "1.22.4"
 
 [[plugins]]
   package = "/scripts/zulip-notification"
-
-[context.production.environment]
-NETLIFY_BUILD_IMAGE = "xenial"  # Older Ubuntu version
