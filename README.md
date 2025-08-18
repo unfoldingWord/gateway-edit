@@ -20,10 +20,6 @@ Book Package harmonized view.
 - **_Release-v1.0.0_** https://release-v1-0-0--gateway-edit.netlify.app/
 - **_Release-v2.1.0_** https://release-v2-1-0--gateway-edit.netlify.app/
 
-### Scripts
-
-- "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
-
 ## Local Testing
 
 ### Running the app locally
@@ -91,6 +87,11 @@ yarn run cypress
 ```
 yarn test:headless
 ```
+
+### Scripts
+
+- "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
+
 
 ## UI Design
 

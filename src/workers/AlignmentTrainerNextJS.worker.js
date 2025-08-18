@@ -12,20 +12,16 @@ async function processTrainingData(data) {
   console.log("Training worker has started");
 
   try {
-    // Send progress update
-    self.postMessage({ type: 'progress', status: 'starting' });
-
-    const {
-      trimmedVerses,
-      wordAlignerModel
-    } = await AlignmentTrainerUtils.createTrainedWordAlignerModel(data);
-
-    self.postMessage({
+    const trainingModelResults = await createTrainedWordAlignerModel(data);
+    const trainedModel = trainingModelResults.wordAlignerModel.save();
+    delete trainingModelResults.wordAlignerModel; // trim the model to save memory
+    const workerResults = {
       type: TRAINING_RESULTS,
       message: 'Worker has finished',
-      trainedModel: wordAlignerModel.save(),
-      trimmedVerses
-    });
+      trainedModel,
+      ...trainingModelResults,
+    }
+    self.postMessage(workerResults);
   } catch (error) {
     console.error("Worker error:", error);
     self.postMessage({
