@@ -1,6 +1,6 @@
 import { AlignmentTrainerUtils } from "enhanced-word-aligner-rcl";
 
-console.log("AlignmentTrainer2.worker.js: Worker script loaded and started", self);
+console.log("AlignmentTrainerNextJS.worker.js: Worker script loaded and started", self);
 const TRAINING_RESULTS = 'trainingResults';
 
 /**
@@ -12,7 +12,7 @@ async function processTrainingData(data) {
   console.log("Training worker has started");
 
   try {
-    const trainingModelResults = await createTrainedWordAlignerModel(data);
+    const trainingModelResults = await AlignmentTrainerUtils.createTrainedWordAlignerModel(data);
     const trainedModel = trainingModelResults.wordAlignerModel.save();
     delete trainingModelResults.wordAlignerModel; // trim the model to save memory
     const workerResults = {

@@ -12,6 +12,9 @@ import Draggable from 'react-draggable'
 import { useBoundsUpdater } from 'translation-helps-rcl'
 import { StoreContext } from '@context/StoreContext'
 import WordAlignerArea from './WordAlignerArea';
+import isEqual from 'deep-equal'
+import {useAlignmentSuggestions} from "enhanced-word-aligner-rcl";
+import {createAlignmentTrainingWorker} from "../workers/startAlignmentTrainer";
 
 // popup dialog for user to align verse
 function WordAlignerDialog({
@@ -23,11 +26,14 @@ function WordAlignerDialog({
   owner
 }) {
   const [aligned, setAligned] = useState(false)
-  const [showDialog, setShowDialog] = useState({})
-  const dialogRef = useRef(null) // for keeping track of  aligner dialog position
-
-  const alignerData_ = alignerStatus?.state?.alignerData || null
-  const shouldShowDialog = !!(alignerData_?.alignments && alignerData_?.wordBank)
+  const [showDialog, setShowDialog] = useState(false)
+  const [alignerStatus_, setAlignerStatus_] = useState(null)
+  const dialogRef = useRef(null) // for keeping track of aligner dialog position
+  const [startTraining, setStartTraining] = useState(false); // triggers start of training
+  const [autoTrainingCompleted, setAutoTrainingCompleted] = useState(false); // triggers start of training
+  const [trained, setTrained] = useState(false);
+  const [training, setTraining] = useState(false);
+  const alignerData_ = alignerStatus_?.state?.alignerData || null
 
   const {
     state: {
@@ -57,21 +63,6 @@ function WordAlignerDialog({
     console.log('WordAlignerDialog: boundsParams changed')
   }, [boundsParams])
 
-  useEffect(() => { // set initial aligned state
-   if (alignerData_) {
-      setAligned(!!alignerStatus?.state?.aligned)
-    }
-  }, [alignerData_])
-
-  useEffect(() => {
-    console.log('WordAlignerDialog: aligner data changed')
-
-    if (showDialog !== shouldShowDialog) {
-      console.log('WordAlignerDialog: aligner visible state changed')
-      setShowDialog(shouldShowDialog)
-    }
-  }, [alignerData_])
-
   function PaperComponent(props) { // contains the word aligner dialog
     return (
       <Draggable
@@ -98,14 +89,14 @@ function WordAlignerDialog({
     }
   }, [currentInstance, alignerData_])
 
-  const errorMessage = alignerStatus?.state?.errorMessage
+  const errorMessage = alignerStatus_?.state?.errorMessage
 
   const {
     bookId,
     chapter,
     verse,
-  } = alignerStatus?.state?.reference || {}
-  const title = `${bookId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
+  } = alignerStatus_?.state?.reference || {}
+  const title = `${bookId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus_?.state?.title}`
 
   const targetBibleBookUsfm = alignerData_?.scriptureConfig?.bibleUsfm || ''
   const translationMemory = {}
@@ -128,11 +119,100 @@ function WordAlignerDialog({
     const bibleId = owner && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}_${repoBibleId}` : '';
 
     return {
-      reference: alignerStatus?.state?.reference || {},
+      reference: alignerStatus_?.state?.reference || {},
       tool: "wordAlignment",
       bibleId
     };
-  }, [alignerStatus?.state?.reference, owner, alignerData_?.scriptureConfig?.resourceLink]);
+  }, [alignerStatus_?.state?.reference, owner, alignerData_?.scriptureConfig?.resourceLink]);
+
+  useEffect(() => {
+    console.log('WordAlignerDialog mounted')
+    // Cleanup function that runs on unmount
+    return () => {
+      console.log('WordAlignerDialog unmounted')
+    };
+  }, []);
+
+  useEffect(() => {
+    let newAlignerStatus = null
+    if (alignerStatus?.state?.alignerData) { // see if aligner selected
+      newAlignerStatus = { // make shallow copy of alignerStatus
+        state: alignerStatus?.state || null,
+        actions: alignerStatus?.actions || null,
+      }
+    }
+
+    if (!isEqual(alignerStatus_, newAlignerStatus)) {
+      console.log('WordAlignerDialog alignerStatus changed', alignerStatus)
+      setAlignerStatus_(newAlignerStatus)
+
+      const alignerData_ = newAlignerStatus?.state?.alignerData || null
+      const shouldShowDialog = !!(alignerData_?.alignments && alignerData_?.wordBank)
+      if (showDialog !== shouldShowDialog) {
+        console.log('WordAlignerDialog: aligner visible state changed')
+        setShowDialog(shouldShowDialog)
+      }
+      setAligned(!!newAlignerStatus?.state?.aligned)
+
+    } else {
+      console.log('WordAlignerDialog alignerStatus changed yet not different', alignerStatus)
+    }
+  }, [alignerStatus, alignerStatus?.state?.alignerData]);
+
+  const sourceLanguageId = alignerStatus_?.state?.sourceLanguage || ''
+  const targetLanguage = alignerStatus_?.state?.targetLanguage || null
+
+  const handleSetTrainingState = (_training, _trained) => {
+    console.log('Updating training state: ' + _training);
+    if (_training !== training) {
+      setTraining(_training);
+    }
+    if (!_training && startTraining) {
+      setStartTraining(false);
+    }
+    if (trained !== _trained) {
+      setTrained(_trained);
+    }
+  };
+
+  const trainingStatusStr = training ? "Currently Training..." : trained ? "Trained" : "Not Trained";
+
+  const {
+    cleanupWorker,
+    failedToLoadCachedTraining,
+    loadTranslationMemory,
+    suggester,
+  } = useAlignmentSuggestions({
+    contextId,
+    createAlignmentTrainingWorker,
+    doTraining: startTraining,
+    handleSetTrainingState,
+    shown: showDialog,
+    sourceLanguageId: sourceLanguageId,
+    targetLanguageId: targetLanguage?.languageId,
+  });
+
+  // Effect to load translation memory when fail to load cached training Model
+  useEffect(() => {
+    const haveBook = contextId?.reference?.bookId;
+    if (!haveBook) {
+      if (autoTrainingCompleted) {
+        setAutoTrainingCompleted(false)
+      }
+    } else { // have a book, so check if we have cached training data
+      if (showDialog) {
+        if (failedToLoadCachedTraining && !startTraining && !autoTrainingCompleted) {
+          const targetUsfmsBooks = translationMemory?.targetUsfms;
+          const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
+          if (haveCachedTrainingData) {
+            console.log('WordAlignerArea: translation memory changed, loading translation memory')
+            loadTranslationMemory(translationMemory);
+            setStartTraining(true);
+          }
+        }
+      }
+    }
+  }, [failedToLoadCachedTraining, contextId, showDialog]);
 
   return (
     <>
@@ -147,7 +227,7 @@ function WordAlignerDialog({
       >
         <WordAlignerArea
           aligned={aligned}
-          alignmentActions={alignerStatus?.actions}
+          alignmentActions={alignerStatus_?.actions}
           errorMessage={errorMessage}
           title={title || ''}
           style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
@@ -155,13 +235,13 @@ function WordAlignerDialog({
           targetWords={alignerData_?.wordBank || []}
           translate={translate}
           contextId={contextId}
-          targetLanguage={alignerStatus?.state?.targetLanguage || ''}
+          targetLanguage={targetLanguage}
           targetLanguageFont={''}
-          sourceLanguage={alignerStatus?.state?.sourceLanguage || ''}
+          sourceLanguageId={sourceLanguageId}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
-          translationMemory={translationMemory}
           showingDialog={!!showDialog}
+          trainingStatusStr={trainingStatusStr}
         />
 
       </Dialog>
@@ -170,7 +250,7 @@ function WordAlignerDialog({
 }
 
 WordAlignerDialog.propTypes = {
-  alignerStatus: PropTypes.object.isRequired,
+  alignerStatus: PropTypes.object,
   height: PropTypes.number.isRequired,
   translate: PropTypes.func.isRequired,
   getLexiconData: PropTypes.func.isRequired,

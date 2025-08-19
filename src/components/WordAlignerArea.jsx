@@ -5,7 +5,6 @@ import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import {
   AlignmentHelpers,
   SuggestingWordAligner,
-  useAlignmentSuggestions,
 } from 'enhanced-word-aligner-rcl'
 import isEqual from 'deep-equal';
 import cloneDeep from 'lodash.clonedeep';
@@ -14,8 +13,6 @@ import Dialog from '@mui/material/Dialog';
 import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import PopoverComponent from './PopoverComponent'
 import {Label} from "react-bootstrap";
-import {delay} from "../utils/resources";
-import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer';
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
@@ -28,17 +25,17 @@ function WordAlignerArea({
   lexiconCache,
   loadLexiconEntry,
   onChange,
-  sourceLanguage,
+  sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
   style,
   targetLanguage,
   targetLanguageFont,
   targetFontSizePercent,
+  targetWords,
   title,
   translate,
-  translationMemory,
-  targetWords,
+  trainingStatusStr,
   verseAlignments,
 }) {
   const [aligned_, setAligned] = useState(aligned)
@@ -46,34 +43,15 @@ function WordAlignerArea({
   const [initialAlignment, setInitialAlignment] = useState(null)
   const [lexiconData, setLexiconData] = useState(null)
   const [showResetWarning, setShowResetWarning] = useState(false)
-  const [startTraining, setStartTraining] = useState(false); // triggers start of training
-  const [autoTrainingCompleted, setAutoTrainingCompleted] = useState(false); // triggers start of training
-  const [trained, setTrained] = useState(false);
-  const [training, setTraining] = useState(false);
-  const [message, setMessage] = useState('');
 
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
 
-  // Handler for the load translation memory button
-  const handleLoadTranslationMemory = () => {
-    console.log('Calling loadTranslationMemory')
-    setAddTranslationMemory(translationMemory);
-    setTranslationMemoryLoaded(true)
-  };
-
-  const handleSetTrainingState = (_training, trained) => {
-    console.log('Updating training state: ' + _training);
-    setTraining(_training);
-    if (!_training) {
-      setStartTraining(false);
-    } else {
-      setMessage("Training ...")
-    }
-    setMessage(trained ? "Training Complete" : "")
-    setTrained(trained);
-  };
-
-  const trainingStatusStr = training ? "Currently Training..." : trained ? "Trained" : "Not Trained";
+  // // Handler for the load translation memory button
+  // const handleLoadTranslationMemory = () => {
+  //   console.log('Calling loadTranslationMemory')
+  //   setAddTranslationMemory(translationMemory);
+  //   setTranslationMemoryLoaded(true)
+  // };
 
   useEffect(() => {
     // see if alignment data has changed
@@ -145,44 +123,15 @@ function WordAlignerArea({
     })
   }
 
-  const {
-    cleanupWorker,
-    failedToLoadCachedTraining,
-    loadTranslationMemory,
-    suggester,
-  } = useAlignmentSuggestions({
-    contextId,
-    createAlignmentTrainingWorker,
-    doTraining: startTraining,
-    handleSetTrainingState,
-    shown: currentShowDialog,
-    sourceLanguage,
-    targetLanguage,
-  });
-
-  // Effect to load translation memory when fail to load cached training Model
-  useEffect(() => {
-    const haveBook = contextId?.reference?.bookId;
-    if (!haveBook) {
-      if (autoTrainingCompleted) {
-        setAutoTrainingCompleted(false)
-      }
-    } else { // have a book, so check if we have cached training data
-      if (currentShowDialog) {
-        if (failedToLoadCachedTraining && !startTraining && !autoTrainingCompleted) {
-          const targetUsfmsBooks = translationMemory?.targetUsfms;
-          const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
-          if (haveCachedTrainingData) {
-            console.log('WordAlignerArea: translation memory changed, loading translation memory')
-            loadTranslationMemory(translationMemory);
-            setStartTraining(true);
-          }
-        }
-      }
-    }
-  }, [failedToLoadCachedTraining, contextId, currentShowDialog]);
-
   const enableResetWarning = (currentShowDialog && showResetWarning);
+
+  useEffect(() => {
+    console.log('WordAlignerArea mounted')
+    // Cleanup function that runs on unmount
+    return () => {
+      console.log('WordAlignerArea unmounted')
+    };
+  }, []);
 
   return (
     <>
@@ -205,7 +154,7 @@ function WordAlignerArea({
           contextId={contextId}
           targetLanguage={targetLanguage}
           targetLanguageFont={targetLanguageFont}
-          sourceLanguage={sourceLanguage}
+          sourceLanguage={sourceLanguageId}
           showPopover={showPopover}
           lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
@@ -228,7 +177,7 @@ function WordAlignerArea({
           </>
         }
         <Label style={{margin: '10px 100px'}}>
-          {trainingStatusStr}
+          {trainingStatusStr || ''}
         </Label>
       </span>
       {/** Lexicon Popup dialog */}
@@ -271,7 +220,7 @@ WordAlignerArea.propTypes = {
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
   onChange: PropTypes.func,
-  sourceLanguage: PropTypes.string.isRequired,
+  sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
   style: PropTypes.object,
@@ -282,7 +231,7 @@ WordAlignerArea.propTypes = {
   title: PropTypes.string,
   verseAlignments: PropTypes.array.isRequired,
   targetWords: PropTypes.array.isRequired,
-  translationMemory: PropTypes.object.isRequired,
+  trainingStatusStr: PropTypes.string,
 };
 
 export default React.memo(WordAlignerArea)
