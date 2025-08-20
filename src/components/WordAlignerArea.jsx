@@ -223,15 +223,16 @@ WordAlignerArea.propTypes = {
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
+  suggester: PropTypes.object,
   style: PropTypes.object,
   targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,
   targetFontSizePercent: PropTypes.number,
-  translate: PropTypes.func.isRequired,
-  title: PropTypes.string,
-  verseAlignments: PropTypes.array.isRequired,
   targetWords: PropTypes.array.isRequired,
+  title: PropTypes.string,
+  translate: PropTypes.func.isRequired,
   trainingStatusStr: PropTypes.string,
+  verseAlignments: PropTypes.array.isRequired,
 };
 
 export default React.memo(WordAlignerArea)

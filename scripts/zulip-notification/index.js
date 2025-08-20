@@ -43,7 +43,7 @@ async function zulipNotify(appName, branchName, content) {
 
     const data = {
       to: 'SOFTWARE - UR/github',
-      subject: `${appName} - ${branchName}`,
+      topic: `${appName} - ${branchName}`,
       content,
       type: 'stream',
     }

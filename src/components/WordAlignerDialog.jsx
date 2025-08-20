@@ -228,20 +228,21 @@ function WordAlignerDialog({
         <WordAlignerArea
           aligned={aligned}
           alignmentActions={alignerStatus_?.actions}
-          errorMessage={errorMessage}
-          title={title || ''}
-          style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
-          verseAlignments={alignerData_?.alignments || []}
-          targetWords={alignerData_?.wordBank || []}
-          translate={translate}
           contextId={contextId}
-          targetLanguage={targetLanguage}
-          targetLanguageFont={''}
-          sourceLanguageId={sourceLanguageId}
+          errorMessage={errorMessage}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
           showingDialog={!!showDialog}
+          sourceLanguageId={sourceLanguageId}
+          style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
+          suggester={suggester}
+          targetLanguage={targetLanguage}
+          targetLanguageFont={''}
+          targetWords={alignerData_?.wordBank || []}
+          title={title || ''}
           trainingStatusStr={trainingStatusStr}
+          translate={translate}
+          verseAlignments={alignerData_?.alignments || []}
         />
 
       </Dialog>
