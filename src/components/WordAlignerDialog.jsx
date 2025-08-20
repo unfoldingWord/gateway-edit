@@ -28,6 +28,7 @@ function WordAlignerDialog({
   const [aligned, setAligned] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
   const [alignerStatus_, setAlignerStatus_] = useState(null)
+  const [contextId, setContextId] = useState(null)
   const dialogRef = useRef(null) // for keeping track of aligner dialog position
   const [startTraining, setStartTraining] = useState(false); // triggers start of training
   const [autoTrainingCompleted, setAutoTrainingCompleted] = useState(false); // triggers start of training
@@ -113,17 +114,21 @@ function WordAlignerDialog({
     }
   }
 
-  const contextId = useMemo(() => {
-    const targetRef = alignerData_?.scriptureConfig?.resourceLink || ''
-    const [ repoLanguageId, repoBibleId ] = targetRef.split('/')
-    const bibleId = owner && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}_${repoBibleId}` : '';
+  const getContextId = (alignerStatus) => {
+    const alignerData = alignerStatus?.state?.alignerData || null
+    const targetRef = alignerData?.scriptureConfig?.resourceLink || ''
+    const [ owner, repoLanguageId, repoBibleId ] = targetRef.split('/')
+    const bibleId = owner && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}/${repoBibleId}` : '';
 
-    return {
-      reference: alignerStatus_?.state?.reference || {},
-      tool: "wordAlignment",
-      bibleId
-    };
-  }, [alignerStatus_?.state?.reference, owner, alignerData_?.scriptureConfig?.resourceLink]);
+    if (alignerStatus?.state?.reference) {
+      return {
+        reference: alignerStatus?.state?.reference,
+        tool: "wordAlignment",
+        bibleId
+      };
+    }
+    return null;
+  }
 
   useEffect(() => {
     console.log('WordAlignerDialog mounted')
@@ -136,10 +141,7 @@ function WordAlignerDialog({
   useEffect(() => {
     let newAlignerStatus = null
     if (alignerStatus?.state?.alignerData) { // see if aligner selected
-      newAlignerStatus = { // make shallow copy of alignerStatus
-        state: alignerStatus?.state || null,
-        actions: alignerStatus?.actions || null,
-      }
+      newAlignerStatus = alignerStatus;
     }
 
     if (!isEqual(alignerStatus_, newAlignerStatus)) {
@@ -153,6 +155,8 @@ function WordAlignerDialog({
         setShowDialog(shouldShowDialog)
       }
       setAligned(!!newAlignerStatus?.state?.aligned)
+      const contextId_ = getContextId(newAlignerStatus);
+      setContextId(contextId_);
 
     } else {
       console.log('WordAlignerDialog alignerStatus changed yet not different', alignerStatus)
