@@ -177,6 +177,10 @@ function WordAlignerDialog({
 
   const trainingStatusStr = training ? "Currently Training..." : trained ? "Trained" : "Not Trained";
 
+  const handleTrainingCompleted = (info) => {
+    console.log("handleTrainingCompleted", info);
+  }
+
   const {
     cleanupWorker,
     failedToLoadCachedTraining,
@@ -187,6 +191,7 @@ function WordAlignerDialog({
     createAlignmentTrainingWorker,
     doTraining: startTraining,
     handleSetTrainingState,
+    handleTrainingCompleted,
     shown: showDialog,
     sourceLanguageId: sourceLanguageId,
     targetLanguageId: targetLanguage?.languageId,
