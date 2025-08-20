@@ -29,6 +29,7 @@ function WordAlignerArea({
   sourceLanguageFont,
   sourceFontSizePercent,
   style,
+  suggester,
   targetLanguage,
   targetLanguageFont,
   targetFontSizePercent,
