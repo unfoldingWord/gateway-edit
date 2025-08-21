@@ -62,7 +62,7 @@ function WordAlignerArea({
     const changedVA = !isEqual(verseAlignments, verseAlignments_);
 
     if (changedTW || changedVA) {
-      console.log('WordAlignerArea: alignment data changed')
+      console.log(`WordAlignerArea: alignment data changed - changedTW ${changedTW}, changedVA ${changedVA}`)
       const newAlignment = {
         verseAlignments,
         targetWords,
@@ -236,4 +236,4 @@ WordAlignerArea.propTypes = {
   verseAlignments: PropTypes.array.isRequired,
 };
 
-export default React.memo(WordAlignerArea)
+export default WordAlignerArea

@@ -16,6 +16,10 @@ import isEqual from 'deep-equal'
 import {useAlignmentSuggestions} from "enhanced-word-aligner-rcl";
 import {createAlignmentTrainingWorker} from "../workers/startAlignmentTrainer";
 
+function getBookData(alignerStatus_) {
+  return alignerStatus_?.state?.reference || {};
+}
+
 // popup dialog for user to align verse
 function WordAlignerDialog({
   alignerStatus,
@@ -34,7 +38,15 @@ function WordAlignerDialog({
   const [autoTrainingCompleted, setAutoTrainingCompleted] = useState(false); // triggers start of training
   const [trained, setTrained] = useState(false);
   const [training, setTraining] = useState(false);
-  const alignerData_ = alignerStatus_?.state?.alignerData || null
+
+  const [targetWords, setTargetWords] = useState([]);
+  const [verseAlignments, setVerseAlignments] = useState([]);
+  const [trainingStatusStr, setTrainingStatusStr] = useState('');
+  const [targetLanguage, setTargetLanguage] = useState('');
+  const [sourceLanguageId, setSourceLanguageId] = useState('');
+  const [alignmentActions, setAlignmentActions] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [title, setTitle] = useState('');
 
   const {
     state: {
@@ -80,6 +92,7 @@ function WordAlignerDialog({
   }
 
   const currentInstance = dialogRef?.current;
+  const alignerData_ = alignerStatus_?.state?.alignerData;
 
   useEffect(() => { // monitor changes in alignment dialog position and open state
     if (alignerData_ &&
@@ -90,37 +103,40 @@ function WordAlignerDialog({
     }
   }, [currentInstance, alignerData_])
 
-  const errorMessage = alignerStatus_?.state?.errorMessage
-
   const {
     bookId,
     chapter,
     verse,
-  } = alignerStatus_?.state?.reference || {}
-  const title = `${bookId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus_?.state?.title}`
+  } = getBookData(alignerStatus_)
 
-  const targetBibleBookUsfm = alignerData_?.scriptureConfig?.bibleUsfm || ''
-  const translationMemory = {}
-  if (bookId) {
-    if (originalBibleBookUsfm) {
-      translationMemory.sourceUsfms = {
-        [bookId]: originalBibleBookUsfm
+  const targetBibleBookUsfm = alignerData_?.bibleUsfm || ''
+  const translationMemory = useMemo(() => {
+    const memory = {};
+
+    if (bookId) {
+      if (originalBibleBookUsfm) {
+        memory.sourceUsfms = {
+          [bookId]: originalBibleBookUsfm
+        };
+      }
+      if (targetBibleBookUsfm) {
+        memory.targetUsfms = {
+          [bookId]: targetBibleBookUsfm
+        };
       }
     }
-    if (targetBibleBookUsfm) {
-      translationMemory.targetUsfms = {
-        [bookId]: targetBibleBookUsfm
-      }
-    }
-  }
+
+    return memory;
+  }, [bookId, originalBibleBookUsfm, targetBibleBookUsfm]);
 
   const getContextId = (alignerStatus) => {
-    const alignerData = alignerStatus?.state?.alignerData || null
-    const targetRef = alignerData?.scriptureConfig?.resourceLink || ''
-    const [ owner, repoLanguageId, repoBibleId ] = targetRef.split('/')
-    const bibleId = owner && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}/${repoBibleId}` : '';
-
     if (alignerStatus?.state?.reference) {
+      const alignerData = alignerStatus?.state?.alignerData || null
+      const targetRef = alignerData?.resourceLink || ''
+      let [ owner_, repoLanguageId, repoBibleId ] = targetRef.split('/')
+      owner_ = owner_ || owner;
+      const bibleId = owner_ && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}/${repoBibleId}` : '';
+
       return {
         reference: alignerStatus?.state?.reference,
         tool: "wordAlignment",
@@ -138,33 +154,64 @@ function WordAlignerDialog({
     };
   }, []);
 
+  const alignerData = alignerStatus_?.state?.alignerData || null
+
+  function getTitle(alignerStatus) {
+    const {
+      bookId,
+      chapter,
+      verse,
+    } = getBookData(alignerStatus)
+
+    const title_ = `${bookId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
+    return title_;
+  }
+
   useEffect(() => {
+    const alignerData_ = alignerStatus?.state?.alignerData;
     let newAlignerStatus = null
-    if (alignerStatus?.state?.alignerData) { // see if aligner selected
+
+    if (alignerData_) { // see if aligner selected
       newAlignerStatus = alignerStatus;
     }
 
     if (!isEqual(alignerStatus_, newAlignerStatus)) {
-      console.log('WordAlignerDialog alignerStatus changed', alignerStatus)
+      console.log('WordAlignerDialog alignerStatus changed', newAlignerStatus)
       setAlignerStatus_(newAlignerStatus)
 
-      const alignerData_ = newAlignerStatus?.state?.alignerData || null
-      const shouldShowDialog = !!(alignerData_?.alignments && alignerData_?.wordBank)
-      if (showDialog !== shouldShowDialog) {
+      setAlignmentActions(newAlignerStatus?.actions)
+      const sourceLanguageId_ = newAlignerStatus?.state?.sourceLanguage || ''
+      setSourceLanguageId(sourceLanguageId_)
+      const targetLanguage_ = newAlignerStatus?.state?.targetLanguage || null
+      setTargetLanguage(targetLanguage_)
+
+      const targetWords_ = alignerData_?.wordBank || []
+      setTargetWords(targetWords_)
+
+      const trainingStatusStr_ = ''
+      setTrainingStatusStr(trainingStatusStr_)
+
+      const verseAlignments_ = alignerData_?.alignments || []
+      setVerseAlignments(verseAlignments_)
+
+      const errorMessage_ = newAlignerStatus?.state?.errorMessage
+      setErrorMessage(errorMessage_)
+
+      const shouldShowDialog_ = !!(alignerData_?.alignments && alignerData_?.wordBank)
+      if (showDialog !== shouldShowDialog_) {
         console.log('WordAlignerDialog: aligner visible state changed')
-        setShowDialog(shouldShowDialog)
+        setShowDialog(shouldShowDialog_)
       }
       setAligned(!!newAlignerStatus?.state?.aligned)
       const contextId_ = getContextId(newAlignerStatus);
       setContextId(contextId_);
+      const title_ = getTitle(newAlignerStatus);
+      setTitle(title_)
 
     } else {
       console.log('WordAlignerDialog alignerStatus changed yet not different', alignerStatus)
     }
-  }, [alignerStatus, alignerStatus?.state?.alignerData]);
-
-  const sourceLanguageId = alignerStatus_?.state?.sourceLanguage || ''
-  const targetLanguage = alignerStatus_?.state?.targetLanguage || null
+  }, [alignerStatus?.state?.alignerData]);
 
   const handleSetTrainingState = ({
                                     training: _training,
@@ -190,9 +237,11 @@ function WordAlignerDialog({
     if (trainingComplete !== trained) {
       setTrained(trainingComplete);
     }
-  };
 
-  const trainingStatusStr = training ? "Currently Training..." : trained ? "Trained" : "Not Trained";
+    const trainingStatusStr_ = _training ? "Currently Training..." : trainingComplete ? "Trained" : "Not Trained";
+    setTrainingStatusStr(trainingStatusStr_)
+    console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`);
+  };
 
   const handleTrainingCompleted = (info) => {
     console.log("handleTrainingCompleted", info);
@@ -249,7 +298,7 @@ function WordAlignerDialog({
       >
         <WordAlignerArea
           aligned={aligned}
-          alignmentActions={alignerStatus_?.actions}
+          alignmentActions={alignmentActions}
           contextId={contextId}
           errorMessage={errorMessage}
           lexiconCache={{}}
@@ -260,11 +309,11 @@ function WordAlignerDialog({
           suggester={suggester}
           targetLanguage={targetLanguage}
           targetLanguageFont={''}
-          targetWords={alignerData_?.wordBank || []}
+          targetWords={targetWords}
           title={title || ''}
           trainingStatusStr={trainingStatusStr}
           translate={translate}
-          verseAlignments={alignerData_?.alignments || []}
+          verseAlignments={verseAlignments}
         />
 
       </Dialog>
@@ -281,4 +330,4 @@ WordAlignerDialog.propTypes = {
   owner: PropTypes.string,
 }
 
-export default React.memo(WordAlignerDialog)
+export default WordAlignerDialog
