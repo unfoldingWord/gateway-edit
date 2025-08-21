@@ -166,16 +166,29 @@ function WordAlignerDialog({
   const sourceLanguageId = alignerStatus_?.state?.sourceLanguage || ''
   const targetLanguage = alignerStatus_?.state?.targetLanguage || null
 
-  const handleSetTrainingState = (_training, _trained) => {
-    console.log('Updating training state: ' + _training);
+  const handleSetTrainingState = ({
+                                    training: _training,
+                                    trainingComplete
+                                  }) => {
+    if (_training === undefined) {
+      _training = training;
+    } else {
+      console.log('Updating training state: ' + _training);
+    }
+    if (trainingComplete === undefined) {
+      trainingComplete = trained;
+    } else {
+      console.log('Updating trainingComplete state: ' + trainingComplete);
+    }
+
     if (_training !== training) {
       setTraining(_training);
     }
     if (!_training && startTraining) {
       setStartTraining(false);
     }
-    if (trained !== _trained) {
-      setTrained(_trained);
+    if (trainingComplete !== trained) {
+      setTrained(trainingComplete);
     }
   };
 
