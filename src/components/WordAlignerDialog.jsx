@@ -247,24 +247,38 @@ function WordAlignerDialog({
     console.log("handleTrainingCompleted", info);
   }
 
+  const handleSetTrainingState_ = (props) => {
+    handleSetTrainingState?.(props);
+    const trainingCurrent = areTrainingSameBook_();
+    console.log(`handleSetTrainingState - training Current Book: ${trainingCurrent}`);
+  }
+
   const {
+    areTrainingSameBook,
     cleanupWorker,
     failedToLoadCachedTraining,
     loadTranslationMemory,
     suggester,
+    trainingRunning,
   } = useAlignmentSuggestions({
     contextId,
     createAlignmentTrainingWorker,
     doTraining: startTraining,
-    handleSetTrainingState,
+    handleSetTrainingState: handleSetTrainingState_,
     handleTrainingCompleted,
     shown: showDialog,
     sourceLanguageId: sourceLanguageId,
     targetLanguageId: targetLanguage?.languageId,
   });
 
+  const areTrainingSameBook_ = () => {
+    const trainingCurrent = areTrainingSameBook(contextId);
+    return trainingCurrent;
+  }
+
   // Effect to load translation memory when fail to load cached training Model
   useEffect(() => {
+    console.log('WordAlignerArea: have a book', failedToLoadCachedTraining, contextId, showDialog)
     const haveBook = contextId?.reference?.bookId;
     if (!haveBook) {
       if (autoTrainingCompleted) {
@@ -272,6 +286,10 @@ function WordAlignerDialog({
       }
     } else { // have a book, so check if we have cached training data
       if (showDialog) {
+        const trainingSameBook = areTrainingSameBook_()
+        if (trainingRunning) {
+          console.log('WordAlignerArea: training already running trainingSameBook:', trainingSameBook)
+        }
         if (failedToLoadCachedTraining && !startTraining && !autoTrainingCompleted) {
           const targetUsfmsBooks = translationMemory?.targetUsfms;
           const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
@@ -283,7 +301,7 @@ function WordAlignerDialog({
         }
       }
     }
-  }, [failedToLoadCachedTraining, contextId, showDialog]);
+  }, [failedToLoadCachedTraining]);
 
   return (
     <>
