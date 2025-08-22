@@ -276,27 +276,29 @@ function WordAlignerDialog({
     return trainingCurrent;
   }
 
-  // Effect to load translation memory when fail to load cached training Model
+  // Effect to load translation memory and start training when fail to load cached training Model
   useEffect(() => {
-    console.log('WordAlignerArea: have a book', failedToLoadCachedTraining, contextId, showDialog)
-    const haveBook = contextId?.reference?.bookId;
-    if (!haveBook) {
-      if (autoTrainingCompleted) {
-        setAutoTrainingCompleted(false)
-      }
-    } else { // have a book, so check if we have cached training data
-      if (showDialog) {
-        const trainingSameBook = areTrainingSameBook_()
-        if (trainingRunning) {
-          console.log('WordAlignerArea: training already running trainingSameBook:', trainingSameBook)
+    if (failedToLoadCachedTraining) {
+      console.log('WordAlignerArea: failedToLoadCachedTraining', {failedToLoadCachedTraining, contextId, showDialog})
+      const haveBook = contextId?.reference?.bookId;
+      if (!haveBook) {
+        if (autoTrainingCompleted) {
+          setAutoTrainingCompleted(false)
         }
-        if (failedToLoadCachedTraining && !startTraining && !autoTrainingCompleted) {
-          const targetUsfmsBooks = translationMemory?.targetUsfms;
-          const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
-          if (haveCachedTrainingData) {
-            console.log('WordAlignerArea: translation memory changed, loading translation memory')
-            loadTranslationMemory(translationMemory);
-            setStartTraining(true);
+      } else { // have a book, so check if we have cached training data
+        if (showDialog) {
+          const trainingSameBook = areTrainingSameBook_()
+          if (trainingRunning) {
+            console.log('WordAlignerArea: training already running trainingSameBook:', trainingSameBook)
+          }
+          if (!startTraining && !autoTrainingCompleted) {
+            const targetUsfmsBooks = translationMemory?.targetUsfms;
+            const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
+            if (haveCachedTrainingData) {
+              console.log('WordAlignerArea: translation memory changed, loading translation memory')
+              loadTranslationMemory(translationMemory);
+              setStartTraining(true);
+            }
           }
         }
       }
