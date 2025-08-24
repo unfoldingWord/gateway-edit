@@ -21,6 +21,7 @@ function WordAlignerArea({
   aligned,
   alignmentActions,
   contextId,
+  doTraining,
   errorMessage,
   lexiconCache,
   loadLexiconEntry,
@@ -37,6 +38,7 @@ function WordAlignerArea({
   title,
   translate,
   trainingStatusStr,
+  trainingButtonStr,
   verseAlignments,
 }) {
   const [aligned_, setAligned] = useState(aligned)
@@ -175,6 +177,11 @@ function WordAlignerArea({
             <Button variant="outlined" style={{margin: '10px 100px'}} onClick={saveAlignment}>
               Accept
             </Button>
+            { trainingButtonStr &&
+              <Button variant="outlined" style={{margin: '10px 100px'}} onClick={doTraining}>
+                {trainingButtonStr}
+              </Button>
+            }
           </>
         }
         <Label style={{margin: '10px 100px'}}>
@@ -217,6 +224,7 @@ WordAlignerArea.propTypes = {
     saveAlignment: PropTypes.func,
   }),
   contextId: PropTypes.object.isRequired,
+  doTraining: PropTypes.func,
   errorMessage: PropTypes.string,
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
@@ -224,7 +232,7 @@ WordAlignerArea.propTypes = {
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
-  suggester: PropTypes.object,
+  suggester: PropTypes.function,
   style: PropTypes.object,
   targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,
@@ -233,6 +241,7 @@ WordAlignerArea.propTypes = {
   title: PropTypes.string,
   translate: PropTypes.func.isRequired,
   trainingStatusStr: PropTypes.string,
+  trainingButtonStr: PropTypes.string,
   verseAlignments: PropTypes.array.isRequired,
 };
 

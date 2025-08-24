@@ -15,6 +15,7 @@ import WordAlignerArea from './WordAlignerArea';
 import isEqual from 'deep-equal'
 import {useAlignmentSuggestions} from "enhanced-word-aligner-rcl";
 import {createAlignmentTrainingWorker} from "../workers/startAlignmentTrainer";
+import {AlignmentTrainerUtils} from "enhanced-word-aligner-rcl";
 
 function getBookData(alignerStatus_) {
   return alignerStatus_?.state?.reference || {};
@@ -42,6 +43,7 @@ function WordAlignerDialog({
   const [targetWords, setTargetWords] = useState([]);
   const [verseAlignments, setVerseAlignments] = useState([]);
   const [trainingStatusStr, setTrainingStatusStr] = useState('');
+  const [trainingButtonStr, setTrainingButtonStr] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('');
   const [sourceLanguageId, setSourceLanguageId] = useState('');
   const [alignmentActions, setAlignmentActions] = useState(null);
@@ -111,22 +113,7 @@ function WordAlignerDialog({
 
   const targetBibleBookUsfm = alignerData_?.bibleUsfm || ''
   const translationMemory = useMemo(() => {
-    const memory = {};
-
-    if (bookId) {
-      if (originalBibleBookUsfm) {
-        memory.sourceUsfms = {
-          [bookId]: originalBibleBookUsfm
-        };
-      }
-      if (targetBibleBookUsfm) {
-        memory.targetUsfms = {
-          [bookId]: targetBibleBookUsfm
-        };
-      }
-    }
-
-    return memory;
+    return AlignmentTrainerUtils.makeTranslationMemory(bookId, originalBibleBookUsfm, targetBibleBookUsfm);
   }, [bookId, originalBibleBookUsfm, targetBibleBookUsfm]);
 
   const getContextId = (alignerStatus) => {
@@ -241,6 +228,10 @@ function WordAlignerDialog({
     const trainingStatusStr_ = _training ? "Currently Training..." : trainingComplete ? "Trained" : "Not Trained";
     setTrainingStatusStr(trainingStatusStr_)
     console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`);
+
+    const trainingButtonStr_ = _training ? '' : trainingComplete ? 'Retrain' : 'Train';
+    setTrainingButtonStr(trainingButtonStr_)
+    console.log(`handleSetTrainingState new state: trainingButtonStr ${trainingButtonStr_}`);
   };
 
   const handleTrainingCompleted = (info) => {
@@ -269,6 +260,8 @@ function WordAlignerDialog({
     shown: showDialog,
     sourceLanguageId: sourceLanguageId,
     targetLanguageId: targetLanguage?.languageId,
+    targetUsfm: targetBibleBookUsfm,
+    sourceUsfm: originalBibleBookUsfm,
   });
 
   const areTrainingSameBook_ = () => {
@@ -305,6 +298,21 @@ function WordAlignerDialog({
     }
   }, [failedToLoadCachedTraining]);
 
+  function doTraining() {
+    console.log('WordAlignerDialog: doTraining')
+    if (!startTraining) {
+      console.log('WordAlignerDialog: doTraining - startTraining false, starting training')
+      setStartTraining(true);
+    } else {
+      console.log('WordAlignerDialog: doTraining - startTraining true, resetting')
+      setStartTraining(false);
+      delay(500).then(() => {
+        console.log('WordAlignerDialog: doTraining - starting training after delay')
+        setStartTraining(true);
+      })
+    }
+  }
+
   return (
     <>
       <Dialog
@@ -320,6 +328,7 @@ function WordAlignerDialog({
           aligned={aligned}
           alignmentActions={alignmentActions}
           contextId={contextId}
+          doTraining={doTraining}
           errorMessage={errorMessage}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
@@ -331,6 +340,7 @@ function WordAlignerDialog({
           targetLanguageFont={''}
           targetWords={targetWords}
           title={title || ''}
+          trainingButtonStr={trainingButtonStr}
           trainingStatusStr={trainingStatusStr}
           translate={translate}
           verseAlignments={verseAlignments}
