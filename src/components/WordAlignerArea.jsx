@@ -165,29 +165,31 @@ function WordAlignerArea({
           suggester={suggester}
         />
       </div>
-      <span style={{width: `95%`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-        <Button variant="outlined" style={{margin: '10px 100px'}} onClick={cancelAlignment}>
+      <div style={{width: `auto`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+        <Button variant="outlined" style={{margin: '10px 30px'}} onClick={cancelAlignment}>
             Cancel
         </Button>
-        {!errorMessage && // only show these buttons if there is no error
-          <>
-            <Button variant="outlined" style={{margin: '10px 100px'}} onClick={() => setShowResetWarning(true)}>
+        {!errorMessage && // only show if there is no error
+            <Button variant="outlined" style={{margin: '10px 30px'}} onClick={() => setShowResetWarning(true)}>
               Reset
             </Button>
-            <Button variant="outlined" style={{margin: '10px 100px'}} onClick={saveAlignment}>
+        }
+        {!errorMessage && // only show if there is no error
+            <Button variant="outlined" style={{margin: '10px 30px'}} onClick={saveAlignment}>
               Accept
             </Button>
-            { trainingButtonStr &&
-              <Button variant="outlined" style={{margin: '10px 100px'}} onClick={doTraining}>
-                {trainingButtonStr}
-              </Button>
-            }
-          </>
         }
-        <Label style={{margin: '10px 100px'}}>
-          {trainingStatusStr || ''}
-        </Label>
-      </span>
+        { !errorMessage && trainingButtonStr &&
+          <Button variant="outlined" style={{margin: '10px 30px'}} onClick={doTraining}>
+            {trainingButtonStr}
+          </Button>
+        }
+        {!errorMessage && // only show if there is no error
+          <Label style={{margin: '10px 30px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            {trainingStatusStr || ''}
+          </Label>
+        }
+      </div>
       {/** Lexicon Popup dialog */}
       <PopoverComponent
         popoverVisibility={lexiconData}
