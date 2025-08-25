@@ -360,4 +360,4 @@ WordAlignerDialog.propTypes = {
   owner: PropTypes.string,
 }
 
-export default WordAlignerDialog
+export default React.memo(WordAlignerDialog)

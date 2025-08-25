@@ -245,4 +245,4 @@ WordAlignerArea.propTypes = {
   verseAlignments: PropTypes.array.isRequired,
 };
 
-export default WordAlignerArea
+export default React.memo(WordAlignerArea)
