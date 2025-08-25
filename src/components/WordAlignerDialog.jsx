@@ -16,6 +16,7 @@ import isEqual from 'deep-equal'
 import {useAlignmentSuggestions} from "enhanced-word-aligner-rcl";
 import {createAlignmentTrainingWorker} from "../workers/startAlignmentTrainer";
 import {AlignmentTrainerUtils} from "enhanced-word-aligner-rcl";
+import {delay} from "@utils/resources";
 
 function getBookData(alignerStatus_) {
   return alignerStatus_?.state?.reference || {};
