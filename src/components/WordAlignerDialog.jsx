@@ -40,6 +40,7 @@ function WordAlignerDialog({
   const [autoTrainingCompleted, setAutoTrainingCompleted] = useState(false); // triggers start of training
   const [trained, setTrained] = useState(false);
   const [training, setTraining] = useState(false);
+  const [trainingError, setTrainingError] = useState('');
 
   const [targetWords, setTargetWords] = useState([]);
   const [verseAlignments, setVerseAlignments] = useState([]);
@@ -203,7 +204,8 @@ function WordAlignerDialog({
 
   const handleSetTrainingState = ({
                                     training: _training,
-                                    trainingComplete
+                                    trainingComplete,
+                                    trainingFailed,
                                   }) => {
     if (_training === undefined) {
       _training = training;
@@ -225,14 +227,23 @@ function WordAlignerDialog({
     if (trainingComplete !== trained) {
       setTrained(trainingComplete);
     }
+    let trainingErrorStr = ''
+    let currentTrainingError = trainingError;
+    if (typeof trainingFailed === 'string') {
+      currentTrainingError = trainingFailed;
+      setTrainingError(currentTrainingError);
+    }
+    if (currentTrainingError) {
+      trainingErrorStr = " - " + currentTrainingError;
+    }
 
-    const trainingStatusStr_ = _training ? "Currently Training..." : trainingComplete ? "Trained" : "Not Trained";
+    const trainingStatusStr_ = (_training ? "Currently Training..." : trainingComplete ? "Trained" : "Not Trained") + trainingErrorStr;
     setTrainingStatusStr(trainingStatusStr_)
     console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`);
 
     const trainingButtonStr_ = _training ? '' : trainingComplete ? 'Retrain' : 'Train';
     setTrainingButtonStr(trainingButtonStr_)
-    console.log(`handleSetTrainingState new state: trainingButtonStr ${trainingButtonStr_}`);
+    console.log(`handleSetTrainingState new trainingButtonStr ${trainingButtonStr_}`);
   };
 
   const handleTrainingCompleted = (info) => {
