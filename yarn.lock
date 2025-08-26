@@ -4996,10 +4996,10 @@ enhanced-resolve@^5.0.0:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
 
-enhanced-word-aligner-rcl@0.9.0-beta.62:
-  version "0.9.0-beta.62"
-  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-0.9.0-beta.62.tgz#ae231504f3e420550f34ff02ada39a3bb45eb3f3"
-  integrity sha512-d5io+Mroa4GRuDW0wTB4zqS7MkzlUDLtvnd2buytLk898KCuzeUr4taZ739zMhmzfvX3QrIhwDrrlnh5fG68XQ==
+enhanced-word-aligner-rcl@0.9.0-beta.69:
+  version "0.9.0-beta.69"
+  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-0.9.0-beta.69.tgz#9196b55cf0c2e6327cb2fec85dc13643af154d10"
+  integrity sha512-+HKQA6+z/Wrvn/15ml56Yn/30wN5/U2tIU1zzRu4MXAKWWFvzwy7MkLaAlXP94YWD/FclW1pTRvcX8tccnpHPw==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     diff "^5.2.0"
@@ -5012,8 +5012,8 @@ enhanced-word-aligner-rcl@0.9.0-beta.62:
     source-map-loader "4"
     styled-components "^5.2.1"
     ts-loader "9"
+    uw-wordmapbooster "1.0.3-beta.13"
     word-aligner-rcl "1.2.0-beta.15"
-    wordmapbooster "1.0.2"
 
 enquirer@^2.3.5, enquirer@^2.3.6:
   version "2.3.6"
@@ -12168,6 +12168,15 @@ uw-tsv-parser@1.0.3:
   resolved "https://registry.yarnpkg.com/uw-tsv-parser/-/uw-tsv-parser-1.0.3.tgz#5009a3710d985e1d86a08bbb58a736a9be0c55d5"
   integrity sha512-BqDEayQWdGGsINZlYMzn1+4dAyVtG9zEmNnIv51H/7DquEODEO8hOI1mpNpLlNqGCcXySgTSj2nGhiODefZ4VA==
 
+uw-wordmapbooster@1.0.3-beta.13:
+  version "1.0.3-beta.13"
+  resolved "https://registry.yarnpkg.com/uw-wordmapbooster/-/uw-wordmapbooster-1.0.3-beta.13.tgz#5544945c4929091f08287767fcfe907091308698"
+  integrity sha512-j6OcUaURLyLsRBhtu2jqwY17knF25QGELqdPewWjBHeoW/e3EkM9jfMIOtGv/bAkqlqUR/12rnaY8Ys+JUKdNw==
+  dependencies:
+    usfm-js "^3.4.2"
+    wordmap "0.6.1-beta.10"
+    wordmap-lexer "^0.3.6"
+
 v8-compile-cache@^2.0.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
@@ -12515,6 +12524,14 @@ wordmap-lexer@^0.3.6:
   dependencies:
     string-punctuation-tokenizer "2.0.0"
 
+wordmap@0.6.1-beta.10:
+  version "0.6.1-beta.10"
+  resolved "https://registry.yarnpkg.com/wordmap/-/wordmap-0.6.1-beta.10.tgz#9127fee1c9c9669c636d7663e67ca151f005e2c4"
+  integrity sha512-w2ChPkByKXyXmfouxs7JUISw1XeEQznBRIm7S18RI0G+B3nUoYtq2gXHX5NXIPWx7RwgZgkAUWS8FQiyGCPFuQ==
+  dependencies:
+    "@types/yargs" "^11.0.0"
+    yargs "^11.0.0"
+
 wordmap@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/wordmap/-/wordmap-0.6.0.tgz#505aae067e0b1a6a1b0f36c70169153fcaa3648a"
@@ -12522,15 +12539,6 @@ wordmap@^0.6.0:
   dependencies:
     "@types/yargs" "^11.0.0"
     yargs "^11.0.0"
-
-wordmapbooster@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/wordmapbooster/-/wordmapbooster-1.0.2.tgz#18cc20b7986e670d70a0b1ad3e610085b3d00807"
-  integrity sha512-kPqjweFTxAIwNQ9UxPin/JARzAEcd2ePzcBTMISbb+ojpcHvr60K41NpswoDt2H8Gkmln6FEyEuKO3uQBVi21g==
-  dependencies:
-    usfm-js "^3.4.2"
-    wordmap "^0.6.0"
-    wordmap-lexer "^0.3.6"
 
 worker-loader@^3.0.8:
   version "3.0.8"
