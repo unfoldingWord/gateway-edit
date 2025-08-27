@@ -203,6 +203,7 @@ function WordAlignerDialog({
   }, [alignerStatus?.state?.alignerData]);
 
   const handleSetTrainingState = ({
+                                    percentComplete,
                                     training: _training,
                                     trainingComplete,
                                     trainingFailed,
@@ -237,7 +238,10 @@ function WordAlignerDialog({
       trainingErrorStr = " - " + currentTrainingError;
     }
 
-    const trainingStatusStr_ = (_training ? "Currently Training..." : trainingComplete ? "Trained" : "Not Trained") + trainingErrorStr;
+    let trainingStatusStr_ = (_training ? "Currently Training ..." : trainingComplete ? "Trained" : "Not Trained") + trainingErrorStr;
+    if (percentComplete !== undefined) {
+      trainingStatusStr_ += ` ${percentComplete}% complete`;
+    }
     setTrainingStatusStr(trainingStatusStr_)
     console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`);
 
