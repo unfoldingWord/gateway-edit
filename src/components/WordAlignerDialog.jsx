@@ -325,6 +325,11 @@ function WordAlignerDialog({
     }
   }
 
+  const alignerAreaStyle = useMemo(() => ({
+    maxHeight: `${height}px`,
+    overflowY: 'auto'
+  }), [height]);
+
   return (
     <>
       <Dialog
@@ -346,7 +351,7 @@ function WordAlignerDialog({
           loadLexiconEntry={getLexiconData}
           showingDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
-          style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
+          style={alignerAreaStyle}
           suggester={suggester}
           targetLanguage={targetLanguage}
           targetLanguageFont={''}
