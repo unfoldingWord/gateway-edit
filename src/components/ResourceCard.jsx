@@ -207,7 +207,7 @@ export default function ResourceCard({
     if (!savedContent && fetchResponse) {
       try {
         if (fetchResponse?.data?.errors) {
-          console.error(`ResourceCard: Error return for fetch ${fetchResponse?.config?.url}`, fetchResponse)
+          console.warn(`ResourceCard: Error return for fetch ${fetchResponse?.config?.url}`, fetchResponse)
         } else {
           const base64Decoded = atob(fetchResponse?.data?.content)
           const utf8DecodedArray = new Uint8Array(
