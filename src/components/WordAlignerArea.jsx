@@ -18,7 +18,6 @@ const alignmentIconStyle = { marginLeft:'50px' }
 
 // popup dialog for user to align verse
 function WordAlignerArea({
-  aligned,
   alignmentActions,
   contextId,
   doTraining,
@@ -41,7 +40,7 @@ function WordAlignerArea({
   trainingButtonStr,
   verseAlignments,
 }) {
-  const [aligned_, setAligned] = useState(aligned)
+  const [aligned_, setAligned] = useState(false)
   const [alignmentChange, setAlignmentChange] = useState(null)
   const [initialAlignment, setInitialAlignment] = useState(null)
   const [lexiconData, setLexiconData] = useState(null)
@@ -70,15 +69,10 @@ function WordAlignerArea({
         targetWords,
       }
       setInitialAlignment(cloneDeep(newAlignment))
+      const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(targetWords, verseAlignments);
+      setAligned(alignmentComplete) // update alignment complete status
     }
   }, [targetWords, verseAlignments])
-
-  useEffect(() => {
-    if (aligned !== aligned_) {
-      console.log('WordAlignerArea: set alignment to', aligned)
-      setAligned(aligned)
-    }
-  }, [aligned])
 
   function onAlignmentChange(results) {
     const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(results.targetWords, results.verseAlignments);
@@ -220,7 +214,6 @@ function WordAlignerArea({
 }
 
 WordAlignerArea.propTypes = {
-  aligned: PropTypes.bool,
   alignmentActions: PropTypes.shape({
     cancelAlignment: PropTypes.func,
     saveAlignment: PropTypes.func,
@@ -234,7 +227,7 @@ WordAlignerArea.propTypes = {
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
-  suggester: PropTypes.function,
+  suggester: PropTypes.func,
   style: PropTypes.object,
   targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,
@@ -247,4 +240,4 @@ WordAlignerArea.propTypes = {
   verseAlignments: PropTypes.array.isRequired,
 };
 
-export default React.memo(WordAlignerArea)
+export default WordAlignerArea
