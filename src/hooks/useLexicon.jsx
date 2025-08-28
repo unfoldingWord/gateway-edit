@@ -21,7 +21,7 @@ export default function useLexicon({
   const [hebrewError, setHebrewError] = useState(null)
   const [repository, setRepository] = useState(null)
   const [lexCacheInit, setLexCacheInit] = useState(false)
-  const [lexiconGlosses, setLexiconGlosses] = useState(null)
+  const lexiconGlossesRef = useRef(null)
   const [fetchingLexicon, setFetchingLexicon] = useState(false)
   const [fetchingGlosses, setFetchingGlosses] = useState(false)
   const [greekLexConfig, setGreekLexConfig] = useState(null)
@@ -66,7 +66,7 @@ export default function useLexicon({
     // console.log(`useLexicon: bible ${bookId} changed testament ${isNT_}`)
     setRepository(null) // clear lexicon repo so it's reloaded after testament change
     setStrongsNumbersInVerse(null)
-    setLexiconGlosses(null)
+    lexiconGlossesRef.current = null
     setLexCacheInit(false)
   }, [isNT_])
 
@@ -121,8 +121,8 @@ export default function useLexicon({
   function getLexiconData(lexiconId, entryId) {
     let gloss = null
 
-    if (lexiconGlosses && entryId) {
-      gloss = lexiconGlosses[entryId.toString()]
+    if (lexiconGlossesRef.current && entryId) {
+      gloss = lexiconGlossesRef.current[entryId.toString()]
 
       if (!gloss) { // show reason we can't find gloss
         const defaultMessage = `### ERROR: Gloss not found`
@@ -131,7 +131,7 @@ export default function useLexicon({
       }
     } else { // show error or reason glosses are not loaded
       const defaultMessage = `Not ready - glosses not yet available`
-      // console.log(`useLexicon.getLexiconData - lexiconId ${lexiconId}, lexiconGlosses length = ${lexiconGlosses?.length}`)
+      // console.log(`useLexicon.getLexiconData - lexiconId ${lexiconId}, lexiconGlossesRef.current.length = ${lexiconGlossesRef.current?.length}`)
       const message = getReasonForLexiconFailure(defaultMessage, entryId)
       gloss = messageToGloss(message)
     }
@@ -145,7 +145,7 @@ export default function useLexicon({
    */
   async function updateLexiconGlosses(newLexiconGlosses) {
     // console.log(`useLexicon.updateLexiconGlosses -`, newLexiconGlosses)
-    setLexiconGlosses(newLexiconGlosses)
+    lexiconGlossesRef.current = newLexiconGlosses
     await saveToGlossesStore(getGlossesCachePath(), newLexiconGlosses)
   }
 
@@ -172,7 +172,7 @@ export default function useLexicon({
           // console.log(`useLexicon.fetchGlossesForVerse - found strongs numbers in verses`, strongs)
           setStrongsNumbersInVerse(strongs)
 
-          if (lexiconGlosses && Object.keys(lexiconGlosses).length) {
+          if (lexiconGlossesRef.current && Object.keys(lexiconGlossesRef.current).length) {
             // console.log(`useLexicon.fetchGlossesForVerse - loading strongs numbers`)
             await fetchGlossesForStrongsNumbers(strongs)
           }

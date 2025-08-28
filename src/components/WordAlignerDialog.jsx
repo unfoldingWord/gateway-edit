@@ -67,16 +67,6 @@ function WordAlignerDialog({
   originalBibleBookUsfm,
   owner
 }) {
-  // Add this hook to track prop changes
-  useWhyDidYouUpdate('WordAlignerDialog', {
-    alignerStatus,
-    height,
-    translate,
-    getLexiconData,
-    originalBibleBookUsfm,
-    owner
-  });
-
   const [aligned, setAligned] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
   const [contextId, setContextId] = useState(null)
@@ -101,6 +91,18 @@ function WordAlignerDialog({
       mainScreenRef,
     },
   } = useContext(StoreContext)
+
+  // Add this hook to track prop changes
+  useWhyDidYouUpdate('WordAlignerDialog', {
+    alignerStatus,
+    height,
+    translate,
+    getLexiconData,
+    mainScreenRef,
+    originalBibleBookUsfm,
+    owner
+  });
+
 
   const boundsParams = useMemo(() => ({ // keeps track of drag bounds
     workspaceRef: mainScreenRef,
