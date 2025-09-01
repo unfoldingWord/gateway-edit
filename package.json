@@ -5,10 +5,11 @@
     "node": ">=18.18.0"
   },
   "scripts": {
+    "clean": "rimraf .next out",
+    "build": "yarn clean && bash -c \"source ./scripts/set-env.sh && next build && next export",
     "dev": "bash -c \"source ./scripts/set-env.sh && NODE_OPTIONS='--max-old-space-size=8192' next\"",
     "dev:vite": "vite",
     "dev:local": "bash ./scripts/use-local-deps.sh",
-    "build": "bash -c \"source ./scripts/set-env.sh && next build && next export\n\"",
     "build:vite": "vite build",
     "start": "bash -c \"source ./scripts/set-env.sh && next start\"",
     "start:vite": "vite preview",
@@ -108,6 +109,7 @@
     "prettier": "^2.2.1",
     "prop-types": "^15.7.2",
     "react-icons": "^4.8.0",
+    "rimraf": "^6.0.1",
     "start-server-and-test": "^1.14.0",
     "typescript": "^5.0.4",
     "vite": "^6.2.1",
