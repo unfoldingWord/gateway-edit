@@ -2095,6 +2095,11 @@
     prop-types "^15.8.1"
     react-transition-group "^4.4.5"
 
+"@netlify/plugin-nextjs@^5.12.0":
+  version "5.12.1"
+  resolved "https://registry.yarnpkg.com/@netlify/plugin-nextjs/-/plugin-nextjs-5.12.1.tgz#da8a2020a823cb02dcbef3f96fd8d615f4d7a61a"
+  integrity sha512-b2Ic9NkNnnh0lKC/YWDZ2+HdLd/uYdBzLvLKYOkPyFt8KEszoC+Je3GRcwBeOLxaNtK8lji7YPIjtGz8K2sLVQ==
+
 "@next/bundle-analyzer@^14.2.3":
   version "14.2.3"
   resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-14.2.3.tgz#dfa43586983d3fffdeb5f3c50f2c65ab1c51f184"

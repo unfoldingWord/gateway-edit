@@ -8,11 +8,6 @@ YARN_VERSION = "1.22.4"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    version = "4.41.3"
-
-[[plugins]]
-  package = "netlify-plugin-cache-nextjs"
 
 [[plugins]]
   package = "/scripts/zulip-notification"
