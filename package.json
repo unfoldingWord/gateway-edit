@@ -5,7 +5,7 @@
     "node": ">=18.18.0"
   },
   "scripts": {
-    "clean": "rimraf .next out",
+    "clean": "rimraf out",
     "build": "yarn clean && bash -c \"source ./scripts/set-env.sh && next build && next export",
     "dev": "bash -c \"source ./scripts/set-env.sh && NODE_OPTIONS='--max-old-space-size=8192' next\"",
     "dev:vite": "vite",
