@@ -39,16 +39,31 @@ function WordAlignerArea({
   translate,
   verseAlignments,
 }) {
-  const [aligned_, setAligned] = useState(false)
-  const [alignmentChange, setAlignmentChange] = useState(null)
-  const [initialAlignment, setInitialAlignment] = useState(null)
-  const [lexiconData, setLexiconData] = useState(null)
-  const [showResetWarning, setShowResetWarning] = useState(false)
-  const [trained, setTrained] = useState(false);
-  const [training, setTraining] = useState(false);
-  const [trainingError, setTrainingError] = useState('');
-  const [trainingStatusStr, setTrainingStatusStr] = useState('');
-  const [trainingButtonStr, setTrainingButtonStr] = useState('');
+  const [state, setState] = useState({
+    aligned_: false,
+    alignmentChange: null,
+    initialAlignment: null,
+    lexiconData: null,
+    showResetWarning: false,
+    trained: false,
+    training: false,
+    trainingError: '',
+    trainingStatusStr: '',
+    trainingButtonStr: ''
+  });
+
+  const {
+    aligned_,
+    alignmentChange,
+    initialAlignment,
+    lexiconData,
+    showResetWarning,
+    trained,
+    training,
+    trainingError,
+    trainingStatusStr,
+    trainingButtonStr
+  } = state;
 
   useEffect(() => {
     console.log('WordAlignerArea mounted')
@@ -86,18 +101,21 @@ function WordAlignerArea({
       console.log('Updating trainingComplete state: ' + trainingComplete);
     }
 
+    const newState = { };
+
     if (_training !== training) {
-      setTraining(_training);
+      newState.training = _training;
     }
 
     if (trainingComplete !== trained) {
-      setTrained(trainingComplete);
+      newState.trained = trainingComplete;
     }
+
     let trainingErrorStr = ''
     let currentTrainingError = trainingError;
     if (typeof trainingFailed === 'string') {
       currentTrainingError = trainingFailed;
-      setTrainingError(currentTrainingError);
+      newState.trainingError = currentTrainingError;
     }
     if (currentTrainingError) {
       trainingErrorStr = " - " + currentTrainingError;
@@ -107,12 +125,17 @@ function WordAlignerArea({
     if (percentComplete !== undefined) {
       trainingStatusStr_ += ` ${percentComplete}% complete`;
     }
-    setTrainingStatusStr(trainingStatusStr_)
+    newState.trainingStatusStr = trainingStatusStr_;
     console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`);
 
     const trainingButtonStr_ = _training ? '' : trainingComplete ? 'Retrain' : 'Train';
-    setTrainingButtonStr(trainingButtonStr_)
+    newState.trainingButtonStr = trainingButtonStr_;
     console.log(`handleSetTrainingState new trainingButtonStr ${trainingButtonStr_}`);
+
+    setState(prevState => ({
+      ...prevState,
+      ...newState,
+    }));
   }
 
   useEffect(() => {
@@ -128,30 +151,38 @@ function WordAlignerArea({
         verseAlignments,
         targetWords,
       }
-      setInitialAlignment(cloneDeep(newAlignment))
+
       const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(targetWords, verseAlignments);
-      setAligned(alignmentComplete) // update alignment complete status
+
+      setState(prevState => ({
+        ...prevState,
+        initialAlignment: cloneDeep(newAlignment),
+        aligned_: alignmentComplete
+      }));
     }
   }, [targetWords, verseAlignments])
 
   function onAlignmentChange(results) {
     const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(results.targetWords, results.verseAlignments);
-    setAlignmentChange(results) // save the most recent change
-    setAligned(alignmentComplete) // update alignment complete status
+    setState(prevState => ({
+      ...prevState,
+      alignmentChange: results,
+      aligned_: alignmentComplete
+    }));
   }
 
   function cancelAlignment() {
     console.log('WordAlignerDialog: cancelAlignment')
     const cancelAlignment = alignmentActions?.cancelAlignment
     cancelAlignment?.()
-    setAlignmentChange(null)
+    setState(prevState => ({ ...prevState, alignmentChange: null }));
   }
 
   function saveAlignment() {
     console.log('WordAlignerDialog: saveAlignment')
     const saveAlignment = alignmentActions?.saveAlignment
     saveAlignment?.(alignmentChange)
-    setAlignmentChange(null)
+    setState(prevState => ({ ...prevState, alignmentChange: null }));
   }
 
   /**
@@ -160,24 +191,32 @@ function WordAlignerArea({
   function doReset() {
     console.log('WordAlignerDialog: doReset')
     const alignmentData_ = AlignmentHelpers.resetAlignments(initialAlignment?.verseAlignments, initialAlignment?.targetWords)
-    setInitialAlignment(cloneDeep(alignmentData_))
+
     const alignmentChange_ = {
       ...alignmentChange,
       targetWords: alignmentData_?.targetWords,
       verseAlignments: alignmentData_?.verseAlignments,
     }
-    setAlignmentChange(cloneDeep(alignmentChange_))
-    setShowResetWarning(false)
+
+    setState(prevState => ({
+      ...prevState,
+      initialAlignment: cloneDeep(alignmentData_),
+      alignmentChange: cloneDeep(alignmentChange_),
+      showResetWarning: false
+    }));
   }
 
   function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
     console.log(`showPopover`, rawData)
-    setLexiconData({
-      PopoverTitle,
-      wordDetails,
-      positionCoord,
-      rawData,
-    })
+    setState(prevState => ({
+      ...prevState,
+      lexiconData: {
+        PopoverTitle,
+        wordDetails,
+        positionCoord,
+        rawData,
+      }
+    }));
   }
 
   const enableResetWarning = (currentShowDialog && showResetWarning);
@@ -216,7 +255,7 @@ function WordAlignerArea({
             Cancel
         </Button>
         {!errorMessage && // only show if there is no error
-            <Button variant="outlined" style={{margin: '10px 30px'}} onClick={() => setShowResetWarning(true)}>
+            <Button variant="outlined" style={{margin: '10px 30px'}} onClick={() => setState(prevState => ({ ...prevState, showResetWarning: true }))}>
               Reset
             </Button>
         }
@@ -242,10 +281,10 @@ function WordAlignerArea({
         title={lexiconData?.PopoverTitle || ''}
         bodyText={lexiconData?.wordDetails || ''}
         positionCoord={lexiconData?.positionCoord}
-        onClosePopover={() => setLexiconData(null)}
+        onClosePopover={() => setState(prevState => ({ ...prevState, lexiconData: null }))}
       />
 
-      <Dialog open={enableResetWarning} onClose={() => setShowResetWarning(false)} aria-labelledby="reset-warn-dialog">
+      <Dialog open={enableResetWarning} onClose={() => setState(prevState => ({ ...prevState, showResetWarning: false }))} aria-labelledby="reset-warn-dialog">
         <DialogTitle id="form-dialog-title">{'Warning'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -253,7 +292,7 @@ function WordAlignerArea({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setShowResetWarning(false)} color="primary">
+          <Button onClick={() => setState(prevState => ({ ...prevState, showResetWarning: false }))} color="primary">
             No
           </Button>
           <Button onClick={doReset} color="secondary">
