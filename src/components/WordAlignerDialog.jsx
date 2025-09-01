@@ -14,46 +14,9 @@ import { useBoundsUpdater } from 'translation-helps-rcl'
 import { StoreContext } from '@context/StoreContext'
 import WordAlignerArea from './WordAlignerArea';
 import isEqual from 'deep-equal'
-import {useAlignmentSuggestions} from "enhanced-word-aligner-rcl";
-import {createAlignmentTrainingWorker} from "../workers/startAlignmentTrainer";
-import {AlignmentTrainerUtils} from "enhanced-word-aligner-rcl";
-import {delay} from "@utils/resources";
-
-// Add this custom hook at the top of the file, after imports
-// function useWhyDidYouUpdate(name, props) {
-//   // Get a mutable ref object where we can store props for comparison next time this hook runs.
-//   const previous = useRef();
-//
-//   useEffect(() => {
-//     if (previous.current) {
-//       // Get all keys from previous and current props
-//       const allKeys = Object.keys({ ...previous.current, ...props });
-//
-//       // Use this object to keep track of changed props
-//       const changedProps = {};
-//
-//       // Iterate through keys
-//       allKeys.forEach(key => {
-//         // If previous is different from current
-//         if (!isEqual(previous.current[key], props[key])) {
-//           // Add to changedProps
-//           changedProps[key] = {
-//             from: previous.current[key],
-//             to: props[key]
-//           };
-//         }
-//       });
-//
-//       // If changedProps not empty then log
-//       if (Object.keys(changedProps).length) {
-//         console.log('[why-did-you-update]', name, changedProps);
-//       }
-//     }
-//
-//     // Finally update previous to current for next hook call
-//     previous.current = props;
-//   });
-// }
+import {AlignmentTrainerUtils, useAlignmentSuggestions} from 'enhanced-word-aligner-rcl'
+import {createAlignmentTrainingWorker} from '../workers/startAlignmentTrainer'
+import {delay} from '@utils/resources'
 
 function getBookData(alignerStatus) {
   return alignerStatus?.state?.reference || {};
@@ -68,35 +31,40 @@ function WordAlignerDialog({
   originalBibleBookUsfm,
   owner
 }) {
-  const [showDialog, setShowDialog] = useState(false)
-  const [contextId, setContextId] = useState(null)
-  const dialogRef = useRef(null) // for keeping track of aligner dialog position
-  const [startTraining, setStartTraining] = useState(false); // triggers start of training
-  const [autoTrainingCompleted, setAutoTrainingCompleted] = useState(false); // triggers start of training
+  const [state, setState] = useState({
+    showDialog: false,
+    contextId: null,
+    startTraining: false,
+    autoTrainingCompleted: false,
+    targetWords: [],
+    verseAlignments: [],
+    targetLanguage: {},
+    sourceLanguageId: '',
+    errorMessage: '',
+    title: ''
+  });
+
+  const dialogRef = useRef(null); // for keeping track of aligner dialog position
   const handleSetTrainingState = useRef(null);
-  const [targetWords, setTargetWords] = useState([]);
-  const [verseAlignments, setVerseAlignments] = useState([]);
-  const [targetLanguage, setTargetLanguage] = useState({});
-  const [sourceLanguageId, setSourceLanguageId] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [title, setTitle] = useState('');
+
+  const {
+    showDialog,
+    contextId,
+    startTraining,
+    autoTrainingCompleted,
+    targetWords,
+    verseAlignments,
+    targetLanguage,
+    sourceLanguageId,
+    errorMessage,
+    title
+  } = state;
 
   const {
     state: {
       mainScreenRef,
     },
   } = useContext(StoreContext)
-
-  // // Add this hook to track prop changes
-  // useWhyDidYouUpdate('WordAlignerDialog', {
-  //   alignerStatus,
-  //   height,
-  //   translate,
-  //   getLexiconData,
-  //   mainScreenRef,
-  //   originalBibleBookUsfm,
-  //   owner
-  // });
 
   useEffect(() => {
     console.log('WordAlignerDialog initialized/mounted')
@@ -216,21 +184,22 @@ function WordAlignerDialog({
   useEffect(() => {
     if (shouldShowDialog_ !== showDialog) {
       console.log(`WordAlignerDialog: alignment data changed shouldShowDialog_ ${shouldShowDialog_}`)
-      setShowDialog(shouldShowDialog_)
 
       const sourceLanguageId_ = alignerStatus?.state?.sourceLanguage || ''
-      setSourceLanguageId(sourceLanguageId_)
       const targetLanguage_ = alignerStatus?.state?.targetLanguage || null
-      setTargetLanguage(targetLanguage_)
-
       const errorMessage_ = alignerStatus?.state?.errorMessage
-      setErrorMessage(errorMessage_)
-
       const title_ = getTitle(alignerStatus);
-      setTitle(title_)
-
       const contextId_ = shouldShowDialog_ ? getContextId(alignerStatus) : null
-      setContextId(contextId_);
+
+      setState(prevState => ({
+        ...prevState,
+        showDialog: shouldShowDialog_,
+        sourceLanguageId: sourceLanguageId_,
+        targetLanguage: targetLanguage_,
+        errorMessage: errorMessage_,
+        title: title_,
+        contextId: contextId_
+      }));
     }
 
     const changedTW = !isEqual(targetWords, targetWords_);
@@ -238,9 +207,11 @@ function WordAlignerDialog({
 
     if (changedTW || changedVA) {
       console.log(`WordAlignerDialog: alignment data changed - changedTW ${changedTW}, changedVA ${changedVA}`)
-      setTargetWords(targetWords_)
-      setVerseAlignments(verseAlignments_)
-
+      setState(prevState => ({
+        ...prevState,
+        targetWords: targetWords_,
+        verseAlignments: verseAlignments_
+      }));
     } else {
       console.log('WordAlignerDialog alignerStatus changed yet wordbank and alignments are not difference')
     }
@@ -266,7 +237,7 @@ function WordAlignerDialog({
     handleSetTrainingState.current(props)
   }
 
-    const {
+  const {
     state: {
       failedToLoadCachedTraining,
       trainingRunning,
@@ -302,7 +273,7 @@ function WordAlignerDialog({
       const haveBook = contextId?.reference?.bookId;
       if (!haveBook) {
         if (autoTrainingCompleted) {
-          setAutoTrainingCompleted(false)
+          setState(prevState => ({...prevState, autoTrainingCompleted: false}));
         }
       } else { // have a book, so check if we have cached training data
         if (showDialog) {
@@ -316,7 +287,7 @@ function WordAlignerDialog({
             if (haveCachedTrainingData) {
               console.log('WordAlignerArea: translation memory changed, loading translation memory')
               loadTranslationMemory(translationMemory);
-              setStartTraining(true);
+              setState(prevState => ({...prevState, startTraining: true}));
             }
           }
         }
@@ -324,55 +295,56 @@ function WordAlignerDialog({
     }
   }, [failedToLoadCachedTraining]);
 
-const doTraining = useCallback(() => {
-  console.log('WordAlignerDialog: doTraining')
-  if (!startTraining) {
-    console.log('WordAlignerDialog: doTraining - startTraining false, starting training')
-    setStartTraining(true);
-  } else {
-    console.log('WordAlignerDialog: doTraining - startTraining true, resetting')
-    setStartTraining(false);
-    delay(500).then(() => {
-      console.log('WordAlignerDialog: doTraining - starting training after delay')
-      setStartTraining(true);
-    })
-  }
-}, [])
+  const doTraining = useCallback(() => {
+    console.log('WordAlignerDialog: doTraining')
+    if (!startTraining) {
+      console.log('WordAlignerDialog: doTraining - startTraining false, starting training')
+      setState(prevState => ({...prevState, startTraining: true}));
+    } else {
+      console.log('WordAlignerDialog: doTraining - startTraining true, resetting')
+      setState(prevState => ({...prevState, startTraining: false}));
+      delay(500).then(() => {
+        console.log('WordAlignerDialog: doTraining - starting training after delay')
+        setState(prevState => ({...prevState, startTraining: true}));
+      })
+    }
+  }, [])
 
   const alignerAreaStyle = useMemo(() => ({
     maxHeight: `${height}px`,
     overflowY: 'auto'
   }), [height]);
 
-  const oldDependencies = useRef({})
+  // const oldDependencies = useRef({})
 
   const wordAlignerDialogArea = useMemo(() => {
-      console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
-      // Track which dependencies caused the useMemo to regenerate
-      const dependencies = {
-        contextId,
-        doTraining,
-        errorMessage,
-        showDialog,
-        sourceLanguageId,
-        targetLanguage,
-        targetWords,
-        title,
-        verseAlignments
-      };
+    console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
 
-      for (const key in dependencies) {
-        if (dependencies.hasOwnProperty(key)) {
-          const value = dependencies[key];
-          const oldValue = oldDependencies.current[key];
-          if (oldValue !== value) {
-            console.log(`WordAlignerDialog: ${key} changed from '${oldValue}' to '${value}'`);
-            oldDependencies.current[key] = value;
-          }
-        }
-      }
+      // // Track which dependencies caused the useMemo to regenerate
+      // const dependencies = {
+      //   contextId,
+      //   doTraining,
+      //   errorMessage,
+      //   showDialog,
+      //   sourceLanguageId,
+      //   targetLanguage,
+      //   targetWords,
+      //   title,
+      //   verseAlignments
+      // };
+      //
+      // for (const key in dependencies) {
+      //   if (dependencies.hasOwnProperty(key)) {
+      //     const value = dependencies[key];
+      //     const oldValue = oldDependencies.current[key];
+      //     if (oldValue !== value) {
+      //       console.log(`WordAlignerDialog: ${key} changed from '${oldValue}' to '${value}'`);
+      //       oldDependencies.current[key] = value;
+      //     }
+      //   }
+      // }
 
-      const newDialog = <Dialog
+      return <Dialog
         fullWidth={true}
         maxWidth={'lg'}
         onClose={() => {
@@ -401,8 +373,7 @@ const doTraining = useCallback(() => {
           translate={translate}
           verseAlignments={verseAlignments}
         />
-      </Dialog>;
-      return newDialog
+      </Dialog>
     },
     [
       contextId,
