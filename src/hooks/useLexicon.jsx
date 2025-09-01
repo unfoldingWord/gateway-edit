@@ -1,4 +1,10 @@
-import { useEffect, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import isEqual from 'deep-equal'
 import { getFilesFromRepoZip, useRepository } from 'gitea-react-toolkit'
 import { core } from 'scripture-resources-rcl'
@@ -30,7 +36,8 @@ export default function useLexicon({
 
   const isNT_ = isNT(bookId)
 
-  const origlangLexConfig = getOriginalLanguageConfig()
+const origlangLexConfig = useMemo(() => getOriginalLanguageConfig(), [greekLexConfig, hebrewLexConfig, isNT_])
+
   const lexRepoName = origlangLexConfig ? `${origlangLexConfig.languageId}_${origlangLexConfig.resourceId}` : null
   const lexRepoFullName = origlangLexConfig ? `${origlangLexConfig.owner}/${lexRepoName}` : null
   const lexiconProps = useRepository({
@@ -118,8 +125,9 @@ export default function useLexicon({
    * @param {string|number} entryId - numerical part of the strongs number (e.g. '00005')
    * @return {*}
    */
-  function getLexiconData(lexiconId, entryId) {
-    let gloss = null
+  const getLexiconData = useCallback((lexiconId, entryId) => {
+
+      let gloss = null
 
     if (lexiconGlossesRef.current && entryId) {
       gloss = lexiconGlossesRef.current[entryId.toString()]
@@ -136,7 +144,7 @@ export default function useLexicon({
       gloss = messageToGloss(message)
     }
     return { [lexiconId]: { [entryId]: gloss } }
-  }
+  }, [])
 
   /**
    * save updated lexicon words in state and in indexDB
@@ -155,7 +163,7 @@ export default function useLexicon({
    * @param {string} languageId
    * @return {Promise}
    */
-  async function fetchGlossesForVerse(verseObjects, languageId) {
+  const fetchGlossesForVerse = useCallback(async (verseObjects, languageId) => {
     if (origlangLexConfig?.origLangId !== languageId) {
       return
     }
@@ -181,7 +189,7 @@ export default function useLexicon({
         }
       }
     }
-  }
+  }, [origlangLexConfig, fetchingGlosses, strongsNumbersInVerse, lexiconGlossesRef, fetchGlossesForStrongsNumbers])
 
   async function getFilesFromCachedLexicon() {
     const files = await getFilesFromRepoZip({
@@ -198,7 +206,7 @@ export default function useLexicon({
    * @param {array} strongs
    * @return {Promise<void>}
    */
-  async function fetchGlossesForStrongsNumbers(strongs) {
+  const fetchGlossesForStrongsNumbers = useCallback(async (strongs) => {
     if (strongs?.length && !fetchingGlosses && origlangLexConfig) {
       // console.log(`useLexicon.fetchGlossesForStrongsNumber: extracting strongs list length ${strongs.length}`, strongs)
       setFetchingGlosses(true)
@@ -211,13 +219,24 @@ export default function useLexicon({
         await updateLexiconGlosses(newLexiconWords)
         // console.log('useLexicon.fetchGlossesForStrongsNumbers: lexicon words updated, length', Object.keys(newLexiconWords).length)
       } else {
-        setLexiconGlosses(newLexiconWords)
+        lexiconGlossesRef.current = newLexiconWords
       }
 
       // console.log('useLexicon.fetchGlossesForStrongsNumbers: new word list length', strongs?.length)
       setFetchingGlosses(false)
     }
-  }
+  }, [
+    fetchingGlosses,
+    origlangLexConfig,
+    fetchFromGlossesStore,
+    getGlossesCachePath,
+    getFilesFromCachedLexicon,
+    extractGlossesFromRepoZip,
+    lexRepoName,
+    updateLexiconGlosses,
+    lexiconGlossesRef,
+    setFetchingGlosses
+  ])
 
   async function unzipFileFromCachedLexicon(filename) {
     const filePath = `${origlangLexConfig.lexiconPath}/${filename}`

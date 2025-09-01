@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
@@ -25,6 +25,7 @@ function WordAlignerArea({
   lexiconCache,
   loadLexiconEntry,
   onChange,
+  setHandleSetTrainingState,
   sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
@@ -36,8 +37,6 @@ function WordAlignerArea({
   targetWords,
   title,
   translate,
-  trainingStatusStr,
-  trainingButtonStr,
   verseAlignments,
 }) {
   const [aligned_, setAligned] = useState(false)
@@ -45,15 +44,76 @@ function WordAlignerArea({
   const [initialAlignment, setInitialAlignment] = useState(null)
   const [lexiconData, setLexiconData] = useState(null)
   const [showResetWarning, setShowResetWarning] = useState(false)
+  const [trained, setTrained] = useState(false);
+  const [training, setTraining] = useState(false);
+  const [trainingError, setTrainingError] = useState('');
+  const [trainingStatusStr, setTrainingStatusStr] = useState('');
+  const [trainingButtonStr, setTrainingButtonStr] = useState('');
+
+  useEffect(() => {
+    console.log('WordAlignerArea mounted')
+    setHandleSetTrainingState(handleSetTrainingState)
+    // Cleanup function that runs on unmount
+    return () => {
+      console.log('WordAlignerArea unmounted')
+      setHandleSetTrainingState(null)
+    };
+  }, []);
 
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
 
-  // // Handler for the load translation memory button
-  // const handleLoadTranslationMemory = () => {
-  //   console.log('Calling loadTranslationMemory')
-  //   setAddTranslationMemory(translationMemory);
-  //   setTranslationMemoryLoaded(true)
-  // };
+  const handleSetTrainingState = (props) => {
+    if (!props) {
+      console.log('handleSetTrainingState: no props');
+      return;
+    }
+
+    let {
+      percentComplete,
+      training: _training,
+      trainingComplete,
+      trainingFailed,
+    } = props || {};
+
+    if (_training === undefined) {
+      _training = training;
+    } else {
+      console.log('Updating training state: ' + _training);
+    }
+    if (trainingComplete === undefined) {
+      trainingComplete = trained;
+    } else {
+      console.log('Updating trainingComplete state: ' + trainingComplete);
+    }
+
+    if (_training !== training) {
+      setTraining(_training);
+    }
+
+    if (trainingComplete !== trained) {
+      setTrained(trainingComplete);
+    }
+    let trainingErrorStr = ''
+    let currentTrainingError = trainingError;
+    if (typeof trainingFailed === 'string') {
+      currentTrainingError = trainingFailed;
+      setTrainingError(currentTrainingError);
+    }
+    if (currentTrainingError) {
+      trainingErrorStr = " - " + currentTrainingError;
+    }
+
+    let trainingStatusStr_ = (_training ? "Currently Training ..." : trainingComplete ? "Trained" : "Not Trained") + trainingErrorStr;
+    if (percentComplete !== undefined) {
+      trainingStatusStr_ += ` ${percentComplete}% complete`;
+    }
+    setTrainingStatusStr(trainingStatusStr_)
+    console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`);
+
+    const trainingButtonStr_ = _training ? '' : trainingComplete ? 'Retrain' : 'Train';
+    setTrainingButtonStr(trainingButtonStr_)
+    console.log(`handleSetTrainingState new trainingButtonStr ${trainingButtonStr_}`);
+  }
 
   useEffect(() => {
     // see if alignment data has changed
@@ -63,7 +123,7 @@ function WordAlignerArea({
     const changedVA = !isEqual(verseAlignments, verseAlignments_);
 
     if (changedTW || changedVA) {
-      console.log(`WordAlignerArea: alignment data changed - changedTW ${changedTW}, changedVA ${changedVA}`)
+      console.log(`WordAlignerArea: alignment data changed - changedTW ${changedTW}, changedVA ${changedVA}, TW ${!!targetWords_}, VA ${!!verseAlignments_}`)
       const newAlignment = {
         verseAlignments,
         targetWords,
@@ -121,14 +181,6 @@ function WordAlignerArea({
   }
 
   const enableResetWarning = (currentShowDialog && showResetWarning);
-
-  useEffect(() => {
-    console.log('WordAlignerArea mounted')
-    // Cleanup function that runs on unmount
-    return () => {
-      console.log('WordAlignerArea unmounted')
-    };
-  }, []);
 
   return (
     <>
@@ -218,12 +270,13 @@ WordAlignerArea.propTypes = {
     cancelAlignment: PropTypes.func,
     saveAlignment: PropTypes.func,
   }),
-  contextId: PropTypes.object.isRequired,
+  contextId: PropTypes.object,
   doTraining: PropTypes.func,
   errorMessage: PropTypes.string,
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
   onChange: PropTypes.func,
+  setHandleSetTrainingState: PropTypes.func,
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
@@ -232,12 +285,10 @@ WordAlignerArea.propTypes = {
   targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,
   targetFontSizePercent: PropTypes.number,
-  targetWords: PropTypes.array.isRequired,
+  targetWords: PropTypes.array,
   title: PropTypes.string,
   translate: PropTypes.func.isRequired,
-  trainingStatusStr: PropTypes.string,
-  trainingButtonStr: PropTypes.string,
-  verseAlignments: PropTypes.array.isRequired,
+  verseAlignments: PropTypes.array,
 };
 
 export default WordAlignerArea

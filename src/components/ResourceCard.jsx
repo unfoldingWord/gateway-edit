@@ -631,7 +631,6 @@ ResourceCard.propTypes = {
   verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   server: PropTypes.string.isRequired,
   owner: PropTypes.string.isRequired,
-  ref: PropTypes.string.isRequired,
   languageId: PropTypes.string.isRequired,
   resourceId: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
