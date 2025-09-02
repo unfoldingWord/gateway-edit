@@ -234,7 +234,7 @@ function WordAlignerDialog({
     if (!handleSetTrainingState.current) {
       console.log('handleSetTrainingState_: no handleSetTrainingState.current');
     }
-    handleSetTrainingState.current(props)
+    handleSetTrainingState.current?.(props)
   }
 
   const {
