@@ -161,8 +161,22 @@
   "suggestions.accept"             : "Accept",
   "suggestions.reject_suggestions" : "Reject all suggestions.",
   "suggestions.reject"             : "Reject",
+  "suggestions.train_button"       : "Train",
+  "suggestions.train_button_hint"  : "Click to improve the quality of alignment suggestions based on currently loaded alignments",
+  "suggestions.retrain_button"     : "Retrain",
+  "suggestions.retrain_button_hint": "Click to improve the quality of alignment suggestions based on current book alignments",
   "alignments.clear_alignments"    : "Clear all alignments.",
-  "alignments.clear"              : "Clear"
+  "alignments.clear"               : "Clear",
+  "alignments.accept"              : "Accept",
+  "alignments.accept_hint"         : "Save current alignments and close the dialog",
+  "alignments.reset"               : "Reset",
+  "alignments.reset_hint"          : "Reset current alignments",
+  "alignments.reset_confirm"       : "Are you sure you want to clear all alignments?",
+  "alignments.cancel"              : "Cancel",
+  "alignments.cancel_hint"         : "Cancel any alignments changes and close the dialog",
+  "no": "No",
+  "yes": "Yes",
+  "warning": "Warning"
 }
 
 

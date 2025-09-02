@@ -49,7 +49,8 @@ function WordAlignerArea({
     training: false,
     trainingError: '',
     trainingStatusStr: '',
-    trainingButtonStr: ''
+    trainingButtonStr: '',
+    trainingButtonHintStr: '',
   });
 
   const {
@@ -62,7 +63,8 @@ function WordAlignerArea({
     training,
     trainingError,
     trainingStatusStr,
-    trainingButtonStr
+    trainingButtonStr,
+    trainingButtonHintStr,
   } = state;
 
   useEffect(() => {
@@ -128,8 +130,10 @@ function WordAlignerArea({
     newState.trainingStatusStr = trainingStatusStr_;
     console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`);
 
-    const trainingButtonStr_ = _training ? '' : trainingComplete ? 'Retrain' : 'Train';
+    const trainingButtonStr_ = _training ? '' : trainingComplete ? translate('suggestions.retrain_button') : translate('suggestions.train_button');
     newState.trainingButtonStr = trainingButtonStr_;
+    const trainingButtonHintStr_ = _training ? '' : trainingComplete ? translate('suggestions.retrain_button_hint') : translate('suggestions.train_button_hint');
+    newState.trainingButtonHintStr = trainingButtonHintStr_;
     console.log(`handleSetTrainingState new trainingButtonStr ${trainingButtonStr_}`);
 
     setState(prevState => ({
@@ -251,21 +255,41 @@ function WordAlignerArea({
         />
       </div>
       <div style={{width: `auto`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-        <Button variant="outlined" style={{margin: '10px 30px'}} onClick={cancelAlignment}>
-            Cancel
+        <Button
+          variant="outlined"
+          style={{margin: '10px 30px'}}
+          onClick={cancelAlignment}
+          title={translate('alignments.cancel_hint')}
+        >
+          {translate('alignments.cancel')}
         </Button>
         {!errorMessage && // only show if there is no error
-            <Button variant="outlined" style={{margin: '10px 30px'}} onClick={() => setState(prevState => ({ ...prevState, showResetWarning: true }))}>
-              Reset
+            <Button
+              variant="outlined"
+              style={{margin: '10px 30px'}}
+              onClick={() => setState(prevState => ({ ...prevState, showResetWarning: true }))}
+              title={translate('alignments.reset_hint')}
+            >
+              {translate('alignments.reset')}
             </Button>
         }
         {!errorMessage && // only show if there is no error
-            <Button variant="outlined" style={{margin: '10px 30px'}} onClick={saveAlignment}>
-              Accept
+            <Button
+              variant="outlined"
+              style={{margin: '10px 30px'}}
+              onClick={saveAlignment}
+              title={translate('alignments.accept_hint')}
+            >
+              {translate('alignments.accept')}
             </Button>
         }
         { !errorMessage && trainingButtonStr &&
-          <Button variant="outlined" style={{margin: '10px 30px'}} onClick={doTraining}>
+          <Button
+            variant="outlined"
+            style={{margin: '10px 30px'}}
+            onClick={doTraining}
+            title={trainingButtonHintStr}
+          >
             {trainingButtonStr}
           </Button>
         }
@@ -285,18 +309,18 @@ function WordAlignerArea({
       />
 
       <Dialog open={enableResetWarning} onClose={() => setState(prevState => ({ ...prevState, showResetWarning: false }))} aria-labelledby="reset-warn-dialog">
-        <DialogTitle id="form-dialog-title">{'Warning'}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{translate('warning')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {'Are you sure you want to clear all alignments?'}
+            {translate('alignments.reset_confirm')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setState(prevState => ({ ...prevState, showResetWarning: false }))} color="primary">
-            No
+            {translate('no')}
           </Button>
           <Button onClick={doReset} color="secondary">
-            Yes
+            {translate('yes')}
           </Button>
         </DialogActions>
       </Dialog>
