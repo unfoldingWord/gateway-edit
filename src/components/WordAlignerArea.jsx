@@ -70,8 +70,8 @@ function WordAlignerArea({
     setHandleSetTrainingState(handleSetTrainingState)
     // Cleanup function that runs on unmount
     return () => {
-      console.log('WordAlignerArea unmounted')
       setHandleSetTrainingState(null)
+      console.log('WordAlignerArea unmounted')
     };
   }, []);
 
