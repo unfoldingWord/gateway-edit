@@ -30,7 +30,7 @@ function WordAlignerArea({
   sourceLanguageFont,
   sourceFontSizePercent,
   style,
-  suggester,
+  suggester: suggester_,
   targetLanguage,
   targetLanguageFont,
   targetFontSizePercent,
@@ -45,6 +45,7 @@ function WordAlignerArea({
     initialAlignment: null,
     lexiconData: null,
     showResetWarning: false,
+    suggester: suggester_,
     trained: false,
     training: false,
     trainingError: '',
@@ -59,6 +60,7 @@ function WordAlignerArea({
     initialAlignment,
     lexiconData,
     showResetWarning,
+    suggester,
     trained,
     training,
     trainingError,
@@ -90,6 +92,7 @@ function WordAlignerArea({
       training: _training,
       trainingComplete,
       trainingFailed,
+      suggester: suggester_,
     } = props || {};
 
     if (_training === undefined) {
@@ -111,6 +114,10 @@ function WordAlignerArea({
 
     if (trainingComplete !== trained) {
       newState.trained = trainingComplete;
+    }
+
+    if (suggester_ !== undefined) { // if suggester updated
+      newState.suggester = suggester_
     }
 
     let trainingErrorStr = ''

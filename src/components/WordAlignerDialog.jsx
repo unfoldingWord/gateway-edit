@@ -188,15 +188,16 @@ function WordAlignerDialog({
     handleSetTrainingState.current = handleSetTrainingState_;
   }
 
+  /**
+   * A function that handles updating the training state.
+   * TRICKY:  Serves as a forward reference for handleSetTrainingStateSub
+   *
+   * @function
+   * @name handleSetTrainingState_
+   * @param {Object} props - The properties or parameters that are passed to determine the training state.
+   */
   const handleSetTrainingState_ = (props) => {
-    if (!props) {
-      console.log('handleSetTrainingState_: no props');
-      return;
-    }
-    if (!handleSetTrainingState.current) {
-      console.log('handleSetTrainingState_: no handleSetTrainingState.current');
-    }
-    handleSetTrainingState.current?.(props)
+    handleSetTrainingStateSub(props)
   }
 
   const {
@@ -207,6 +208,7 @@ function WordAlignerDialog({
     actions: {
       areTrainingSameBook,
       cleanupWorker,
+      getSuggester,
       getTrainingContextId,
       isTraining,
       loadTranslationMemory,
@@ -224,6 +226,25 @@ function WordAlignerDialog({
     targetUsfm: targetBibleBookUsfm,
     sourceUsfm: originalBibleBookUsfm,
   });
+
+  const handleSetTrainingStateSub = (props) => {
+    if (!props) {
+      console.log('handleSetTrainingStateSub: no props');
+      return;
+    }
+
+    const current = handleSetTrainingState.current;
+    if (!current) {
+      console.log('handleSetTrainingStateSub: no handleSetTrainingState.current');
+      return
+    }
+    const newProps = {
+      ...props,
+      suggester: getSuggester(), // inject updated suggester
+    }
+
+    current?.(newProps)
+  }
 
   useEffect(() => {
     if (shouldShowDialog_ !== showDialog) {
