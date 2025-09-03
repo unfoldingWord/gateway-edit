@@ -121,7 +121,8 @@ function WordAlignerArea({
       trainingErrorStr = " - " + currentTrainingError;
     }
 
-    let trainingStatusStr_ = (_training ? "Currently Training ..." : trainingComplete ? "Trained" : "Not Trained") + trainingErrorStr;
+    const trainingMessage = trainingComplete ? "Trained, but updating ..." : "Currently Training ...";
+    let trainingStatusStr_ = (_training ? trainingMessage : trainingComplete ? "Trained" : "Not Trained") + trainingErrorStr;
     if (percentComplete !== undefined) {
       trainingStatusStr_ += ` ${percentComplete}% complete`;
     }
@@ -235,19 +236,20 @@ function WordAlignerArea({
       </DialogTitle>
       <div style={{width: `95%`, margin: '10px'}}>
         <SuggestingWordAligner
-          style={style}
-          verseAlignments={initialAlignment?.verseAlignments || []}
-          targetWords={initialAlignment?.targetWords ||[]}
-          translate={translate}
           contextId={contextId}
-          targetLanguage={targetLanguage}
-          targetLanguageFont={targetLanguageFont}
-          sourceLanguage={sourceLanguageId}
-          showPopover={showPopover}
           lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
           onChange={onAlignmentChange}
+          showPopover={showPopover}
+          sourceLanguage={sourceLanguageId}
+          style={style}
           suggester={suggester}
+          removeClear={true}
+          targetWords={initialAlignment?.targetWords ||[]}
+          targetLanguage={targetLanguage}
+          targetLanguageFont={targetLanguageFont}
+          translate={translate}
+          verseAlignments={initialAlignment?.verseAlignments || []}
         />
       </div>
       <div style={{width: `auto`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>

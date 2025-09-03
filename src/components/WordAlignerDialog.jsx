@@ -34,7 +34,6 @@ function WordAlignerDialog({
   const [state, setState] = useState({
     showDialog: false,
     contextId: null,
-    startTraining: false,
     autoTrainingCompleted: false,
     targetWords: [],
     verseAlignments: [],
@@ -50,7 +49,6 @@ function WordAlignerDialog({
   const {
     showDialog,
     contextId,
-    startTraining,
     autoTrainingCompleted,
     targetWords,
     verseAlignments,
@@ -245,13 +243,14 @@ function WordAlignerDialog({
     actions: {
       areTrainingSameBook,
       cleanupWorker,
+      isTraining,
       loadTranslationMemory,
+      startTraining,
       suggester,
     }
   } = useAlignmentSuggestions({
     contextId,
     createAlignmentTrainingWorker,
-    doTraining: startTraining,
     handleSetTrainingState: handleSetTrainingState_,
     handleTrainingCompleted,
     shown: showDialog,
@@ -281,13 +280,13 @@ function WordAlignerDialog({
           if (trainingRunning) {
             console.log('WordAlignerArea: training already running trainingSameBook:', trainingSameBook)
           }
-          if (!startTraining && !autoTrainingCompleted) {
+          if (!trainingRunning && !autoTrainingCompleted) {
             const targetUsfmsBooks = translationMemory?.targetUsfms;
             const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
             if (haveCachedTrainingData) {
               console.log('WordAlignerArea: translation memory changed, loading translation memory')
               loadTranslationMemory(translationMemory);
-              setState(prevState => ({...prevState, startTraining: true}));
+              startTraining();
             }
           }
         }
@@ -296,19 +295,12 @@ function WordAlignerDialog({
   }, [failedToLoadCachedTraining]);
 
   const doTraining = useCallback(() => {
-    console.log('WordAlignerDialog: doTraining')
-    if (!startTraining) {
-      console.log('WordAlignerDialog: doTraining - startTraining false, starting training')
-      setState(prevState => ({...prevState, startTraining: true}));
-    } else {
-      console.log('WordAlignerDialog: doTraining - startTraining true, resetting')
-      setState(prevState => ({...prevState, startTraining: false}));
-      delay(500).then(() => {
-        console.log('WordAlignerDialog: doTraining - starting training after delay')
-        setState(prevState => ({...prevState, startTraining: true}));
-      })
+    const training = isTraining()
+    console.log(`WordAlignerDialog: doTraining() - currently training is ${training}`)
+    if (!training) {
+      startTraining();
     }
-  }, [])
+  }, [showDialog])
 
   const alignerAreaStyle = useMemo(() => ({
     maxHeight: `${height}px`,
@@ -360,6 +352,7 @@ function WordAlignerDialog({
           errorMessage={errorMessage}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
+          removeClear={true}
           setHandleSetTrainingState={setHandleSetTrainingState}
           showingDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
@@ -426,26 +419,26 @@ export default React.memo(WordAlignerDialog, (prevProps, nextProps) => {
   const nextAlignmentData = getAlignmentData(nextProps.alignerStatus);
 
   if (!isEqual(previousAlignmentData, nextAlignmentData)) {
-    console.log('WordAlignerDialog React.memo: prop changed alignerStatus', {previousAlignmentData, nextAlignmentData})
+    // console.log('WordAlignerDialog React.memo: prop changed alignerStatus', {previousAlignmentData, nextAlignmentData})
     changedProps.alignerStatus = { from: previousAlignmentData, to: nextAlignmentData };
   }
 
   // Simple comparison for other props
   for (let key of keysToCompare.slice(1)) {
     if (prevProps[key] !== nextProps[key]) {
-      console.log('WordAlignerDialog React.memo: prop changed', {key, from: prevProps[key], to: nextProps[key]})
+      // console.log('WordAlignerDialog React.memo: prop changed', {key, from: prevProps[key], to: nextProps[key]})
       changedProps[key] = { from: prevProps[key], to: nextProps[key] };
     }
   }
 
   // Functions should be stable, but check reference equality
   if (prevProps.translate !== nextProps.translate) {
-    console.log('WordAlignerDialog React.memo: translate function changed');
+    // console.log('WordAlignerDialog React.memo: translate function changed');
     changedProps.translate = 'function reference changed';
   }
 
   if (prevProps.getLexiconData !== nextProps.getLexiconData) {
-    console.log('WordAlignerDialog React.memo: getLexiconData function changed');
+    // console.log('WordAlignerDialog React.memo: getLexiconData function changed');
     changedProps.getLexiconData = 'function reference changed';
   }
 
@@ -456,6 +449,6 @@ export default React.memo(WordAlignerDialog, (prevProps, nextProps) => {
     return false; // Props changed, re-render
   }
 
-  console.log('WordAlignerDialog React.memo: No props changed, skipping re-render');
+  // console.log('WordAlignerDialog React.memo: No props changed, skipping re-render');
   return true; // Props are the same, skip re-render
 });
