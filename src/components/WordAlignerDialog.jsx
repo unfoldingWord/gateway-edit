@@ -311,7 +311,24 @@ function WordAlignerDialog({
     return trainingCurrent;
   }
 
-  // Effect to load translation memory and start training when fail to load cached training Model
+  /**
+   * Initiates the training process using translation memory data if available.
+   * The method checks for cached training data within `targetUsfmsBooks` and,
+   * if present, loads the translation memory and starts the training process.
+   *
+   * @return {void} Does not return a value.
+   */
+  function startTraining_() {
+    const targetUsfmsBooks = translationMemory?.targetUsfms;
+    const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
+    if (haveCachedTrainingData) {
+      console.log('WordAlignerArea: translation memory changed, loading translation memory')
+      loadTranslationMemory(translationMemory);
+      startTraining();
+    }
+  }
+
+// Effect to load translation memory and start training when fail to load cached training Model
   useEffect(() => {
     if (failedToLoadCachedTraining) {
       console.log('WordAlignerArea: failedToLoadCachedTraining', {failedToLoadCachedTraining, contextId, showDialog})
@@ -327,24 +344,33 @@ function WordAlignerDialog({
             console.log('WordAlignerArea: training already running trainingSameBook:', trainingSameBook)
           }
           if (!trainingRunning && !autoTrainingCompleted) {
-            const targetUsfmsBooks = translationMemory?.targetUsfms;
-            const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
-            if (haveCachedTrainingData) {
-              console.log('WordAlignerArea: translation memory changed, loading translation memory')
-              loadTranslationMemory(translationMemory);
-              startTraining();
-            }
+            startTraining_();
           }
         }
       }
     }
   }, [failedToLoadCachedTraining]);
 
+  /**
+   * Handler for button press to start training process.
+   *
+   * This function checks if a training process is already in progress
+   * and logs the current training state. If no training is in progress,
+   * it initiates the training by calling the appropriate start function.
+   * It is memoized to only recompute when `showDialog` changes.
+   *
+   * Dependencies:
+   * - `isTraining`: A function to check the current training state.
+   * - `startTraining_`: A function to initiate the training process.
+   *
+   * External Dependencies:
+   * - `showDialog`: A state or variable that triggers re-execution of the function when changed.
+   */
   const doTraining = useCallback(() => {
     const training = isTraining()
     console.log(`WordAlignerDialog: doTraining() - currently training is ${training}`)
     if (!training) {
-      startTraining();
+      startTraining_();
     }
   }, [showDialog])
 
