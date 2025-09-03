@@ -210,6 +210,7 @@ function WordAlignerDialog({
       getTrainingContextId,
       isTraining,
       loadTranslationMemory,
+      startTraining,
       suggester,
     }
   } = useAlignmentSuggestions({
