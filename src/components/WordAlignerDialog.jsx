@@ -181,42 +181,6 @@ function WordAlignerDialog({
     return title_;
   }
 
-  useEffect(() => {
-    if (shouldShowDialog_ !== showDialog) {
-      console.log(`WordAlignerDialog: alignment data changed shouldShowDialog_ ${shouldShowDialog_}`)
-
-      const sourceLanguageId_ = alignerStatus?.state?.sourceLanguage || ''
-      const targetLanguage_ = alignerStatus?.state?.targetLanguage || null
-      const errorMessage_ = alignerStatus?.state?.errorMessage
-      const title_ = getTitle(alignerStatus);
-      const contextId_ = shouldShowDialog_ ? getContextId(alignerStatus) : null
-
-      setState(prevState => ({
-        ...prevState,
-        showDialog: shouldShowDialog_,
-        sourceLanguageId: sourceLanguageId_,
-        targetLanguage: targetLanguage_,
-        errorMessage: errorMessage_,
-        title: title_,
-        contextId: contextId_
-      }));
-    }
-
-    const changedTW = !isEqual(targetWords, targetWords_);
-    const changedVA = !isEqual(verseAlignments, verseAlignments_);
-
-    if (changedTW || changedVA) {
-      console.log(`WordAlignerDialog: alignment data changed - changedTW ${changedTW}, changedVA ${changedVA}`)
-      setState(prevState => ({
-        ...prevState,
-        targetWords: targetWords_,
-        verseAlignments: verseAlignments_
-      }));
-    } else {
-      console.log('WordAlignerDialog alignerStatus changed yet wordbank and alignments are not difference')
-    }
-  }, [targetWords_, verseAlignments_, alignerData_?.state?.reference, shouldShowDialog_]);
-
   const handleTrainingCompleted = useCallback((info) => {
     console.log("handleTrainingCompleted", info);
   }, []);
@@ -244,7 +208,9 @@ function WordAlignerDialog({
     },
     actions: {
       areTrainingSameBook,
+      isTraining,
       cleanupWorker,
+      getTrainingContextId,
       loadTranslationMemory,
       suggester,
     }
@@ -260,6 +226,56 @@ function WordAlignerDialog({
     targetUsfm: targetBibleBookUsfm,
     sourceUsfm: originalBibleBookUsfm,
   });
+
+  useEffect(() => {
+    if (shouldShowDialog_ !== showDialog) {
+      console.log(`WordAlignerDialog: alignment data changed shouldShowDialog_ ${shouldShowDialog_}`)
+
+      const sourceLanguageId_ = alignerStatus?.state?.sourceLanguage || ''
+      const targetLanguage_ = alignerStatus?.state?.targetLanguage || null
+      const errorMessage_ = alignerStatus?.state?.errorMessage
+      const title_ = getTitle(alignerStatus);
+      const contextId_ = shouldShowDialog_ ? getContextId(alignerStatus) : null
+
+      setState(prevState => ({
+        ...prevState,
+        showDialog: shouldShowDialog_,
+        sourceLanguageId: sourceLanguageId_,
+        targetLanguage: targetLanguage_,
+        errorMessage: errorMessage_,
+        title: title_,
+        contextId: contextId_
+      }));
+
+      if (shouldShowDialog_) {
+        if (isTraining()) {
+          const sameContext = areTrainingSameBook(contextId_)
+          const trainingContextId = getTrainingContextId();
+          console.log(`WordAlignerDialog: training is running, sameContext is ${sameContext}`)
+          if (!sameContext) {
+            console.log(`WordAlignerDialog: stopping worker on other book:`, trainingContextId)
+            cleanupWorker()
+          } else {
+            console.log(`WordAlignerDialog: worker running on same book:`, trainingContextId)
+          }
+        }
+      }
+    }
+
+    const changedTW = !isEqual(targetWords, targetWords_);
+    const changedVA = !isEqual(verseAlignments, verseAlignments_);
+
+    if (changedTW || changedVA) {
+      console.log(`WordAlignerDialog: alignment data changed - changedTW ${changedTW}, changedVA ${changedVA}`)
+      setState(prevState => ({
+        ...prevState,
+        targetWords: targetWords_,
+        verseAlignments: verseAlignments_
+      }));
+    } else {
+      console.log('WordAlignerDialog alignerStatus changed yet wordbank and alignments are not difference')
+    }
+  }, [targetWords_, verseAlignments_, alignerData_?.state?.reference, shouldShowDialog_]);
 
   const areTrainingSameBook_ = () => {
     const trainingCurrent = areTrainingSameBook(contextId);
