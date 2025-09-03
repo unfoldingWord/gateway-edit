@@ -190,14 +190,14 @@ function WordAlignerDialog({
 
   /**
    * A function that handles updating the training state.
-   * TRICKY:  Serves as a forward reference for handleSetTrainingStateSub
+   * TRICKY: Serves as a forward reference for handleSetTrainingState_
    *
    * @function
-   * @name handleSetTrainingState_
+   * @name handleSetTrainingStateForward
    * @param {Object} props - The properties or parameters that are passed to determine the training state.
    */
-  const handleSetTrainingState_ = (props) => {
-    handleSetTrainingStateSub(props)
+  const handleSetTrainingStateForward = (props) => {
+    handleSetTrainingState_(props)
   }
 
   const {
@@ -218,7 +218,7 @@ function WordAlignerDialog({
   } = useAlignmentSuggestions({
     contextId,
     createAlignmentTrainingWorker,
-    handleSetTrainingState: handleSetTrainingState_,
+    handleSetTrainingState: handleSetTrainingStateForward,
     handleTrainingCompleted,
     shown: showDialog,
     sourceLanguageId: sourceLanguageId,
@@ -227,17 +227,27 @@ function WordAlignerDialog({
     sourceUsfm: originalBibleBookUsfm,
   });
 
-  const handleSetTrainingStateSub = (props) => {
+  /**
+   * Handles the setting of the training state with updated properties.
+   *
+   * This function checks for the existence of the provided `props` and injects the `current`
+   * suggester into `handleSetTrainingState`.
+   *
+   * @param {Object} props - The properties to update the training state.
+   * @returns {void}
+   */
+  const handleSetTrainingState_ = (props) => {
     if (!props) {
-      console.log('handleSetTrainingStateSub: no props');
+      console.log('handleSetTrainingState_: no props');
       return;
     }
 
     const current = handleSetTrainingState.current;
     if (!current) {
-      console.log('handleSetTrainingStateSub: no handleSetTrainingState.current');
+      console.log('handleSetTrainingState_: no handleSetTrainingState.current');
       return
     }
+
     const newProps = {
       ...props,
       suggester: getSuggester(), // inject updated suggester
