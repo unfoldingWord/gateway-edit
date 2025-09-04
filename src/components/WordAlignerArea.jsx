@@ -98,12 +98,12 @@ function WordAlignerArea({
     if (_training === undefined) {
       _training = training;
     } else {
-      console.log('Updating training state: ' + _training);
+      // console.log('Updating training state: ' + _training);
     }
     if (trainingComplete === undefined) {
       trainingComplete = trained;
     } else {
-      console.log('Updating trainingComplete state: ' + trainingComplete);
+      // console.log('Updating trainingComplete state: ' + trainingComplete);
     }
 
     const newState = { };
@@ -136,13 +136,13 @@ function WordAlignerArea({
       trainingStatusStr_ += ` ${percentComplete}% complete`;
     }
     newState.trainingStatusStr = trainingStatusStr_;
-    console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`);
+    console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`, props);
 
     const trainingButtonStr_ = _training ? '' : trainingComplete ? translate('suggestions.retrain_button') : translate('suggestions.train_button');
     newState.trainingButtonStr = trainingButtonStr_;
     const trainingButtonHintStr_ = _training ? '' : trainingComplete ? translate('suggestions.retrain_button_hint') : translate('suggestions.train_button_hint');
     newState.trainingButtonHintStr = trainingButtonHintStr_;
-    console.log(`handleSetTrainingState new trainingButtonStr ${trainingButtonStr_}`);
+    // console.log(`handleSetTrainingState new trainingButtonStr ${trainingButtonStr_}`);
 
     setState(prevState => ({
       ...prevState,
