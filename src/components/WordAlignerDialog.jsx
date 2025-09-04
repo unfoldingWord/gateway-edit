@@ -22,6 +22,10 @@ function getBookData(alignerStatus) {
   return alignerStatus?.state?.reference || {};
 }
 
+const wordSuggesterConfig= {
+  trainOnlyOnCurrentBook: true
+}
+
 // popup dialog for user to align verse
 function WordAlignerDialog({
   alignerStatus,
@@ -216,6 +220,7 @@ function WordAlignerDialog({
       suggester,
     }
   } = useAlignmentSuggestions({
+    config: wordSuggesterConfig,
     contextId,
     createAlignmentTrainingWorker,
     handleSetTrainingState: handleSetTrainingStateForward,
