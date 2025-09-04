@@ -11931,10 +11931,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.4.26-beta.2:
-  version "3.4.26-beta.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.26-beta.2.tgz#4912cff7964a49cc165244b89cddc3634d51c0d1"
-  integrity sha512-TEBhy/H8esMDw9f6507SGDj21eUBMcZOPhZVnLy4rL6xzAbAgshu7IXLRWDQpgDqDLQv/QVNGEDoZ8qqSy1m/A==
+single-scripture-rcl@3.4.26:
+  version "3.4.26"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.4.26.tgz#7fd4bfa3759daf106e4890998321a5d67c3be290"
+  integrity sha512-TaKv/f1pv+PJD7h6K2SEF1+EJN2+TwlxxsS692KEpXPvtn/6aptBuM4fIeMnthPyp3qwZfOXuG6KtMel+v6iDw==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
