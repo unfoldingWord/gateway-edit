@@ -14,16 +14,17 @@ import { useBoundsUpdater } from 'translation-helps-rcl'
 import { StoreContext } from '@context/StoreContext'
 import WordAlignerArea from './WordAlignerArea';
 import isEqual from 'deep-equal'
-import {AlignmentTrainerUtils, useAlignmentSuggestions} from 'enhanced-word-aligner-rcl'
-import {createAlignmentTrainingWorker} from '../workers/startAlignmentTrainer'
-import {delay} from '@utils/resources'
+import { AlignmentTrainerUtils, useAlignmentSuggestions } from 'enhanced-word-aligner-rcl'
+import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 
 function getBookData(alignerStatus) {
   return alignerStatus?.state?.reference || {};
 }
 
 const wordSuggesterConfig= {
-  trainOnlyOnCurrentBook: true
+  trainOnlyOnCurrentBook: true, // if true, then training is sped up for small books by just training on alignment memory data for current book
+  minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
+  keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
 }
 
 // popup dialog for user to align verse
@@ -87,7 +88,7 @@ function WordAlignerDialog({
 
     return { // keeps track of drag bounds
       workspaceRef: mainScreenRef,
-        cardRef: dialogRef,
+      cardRef: dialogRef,
       open: !!shouldShowDialog_,
       displayState: {
         showDialog: shouldShowDialog_
