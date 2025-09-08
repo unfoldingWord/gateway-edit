@@ -375,9 +375,11 @@ function WordAlignerDialog({
   const doTraining = useCallback(() => {
     const training = isTraining()
     console.log(`WordAlignerDialog: doTraining() - currently training is ${training}`)
-    if (!training) {
-      startTraining_();
+
+    if (training) {
+      cleanupWorker();
     }
+    startTraining_();
   }, [showDialog])
 
   const alignerAreaStyle = useMemo(() => ({
