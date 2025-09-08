@@ -212,12 +212,12 @@ function WordAlignerDialog({
     },
     actions: {
       areTrainingSameBook,
-      cleanupWorker,
       getSuggester,
       getTrainingContextId,
       isTraining,
       loadTranslationMemory,
       startTraining,
+      stopTraining,
       suggester,
     }
   } = useAlignmentSuggestions({
@@ -287,9 +287,10 @@ function WordAlignerDialog({
           const sameContext = areTrainingSameBook(contextId_)
           const trainingContextId = getTrainingContextId();
           console.log(`WordAlignerDialog: training is running, sameContext is ${sameContext}`)
+
           if (!sameContext) {
             console.log(`WordAlignerDialog: stopping worker on other book:`, trainingContextId)
-            cleanupWorker()
+            stopTraining()
           } else {
             console.log(`WordAlignerDialog: worker running on same book:`, trainingContextId)
           }
@@ -377,7 +378,7 @@ function WordAlignerDialog({
     console.log(`WordAlignerDialog: doTraining() - currently training is ${training}`)
 
     if (training) {
-      cleanupWorker();
+      stopTraining();
     }
     startTraining_();
   }, [showDialog])
@@ -392,31 +393,8 @@ function WordAlignerDialog({
   const wordAlignerDialogArea = useMemo(() => {
     console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
 
-      // // Track which dependencies caused the useMemo to regenerate
-      // const dependencies = {
-      //   contextId,
-      //   doTraining,
-      //   errorMessage,
-      //   showDialog,
-      //   sourceLanguageId,
-      //   targetLanguage,
-      //   targetWords,
-      //   title,
-      //   verseAlignments
-      // };
-      //
-      // for (const key in dependencies) {
-      //   if (dependencies.hasOwnProperty(key)) {
-      //     const value = dependencies[key];
-      //     const oldValue = oldDependencies.current[key];
-      //     if (oldValue !== value) {
-      //       console.log(`WordAlignerDialog: ${key} changed from '${oldValue}' to '${value}'`);
-      //       oldDependencies.current[key] = value;
-      //     }
-      //   }
-      // }
-
-      return <Dialog
+    return (
+      <Dialog
         fullWidth={true}
         maxWidth={'lg'}
         onClose={() => {}}
@@ -446,18 +424,19 @@ function WordAlignerDialog({
           verseAlignments={verseAlignments}
         />
       </Dialog>
-    },
-    [
-      contextId,
-      doTraining,
-      errorMessage,
-      showDialog,
-      sourceLanguageId,
-      targetLanguage,
-      targetWords,
-      title,
-      verseAlignments
-    ]
+    )
+  },
+  [
+    contextId,
+    doTraining,
+    errorMessage,
+    showDialog,
+    sourceLanguageId,
+    targetLanguage,
+    targetWords,
+    title,
+    verseAlignments
+  ]
   );
 
   return (
