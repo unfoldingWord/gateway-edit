@@ -255,7 +255,7 @@ function WordAlignerArea({
           sourceLanguage={sourceLanguageId}
           style={style}
           suggester={suggester}
-          removeClear={true}
+          suggestionsOnly={true}
           targetWords={initialAlignment?.targetWords ||[]}
           targetLanguage={targetLanguage}
           targetLanguageFont={targetLanguageFont}

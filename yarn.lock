@@ -5538,10 +5538,10 @@ enhanced-resolve@^5.0.0:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
 
-enhanced-word-aligner-rcl@0.9.0-beta.96:
-  version "0.9.0-beta.96"
-  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-0.9.0-beta.96.tgz#4a5bf7c54e2aa174f401566749cf270ea8932032"
-  integrity sha512-xCbaDDe2q8a9WP1SNIJ7FRKW9QNBoaO229lSU/rUYVo5jYU49u5DIJ0z9MzXdWw11Wk6oJgOWoUOQwa3VZWcNQ==
+enhanced-word-aligner-rcl@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.0.0.tgz#55d46473df7f1291d6fd73a23662d4bfeae2680a"
+  integrity sha512-4xfccXz2/X3htA/Zrks38BvaZsWYFBLaMbhyhAOXTv6Dt52Nb1SH3EGSqloaQiU21XiduAs2zvvIVTh5TtEOBQ==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     diff "^5.2.0"
@@ -5554,8 +5554,8 @@ enhanced-word-aligner-rcl@0.9.0-beta.96:
     source-map-loader "4"
     styled-components "^5.2.1"
     ts-loader "9"
-    uw-wordmapbooster "1.0.3-beta.14"
-    word-aligner-rcl "1.2.0-beta.18"
+    uw-wordmapbooster "1.0.3"
+    word-aligner-rcl "1.2.0"
 
 enquirer@^2.3.5, enquirer@^2.3.6:
   version "2.3.6"
@@ -13457,10 +13457,10 @@ uw-tsv-parser@1.0.3:
   resolved "https://registry.yarnpkg.com/uw-tsv-parser/-/uw-tsv-parser-1.0.3.tgz#5009a3710d985e1d86a08bbb58a736a9be0c55d5"
   integrity sha512-BqDEayQWdGGsINZlYMzn1+4dAyVtG9zEmNnIv51H/7DquEODEO8hOI1mpNpLlNqGCcXySgTSj2nGhiODefZ4VA==
 
-uw-wordmapbooster@1.0.3-beta.14:
-  version "1.0.3-beta.14"
-  resolved "https://registry.yarnpkg.com/uw-wordmapbooster/-/uw-wordmapbooster-1.0.3-beta.14.tgz#e2b5a5f74d518c6c547e03e39b71b8bc64f48f61"
-  integrity sha512-4z9B76Y2hkXK2MUAgu+V8BjhGU6ZHGAXJT56Bognj3R2tK9pRj9FuboFthIaA1G+LJbvN99fn9lWjliaY5SKjA==
+uw-wordmapbooster@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/uw-wordmapbooster/-/uw-wordmapbooster-1.0.3.tgz#cb4ef26115f81cdb6514c2c1b556e96459ca4a65"
+  integrity sha512-xkXDX39WcMN99FTXK9Xfqm7hV7W4tJMEw+ylf6jibx1ydk/ziaUwQNtRANzmWL9z4IWhcT+bvqyh32EtRaOZpA==
   dependencies:
     usfm-js "^3.4.2"
     wordmap "0.6.0"
@@ -13766,10 +13766,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.2.0-beta.18:
-  version "1.2.0-beta.18"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.0-beta.18.tgz#5ca3442a2a58c297c6841cc3dd97c3841f2ef4a9"
-  integrity sha512-zWiOqUhzLDIIncgG7LLSBLvCToNh884Xkj0eO7N6if9tdWxQ5X3OHzPII4s7+WlqeITscbUfycBqqlXP/vmeyg==
+word-aligner-rcl@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.0.tgz#7d334bf83b57608c9228d70e267e6c187f9139e8"
+  integrity sha512-cqsojuzRDTly4DXumom+ggJcexAr1YbfLZWSyPK8WTFLIRtaKaU3NnjGP/px9tnpwNozh/p4BB/YyOXe/k6cTw==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"

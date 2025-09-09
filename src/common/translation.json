@@ -165,6 +165,7 @@
   "suggestions.train_button_hint"  : "Click to improve the quality of alignment suggestions based on currently loaded alignments",
   "suggestions.retrain_button"     : "Retrain",
   "suggestions.retrain_button_hint": "Click to improve the quality of alignment suggestions based on current book alignments",
+  "suggestions.title"              : "Suggestions:",
   "alignments.clear_alignments"    : "Clear all alignments.",
   "alignments.clear"               : "Clear",
   "alignments.accept"              : "Accept",

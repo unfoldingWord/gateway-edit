@@ -410,7 +410,6 @@ function WordAlignerDialog({
           errorMessage={errorMessage}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
-          removeClear={true}
           setHandleSetTrainingState={setHandleSetTrainingState}
           showingDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
