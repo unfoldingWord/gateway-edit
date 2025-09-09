@@ -1,3 +1,68 @@
+/**
+ * WordAlignerArea Component
+ *
+ * Synopsis:
+ * A React component that renders the content for WordAlignerDialog.  It provides interactive with an interface for
+ *   aligning words between source and target language texts.
+ *   This component renders the main content area for word alignment operations within a dialog-based interface.
+ *
+ * Description:
+ * This component serves as the core interface for word alignment functionality in the Gateway Edit Bible translation
+ * application. It allows translators to create, edit, and manage word-level alignments between original language
+ * texts (Hebrew/Greek) and target language translations. The component integrates with machine learning-based
+ * suggestion systems to assist translators in creating accurate alignments more efficiently.
+ *
+ * Key Features:
+ * - Interactive drag-and-drop word alignment interface
+ * - Visual completion status indicators (linked/unlinked icons)
+ * - Machine learning suggestion engine with training capabilities
+ * - Lexicon integration with popover definitions
+ * - Alignment reset functionality with confirmation dialog
+ * - Real-time alignment validation and status tracking
+ * - Training progress monitoring and status reporting
+ *
+ * Properties:
+ * @param {Object} alignmentActions - Action handlers for saving/canceling alignments
+ * @param {Function} alignmentActions.cancelAlignment - Cancels current alignment changes
+ * @param {Function} alignmentActions.saveAlignment - Saves alignment changes
+ * @param {Object} contextId - Context information for current verse/passage being aligned
+ * @param {Function} doTraining - Triggers training of the alignment suggestion engine
+ * @param {string} errorMessage - Error message to display if alignment operations fail
+ * @param {Object} lexiconCache - Cached lexicon entries for performance optimization
+ * @param {Function} loadLexiconEntry - Loads lexicon data for word definitions (required)
+ * @param {Function} onChange - Callback fired when alignments change
+ * @param {Function} setHandleSetTrainingState - Sets the training state handler reference
+ * @param {string} sourceLanguageId - Identifier for source language (Hebrew/Greek) (required)
+ * @param {string} sourceLanguageFont - Font family for source language text display
+ * @param {number} sourceFontSizePercent - Font size percentage for source language
+ * @param {Object} style - Custom CSS styles for the component
+ * @param {Function} suggester - Function that provides alignment suggestions based on ML training
+ * @param {Object} targetLanguage - Target language configuration object (required)
+ * @param {string} targetLanguageFont - Font family for target language text display
+ * @param {number} targetFontSizePercent - Font size percentage for target language
+ * @param {Array} targetWords - Array of target language words to be aligned
+ * @param {string} title - Title displayed in the alignment dialog header
+ * @param {Function} translate - Translation function for UI text localization (required)
+ * @param {Array} verseAlignments - Current alignment data for the verse
+ *
+ * Requirements:
+ * - React 18+ for hooks and concurrent features
+ * - Material UI (@mui/material) for dialog and button components
+ * - enhanced-word-aligner-rcl package for core alignment functionality
+ * - react-icons/rx for status indicator icons
+ * - deep-equal for state comparison optimization
+ * - lodash.clonedeep for deep object cloning
+ * - react-bootstrap for Label component
+ * - PopoverComponent for lexicon definition display
+ *
+ * Technical Dependencies:
+ * - AlignmentHelpers from enhanced-word-aligner-rcl for alignment validation
+ * - SuggestingWordAligner from enhanced-word-aligner-rcl for the main alignment interface
+ * - Requires proper integration with parent WordAlignerDialog component
+ * - Depends on lexicon data infrastructure for word definitions
+ * - Integrates with machine learning training pipeline for suggestions
+ */
+
 import React, {useCallback, useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -6,13 +71,13 @@ import {
   AlignmentHelpers,
   SuggestingWordAligner,
 } from 'enhanced-word-aligner-rcl'
+import { Label } from 'react-bootstrap';
 import isEqual from 'deep-equal';
 import cloneDeep from 'lodash.clonedeep';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import PopoverComponent from './PopoverComponent'
-import {Label} from "react-bootstrap";
 
 const alignmentIconStyle = { marginLeft:'50px' }
 

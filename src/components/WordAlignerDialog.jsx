@@ -1,3 +1,41 @@
+/**
+ * WordAlignerDialog Component
+ *
+ * ## Synopsis
+ * A modal dialog component that provides an interactive interface for aligning words between source and target Bible texts.
+ * The dialog is draggable and integrates with machine learning-based alignment suggestions to assist users in creating
+ * accurate word alignments for translation work.
+ *
+ * ## Description
+ * The WordAlignerArea serves as a specialized tool for Bible translation teams to create and manage word alignments
+ *   between original language texts (Hebrew/Greek) and target language translations. It features:
+ *   It uses WordAlignerArea Component to render dialog content and uses useAlignmentSuggestions for alignment suggestions
+ *
+ * - **Draggable Interface**: Users can reposition the dialog within the workspace bounds
+ * - **AI-Powered Suggestions**: Integrates with enhanced-word-aligner-rcl for intelligent alignment recommendations
+ * - **Training System**: Supports both cached and on-demand training of alignment models using translation memory
+ * - **Real-time Updates**: Monitors alignment status changes and updates the interface accordingly
+ * - **Error Handling**: Displays error messages and handles training failures gracefully
+ * - **Performance Optimization**: Uses React.memo with custom comparison to prevent unnecessary re-renders
+ *
+ * ## Properties
+ * @param {Object} alignerStatus - Status object containing alignment data, reference information, and control actions
+ * @param {number} height - Maximum height constraint for the dialog content area (required)
+ * @param {Function} translate - Translation function for UI text localization (required)
+ * @param {Function} getLexiconData - Function to fetch lexicon data for words (required)
+ * @param {string} originalBibleBookUsfm - USFM content of the original language Bible book
+ * @param {string} owner - Repository owner identifier for the target Bible
+ *
+ * ## Requirements
+ * - React 16.8+ (uses hooks extensively)
+ * - Material-UI Dialog component
+ * - react-draggable for drag functionality
+ * - translation-helps-rcl for bounds management
+ * - enhanced-word-aligner-rcl for alignment suggestions and training
+ * - Web Worker support for background training processes
+ * - StoreContext for accessing workspace references
+ */
+
 import React, {
   useCallback,
   useContext,
@@ -11,17 +49,18 @@ import Dialog from '@mui/material/Dialog'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import { useBoundsUpdater } from 'translation-helps-rcl'
-import { StoreContext } from '@context/StoreContext'
-import WordAlignerArea from './WordAlignerArea';
 import isEqual from 'deep-equal'
 import { AlignmentTrainerUtils, useAlignmentSuggestions } from 'enhanced-word-aligner-rcl'
+import { StoreContext } from '@context/StoreContext'
 import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
+import WordAlignerArea from './WordAlignerArea';
 
 function getBookData(alignerStatus) {
   return alignerStatus?.state?.reference || {};
 }
 
 const wordSuggesterConfig= {
+  doAutoTraining: true,
   trainOnlyOnCurrentBook: true, // if true, then training is sped up for small books by just training on alignment memory data for current book
   minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
   keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
@@ -132,12 +171,13 @@ function WordAlignerDialog({
   const bookId = contextId?.reference?.bookId || ''
 
   const targetBibleBookUsfm = alignerData_?.bibleUsfm || ''
-  const translationMemory = useMemo(() => {
-    return AlignmentTrainerUtils.makeTranslationMemory(bookId, originalBibleBookUsfm, targetBibleBookUsfm);
-  }, [bookId, originalBibleBookUsfm, targetBibleBookUsfm]);
+  const translationMemory = useMemo(() => (
+    AlignmentTrainerUtils.makeTranslationMemory(bookId, originalBibleBookUsfm, targetBibleBookUsfm)
+  ), [bookId, originalBibleBookUsfm, targetBibleBookUsfm]);
 
   const getContextId = (alignerStatus) => {
     const reference = alignerStatus?.state?.reference;
+
     if (reference) {
       const alignerData = alignerStatus?.state?.alignerData || null
       const targetRef = alignerData?.resourceLink || ''
@@ -146,11 +186,12 @@ function WordAlignerDialog({
       const bibleId = owner_ && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}/${repoBibleId}` : '';
 
       let newContextId = null;
+
       if (targetRef && reference?.bookId) {
         newContextId = {
           reference: alignerStatus?.state?.reference,
-          tool: "wordAlignment",
-          bibleId
+          bibleId,
+          tool: 'wordAlignment'
         };
       }
       console.log('WordAlignerDialog: getContextId', newContextId)
@@ -185,7 +226,7 @@ function WordAlignerDialog({
   }
 
   const handleTrainingCompleted = useCallback((info) => {
-    console.log("handleTrainingCompleted", info);
+    console.log('handleTrainingCompleted', info);
   }, []);
 
   function setHandleSetTrainingState(handleSetTrainingState_) {
@@ -249,6 +290,7 @@ function WordAlignerDialog({
     }
 
     const current = handleSetTrainingState.current;
+
     if (!current) {
       console.log('handleSetTrainingState_: no handleSetTrainingState.current');
       return
@@ -328,35 +370,13 @@ function WordAlignerDialog({
   function startTraining_() {
     const targetUsfmsBooks = translationMemory?.targetUsfms;
     const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
+
     if (haveCachedTrainingData) {
       console.log('WordAlignerArea: translation memory changed, loading translation memory')
       loadTranslationMemory(translationMemory);
       startTraining();
     }
   }
-
-// Effect to load translation memory and start training when fail to load cached training Model
-  useEffect(() => {
-    if (failedToLoadCachedTraining) {
-      console.log('WordAlignerArea: failedToLoadCachedTraining', {failedToLoadCachedTraining, contextId, showDialog})
-      const haveBook = contextId?.reference?.bookId;
-      if (!haveBook) {
-        if (autoTrainingCompleted) {
-          setState(prevState => ({...prevState, autoTrainingCompleted: false}));
-        }
-      } else { // have a book, so check if we have cached training data
-        if (showDialog) {
-          const trainingSameBook = areTrainingSameBook_()
-          if (trainingRunning) {
-            console.log('WordAlignerArea: training already running trainingSameBook:', trainingSameBook)
-          }
-          if (!trainingRunning && !autoTrainingCompleted) {
-            startTraining_();
-          }
-        }
-      }
-    }
-  }, [failedToLoadCachedTraining]);
 
   /**
    * Handler for button press to start training process.
