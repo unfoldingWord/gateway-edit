@@ -60,7 +60,7 @@ function getBookData(alignerStatus) {
 }
 
 const wordSuggesterConfig= {
-  doAutoTraining: true,
+  doAutoTraining: true, // set true to enable auto training of alignment suggestions
   trainOnlyOnCurrentBook: true, // if true, then training is sped up for small books by just training on alignment memory data for current book
   minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
   keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
@@ -323,21 +323,6 @@ function WordAlignerDialog({
         title: title_,
         contextId: contextId_
       }));
-
-      if (shouldShowDialog_) {
-        if (isTraining()) {
-          const sameContext = areTrainingSameBook(contextId_)
-          const trainingContextId = getTrainingContextId();
-          console.log(`WordAlignerDialog: training is running, sameContext is ${sameContext}`)
-
-          if (!sameContext) {
-            console.log(`WordAlignerDialog: stopping worker on other book:`, trainingContextId)
-            stopTraining()
-          } else {
-            console.log(`WordAlignerDialog: worker running on same book:`, trainingContextId)
-          }
-        }
-      }
     }
 
     const changedTW = !isEqual(targetWords, targetWords_);
@@ -354,11 +339,6 @@ function WordAlignerDialog({
       console.log('WordAlignerDialog alignerStatus changed yet wordbank and alignments are not difference')
     }
   }, [targetWords_, verseAlignments_, alignerData_?.state?.reference, shouldShowDialog_]);
-
-  const areTrainingSameBook_ = () => {
-    const trainingCurrent = areTrainingSameBook(contextId);
-    return trainingCurrent;
-  }
 
   /**
    * Initiates the training process using translation memory data if available.

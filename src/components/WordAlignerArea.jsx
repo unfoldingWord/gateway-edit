@@ -70,6 +70,7 @@ import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import {
   AlignmentHelpers,
   SuggestingWordAligner,
+  useTrainingState,
 } from 'enhanced-word-aligner-rcl'
 import { Label } from 'react-bootstrap';
 import isEqual from 'deep-equal';
@@ -111,11 +112,6 @@ function WordAlignerArea({
     lexiconData: null,
     showResetWarning: false,
     suggester: suggester_,
-    trained: false,
-    training: false,
-    trainingError: '',
-    trainingStatusStr: '',
-    trainingButtonStr: '',
     trainingButtonHintStr: '',
   });
 
@@ -126,17 +122,27 @@ function WordAlignerArea({
     lexiconData,
     showResetWarning,
     suggester,
-    trained,
-    training,
-    trainingError,
-    trainingStatusStr,
-    trainingButtonStr,
-    trainingButtonHintStr,
   } = state;
+
+  const {
+    actions: {
+      handleTrainingStateChange
+    },
+    state: {
+      training,
+      trained,
+      trainingError,
+      trainingStatusStr,
+      trainingButtonStr,
+      trainingButtonHintStr,
+    }
+  } = useTrainingState({
+    translate,
+  })
 
   useEffect(() => {
     console.log('WordAlignerArea mounted')
-    setHandleSetTrainingState(handleSetTrainingState)
+    setHandleSetTrainingState(handleTrainingStateChange)
     // Cleanup function that runs on unmount
     return () => {
       setHandleSetTrainingState(null)
@@ -146,74 +152,74 @@ function WordAlignerArea({
 
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
 
-  const handleSetTrainingState = (props) => {
-    if (!props) {
-      console.log('handleSetTrainingState: no props');
-      return;
-    }
-
-    let {
-      percentComplete,
-      training: _training,
-      trainingComplete,
-      trainingFailed,
-      suggester: suggester_,
-    } = props || {};
-
-    if (_training === undefined) {
-      _training = training;
-    } else {
-      // console.log('Updating training state: ' + _training);
-    }
-    if (trainingComplete === undefined) {
-      trainingComplete = trained;
-    } else {
-      // console.log('Updating trainingComplete state: ' + trainingComplete);
-    }
-
-    const newState = { };
-
-    if (_training !== training) {
-      newState.training = _training;
-    }
-
-    if (trainingComplete !== trained) {
-      newState.trained = trainingComplete;
-    }
-
-    if (suggester_ !== undefined) { // if suggester updated
-      newState.suggester = suggester_
-    }
-
-    let trainingErrorStr = ''
-    let currentTrainingError = trainingError;
-    if (typeof trainingFailed === 'string') {
-      currentTrainingError = trainingFailed;
-      newState.trainingError = currentTrainingError;
-    }
-    if (currentTrainingError) {
-      trainingErrorStr = " - " + currentTrainingError;
-    }
-
-    const trainingMessage = trainingComplete ? "Trained, but updating ..." : "Currently Training ...";
-    let trainingStatusStr_ = (_training ? trainingMessage : trainingComplete ? "Trained" : "Not Trained") + trainingErrorStr;
-    if (percentComplete !== undefined) {
-      trainingStatusStr_ += ` ${percentComplete}% complete`;
-    }
-    newState.trainingStatusStr = trainingStatusStr_;
-    console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`, props);
-
-    const trainingButtonStr_ = _training ? '' : trainingComplete ? translate('suggestions.retrain_button') : translate('suggestions.train_button');
-    newState.trainingButtonStr = trainingButtonStr_;
-    const trainingButtonHintStr_ = _training ? '' : trainingComplete ? translate('suggestions.retrain_button_hint') : translate('suggestions.train_button_hint');
-    newState.trainingButtonHintStr = trainingButtonHintStr_;
-    // console.log(`handleSetTrainingState new trainingButtonStr ${trainingButtonStr_}`);
-
-    setState(prevState => ({
-      ...prevState,
-      ...newState,
-    }));
-  }
+  // const handleSetTrainingState = (props) => {
+  //   if (!props) {
+  //     console.log('handleSetTrainingState: no props');
+  //     return;
+  //   }
+  //
+  //   let {
+  //     percentComplete,
+  //     training: _training,
+  //     trainingComplete,
+  //     trainingFailed,
+  //     suggester: suggester_,
+  //   } = props || {};
+  //
+  //   if (_training === undefined) {
+  //     _training = training;
+  //   } else {
+  //     // console.log('Updating training state: ' + _training);
+  //   }
+  //   if (trainingComplete === undefined) {
+  //     trainingComplete = trained;
+  //   } else {
+  //     // console.log('Updating trainingComplete state: ' + trainingComplete);
+  //   }
+  //
+  //   const newState = { };
+  //
+  //   if (_training !== training) {
+  //     newState.training = _training;
+  //   }
+  //
+  //   if (trainingComplete !== trained) {
+  //     newState.trained = trainingComplete;
+  //   }
+  //
+  //   if (suggester_ !== undefined) { // if suggester updated
+  //     newState.suggester = suggester_
+  //   }
+  //
+  //   let trainingErrorStr = ''
+  //   let currentTrainingError = trainingError;
+  //   if (typeof trainingFailed === 'string') {
+  //     currentTrainingError = trainingFailed;
+  //     newState.trainingError = currentTrainingError;
+  //   }
+  //   if (currentTrainingError) {
+  //     trainingErrorStr = " - " + currentTrainingError;
+  //   }
+  //
+  //   const trainingMessage = trainingComplete ? "Trained, but updating ..." : "Currently Training ...";
+  //   let trainingStatusStr_ = (_training ? trainingMessage : trainingComplete ? "Trained" : "Not Trained") + trainingErrorStr;
+  //   if (percentComplete !== undefined) {
+  //     trainingStatusStr_ += ` ${percentComplete}% complete`;
+  //   }
+  //   newState.trainingStatusStr = trainingStatusStr_;
+  //   console.log(`handleSetTrainingState new state: training ${_training}, trainingComplete ${trainingComplete}, trainingStatusStr ${trainingStatusStr_}`, props);
+  //
+  //   const trainingButtonStr_ = _training ? '' : trainingComplete ? translate('suggestions.retrain_button') : translate('suggestions.train_button');
+  //   newState.trainingButtonStr = trainingButtonStr_;
+  //   const trainingButtonHintStr_ = _training ? '' : trainingComplete ? translate('suggestions.retrain_button_hint') : translate('suggestions.train_button_hint');
+  //   newState.trainingButtonHintStr = trainingButtonHintStr_;
+  //   // console.log(`handleSetTrainingState new trainingButtonStr ${trainingButtonStr_}`);
+  //
+  //   setState(prevState => ({
+  //     ...prevState,
+  //     ...newState,
+  //   }));
+  // }
 
   useEffect(() => {
     // see if alignment data has changed
