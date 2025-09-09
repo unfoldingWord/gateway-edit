@@ -1,4 +1,10 @@
-import { useEffect, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import isEqual from 'deep-equal'
 import { getFilesFromRepoZip, useRepository } from 'gitea-react-toolkit'
 import { core } from 'scripture-resources-rcl'
@@ -21,7 +27,7 @@ export default function useLexicon({
   const [hebrewError, setHebrewError] = useState(null)
   const [repository, setRepository] = useState(null)
   const [lexCacheInit, setLexCacheInit] = useState(false)
-  const [lexiconGlosses, setLexiconGlosses] = useState(null)
+  const lexiconGlossesRef = useRef(null)
   const [fetchingLexicon, setFetchingLexicon] = useState(false)
   const [fetchingGlosses, setFetchingGlosses] = useState(false)
   const [greekLexConfig, setGreekLexConfig] = useState(null)
@@ -30,7 +36,8 @@ export default function useLexicon({
 
   const isNT_ = isNT(bookId)
 
-  const origlangLexConfig = getOriginalLanguageConfig()
+const origlangLexConfig = useMemo(() => getOriginalLanguageConfig(), [greekLexConfig, hebrewLexConfig, isNT_])
+
   const lexRepoName = origlangLexConfig ? `${origlangLexConfig.languageId}_${origlangLexConfig.resourceId}` : null
   const lexRepoFullName = origlangLexConfig ? `${origlangLexConfig.owner}/${lexRepoName}` : null
   const lexiconProps = useRepository({
@@ -66,7 +73,7 @@ export default function useLexicon({
     // console.log(`useLexicon: bible ${bookId} changed testament ${isNT_}`)
     setRepository(null) // clear lexicon repo so it's reloaded after testament change
     setStrongsNumbersInVerse(null)
-    setLexiconGlosses(null)
+    lexiconGlossesRef.current = null
     setLexCacheInit(false)
   }, [isNT_])
 
@@ -118,11 +125,12 @@ export default function useLexicon({
    * @param {string|number} entryId - numerical part of the strongs number (e.g. '00005')
    * @return {*}
    */
-  function getLexiconData(lexiconId, entryId) {
-    let gloss = null
+  const getLexiconData = useCallback((lexiconId, entryId) => {
 
-    if (lexiconGlosses && entryId) {
-      gloss = lexiconGlosses[entryId.toString()]
+      let gloss = null
+
+    if (lexiconGlossesRef.current && entryId) {
+      gloss = lexiconGlossesRef.current[entryId.toString()]
 
       if (!gloss) { // show reason we can't find gloss
         const defaultMessage = `### ERROR: Gloss not found`
@@ -131,12 +139,12 @@ export default function useLexicon({
       }
     } else { // show error or reason glosses are not loaded
       const defaultMessage = `Not ready - glosses not yet available`
-      // console.log(`useLexicon.getLexiconData - lexiconId ${lexiconId}, lexiconGlosses length = ${lexiconGlosses?.length}`)
+      // console.log(`useLexicon.getLexiconData - lexiconId ${lexiconId}, lexiconGlossesRef.current.length = ${lexiconGlossesRef.current?.length}`)
       const message = getReasonForLexiconFailure(defaultMessage, entryId)
       gloss = messageToGloss(message)
     }
     return { [lexiconId]: { [entryId]: gloss } }
-  }
+  }, [])
 
   /**
    * save updated lexicon words in state and in indexDB
@@ -145,7 +153,7 @@ export default function useLexicon({
    */
   async function updateLexiconGlosses(newLexiconGlosses) {
     // console.log(`useLexicon.updateLexiconGlosses -`, newLexiconGlosses)
-    setLexiconGlosses(newLexiconGlosses)
+    lexiconGlossesRef.current = newLexiconGlosses
     await saveToGlossesStore(getGlossesCachePath(), newLexiconGlosses)
   }
 
@@ -155,7 +163,7 @@ export default function useLexicon({
    * @param {string} languageId
    * @return {Promise}
    */
-  async function fetchGlossesForVerse(verseObjects, languageId) {
+  const fetchGlossesForVerse = useCallback(async (verseObjects, languageId) => {
     if (origlangLexConfig?.origLangId !== languageId) {
       return
     }
@@ -172,7 +180,7 @@ export default function useLexicon({
           // console.log(`useLexicon.fetchGlossesForVerse - found strongs numbers in verses`, strongs)
           setStrongsNumbersInVerse(strongs)
 
-          if (lexiconGlosses && Object.keys(lexiconGlosses).length) {
+          if (lexiconGlossesRef.current && Object.keys(lexiconGlossesRef.current).length) {
             // console.log(`useLexicon.fetchGlossesForVerse - loading strongs numbers`)
             await fetchGlossesForStrongsNumbers(strongs)
           }
@@ -181,7 +189,7 @@ export default function useLexicon({
         }
       }
     }
-  }
+  }, [origlangLexConfig, fetchingGlosses, strongsNumbersInVerse, lexiconGlossesRef, fetchGlossesForStrongsNumbers])
 
   async function getFilesFromCachedLexicon() {
     const files = await getFilesFromRepoZip({
@@ -198,7 +206,7 @@ export default function useLexicon({
    * @param {array} strongs
    * @return {Promise<void>}
    */
-  async function fetchGlossesForStrongsNumbers(strongs) {
+  const fetchGlossesForStrongsNumbers = useCallback(async (strongs) => {
     if (strongs?.length && !fetchingGlosses && origlangLexConfig) {
       // console.log(`useLexicon.fetchGlossesForStrongsNumber: extracting strongs list length ${strongs.length}`, strongs)
       setFetchingGlosses(true)
@@ -211,13 +219,24 @@ export default function useLexicon({
         await updateLexiconGlosses(newLexiconWords)
         // console.log('useLexicon.fetchGlossesForStrongsNumbers: lexicon words updated, length', Object.keys(newLexiconWords).length)
       } else {
-        setLexiconGlosses(newLexiconWords)
+        lexiconGlossesRef.current = newLexiconWords
       }
 
       // console.log('useLexicon.fetchGlossesForStrongsNumbers: new word list length', strongs?.length)
       setFetchingGlosses(false)
     }
-  }
+  }, [
+    fetchingGlosses,
+    origlangLexConfig,
+    fetchFromGlossesStore,
+    getGlossesCachePath,
+    getFilesFromCachedLexicon,
+    extractGlossesFromRepoZip,
+    lexRepoName,
+    updateLexiconGlosses,
+    lexiconGlossesRef,
+    setFetchingGlosses
+  ])
 
   async function unzipFileFromCachedLexicon(filename) {
     const filePath = `${origlangLexConfig.lexiconPath}/${filename}`

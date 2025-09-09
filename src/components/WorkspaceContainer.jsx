@@ -835,6 +835,8 @@ function WorkspaceContainer() {
           height={wordAlignerHeight}
           translate={translate}
           getLexiconData={getLexiconData}
+          originalBibleBookUsfm={originalScriptureResults?.bibleUsfm}
+          owner={owner}
         />
 
         {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings

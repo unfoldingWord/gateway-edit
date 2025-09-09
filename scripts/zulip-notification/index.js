@@ -43,21 +43,26 @@ async function zulipNotify(appName, branchName, content) {
 
     const data = {
       to: 'SOFTWARE - UR/github',
-      subject: `${appName} - ${branchName}`,
+      topic: `${appName} - ${branchName}`,
       content,
       type: 'stream',
     }
     console.log('Sending Zulip Notification', data)
-    const params = new url.URLSearchParams(data)
+    const params = new URLSearchParams(data)
 
-    await axios.post('https://unfoldingword.zulipchat.com/api/v1/messages',
+    await axios.post(
+      'https://unfoldingword.zulipchat.com/api/v1/messages',
       params.toString(),
       {
         auth: {
           username,
           password: token,
         },
-      })
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    )
   } catch (error) {
     console.error('error Sending Zulip notification', error)
   }
