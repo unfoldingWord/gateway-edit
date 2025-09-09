@@ -164,4 +164,3 @@ StoreContext context:
 useLocalStorage - custom hook that persists generic application data into local storage
 
 useUserLocalStorage - custom hook that application data for logged in user into local storage
-
