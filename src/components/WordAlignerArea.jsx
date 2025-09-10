@@ -63,7 +63,7 @@
  * - Integrates with machine learning training pipeline for suggestions
  */
 
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
@@ -80,6 +80,7 @@ import Dialog from '@mui/material/Dialog';
 import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 import PopoverComponent from './PopoverComponent'
+import {delay} from "@utils/resources";
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
@@ -88,19 +89,20 @@ function WordAlignerArea({
   alignmentActions,
   contextId,
   errorMessage,
+  height,
   lexiconCache,
   loadLexiconEntry,
   onChange,
   sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
-  style,
   targetLanguage,
   targetLanguageFont,
   targetFontSizePercent,
   targetWords,
   title,
   translate,
+  translationMemory,
   verseAlignments,
 }) {
   const [state, setState] = useState({
@@ -250,6 +252,11 @@ function WordAlignerArea({
     keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
   }
 
+  const alignerAreaStyle = useMemo(() => ({
+    maxHeight: `${height}px`,
+    overflowY: 'auto'
+  }), [height]);
+
   return (
     <>
       <DialogTitle style={{cursor: 'move'}} id="draggable-aligner-dialog-title">
@@ -264,21 +271,22 @@ function WordAlignerArea({
       </DialogTitle>
       <div style={{width: `95%`, margin: '10px'}}>
         <EnhancedWordAligner
+          addTranslationMemory={translationMemory}
           config={wordSuggesterConfig}
           contextId={contextId}
           createAlignmentTrainingWorker={createAlignmentTrainingWorker}
           doTraining={doTraining}
-          lexiconCache={lexiconCache}
-          loadLexiconEntry={loadLexiconEntry}
           handleTrainingStateChange={handleTrainingStateChange}
+          lexicons={lexiconCache}
+          loadLexiconEntry={loadLexiconEntry}
           onChange={onAlignmentChange}
           showPopover={showPopover}
-          sourceLanguage={sourceLanguageId}
-          style={style}
+          sourceLanguageId={sourceLanguageId}
+          styles={alignerAreaStyle}
           suggestionsOnly={true}
-          targetWords={initialAlignment?.targetWords ||[]}
-          targetLanguage={targetLanguage}
+          targetLanguageId={targetLanguage}
           targetLanguageFont={targetLanguageFont}
+          targetWords={initialAlignment?.targetWords ||[]}
           translate={translate}
           verseAlignments={initialAlignment?.verseAlignments || []}
         />
@@ -312,7 +320,7 @@ function WordAlignerArea({
               {translate('alignments.accept')}
             </Button>
         }
-        { !errorMessage && trainingButtonStr &&
+        { !errorMessage && trainingButtonStr && !training &&
           <Button
             variant="outlined"
             style={{margin: '10px 30px'}}
@@ -364,19 +372,20 @@ WordAlignerArea.propTypes = {
   }),
   contextId: PropTypes.object,
   errorMessage: PropTypes.string,
+  height: PropTypes.number,
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
-  style: PropTypes.object,
   targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,
   targetFontSizePercent: PropTypes.number,
   targetWords: PropTypes.array,
   title: PropTypes.string,
   translate: PropTypes.func.isRequired,
+  translationMemory: PropTypes.object,
   verseAlignments: PropTypes.array,
 };
 

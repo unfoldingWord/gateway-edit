@@ -251,13 +251,6 @@ function WordAlignerDialog({
     }
   }, [targetWords_, verseAlignments_, alignerData_?.state?.reference, shouldShowDialog_]);
 
-  const alignerAreaStyle = useMemo(() => ({
-    maxHeight: `${height}px`,
-    overflowY: 'auto'
-  }), [height]);
-
-  // const oldDependencies = useRef({})
-
   const wordAlignerDialogArea = useMemo(() => {
     console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
 
@@ -279,12 +272,13 @@ function WordAlignerDialog({
           loadLexiconEntry={getLexiconData}
           showingDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
-          style={alignerAreaStyle}
+          height={height}
           targetLanguage={targetLanguage}
           targetLanguageFont={''}
           targetWords={targetWords}
           title={title || ''}
           translate={translate}
+          translationMemory={translationMemory}
           verseAlignments={verseAlignments}
         />
       </Dialog>
