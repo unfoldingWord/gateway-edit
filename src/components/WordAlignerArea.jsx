@@ -285,7 +285,7 @@ function WordAlignerArea({
           sourceLanguageId={sourceLanguageId}
           styles={alignerAreaStyle}
           suggestionsOnly={true}
-          targetLanguageId={targetLanguage}
+          targetLanguageId={targetLanguage?.languageId || ''}
           targetLanguageFont={targetLanguageFont}
           targetWords={initialAlignment?.targetWords ||[]}
           translate={translate}
