@@ -50,20 +50,12 @@ import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import { useBoundsUpdater } from 'translation-helps-rcl'
 import isEqual from 'deep-equal'
-import { AlignmentTrainerUtils, useAlignmentSuggestions } from 'enhanced-word-aligner-rcl'
+import { AlignmentTrainerUtils } from 'enhanced-word-aligner-rcl'
 import { StoreContext } from '@context/StoreContext'
-import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 import WordAlignerArea from './WordAlignerArea';
 
 function getBookData(alignerStatus) {
   return alignerStatus?.state?.reference || {};
-}
-
-const wordSuggesterConfig= {
-  doAutoTraining: true, // set true to enable auto training of alignment suggestions
-  trainOnlyOnCurrentBook: true, // if true, then training is sped up for small books by just training on alignment memory data for current book
-  minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
-  keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
 }
 
 // popup dialog for user to align verse
@@ -78,7 +70,6 @@ function WordAlignerDialog({
   const [state, setState] = useState({
     showDialog: false,
     contextId: null,
-    autoTrainingCompleted: false,
     targetWords: [],
     verseAlignments: [],
     targetLanguage: {},
@@ -93,7 +84,6 @@ function WordAlignerDialog({
   const {
     showDialog,
     contextId,
-    autoTrainingCompleted,
     targetWords,
     verseAlignments,
     targetLanguage,
@@ -225,85 +215,6 @@ function WordAlignerDialog({
     return title_;
   }
 
-  const handleTrainingCompleted = useCallback((info) => {
-    console.log('handleTrainingCompleted', info);
-  }, []);
-
-  function setHandleSetTrainingState(handleSetTrainingState_) {
-    console.log('WordAlignerDialog: setHandleSetTrainingState', handleSetTrainingState_)
-    handleSetTrainingState.current = handleSetTrainingState_;
-  }
-
-  /**
-   * A function that handles updating the training state.
-   * TRICKY: Serves as a forward reference for handleSetTrainingState_
-   *
-   * @function
-   * @name handleSetTrainingStateForward
-   * @param {Object} props - The properties or parameters that are passed to determine the training state.
-   */
-  const handleSetTrainingStateForward = (props) => {
-    handleSetTrainingState_(props)
-  }
-
-  const {
-    state: {
-      failedToLoadCachedTraining,
-      trainingRunning,
-    },
-    actions: {
-      areTrainingSameBook,
-      getSuggester,
-      getTrainingContextId,
-      isTraining,
-      loadTranslationMemory,
-      startTraining,
-      stopTraining,
-      suggester,
-    }
-  } = useAlignmentSuggestions({
-    config: wordSuggesterConfig,
-    contextId,
-    createAlignmentTrainingWorker,
-    handleSetTrainingState: handleSetTrainingStateForward,
-    handleTrainingCompleted,
-    shown: showDialog,
-    sourceLanguageId: sourceLanguageId,
-    targetLanguageId: targetLanguage?.languageId,
-    targetUsfm: targetBibleBookUsfm,
-    sourceUsfm: originalBibleBookUsfm,
-  });
-
-  /**
-   * Handles the setting of the training state with updated properties.
-   *
-   * This function checks for the existence of the provided `props` and injects the `current`
-   * suggester into `handleSetTrainingState`.
-   *
-   * @param {Object} props - The properties to update the training state.
-   * @returns {void}
-   */
-  const handleSetTrainingState_ = (props) => {
-    if (!props) {
-      console.log('handleSetTrainingState_: no props');
-      return;
-    }
-
-    const current = handleSetTrainingState.current;
-
-    if (!current) {
-      console.log('handleSetTrainingState_: no handleSetTrainingState.current');
-      return
-    }
-
-    const newProps = {
-      ...props,
-      suggester: getSuggester(), // inject updated suggester
-    }
-
-    current?.(newProps)
-  }
-
   useEffect(() => {
     if (shouldShowDialog_ !== showDialog) {
       console.log(`WordAlignerDialog: alignment data changed shouldShowDialog_ ${shouldShowDialog_}`)
@@ -340,49 +251,6 @@ function WordAlignerDialog({
     }
   }, [targetWords_, verseAlignments_, alignerData_?.state?.reference, shouldShowDialog_]);
 
-  /**
-   * Initiates the training process using translation memory data if available.
-   * The method checks for cached training data within `targetUsfmsBooks` and,
-   * if present, loads the translation memory and starts the training process.
-   *
-   * @return {void} Does not return a value.
-   */
-  function startTraining_() {
-    const targetUsfmsBooks = translationMemory?.targetUsfms;
-    const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
-
-    if (haveCachedTrainingData) {
-      console.log('WordAlignerArea: translation memory changed, loading translation memory')
-      loadTranslationMemory(translationMemory);
-      startTraining();
-    }
-  }
-
-  /**
-   * Handler for button press to start training process.
-   *
-   * This function checks if a training process is already in progress
-   * and logs the current training state. If no training is in progress,
-   * it initiates the training by calling the appropriate start function.
-   * It is memoized to only recompute when `showDialog` changes.
-   *
-   * Dependencies:
-   * - `isTraining`: A function to check the current training state.
-   * - `startTraining_`: A function to initiate the training process.
-   *
-   * External Dependencies:
-   * - `showDialog`: A state or variable that triggers re-execution of the function when changed.
-   */
-  const doTraining = useCallback(() => {
-    const training = isTraining()
-    console.log(`WordAlignerDialog: doTraining() - currently training is ${training}`)
-
-    if (training) {
-      stopTraining();
-    }
-    startTraining_();
-  }, [showDialog])
-
   const alignerAreaStyle = useMemo(() => ({
     maxHeight: `${height}px`,
     overflowY: 'auto'
@@ -406,15 +274,12 @@ function WordAlignerDialog({
         <WordAlignerArea
           alignmentActions={alignmentActions_}
           contextId={contextId}
-          doTraining={doTraining}
           errorMessage={errorMessage}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
-          setHandleSetTrainingState={setHandleSetTrainingState}
           showingDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
           style={alignerAreaStyle}
-          suggester={suggester}
           targetLanguage={targetLanguage}
           targetLanguageFont={''}
           targetWords={targetWords}
@@ -427,7 +292,6 @@ function WordAlignerDialog({
   },
   [
     contextId,
-    doTraining,
     errorMessage,
     showDialog,
     sourceLanguageId,

@@ -63,13 +63,13 @@
  * - Integrates with machine learning training pipeline for suggestions
  */
 
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import {
   AlignmentHelpers,
-  SuggestingWordAligner,
+  EnhancedWordAligner,
   useTrainingState,
 } from 'enhanced-word-aligner-rcl'
 import { Label } from 'react-bootstrap';
@@ -78,6 +78,7 @@ import cloneDeep from 'lodash.clonedeep';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
+import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 import PopoverComponent from './PopoverComponent'
 
 const alignmentIconStyle = { marginLeft:'50px' }
@@ -86,17 +87,14 @@ const alignmentIconStyle = { marginLeft:'50px' }
 function WordAlignerArea({
   alignmentActions,
   contextId,
-  doTraining,
   errorMessage,
   lexiconCache,
   loadLexiconEntry,
   onChange,
-  setHandleSetTrainingState,
   sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
   style,
-  suggester: suggester_,
   targetLanguage,
   targetLanguageFont,
   targetFontSizePercent,
@@ -108,20 +106,20 @@ function WordAlignerArea({
   const [state, setState] = useState({
     aligned_: false,
     alignmentChange: null,
+    doTraining: false,
     initialAlignment: null,
     lexiconData: null,
     showResetWarning: false,
-    suggester: suggester_,
     trainingButtonHintStr: '',
   });
 
   const {
     aligned_,
     alignmentChange,
+    doTraining,
     initialAlignment,
     lexiconData,
     showResetWarning,
-    suggester,
   } = state;
 
   const {
@@ -142,16 +140,13 @@ function WordAlignerArea({
 
   useEffect(() => {
     console.log('WordAlignerArea mounted')
-    setHandleSetTrainingState(handleTrainingStateChange)
     // Cleanup function that runs on unmount
     return () => {
-      setHandleSetTrainingState(null)
       console.log('WordAlignerArea unmounted')
     };
   }, []);
 
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
-
 
   useEffect(() => {
     // see if alignment data has changed
@@ -179,6 +174,7 @@ function WordAlignerArea({
 
   function onAlignmentChange(results) {
     const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(results.targetWords, results.verseAlignments);
+
     setState(prevState => ({
       ...prevState,
       alignmentChange: results,
@@ -198,6 +194,18 @@ function WordAlignerArea({
     const saveAlignment = alignmentActions?.saveAlignment
     saveAlignment?.(alignmentChange)
     setState(prevState => ({ ...prevState, alignmentChange: null }));
+  }
+
+  function handleDoTraining() {
+    console.log('WordAlignerDialog: handleDoTraining')
+    if (!doTraining) {
+      setState(prevState => ({ ...prevState, doTraining: true }));
+      delay(1000).then(() => {
+        setState(prevState => ({ ...prevState, doTraining: false }));
+      })
+    } else {
+      console.log('WordAlignerDialog: handleDoTraining - doTraining already set')
+    }
   }
 
   /**
@@ -235,6 +243,12 @@ function WordAlignerArea({
   }
 
   const enableResetWarning = (currentShowDialog && showResetWarning);
+  const wordSuggesterConfig= {
+    doAutoTraining: true, // set true to enable auto training of alignment suggestions
+    trainOnlyOnCurrentBook: true, // if true, then training is sped up for small books by just training on alignment memory data for current book
+    minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
+    keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
+  }
 
   return (
     <>
@@ -249,15 +263,18 @@ function WordAlignerArea({
         </span>
       </DialogTitle>
       <div style={{width: `95%`, margin: '10px'}}>
-        <SuggestingWordAligner
+        <EnhancedWordAligner
+          config={wordSuggesterConfig}
           contextId={contextId}
+          createAlignmentTrainingWorker={createAlignmentTrainingWorker}
+          doTraining={doTraining}
           lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
+          handleTrainingStateChange={handleTrainingStateChange}
           onChange={onAlignmentChange}
           showPopover={showPopover}
           sourceLanguage={sourceLanguageId}
           style={style}
-          suggester={suggester}
           suggestionsOnly={true}
           targetWords={initialAlignment?.targetWords ||[]}
           targetLanguage={targetLanguage}
@@ -299,7 +316,7 @@ function WordAlignerArea({
           <Button
             variant="outlined"
             style={{margin: '10px 30px'}}
-            onClick={doTraining}
+            onClick={handleDoTraining}
             title={trainingButtonHintStr}
           >
             {trainingButtonStr}
@@ -346,16 +363,13 @@ WordAlignerArea.propTypes = {
     saveAlignment: PropTypes.func,
   }),
   contextId: PropTypes.object,
-  doTraining: PropTypes.func,
   errorMessage: PropTypes.string,
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
   onChange: PropTypes.func,
-  setHandleSetTrainingState: PropTypes.func,
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
-  suggester: PropTypes.func,
   style: PropTypes.object,
   targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,

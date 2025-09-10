@@ -5538,10 +5538,10 @@ enhanced-resolve@^5.0.0:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
 
-enhanced-word-aligner-rcl@1.1.0-beta.3:
-  version "1.1.0-beta.3"
-  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.1.0-beta.3.tgz#b31242e2d5e12cd6d14918f01caa9d2577b47c61"
-  integrity sha512-Uwrwb/k0jKyjI+QAIoi3cvzVZWR23+IyWVpRXyqOAtiTaupr0vSlA0vX2nGOewnlXy8T8VX8/mxRyPS8Vm+JQw==
+enhanced-word-aligner-rcl@1.1.0-beta.4:
+  version "1.1.0-beta.4"
+  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.1.0-beta.4.tgz#4d09de1058aac7528f7cc97c2eb597e015f313e3"
+  integrity sha512-GM5MkmcCiBAJTyvWFrqhlR7aqkbgmgwSKufosKgkJqF+z8IrUDVAdgL1utXo9tJGcNNQXfZps0/Xk2hFyhw7AA==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     diff "^5.2.0"
