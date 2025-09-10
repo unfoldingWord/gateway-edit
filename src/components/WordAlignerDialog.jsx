@@ -12,11 +12,7 @@
  *   It uses WordAlignerArea Component to render dialog content and uses useAlignmentSuggestions for alignment suggestions
  *
  * - **Draggable Interface**: Users can reposition the dialog within the workspace bounds
- * - **AI-Powered Suggestions**: Integrates with enhanced-word-aligner-rcl for intelligent alignment recommendations
- * - **Training System**: Supports both cached and on-demand training of alignment models using translation memory
- * - **Real-time Updates**: Monitors alignment status changes and updates the interface accordingly
  * - **Error Handling**: Displays error messages and handles training failures gracefully
- * - **Performance Optimization**: Uses React.memo with custom comparison to prevent unnecessary re-renders
  *
  * ## Properties
  * @param {Object} alignerStatus - Status object containing alignment data, reference information, and control actions
@@ -25,15 +21,6 @@
  * @param {Function} getLexiconData - Function to fetch lexicon data for words (required)
  * @param {string} originalBibleBookUsfm - USFM content of the original language Bible book
  * @param {string} owner - Repository owner identifier for the target Bible
- *
- * ## Requirements
- * - React 16.8+ (uses hooks extensively)
- * - Material-UI Dialog component
- * - react-draggable for drag functionality
- * - translation-helps-rcl for bounds management
- * - enhanced-word-aligner-rcl for alignment suggestions and training
- * - Web Worker support for background training processes
- * - StoreContext for accessing workspace references
  */
 
 import React, {

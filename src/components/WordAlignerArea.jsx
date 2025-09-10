@@ -46,8 +46,6 @@
  * @param {Array} verseAlignments - Current alignment data for the verse
  *
  * Requirements:
- * - React 18+ for hooks and concurrent features
- * - Material UI (@mui/material) for dialog and button components
  * - enhanced-word-aligner-rcl package for core alignment functionality
  * - react-icons/rx for status indicator icons
  * - deep-equal for state comparison optimization
@@ -57,10 +55,9 @@
  *
  * Technical Dependencies:
  * - AlignmentHelpers from enhanced-word-aligner-rcl for alignment validation
- * - SuggestingWordAligner from enhanced-word-aligner-rcl for the main alignment interface
+ * - EnhancedWordAligner from enhanced-word-aligner-rcl for the main alignment interface with alignment suggestions
  * - Requires proper integration with parent WordAlignerDialog component
  * - Depends on lexicon data infrastructure for word definitions
- * - Integrates with machine learning training pipeline for suggestions
  */
 
 import React, {useEffect, useMemo, useState} from 'react'
@@ -185,36 +182,40 @@ function WordAlignerArea({
   }
 
   function cancelAlignment() {
-    console.log('WordAlignerDialog: cancelAlignment')
+    console.log('WordAlignerArea: cancelAlignment')
     const cancelAlignment = alignmentActions?.cancelAlignment
     cancelAlignment?.()
     setState(prevState => ({ ...prevState, alignmentChange: null }));
   }
 
   function saveAlignment() {
-    console.log('WordAlignerDialog: saveAlignment')
+    console.log('WordAlignerArea: saveAlignment')
     const saveAlignment = alignmentActions?.saveAlignment
     saveAlignment?.(alignmentChange)
     setState(prevState => ({ ...prevState, alignmentChange: null }));
   }
 
   function handleDoTraining() {
-    console.log('WordAlignerDialog: handleDoTraining')
+    console.log('WordAlignerArea: handleDoTraining')
     if (!doTraining) {
       setState(prevState => ({ ...prevState, doTraining: true }));
-      delay(1000).then(() => {
-        setState(prevState => ({ ...prevState, doTraining: false }));
-      })
     } else {
-      console.log('WordAlignerDialog: handleDoTraining - doTraining already set')
+      console.log('WordAlignerArea: handleDoTraining - doTraining already set')
     }
   }
+
+  useEffect(() => {
+    if (doTraining && !training) {
+      console.log('WordAlignerArea: training completed')
+      setState(prevState => ({ ...prevState, doTraining: false }));
+    }
+  }, [training]);
 
   /**
    * reset all the alignments
    */
   function doReset() {
-    console.log('WordAlignerDialog: doReset')
+    console.log('WordAlignerArea: doReset')
     const alignmentData_ = AlignmentHelpers.resetAlignments(initialAlignment?.verseAlignments, initialAlignment?.targetWords)
 
     const alignmentChange_ = {
