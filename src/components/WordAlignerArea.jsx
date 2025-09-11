@@ -204,6 +204,12 @@ function WordAlignerArea({
     }
   }
 
+  function handleInfoClick(info) {
+    console.log("handleInfoClick");
+    const message = JSON.stringify(info, null, 2)
+    window.prompt(`Training Model: ${info}`)
+  }
+
   useEffect(() => {
     if (doTraining && !training) {
       console.log('WordAlignerArea: training completed')
@@ -277,6 +283,7 @@ function WordAlignerArea({
           contextId={contextId}
           createAlignmentTrainingWorker={createAlignmentTrainingWorker}
           doTraining={doTraining}
+          handleInfoClick={handleInfoClick}
           handleTrainingStateChange={handleTrainingStateChange}
           lexicons={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
