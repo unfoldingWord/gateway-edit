@@ -4091,15 +4091,15 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bible-reference-range@1.1.1, bible-reference-range@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.1.tgz#9438bb870f853439fa92afe61a04fab53922ab91"
+  integrity sha512-rEHpdcTrlJcLP/KuSl5hJjPND3EBD67m81hvDrSbZ48xyE1r6V7qgxUacDY2ZfT6nu1pBTkc6JizH9a+m3LMRQ==
+
 bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
-
-bible-reference-range@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.1.tgz#9438bb870f853439fa92afe61a04fab53922ab91"
-  integrity sha512-rEHpdcTrlJcLP/KuSl5hJjPND3EBD67m81hvDrSbZ48xyE1r6V7qgxUacDY2ZfT6nu1pBTkc6JizH9a+m3LMRQ==
 
 bible-reference-rcl@1.4.1:
   version "1.4.1"
@@ -5538,12 +5538,13 @@ enhanced-resolve@^5.0.0:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
 
-enhanced-word-aligner-rcl@1.1.0-beta.6:
-  version "1.1.0-beta.6"
-  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.1.0-beta.6.tgz#e98300ea75d8991bf273dfef8c4257a5e0713178"
-  integrity sha512-ylpU8e1q11Eayy4l4QO+pRbegAAEwbDA1HvUCrAufl+9zw4caohocaH4oaZNG2Zr+XZkHPKC4EeP2+ZP8TLvwA==
+enhanced-word-aligner-rcl@1.1.0-beta.8:
+  version "1.1.0-beta.8"
+  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.1.0-beta.8.tgz#1f4b52b69d5899bd6cc22b3d0bcdd1108c77c5f1"
+  integrity sha512-UrFAU1QYQrE4k13hAoZk+EAUk547ObR13JdL19Q9C+bzB3B/ZbySlGpvpEFwsdGA7iX2stmgFHHjm0g2MpRgGA==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
+    bible-reference-range "1.1.1"
     diff "^5.2.0"
     jszip "^3.10.1"
     lodash "^4.17.21"
