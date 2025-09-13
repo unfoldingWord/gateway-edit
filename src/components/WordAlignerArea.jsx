@@ -77,7 +77,6 @@ import Dialog from '@mui/material/Dialog';
 import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 import PopoverComponent from './PopoverComponent'
-import {delay} from "@utils/resources";
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
