@@ -205,8 +205,8 @@ function WordAlignerArea({
 
   function handleInfoClick(info) {
     console.log("handleInfoClick");
-    const message = JSON.stringify(info, null, 2)
-    window.prompt(`Training Model: ${info}`)
+    const message = (info && info.message) || JSON.stringify(info, null, 2)
+    window.prompt(`Training Information:\n\n${message}`)
   }
 
   useEffect(() => {
