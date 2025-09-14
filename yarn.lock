@@ -4091,15 +4091,15 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bible-reference-range@1.1.1, bible-reference-range@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.1.tgz#9438bb870f853439fa92afe61a04fab53922ab91"
+  integrity sha512-rEHpdcTrlJcLP/KuSl5hJjPND3EBD67m81hvDrSbZ48xyE1r6V7qgxUacDY2ZfT6nu1pBTkc6JizH9a+m3LMRQ==
+
 bible-reference-range@^1.0.1, bible-reference-range@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.0.tgz#2e80f066d30e9884d30f582c623de9cc2414676b"
   integrity sha512-EVPhDLSY/hmeW6reO9XLst1SKAAf6Opyfy6l2MZSna9kE6DqEiFW/eWOrkPq5g40Hs+Xe8odPGJuIpdysokQpg==
-
-bible-reference-range@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/bible-reference-range/-/bible-reference-range-1.1.1.tgz#9438bb870f853439fa92afe61a04fab53922ab91"
-  integrity sha512-rEHpdcTrlJcLP/KuSl5hJjPND3EBD67m81hvDrSbZ48xyE1r6V7qgxUacDY2ZfT6nu1pBTkc6JizH9a+m3LMRQ==
 
 bible-reference-rcl@1.4.1:
   version "1.4.1"
@@ -5538,12 +5538,13 @@ enhanced-resolve@^5.0.0:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
 
-enhanced-word-aligner-rcl@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.0.0.tgz#55d46473df7f1291d6fd73a23662d4bfeae2680a"
-  integrity sha512-4xfccXz2/X3htA/Zrks38BvaZsWYFBLaMbhyhAOXTv6Dt52Nb1SH3EGSqloaQiU21XiduAs2zvvIVTh5TtEOBQ==
+enhanced-word-aligner-rcl@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.1.0.tgz#f8349b3fb4c66fb1d9ff3abc596d6af4f5ac3775"
+  integrity sha512-yJup/foxyAPpLEBWVzmDHH7haWPVrJ24jv9KvPQ1QBBaXFujBoLziaDdkmA0SPiOBKW1WDqIUd68wQ0LpUXcaA==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
+    bible-reference-range "1.1.1"
     diff "^5.2.0"
     jszip "^3.10.1"
     lodash "^4.17.21"
@@ -5555,7 +5556,7 @@ enhanced-word-aligner-rcl@1.0.0:
     styled-components "^5.2.1"
     ts-loader "9"
     uw-wordmapbooster "1.0.3"
-    word-aligner-rcl "1.2.0"
+    word-aligner-rcl "1.2.1"
 
 enquirer@^2.3.5, enquirer@^2.3.6:
   version "2.3.6"
@@ -13766,10 +13767,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.0.tgz#7d334bf83b57608c9228d70e267e6c187f9139e8"
-  integrity sha512-cqsojuzRDTly4DXumom+ggJcexAr1YbfLZWSyPK8WTFLIRtaKaU3NnjGP/px9tnpwNozh/p4BB/YyOXe/k6cTw==
+word-aligner-rcl@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.1.tgz#8a47b313f7dd92d19597840e4d2b13f1d1c0b9df"
+  integrity sha512-wUO9ZU2AqK6CL0lklYk5gxoFdjqq20te6EJ09hDxLdiAYAjAMADLqh1/PGzhlBG/XQrQa2nP2yyzVlA5vVCC4A==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
