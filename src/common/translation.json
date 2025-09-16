@@ -166,6 +166,7 @@
   "suggestions.retrain_button"     : "Retrain",
   "suggestions.retrain_button_hint": "Click to improve the quality of alignment suggestions based on current book alignments",
   "suggestions.status_training"    : "Currently Training ...",
+  "suggestions.status_retraining"  : "Currently Retraining ...",
   "suggestions.status_trained"     : "Trained",
   "suggestions.status_not_trained" : "Not Trained",
   "suggestions.percent_complete"   : "% complete",
