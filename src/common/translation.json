@@ -196,6 +196,7 @@
   "training.training_steps_label"  : "Training Steps",
   "training.training_steps_hint"   : "Number of iterations used for training wordMap settings. Training time is proportional to this value, and low values may impact quality of suggestions",
   "delete"                         : "Delete",
+  "alignments.accept"              : "Accept",
   "alignments.accept_hint"         : "Save current alignments and close the dialog",
   "alignments.reset"               : "Reset",
   "alignments.reset_hint"          : "Reset current alignments",
