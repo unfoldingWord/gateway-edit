@@ -1,6 +1,7 @@
 import localforage from 'localforage'
 import { core } from 'scripture-resources-rcl'
 import { HTTP_CONFIG } from '@common/constants'
+import { Localization } from 'enhanced-word-aligner-rcl'
 
 // TRICKY - importing from direct path gets around exported css styles which crash nextjs
 import {
@@ -214,12 +215,14 @@ export async function extractGlossesFromRepoZip(
  * @param key
  * @return {*}
  */
-export function translate(key) {
-  const text = translations?.[key]
+export const translate = Localization.t
 
-  if (text) {
-    return text
+if (!Localization.is_initialized()) {
+  const localeData = {
+    en: translations
   }
-  return key
+
+  Localization.locale_init(localeData)
 }
 
+console.log(`Localization is initialized is ${Localization.is_initialized()}`)
