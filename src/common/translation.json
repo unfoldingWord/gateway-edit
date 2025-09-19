@@ -193,6 +193,8 @@
   "training.all_memory_hint"       : "Keep All Alignment Memory even alignments not used for training.  This should improve alignment vocabulary, but may negatively impact accuracy in the case of fully aligned books.",
   "training.target_ngram_label"    : "Target N-gram Length",
   "training.target_ngram_hint"     : "Maximum number of target words used for alignment memory.  Higher values can slow down suggestions and training",
+  "training.source_ngram_label"    : "Source N-gram Length",
+  "training.source_ngram_hint"     : "Maximum number of source words used for alignment memory.  Higher values can slow down suggestions and training",
   "training.training_steps_label"  : "Training Steps",
   "training.training_steps_hint"   : "Number of iterations used for training wordMap settings. Training time is proportional to this value, and low values may impact quality of suggestions",
   "delete"                         : "Delete",
