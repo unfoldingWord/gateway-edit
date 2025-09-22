@@ -205,13 +205,22 @@ export default function ResourceCard({
 
   useEffect(() => {
     if (!savedContent && fetchResponse) {
-      const base64Decoded = atob(fetchResponse.data.content)
-      const utf8DecodedArray = new Uint8Array(
-        base64Decoded.split('').map(char => char.charCodeAt(0))
-      )
-      const decoder = new TextDecoder()
-      const finalString = decoder.decode(utf8DecodedArray)
-      setSavedContent(finalString)
+      try {
+        if (fetchResponse?.data?.errors) {
+          console.warn(`ResourceCard: Error return for fetch ${fetchResponse?.config?.url}`, fetchResponse)
+        } else {
+          const base64Decoded = atob(fetchResponse?.data?.content)
+          const utf8DecodedArray = new Uint8Array(
+            base64Decoded.split('').map(char => char.charCodeAt(0))
+          )
+          const decoder = new TextDecoder()
+          const finalString = decoder.decode(utf8DecodedArray)
+          setSavedContent(finalString)
+        }
+      } catch (error) {
+        const url =fetchResponse?.config?.url || ''
+        console.error(`ResourceCard: Error decoding base64 content for ${url}`, error)
+      }
     }
   }, [fetchResponse, savedContent])
 
