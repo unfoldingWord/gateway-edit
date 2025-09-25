@@ -67,15 +67,14 @@ function WordAlignerDialog({
   owner
 }) {
   const [state, setState] = useState({
-    showDialog: false,
     contextId: null,
-    autoTrainingCompleted: false,
-    targetWords: [],
-    verseAlignments: [],
-    targetLanguage: {},
-    sourceLanguageId: '',
     errorMessage: '',
-    title: ''
+    showDialog: false,
+    sourceLanguageId: '',
+    targetLanguage: {},
+    targetWords: [],
+    title: '',
+    verseAlignments: []
   });
 
   const dialogRef = useRef(null); // for keeping track of aligner dialog position
@@ -83,15 +82,14 @@ function WordAlignerDialog({
 //  const oldDependencies = useRef({})
 
   const {
-    showDialog,
     contextId,
-    autoTrainingCompleted,
-    targetWords,
-    verseAlignments,
-    targetLanguage,
-    sourceLanguageId,
     errorMessage,
-    title
+    showDialog,
+    sourceLanguageId,
+    targetLanguage,
+    targetWords,
+    title,
+    verseAlignments
   } = state;
 
   const {
@@ -228,21 +226,30 @@ function WordAlignerDialog({
 
   /**
    * A function that handles updating the training state.
-   * TRICKY: Serves as a forward reference for handleSetTrainingState_
+   * TRICKY: does callback to function previously set by setHandleSetTrainingState()
    *
    * @function
    * @name handleSetTrainingStateForward
    * @param {Object} props - The properties or parameters that are passed to determine the training state.
+   *    see definition of THandleTrainingStateChange
    */
   const handleSetTrainingStateForward = (props) => {
-    handleSetTrainingState_(props)
+    const current = handleSetTrainingState.current;
+
+    if (!current) {
+      console.log('handleSetTrainingStateForward: no handleSetTrainingState.current');
+      return
+    }
+
+    current(props)
   }
 
-  const alignmentSuggestionsManage = useAlignmentSuggestions({
+  // this hook manages the word aligner suggestions including training of the Model
+  const alignmentSuggestionsManage = useAlignmentSuggestions({ // see TUseAlignmentSuggestionsProps
     config: wordSuggesterConfig,
     contextId,
     createAlignmentTrainingWorker,
-    handleSetTrainingState: handleSetTrainingStateForward,
+    handleTrainingStateChange: handleSetTrainingStateForward,
     handleTrainingCompleted,
     shown: showDialog,
     sourceLanguageId: sourceLanguageId,
@@ -252,12 +259,7 @@ function WordAlignerDialog({
   });
 
   const {
-    state: {
-      failedToLoadCachedTraining,
-      trainingRunning,
-    },
     actions: {
-      areTrainingSameBook,
       getSuggester,
       getTrainingContextId,
       isTraining,
@@ -266,37 +268,7 @@ function WordAlignerDialog({
       stopTraining,
       suggester,
     }
-  } = alignmentSuggestionsManage;
-
-  /**
-   * Handles the setting of the training state with updated properties.
-   *
-   * This function checks for the existence of the provided `props` and injects the `current`
-   * suggester into `handleSetTrainingState`.
-   *
-   * @param {Object} props - The properties to update the training state.
-   * @returns {void}
-   */
-  const handleSetTrainingState_ = (props) => {
-    if (!props) {
-      console.log('handleSetTrainingState_: no props');
-      return;
-    }
-
-    const current = handleSetTrainingState.current;
-
-    if (!current) {
-      console.log('handleSetTrainingState_: no handleSetTrainingState.current');
-      return
-    }
-
-    const newProps = {
-      ...props,
-      suggester: getSuggester(), // inject updated suggester
-    }
-
-    current?.(newProps)
-  }
+  } = alignmentSuggestionsManage; // type is TUseAlignmentSuggestionsReturn
 
   useEffect(() => {
     if (shouldShowDialog_ !== showDialog) {

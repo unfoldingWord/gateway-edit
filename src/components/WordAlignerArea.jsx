@@ -53,7 +53,7 @@
  *
  * Technical Dependencies:
  * - AlignmentHelpers from enhanced-word-aligner-rcl for alignment validation
- * - EnhancedWordAlignerPane from enhanced-word-aligner-rcl for the main alignment interface with alignment suggestions
+ * - EnhancedWordAligner from enhanced-word-aligner-rcl for the main alignment interface with alignment suggestions
  * - Requires proper integration with parent WordAlignerDialog component
  * - Depends on lexicon data infrastructure for word definitions
  */
@@ -64,7 +64,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import {
   AlignmentHelpers,
-  EnhancedWordAlignerPane,
+  EnhancedWordAligner,
   useTrainingState,
 } from 'enhanced-word-aligner-rcl'
 import { Label } from 'react-bootstrap';
@@ -267,15 +267,16 @@ function WordAlignerArea({
         </span>
       </DialogTitle>
       <div style={{width: `95%`, margin: '10px'}}>
-        <EnhancedWordAlignerPane
+        <EnhancedWordAligner
+          addTranslationMemory={translationMemory}
+          alignmentSuggestionsManage={alignmentSuggestionsManage}
+          cancelTraining={cancelTraining}
+          config={wordSuggesterConfig}
           contextId={contextId}
-          deleteBookFromGroup={suggestionActions.deleteBookFromGroup}
-          getModelMetaData={suggestionActions.getModelMetaData}
-          hasRenderedSuggestions={suggestionActions.hasRenderedSuggestions}
-          lexiconCache={lexiconCache}
+          doTraining={doTraining}
+          lexicons={lexicons}
           loadLexiconEntry={loadLexiconEntry}
           onChange={onChange}
-          saveChangedSettings={suggestionActions.saveChangedSettings}
           showPopover={showPopover}
           sourceLanguageId={sourceLanguageId}
           sourceLanguageFont={sourceLanguageFont}
