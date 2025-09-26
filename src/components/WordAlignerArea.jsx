@@ -29,7 +29,7 @@
  * @param {Object} lexiconCache - Cached lexicon entries for performance optimization
  * @param {Function} loadLexiconEntry - Loads lexicon data for word definitions (required)
  * @param {Function} onChange - Callback fired when alignments change
- * @param {Function} setHandleSetTrainingState - Sets the training state handler reference
+ * @param {Function} setTrainingStateChangeHandler - Sets the training state handler reference
  * @param {string} sourceLanguageId - Identifier for source language (Hebrew/Greek) (required)
  * @param {string} sourceLanguageFont - Font family for source language text display
  * @param {number} sourceFontSizePercent - Font size percentage for source language
@@ -84,12 +84,13 @@ function WordAlignerArea({
   alignmentSuggestionsManage,
   contextId,
   errorMessage,
+  handleTrainingStateChange: handleTrainingStateChange_,
   handleDoTrainingClick,
   height,
   lexiconCache,
   loadLexiconEntry,
   onChange,
-  setHandleSetTrainingState,
+  setTrainingStateChangeHandler,
   sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
@@ -101,6 +102,7 @@ function WordAlignerArea({
   targetWords,
   title,
   translate,
+  translationMemory,
   verseAlignments,
 }) {
   const [state, setState] = useState({
@@ -135,17 +137,30 @@ function WordAlignerArea({
       trainingButtonHintStr,
     }
   } = useTrainingState({
+    passThroughStateChange: handleTrainingStateChange_,
     translate,
     verbose: true,
   })
 
+  /**
+   * Training State Handler Effect
+   * ============================
+   *
+   * This effect sets up the training state change handler on component mount.
+   * It ensures that training state updates are properly handled by setting
+   * the handleTrainingStateChange callback once when the component mounts.
+   *
+   * @effect Initializes training state change handler on mount
+   */
   useEffect(() => {
-    console.log('WordAlignerArea mounted')
-    // Cleanup function that runs on unmount
+    const key = 'WordAlignerArea';
+    console.log('WordAlignerArea initialized/mounted')
+    setTrainingStateChangeHandler(handleTrainingStateChange, key) // set on mount
     return () => {
       console.log('WordAlignerArea unmounted')
+      setTrainingStateChangeHandler(null, key) // set on mount
     };
-  }, []);
+  },[]);
 
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
 
@@ -270,13 +285,13 @@ function WordAlignerArea({
         <EnhancedWordAligner
           addTranslationMemory={translationMemory}
           alignmentSuggestionsManage={alignmentSuggestionsManage}
-          cancelTraining={cancelTraining}
           config={wordSuggesterConfig}
           contextId={contextId}
-          doTraining={doTraining}
-          lexicons={lexicons}
+          handleTrainingStateChange={handleTrainingStateChange}
+          lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
           onChange={onChange}
+          setTrainingStateChangeHandler={setTrainingStateChangeHandler}
           showPopover={showPopover}
           sourceLanguageId={sourceLanguageId}
           sourceLanguageFont={sourceLanguageFont}

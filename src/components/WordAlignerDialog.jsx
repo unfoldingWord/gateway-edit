@@ -40,7 +40,7 @@ import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import { useBoundsUpdater } from 'translation-helps-rcl'
 import isEqual from 'deep-equal'
-import { AlignmentTrainerUtils, useAlignmentSuggestions } from 'enhanced-word-aligner-rcl'
+import {AlignmentTrainerUtils, useAlignmentSuggestions, useTrainingState} from 'enhanced-word-aligner-rcl'
 import { StoreContext } from '@context/StoreContext'
 import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 import WordAlignerArea from './WordAlignerArea';
@@ -78,7 +78,6 @@ function WordAlignerDialog({
   });
 
   const dialogRef = useRef(null); // for keeping track of aligner dialog position
-  const handleSetTrainingState = useRef(null);
 //  const oldDependencies = useRef({})
 
   const {
@@ -215,47 +214,45 @@ function WordAlignerDialog({
     return title_;
   }
 
+  /**
+   * A callback function that handles actions to be performed upon the completion of training.
+   *
+   * The function logs the completed training's related information to the console.
+   *
+   * This function is memoized using `useCallback` to ensure its identity remains stable
+   * and does not change across re-renders unless dependencies change.
+   *
+   * @constant
+   * @function
+   * @param {any} info - Information related to the completed training.
+   */
   const handleTrainingCompleted = useCallback((info) => {
     console.log('handleTrainingCompleted', info);
   }, []);
 
-  function setHandleSetTrainingState(handleSetTrainingState_) {
-    console.log('WordAlignerDialog: setHandleSetTrainingState', handleSetTrainingState_)
-    handleSetTrainingState.current = handleSetTrainingState_;
-  }
-
-  /**
-   * A function that handles updating the training state.
-   * TRICKY: does callback to function previously set by setHandleSetTrainingState()
-   *
-   * @function
-   * @name handleSetTrainingStateForward
-   * @param {Object} props - The properties or parameters that are passed to determine the training state.
-   *    see definition of THandleTrainingStateChange
-   */
-  const handleSetTrainingStateForward = (props) => {
-    const current = handleSetTrainingState.current;
-
-    if (!current) {
-      console.log('handleSetTrainingStateForward: no handleSetTrainingState.current');
-      return
-    }
-
-    current(props)
-  }
+  const {
+    actions: {
+      handleTrainingStateChange,
+      setTrainingStateChangeHandler
+    },
+  } = useTrainingState({
+    translate,
+    verbose: true,
+  })
 
   // this hook manages the word aligner suggestions including training of the Model
   const alignmentSuggestionsManage = useAlignmentSuggestions({ // see TUseAlignmentSuggestionsProps
     config: wordSuggesterConfig,
     contextId,
     createAlignmentTrainingWorker,
-    handleTrainingStateChange: handleSetTrainingStateForward,
+    handleTrainingStateChange,
     handleTrainingCompleted,
     shown: showDialog,
     sourceLanguageId: sourceLanguageId,
+    sourceUsfm: originalBibleBookUsfm,
     targetLanguageId: targetLanguage?.languageId,
     targetUsfm: targetBibleBookUsfm,
-    sourceUsfm: originalBibleBookUsfm,
+    translationMemory: translationMemory,
   });
 
   const {
@@ -388,7 +385,7 @@ function WordAlignerDialog({
           handleDoTrainingClick={handleDoTrainingClick}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
-          setHandleSetTrainingState={setHandleSetTrainingState}
+          setTrainingStateChangeHandler={setTrainingStateChangeHandler}
           showingDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
           style={alignerAreaStyle}
