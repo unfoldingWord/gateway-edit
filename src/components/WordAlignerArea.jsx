@@ -65,7 +65,7 @@ import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
 import {
   AlignmentHelpers,
   EnhancedWordAligner,
-  useTrainingState,
+  TrainingState,
 } from 'enhanced-word-aligner-rcl'
 import { Label } from 'react-bootstrap';
 import isEqual from 'deep-equal';
@@ -84,13 +84,11 @@ function WordAlignerArea({
   alignmentSuggestionsManage,
   contextId,
   errorMessage,
-  handleTrainingStateChange: handleTrainingStateChange_,
   handleDoTrainingClick,
   height,
   lexiconCache,
   loadLexiconEntry,
   onChange,
-  setTrainingStateChangeHandler,
   sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
@@ -125,9 +123,6 @@ function WordAlignerArea({
   } = state;
 
   const {
-    actions: {
-      handleTrainingStateChange
-    },
     state: {
       training,
       trained,
@@ -136,29 +131,13 @@ function WordAlignerArea({
       trainingButtonStr,
       trainingButtonHintStr,
     }
-  } = useTrainingState({
-    passThroughStateChange: handleTrainingStateChange_,
-    translate,
-    verbose: true,
-  })
+  } = TrainingState.useTrainingStateContext()
 
-  /**
-   * Training State Handler Effect
-   * ============================
-   *
-   * This effect sets up the training state change handler on component mount.
-   * It ensures that training state updates are properly handled by setting
-   * the handleTrainingStateChange callback once when the component mounts.
-   *
-   * @effect Initializes training state change handler on mount
-   */
   useEffect(() => {
     const key = 'WordAlignerArea';
     console.log('WordAlignerArea initialized/mounted')
-    setTrainingStateChangeHandler(handleTrainingStateChange, key) // set on mount
     return () => {
       console.log('WordAlignerArea unmounted')
-      setTrainingStateChangeHandler(null, key) // set on mount
     };
   },[]);
 
@@ -287,11 +266,9 @@ function WordAlignerArea({
           alignmentSuggestionsManage={alignmentSuggestionsManage}
           config={wordSuggesterConfig}
           contextId={contextId}
-          handleTrainingStateChange={handleTrainingStateChange}
           lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
           onChange={onChange}
-          setTrainingStateChangeHandler={setTrainingStateChangeHandler}
           showPopover={showPopover}
           sourceLanguageId={sourceLanguageId}
           sourceLanguageFont={sourceLanguageFont}
@@ -353,7 +330,7 @@ function WordAlignerArea({
       </div>
       {/** Lexicon Popup dialog */}
       <PopoverComponent
-        popoverVisibility={lexiconData}
+        popoverVisibility={!!lexiconData}
         title={lexiconData?.PopoverTitle || ''}
         bodyText={lexiconData?.wordDetails || ''}
         positionCoord={lexiconData?.positionCoord}

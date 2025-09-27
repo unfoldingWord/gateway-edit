@@ -40,7 +40,7 @@ import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import { useBoundsUpdater } from 'translation-helps-rcl'
 import isEqual from 'deep-equal'
-import {AlignmentTrainerUtils, useAlignmentSuggestions, useTrainingState} from 'enhanced-word-aligner-rcl'
+import {AlignmentTrainerUtils, useAlignmentSuggestions, TrainingState} from 'enhanced-word-aligner-rcl'
 import { StoreContext } from '@context/StoreContext'
 import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 import WordAlignerArea from './WordAlignerArea';
@@ -232,13 +232,9 @@ function WordAlignerDialog({
 
   const {
     actions: {
-      handleTrainingStateChange,
-      setTrainingStateChangeHandler
+      handleTrainingStateChange
     },
-  } = useTrainingState({
-    translate,
-    verbose: true,
-  })
+  } = TrainingState.useTrainingStateContext()
 
   // this hook manages the word aligner suggestions including training of the Model
   const alignmentSuggestionsManage = useAlignmentSuggestions({ // see TUseAlignmentSuggestionsProps
@@ -385,7 +381,6 @@ function WordAlignerDialog({
           handleDoTrainingClick={handleDoTrainingClick}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
-          setTrainingStateChangeHandler={setTrainingStateChangeHandler}
           showingDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
           style={alignerAreaStyle}
