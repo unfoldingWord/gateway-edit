@@ -12,6 +12,9 @@
  *   It uses WordAlignerArea Component to render dialog content and uses useAlignmentSuggestions for alignment suggestions
  *
  * - **Draggable Interface**: Users can reposition the dialog within the workspace bounds
+ * - **AI-Powered Suggestions**: Integrates with enhanced-word-aligner-rcl for intelligent alignment recommendations
+ * - **Training System**: Supports both cached and on-demand training of alignment models using translation memory
+ * - **Real-time Updates**: Monitors alignment status changes and updates the interface accordingly
  * - **Error Handling**: Displays error messages and handles training failures gracefully
  *
  * ## Properties
@@ -37,12 +40,21 @@ import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import { useBoundsUpdater } from 'translation-helps-rcl'
 import isEqual from 'deep-equal'
-import { AlignmentTrainerUtils } from 'enhanced-word-aligner-rcl'
+import {AlignmentTrainerUtils, useAlignmentSuggestions, TrainingState} from 'enhanced-word-aligner-rcl'
 import { StoreContext } from '@context/StoreContext'
+import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 import WordAlignerArea from './WordAlignerArea';
 
 function getBookData(alignerStatus) {
   return alignerStatus?.state?.reference || {};
+}
+
+const wordSuggesterConfig= {
+  doAutoTraining: true, // set true to enable auto training of alignment suggestions
+  trainOnlyOnCurrentBook: false, // if true, then training is sped up for small books by just training on alignment memory data for current book
+  minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
+  keepAllAlignmentMemory: true, // EXPERIMENTAL FEATURE - if true, then alignment data not used for training will be added back into wordMap after training.  This should improve alignment vocabulary, but may negatively impact accuracy in the case of fully aligned books.
+  keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
 }
 
 // popup dialog for user to align verse
@@ -55,28 +67,28 @@ function WordAlignerDialog({
   owner
 }) {
   const [state, setState] = useState({
-    showDialog: false,
     contextId: null,
-    targetWords: [],
-    verseAlignments: [],
-    targetLanguage: {},
-    sourceLanguageId: '',
     errorMessage: '',
-    title: ''
+    showDialog: false,
+    sourceLanguageId: '',
+    targetLanguage: {},
+    targetWords: [],
+    title: '',
+    verseAlignments: []
   });
 
   const dialogRef = useRef(null); // for keeping track of aligner dialog position
-  const handleSetTrainingState = useRef(null);
+//  const oldDependencies = useRef({})
 
   const {
-    showDialog,
     contextId,
-    targetWords,
-    verseAlignments,
-    targetLanguage,
-    sourceLanguageId,
     errorMessage,
-    title
+    showDialog,
+    sourceLanguageId,
+    targetLanguage,
+    targetWords,
+    title,
+    verseAlignments
   } = state;
 
   const {
@@ -202,6 +214,55 @@ function WordAlignerDialog({
     return title_;
   }
 
+  /**
+   * A callback function that handles actions to be performed upon the completion of training.
+   *
+   * The function logs the completed training's related information to the console.
+   *
+   * This function is memoized using `useCallback` to ensure its identity remains stable
+   * and does not change across re-renders unless dependencies change.
+   *
+   * @constant
+   * @function
+   * @param {any} info - Information related to the completed training.
+   */
+  const handleTrainingCompleted = useCallback((info) => {
+    console.log('handleTrainingCompleted', info);
+  }, []);
+
+  const {
+    actions: {
+      handleTrainingStateChange
+    },
+  } = TrainingState.useTrainingStateContext()
+
+  // this hook manages the word aligner suggestions including training of the Model
+  const alignmentSuggestionsManage = useAlignmentSuggestions({ // see TUseAlignmentSuggestionsProps
+    config: wordSuggesterConfig,
+    contextId,
+    createAlignmentTrainingWorker,
+    handleTrainingStateChange,
+    handleTrainingCompleted,
+    shown: showDialog,
+    sourceLanguageId: sourceLanguageId,
+    sourceUsfm: originalBibleBookUsfm,
+    targetLanguageId: targetLanguage?.languageId,
+    targetUsfm: targetBibleBookUsfm,
+    translationMemory: translationMemory,
+  });
+
+  const {
+    actions: {
+      getSuggester,
+      getTrainingContextId,
+      isTraining,
+      loadTranslationMemory,
+      startTraining,
+      stopTraining,
+      suggester,
+    }
+  } = alignmentSuggestionsManage; // type is TUseAlignmentSuggestionsReturn
+
   useEffect(() => {
     if (shouldShowDialog_ !== showDialog) {
       console.log(`WordAlignerDialog: alignment data changed shouldShowDialog_ ${shouldShowDialog_}`)
@@ -238,10 +299,71 @@ function WordAlignerDialog({
     }
   }, [targetWords_, verseAlignments_, alignerData_?.state?.reference, shouldShowDialog_]);
 
+  /**
+   * Initiates the training process using translation memory data if available.
+   * The method checks for cached training data within `targetUsfmsBooks` and,
+   * if present, loads the translation memory and starts the training process.
+   *
+   * @return {void} Does not return a value.
+   */
+  function startTraining_() {
+    const targetUsfmsBooks = translationMemory?.targetUsfms;
+    const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
+
+    if (haveCachedTrainingData) {
+      console.log('WordAlignerArea: translation memory changed, loading translation memory')
+      loadTranslationMemory(translationMemory);
+      startTraining();
+    } else {
+      console.log('WordAlignerArea: translation memory not loaded')
+    }
+  }
+
+  const alignerAreaStyle = useMemo(() => ({
+    maxHeight: `${height}px`,
+    overflowY: 'auto'
+  }), [height]);
+
+  function handleDoTrainingClick() {
+    const training = isTraining()
+    console.log(`WordAlignerDialog: handleDoTrainingClick, current training ${training}`);
+    if (!training) {
+      startTraining_();
+    } else {
+      console.log('WordAlignerDialog: handleDoTrainingClick - already training, cancelling')
+      stopTraining()
+    }
+  }
+
+  // const oldDependencies = useRef({})
+
   const wordAlignerDialogArea = useMemo(() => {
     console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
 
-    return (
+      // // Track which dependencies caused the useMemo to regenerate
+      // const dependencies = {
+      //   contextId,
+      //   errorMessage,
+      //   showDialog,
+      //   sourceLanguageId,
+      //   targetLanguage,
+      //   targetWords,
+      //   title,
+      //   verseAlignments
+      // };
+      //
+      // for (const key in dependencies) {
+      //   if (dependencies.hasOwnProperty(key)) {
+      //     const value = dependencies[key];
+      //     const oldValue = oldDependencies.current[key];
+      //     if (oldValue !== value) {
+      //       console.log(`WordAlignerDialog: ${key} changed from '${oldValue}' to '${value}'`);
+      //       oldDependencies.current[key] = value;
+      //     }
+      //   }
+      // }
+
+      return (
       <Dialog
         fullWidth={true}
         maxWidth={'lg'}
@@ -253,19 +375,21 @@ function WordAlignerDialog({
       >
         <WordAlignerArea
           alignmentActions={alignmentActions_}
+          alignmentSuggestionsManage={alignmentSuggestionsManage}
           contextId={contextId}
           errorMessage={errorMessage}
+          handleDoTrainingClick={handleDoTrainingClick}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
           showingDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
-          height={height}
+          style={alignerAreaStyle}
+          suggester={suggester}
           targetLanguage={targetLanguage}
           targetLanguageFont={''}
           targetWords={targetWords}
           title={title || ''}
           translate={translate}
-          translationMemory={translationMemory}
           verseAlignments={verseAlignments}
         />
       </Dialog>

@@ -14,6 +14,7 @@ import {
   useMinimizedCardsState,
   Workspace,
 } from 'resource-workspace-rcl'
+import { TrainingState } from 'enhanced-word-aligner-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   fixOccurrence,
@@ -830,14 +831,18 @@ function WorkspaceContainer() {
             )
           }
         </Workspace>
-        <WordAlignerDialog
-          alignerStatus={wordAlignerStatus}
-          height={wordAlignerHeight}
+        <TrainingState.TrainingStateProvider
           translate={translate}
-          getLexiconData={getLexiconData}
-          originalBibleBookUsfm={originalScriptureResults?.bibleUsfm}
-          owner={owner}
-        />
+          verbose={true}>
+          <WordAlignerDialog
+            alignerStatus={wordAlignerStatus}
+            height={wordAlignerHeight}
+            translate={translate}
+            getLexiconData={getLexiconData}
+            originalBibleBookUsfm={originalScriptureResults?.bibleUsfm}
+            owner={owner}
+          />
+        </TrainingState.TrainingStateProvider>
 
         {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
           <>
