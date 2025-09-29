@@ -280,9 +280,9 @@ function WordAlignerArea({
           targetLanguageFont={targetLanguageFont}
           targetLanguage={targetLanguage}
           targetFontSizePercent={targetFontSizePercent}
-          targetWords={targetWords || []}
+          targetWords={initialAlignment?.targetWords || []}
           translate={translate}
-          verseAlignments={verseAlignments || []}
+          verseAlignments={initialAlignment?.verseAlignments || []}
         />
       </div>
       <div style={{width: `auto`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
@@ -376,6 +376,7 @@ WordAlignerArea.propTypes = {
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
+  suggester: PropTypes.func,
   targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,
   targetFontSizePercent: PropTypes.number,
