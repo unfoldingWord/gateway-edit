@@ -62,10 +62,10 @@
     "resource-workspace-rcl": "2.1.4",
     "scripture-resources-rcl": "5.5.15",
     "scripture-tsv": "1.2.0",
-    "single-scripture-rcl": "3.4.28",
+    "single-scripture-rcl": "3.4.29",
     "tailwindcss": "^2.0.4",
     "tc-ui-toolkit": "5.3.3",
-    "translation-helps-rcl": "3.6.4",
+    "translation-helps-rcl": "3.6.5",
     "use-deep-compare-effect": "^1.3.1",
     "word-aligner": "^1.0.0",
     "word-aligner-rcl": "1.1.3"
