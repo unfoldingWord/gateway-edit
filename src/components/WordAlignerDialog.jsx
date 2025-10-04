@@ -381,7 +381,7 @@ function WordAlignerDialog({
           handleDoTrainingClick={handleDoTrainingClick}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
-          showingDialog={!!showDialog}
+          showDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
           style={alignerAreaStyle}
           suggester={suggester}

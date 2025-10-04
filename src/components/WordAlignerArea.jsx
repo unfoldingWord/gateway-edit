@@ -30,6 +30,7 @@
  * @param {Function} loadLexiconEntry - Loads lexicon data for word definitions (required)
  * @param {Function} onChange - Callback fired when alignments change
  * @param {Function} setTrainingStateChangeHandler - Sets the training state handler reference
+ * @param {string} showDialog - true if dialog is to be shown
  * @param {string} sourceLanguageId - Identifier for source language (Hebrew/Greek) (required)
  * @param {string} sourceLanguageFont - Font family for source language text display
  * @param {number} sourceFontSizePercent - Font size percentage for source language
@@ -89,6 +90,7 @@ function WordAlignerArea({
   lexiconCache,
   loadLexiconEntry,
   onChange,
+  showDialog,
   sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
@@ -271,6 +273,7 @@ function WordAlignerArea({
           lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
           onChange={onChange}
+          showDialog={showDialog}
           showPopover={showPopover}
           sourceLanguageId={sourceLanguageId}
           sourceLanguageFont={sourceLanguageFont}
@@ -373,6 +376,7 @@ WordAlignerArea.propTypes = {
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
   onChange: PropTypes.func,
+  showDialog: PropTypes.bool,
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
