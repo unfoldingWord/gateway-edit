@@ -163,7 +163,7 @@ export function getResourceMessage(resourceStatus, owner, languageId, resourceId
  * @return {Promise<*>}
  */
 export async function getLatestBibleRepo(server, org, lang, bible, processError) {
-  const url = `${server}/api/catalog/v5/search/${org}/${lang}_${bible}`
+  const url = `${server}/api/v1/catalog/search/?owner=${org}&repo=${lang}_${bible}&metadataType=rc`
   const results = await doFetch(url, {}, HTTP_GET_MAX_WAIT_TIME)
     .then(response => {
       if (response?.status !== 200) {

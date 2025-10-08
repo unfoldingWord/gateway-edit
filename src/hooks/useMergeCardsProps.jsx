@@ -43,6 +43,15 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     cardsToMerge: []
   }
 
+  const cardTitles = { }
+
+  if (mergeStatusForCards) {
+    const cardKeys = Object.keys(mergeStatusForCards);
+    cardKeys.forEach((key) => {
+      cardTitles[key] = mergeStatusForCards[key].title
+    })
+  }
+
   const cardMergeGroupings = useMemo(() => {
     if (mergeStatusForCards) {
       return Object.keys(mergeStatusForCards).reduce(groupCardByMergability, initialCardMergeGroupings)
@@ -145,6 +154,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     loadingProps,
     cardMergeGroupings,
     cardsToMerge,
+    cardTitles,
   }
 }
 

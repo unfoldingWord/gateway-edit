@@ -54,6 +54,7 @@ export default function Drawer({
     isMessageDialogOpen,
     onCloseErrorDialog,
     cardsToMerge,
+    cardTitles,
   } = mergeButtonProps
 
   async function onSettingsClick() {
@@ -155,6 +156,7 @@ export default function Drawer({
             />
             <MergeDialog
               cardsToMerge={cardsToMerge}
+              cardTitles={cardTitles}
               mergeStatusForCards={mergeStatusForCards}
               {...mergeButtonProps}
               open={isMessageDialogOpen}
