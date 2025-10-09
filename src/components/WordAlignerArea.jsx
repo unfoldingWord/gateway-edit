@@ -243,8 +243,7 @@ function WordAlignerArea({
   }
 
   const suggestionActions = alignmentSuggestionsManage.actions;
-  const maxHeight = 350;
-  const infoVerticalOffset = '48px';
+  const maxHeight = 450;
 
   const alignerAreaStyle = useMemo(() => ({
     maxHeight: `${height > maxHeight ? maxHeight : height}px`,
@@ -269,7 +268,6 @@ function WordAlignerArea({
           alignmentSuggestionsManage={alignmentSuggestionsManage}
           config={wordSuggesterConfig}
           contextId={contextId}
-          infoVerticalOffset={infoVerticalOffset}
           lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
           onChange={onChange}
