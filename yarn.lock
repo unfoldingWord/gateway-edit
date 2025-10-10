@@ -5538,10 +5538,10 @@ enhanced-resolve@^5.0.0:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
 
-enhanced-word-aligner-rcl@1.3.8:
-  version "1.3.8"
-  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.3.8.tgz#a43bc4fde4c6304c1329b118d6436b2f0b5c9ced"
-  integrity sha512-SmniXOVo3mzpn2KxzLxaA0yH8rjobUGWPolbhB60I54HhVnEdnfc2V6W/RhCBZIAAMLEZlK2Nedd8Xu4qJYiMA==
+enhanced-word-aligner-rcl@1.3.9:
+  version "1.3.9"
+  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.3.9.tgz#de77511997dff3ee3a6b89e5018a7f3725eb55e9"
+  integrity sha512-M3GQl+y0MuGc9G0QVacNHum42kPhQpuWOJ6lXLF9EAFTlBVgxpXGoMonF9RjNkFwUbSjLnROHHI6ZqjezsalYg==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     bible-reference-range "1.1.1"
@@ -5556,7 +5556,7 @@ enhanced-word-aligner-rcl@1.3.8:
     styled-components "^5.2.1"
     ts-loader "9"
     uw-wordmapbooster "1.0.3"
-    word-aligner-rcl "1.2.1"
+    word-aligner-rcl "1.2.3"
 
 enquirer@^2.3.5, enquirer@^2.3.6:
   version "2.3.6"
@@ -13767,10 +13767,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.1.tgz#8a47b313f7dd92d19597840e4d2b13f1d1c0b9df"
-  integrity sha512-wUO9ZU2AqK6CL0lklYk5gxoFdjqq20te6EJ09hDxLdiAYAjAMADLqh1/PGzhlBG/XQrQa2nP2yyzVlA5vVCC4A==
+word-aligner-rcl@1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.3.tgz#eea5018e441541d5a4251505521ee023d9c813ac"
+  integrity sha512-DiOvKCICTPjkq6SpOHgl47bYIKYCkw23uUTRaczdTd0fXaQmNmADVlmkZEX2V4sL9HnkIVGhDCFglQJO6rCnMQ==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
