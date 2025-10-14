@@ -72,10 +72,8 @@ import { Label } from 'react-bootstrap';
 import isEqual from 'deep-equal';
 import cloneDeep from 'lodash.clonedeep';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import PopoverComponent from './PopoverComponent'
-import {delay} from "@utils/resources";
+import PromptDialog from "@components/PromptDialog";
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
@@ -110,7 +108,7 @@ function WordAlignerArea({
     alignmentChange: null,
     initialAlignment: null,
     lexiconData: null,
-    showResetWarning: false,
+    showPrompt: null,
     suggester: suggester_,
     trainingButtonHintStr: '',
   });
@@ -120,7 +118,7 @@ function WordAlignerArea({
     alignmentChange,
     initialAlignment,
     lexiconData,
-    showResetWarning,
+    showPrompt,
     suggester,
   } = state;
 
@@ -177,6 +175,7 @@ function WordAlignerArea({
       alignmentChange: results,
       aligned_: alignmentComplete
     }));
+    onChange?.(results); // forward on changes
   }
 
   function cancelAlignment() {
@@ -187,6 +186,23 @@ function WordAlignerArea({
   }
 
   function saveAlignment() {
+    if (haveSuggestions(alignmentChange?.verseAlignments)) {
+      const _showSuggestionWarning = {
+        content: translate('alignments.use_suggestions'),
+        noText: translate('no'),
+        onClose: onClosePrompt,
+        onNo: onClosePrompt,
+        onYes: _saveAlignment,
+        title: translate('warning'),
+        yesText: translate('yes'),
+      }
+      setState(prevState => ({...prevState, showPrompt: _showSuggestionWarning}));
+    } else {
+      _saveAlignment()
+    }
+  }
+
+  function _saveAlignment() {
     console.log('WordAlignerArea: saveAlignment')
     const saveAlignment = alignmentActions?.saveAlignment
     saveAlignment?.(alignmentChange)
@@ -197,6 +213,22 @@ function WordAlignerArea({
     console.log("handleInfoClick");
     const message = (info && info.message) || JSON.stringify(info, null, 2)
     window.prompt(`Training Information:\n\n${message}`)
+  }
+
+  /**
+   * Determines if there are any suggestions in the provided verse alignments.
+   *
+   * @param {Array<Object>} verseAlignments - An array of alignment objects where each object may include an `isSuggestion` property.
+   * @return {boolean} Returns true if any alignment object has the `isSuggestion` property set to true; otherwise, returns false.
+   */
+  function haveSuggestions(verseAlignments) {
+    const _verseAlignments = verseAlignments || [];
+    for (let i = 0; i < _verseAlignments.length; i++) {
+      if (_verseAlignments[i]?.isSuggestion) {
+        return true;
+      }
+    }
+    return false
   }
 
   /**
@@ -212,12 +244,15 @@ function WordAlignerArea({
       verseAlignments: alignmentData_?.verseAlignments,
     }
 
+    const _alignmentChange = cloneDeep(alignmentChange_);
     setState(prevState => ({
       ...prevState,
       initialAlignment: cloneDeep(alignmentData_),
-      alignmentChange: cloneDeep(alignmentChange_),
-      showResetWarning: false
+      alignmentChange: _alignmentChange,
+      showPrompt: null,
+      aligned: false,
     }));
+    onAlignmentChange(_alignmentChange)
   }
 
   function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
@@ -233,7 +268,7 @@ function WordAlignerArea({
     }));
   }
 
-  const enableResetWarning = (currentShowDialog && showResetWarning);
+  const enablePrompt = (currentShowDialog && showPrompt);
   const wordSuggesterConfig = {
     doAutoTraining: true, // set true to enable auto training of alignment suggestions
     trainOnlyOnCurrentBook: false, // if true, then training is sped up for small books by just training on alignment memory data for current book
@@ -249,6 +284,23 @@ function WordAlignerArea({
     maxHeight: `${height > maxHeight ? maxHeight : height}px`,
     overflowY: 'auto'
   }), [height]);
+
+  function showResetWarning() {
+    const _showResetWarning = {
+      content: translate('alignments.reset_confirm'),
+      noText: translate('no'),
+      onClose: onClosePrompt,
+      onNo: onClosePrompt,
+      onYes: doReset,
+      title: translate('warning'),
+      yesText: translate('yes'),
+    }
+    setState(prevState => ({...prevState, showPrompt: _showResetWarning}));
+  }
+
+  function onClosePrompt() {
+    setState(prevState => ({...prevState, showPrompt: null}));
+  }
 
   return (
     <>
@@ -270,7 +322,7 @@ function WordAlignerArea({
           contextId={contextId}
           lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
-          onChange={onChange}
+          onChange={onAlignmentChange}
           showDialog={showDialog}
           showPopover={showPopover}
           sourceLanguageId={sourceLanguageId}
@@ -299,7 +351,7 @@ function WordAlignerArea({
             <Button
               variant="outlined"
               style={{margin: '10px 30px'}}
-              onClick={() => setState(prevState => ({ ...prevState, showResetWarning: true }))}
+              onClick={showResetWarning}
               title={translate('alignments.reset_hint')}
             >
               {translate('alignments.reset')}
@@ -340,22 +392,15 @@ function WordAlignerArea({
         onClosePopover={() => setState(prevState => ({ ...prevState, lexiconData: null }))}
       />
 
-      <Dialog open={enableResetWarning} onClose={() => setState(prevState => ({ ...prevState, showResetWarning: false }))} aria-labelledby="reset-warn-dialog">
-        <DialogTitle id="form-dialog-title">{translate('warning')}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {translate('alignments.reset_confirm')}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setState(prevState => ({ ...prevState, showResetWarning: false }))} color="primary">
-            {translate('no')}
-          </Button>
-          <Button onClick={doReset} color="secondary">
-            {translate('yes')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <PromptDialog
+        open={!!enablePrompt}
+        content={showPrompt?.content}
+        noText={showPrompt?.noText}
+        onNo={showPrompt?.onNo}
+        onYes={showPrompt?.onYes}
+        title={showPrompt?.title}
+        yesText={showPrompt?.yesText}
+      />
     </>
   )
 }

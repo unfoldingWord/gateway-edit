@@ -335,33 +335,8 @@ function WordAlignerDialog({
     }
   }
 
-  // const oldDependencies = useRef({})
-
   const wordAlignerDialogArea = useMemo(() => {
     console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
-
-      // // Track which dependencies caused the useMemo to regenerate
-      // const dependencies = {
-      //   contextId,
-      //   errorMessage,
-      //   showDialog,
-      //   sourceLanguageId,
-      //   targetLanguage,
-      //   targetWords,
-      //   title,
-      //   verseAlignments
-      // };
-      //
-      // for (const key in dependencies) {
-      //   if (dependencies.hasOwnProperty(key)) {
-      //     const value = dependencies[key];
-      //     const oldValue = oldDependencies.current[key];
-      //     if (oldValue !== value) {
-      //       console.log(`WordAlignerDialog: ${key} changed from '${oldValue}' to '${value}'`);
-      //       oldDependencies.current[key] = value;
-      //     }
-      //   }
-      // }
 
       return (
       <Dialog
