@@ -839,7 +839,6 @@ function WorkspaceContainer() {
             height={wordAlignerHeight}
             translate={translate}
             getLexiconData={getLexiconData}
-            originalBibleBookUsfm={originalScriptureResults?.bibleUsfm}
             owner={owner}
           />
         </TrainingState.TrainingStateProvider>
