@@ -22,7 +22,6 @@
  * @param {number} height - Maximum height constraint for the dialog content area (required)
  * @param {Function} translate - Translation function for UI text localization (required)
  * @param {Function} getLexiconData - Function to fetch lexicon data for words (required)
- * @param {string} originalBibleBookUsfm - USFM content of the original language Bible book
  * @param {string} owner - Repository owner identifier for the target Bible
  */
 
@@ -39,6 +38,7 @@ import Dialog from '@mui/material/Dialog'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import { useBoundsUpdater } from 'translation-helps-rcl'
+import usfm from 'usfm-js';
 import isEqual from 'deep-equal'
 import {AlignmentTrainerUtils, useAlignmentSuggestions, TrainingState} from 'enhanced-word-aligner-rcl'
 import { StoreContext } from '@context/StoreContext'
@@ -63,12 +63,12 @@ function WordAlignerDialog({
   height,
   translate,
   getLexiconData,
-  originalBibleBookUsfm,
   owner
 }) {
   const [state, setState] = useState({
     contextId: null,
     errorMessage: '',
+    originalBibleBookUsfm: '',
     showDialog: false,
     sourceLanguageId: '',
     targetLanguage: {},
@@ -83,6 +83,7 @@ function WordAlignerDialog({
   const {
     contextId,
     errorMessage,
+    originalBibleBookUsfm,
     showDialog,
     sourceLanguageId,
     targetLanguage,
@@ -110,7 +111,7 @@ function WordAlignerDialog({
   const targetWords_ = alignerData_?.wordBank || null
   const verseAlignments_ = alignerData_?.alignments || null
   const shouldShowDialog_ = !!(targetWords_ && verseAlignments_)
-
+  const originalScriptureBookObjects = alignerData_?.originalScriptureBookObjects;
   const boundsParams = useMemo(() => {
     console.log(`WordAlignerDialog: shouldShowDialog_ changed to ${shouldShowDialog_}`)
 
@@ -160,9 +161,10 @@ function WordAlignerDialog({
   const bookId = contextId?.reference?.bookId || ''
 
   const targetBibleBookUsfm = alignerData_?.bibleUsfm || ''
-  const translationMemory = useMemo(() => (
-    AlignmentTrainerUtils.makeTranslationMemory(bookId, originalBibleBookUsfm, targetBibleBookUsfm)
-  ), [bookId, originalBibleBookUsfm, targetBibleBookUsfm]);
+  const translationMemory = useMemo(() => {
+    const originalBibleBookUsfm = originalScriptureBookObjects ? usfm.toUSFM(originalScriptureBookObjects, { forcedNewLines: true }) : ''
+    return AlignmentTrainerUtils.makeTranslationMemory(bookId, originalBibleBookUsfm, targetBibleBookUsfm)
+  }, [bookId, originalScriptureBookObjects, targetBibleBookUsfm]);
 
   const getContextId = (alignerStatus) => {
     const reference = alignerStatus?.state?.reference;
@@ -272,15 +274,17 @@ function WordAlignerDialog({
       const errorMessage_ = alignerStatus?.state?.errorMessage
       const title_ = getTitle(alignerStatus);
       const contextId_ = shouldShowDialog_ ? getContextId(alignerStatus) : null
+      const originalBibleBookUsfm = originalScriptureBookObjects ? usfm.toUSFM(originalScriptureBookObjects, { forcedNewLines: true }) : ''
 
       setState(prevState => ({
         ...prevState,
+        contextId: contextId_,
+        errorMessage: errorMessage_,
+        originalBibleBookUsfm,
         showDialog: shouldShowDialog_,
         sourceLanguageId: sourceLanguageId_,
         targetLanguage: targetLanguage_,
-        errorMessage: errorMessage_,
         title: title_,
-        contextId: contextId_
       }));
     }
 
@@ -394,7 +398,6 @@ WordAlignerDialog.propTypes = {
   height: PropTypes.number.isRequired,
   translate: PropTypes.func.isRequired,
   getLexiconData: PropTypes.func.isRequired,
-  originalBibleBookUsfm: PropTypes.string,
   owner: PropTypes.string,
 }
 
@@ -403,7 +406,6 @@ export default React.memo(WordAlignerDialog, (prevProps, nextProps) => {
   const keysToCompare = [
     'alignerStatus',
     'height',
-    'originalBibleBookUsfm',
     'owner'
   ];
 
