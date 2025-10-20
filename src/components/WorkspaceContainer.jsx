@@ -66,7 +66,7 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
-const wordAlignmentScreenRatio = 0.7
+const wordAlignmentScreenRatio = 0.8
 const wordAlignmentMaxHeightPx = 1000
 
 const buildId = getBuildId()
@@ -118,7 +118,7 @@ function WorkspaceContainer() {
   const { height } = useWindowDimensions()
 
   const wordAlignerHeight = useMemo(() => {
-    let _height = wordAlignmentScreenRatio * height
+    let _height = wordAlignmentScreenRatio * (height || 640) // do sanity check on number
 
     if (_height > wordAlignmentMaxHeightPx) {
       _height = wordAlignmentMaxHeightPx
@@ -836,7 +836,7 @@ function WorkspaceContainer() {
           verbose={true}>
           <WordAlignerDialog
             alignerStatus={wordAlignerStatus}
-            height={wordAlignerHeight}
+            wordAlignerMaxHeight={wordAlignerHeight}
             translate={translate}
             getLexiconData={getLexiconData}
             owner={owner}
