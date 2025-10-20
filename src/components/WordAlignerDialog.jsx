@@ -60,10 +60,10 @@ const wordSuggesterConfig= {
 // popup dialog for user to align verse
 function WordAlignerDialog({
   alignerStatus,
-  height,
-  translate,
   getLexiconData,
-  owner
+  translate,
+  owner,
+  wordAlignerMaxHeight
 }) {
   const [state, setState] = useState({
     contextId: null,
@@ -323,11 +323,6 @@ function WordAlignerDialog({
     }
   }
 
-  const alignerAreaStyle = useMemo(() => ({
-    maxHeight: `${height}px`,
-    overflowY: 'auto'
-  }), [height]);
-
   function handleDoTrainingClick() {
     const training = isTraining()
     console.log(`WordAlignerDialog: handleDoTrainingClick, current training ${training}`);
@@ -362,7 +357,6 @@ function WordAlignerDialog({
           loadLexiconEntry={getLexiconData}
           showDialog={!!showDialog}
           sourceLanguageId={sourceLanguageId}
-          style={alignerAreaStyle}
           suggester={suggester}
           targetLanguage={targetLanguage}
           targetLanguageFont={''}
@@ -370,6 +364,7 @@ function WordAlignerDialog({
           title={title || ''}
           translate={translate}
           verseAlignments={verseAlignments}
+          wordAlignmentMaxHeight={wordAlignerMaxHeight}
         />
       </Dialog>
     )
@@ -395,10 +390,10 @@ function WordAlignerDialog({
 
 WordAlignerDialog.propTypes = {
   alignerStatus: PropTypes.object,
-  height: PropTypes.number.isRequired,
-  translate: PropTypes.func.isRequired,
   getLexiconData: PropTypes.func.isRequired,
   owner: PropTypes.string,
+  translate: PropTypes.func.isRequired,
+  wordAlignerMaxHeight: PropTypes.number.isRequired,
 }
 
 export default React.memo(WordAlignerDialog, (prevProps, nextProps) => {
