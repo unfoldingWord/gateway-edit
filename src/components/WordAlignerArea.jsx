@@ -34,7 +34,6 @@
  * @param {string} sourceLanguageId - Identifier for source language (Hebrew/Greek) (required)
  * @param {string} sourceLanguageFont - Font family for source language text display
  * @param {number} sourceFontSizePercent - Font size percentage for source language
- * @param {Object} style - Custom CSS styles for the component
  * @param {Function} suggester - Function that provides alignment suggestions based on ML training
  * @param {Object} targetLanguage - Target language configuration object (required)
  * @param {string} targetLanguageFont - Font family for target language text display
@@ -84,7 +83,6 @@ function WordAlignerArea({
   contextId,
   errorMessage,
   handleDoTrainingClick,
-  height,
   lexiconCache,
   loadLexiconEntry,
   onChange,
@@ -92,7 +90,6 @@ function WordAlignerArea({
   sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
-  style,
   suggester: suggester_,
   targetLanguage,
   targetLanguageFont,
@@ -102,6 +99,7 @@ function WordAlignerArea({
   translate,
   translationMemory,
   verseAlignments,
+  wordAlignmentMaxHeight,
 }) {
   const [state, setState] = useState({
     aligned_: false,
@@ -277,13 +275,15 @@ function WordAlignerArea({
     keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
   }
 
-  const suggestionActions = alignmentSuggestionsManage.actions;
-  const maxHeight = 450;
+  // calculate maximum height
+  const absoluteMaxHeight = 1000;
+  const _height = Math.round(wordAlignmentMaxHeight || 640); // sanity check and round
+  const maxHeight = _height > absoluteMaxHeight ? absoluteMaxHeight : _height; // limit to max height
 
   const alignerAreaStyle = useMemo(() => ({
-    maxHeight: `${height > maxHeight ? maxHeight : height}px`,
+    maxHeight: `${maxHeight}px`,
     overflowY: 'auto'
-  }), [height]);
+  }), [maxHeight]);
 
   function showResetWarning() {
     const _showResetWarning = {
@@ -415,7 +415,6 @@ WordAlignerArea.propTypes = {
   contextId: PropTypes.object,
   errorMessage: PropTypes.string,
   handleDoTrainingClick: PropTypes.func,
-  height: PropTypes.number,
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
   onChange: PropTypes.func,
@@ -432,6 +431,7 @@ WordAlignerArea.propTypes = {
   translate: PropTypes.func.isRequired,
   translationMemory: PropTypes.object,
   verseAlignments: PropTypes.array,
+  wordAlignmentMaxHeight: PropTypes.number,
 };
 
 export default WordAlignerArea
