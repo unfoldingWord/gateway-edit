@@ -198,6 +198,8 @@
   "training.source_ngram_hint"     : "Maximum number of original language words used for alignment memory.  Higher values can slow down suggestions and training",
   "training.training_steps_label"  : "Training Steps",
   "training.training_steps_hint"   : "Number of iterations used for training wordMap settings. Training time is proportional to this value, and low values may impact quality of suggestions",
+  "training.training_max_complexity_label" : "Maximum Complexity Training Data",
+  "training.training_max_complexity_hint"  : "Complexity Training Data is the sum of products of the original language word count times the gateway language word count for each verse.  This max value is to prevent memory overflow when there are a lot of alignments. On faster computers, setting to larger values may improve the suggestions, but will slow the training.",
   "delete"                         : "Delete",
   "alignments.use_suggestions"     : "Do you want to accept the suggested alignments",
   "alignments.accept"              : "Save",
