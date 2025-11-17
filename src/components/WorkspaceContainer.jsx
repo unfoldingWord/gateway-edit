@@ -14,6 +14,7 @@ import {
   useMinimizedCardsState,
   Workspace,
 } from 'resource-workspace-rcl'
+import { TrainingState } from 'enhanced-word-aligner-rcl'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   fixOccurrence,
@@ -65,7 +66,7 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
-const wordAlignmentScreenRatio = 0.7
+const wordAlignmentScreenRatio = 0.8
 const wordAlignmentMaxHeightPx = 1000
 
 const buildId = getBuildId()
@@ -117,7 +118,7 @@ function WorkspaceContainer() {
   const { height } = useWindowDimensions()
 
   const wordAlignerHeight = useMemo(() => {
-    let _height = wordAlignmentScreenRatio * height
+    let _height = wordAlignmentScreenRatio * (height || 640) // do sanity check on number
 
     if (_height > wordAlignmentMaxHeightPx) {
       _height = wordAlignmentMaxHeightPx
@@ -830,12 +831,17 @@ function WorkspaceContainer() {
             )
           }
         </Workspace>
-        <WordAlignerDialog
-          alignerStatus={wordAlignerStatus}
-          height={wordAlignerHeight}
+        <TrainingState.TrainingStateProvider
           translate={translate}
-          getLexiconData={getLexiconData}
-        />
+          verbose={true}>
+          <WordAlignerDialog
+            alignerStatus={wordAlignerStatus}
+            wordAlignerMaxHeight={wordAlignerHeight}
+            translate={translate}
+            getLexiconData={getLexiconData}
+            owner={owner}
+          />
+        </TrainingState.TrainingStateProvider>
 
         {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
           <>

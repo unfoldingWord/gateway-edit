@@ -20,11 +20,30 @@ Book Package harmonized view.
 - **_Release-v1.0.0_** https://release-v1-0-0--gateway-edit.netlify.app/
 - **_Release-v2.1.0_** https://release-v2-1-0--gateway-edit.netlify.app/
 
-## Scripts
+## Local Testing
 
-- "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
+### Running the app locally
 
-### Running tests
+Run:
+```bash
+yarn && yarn dev
+```
+
+Then open browser to `http://localhost:3000/` to run the app.
+
+### Testing Nextjs build
+
+First delete the `.next` and `out` folders. And then run:
+
+```bash
+yarn && yarn build
+```
+
+Then should see that the `.next` and `out` folders are created.  The `out` folder should have index.html file.
+
+
+
+## Running tests
 
 - Before running any tests, make sure initialized by doing:
 
@@ -41,13 +60,13 @@ yarn
 }
 ```
 
-#### Running Jest Unit Tests
+### Running Jest Unit Tests
 
 ```
 yarn run test:unit
 ```
 
-#### Running Cypress tests Interactively
+### Running Cypress tests Interactively
 
 - in first terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
 
@@ -61,13 +80,18 @@ yarn dev
 yarn run cypress
 ```
 
-#### Running Cypress tests headless
+### Running Cypress tests headless
 
 - in terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
 
 ```
 yarn test:headless
 ```
+
+### Scripts
+
+- "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
+
 
 ## UI Design
 

@@ -1,43 +1,144 @@
-import React, {useEffect, useState} from 'react'
+/**
+ * WordAlignerArea Component
+ *
+ * Synopsis:
+ * A React component that renders the content for WordAlignerDialog.  It provides interactive with an interface for
+ *   aligning words between source and target language texts.
+ *   This component renders the main content area for word alignment operations within a dialog-based interface.
+ *
+ * Description:
+ * This component serves as the core interface for word alignment functionality in the Gateway Edit Bible translation
+ * application. It allows translators to create, edit, and manage word-level alignments between original language
+ * texts (Hebrew/Greek) and target language translations. The component integrates with machine learning-based
+ * suggestion systems to assist translators in creating accurate alignments more efficiently.
+ *
+ * Key Features:
+ * - Interactive drag-and-drop word alignment interface
+ * - Visual completion status indicators (linked/unlinked icons)
+ * - Machine learning suggestion engine with training capabilities
+ * - Lexicon integration with popover definitions
+ * - Alignment reset functionality with confirmation dialog
+ * - Real-time alignment validation and status tracking
+ * - Training progress monitoring and status reporting
+ *
+ * Properties:
+ * @param {Object} alignmentActions - Action handlers for saving/canceling alignments
+ * @param {Function} alignmentActions.cancelAlignment - Cancels current alignment changes
+ * @param {Function} alignmentActions.saveAlignment - Saves alignment changes
+ * @param {Object} contextId - Context information for current verse/passage being aligned
+ * @param {Object} lexiconCache - Cached lexicon entries for performance optimization
+ * @param {Function} loadLexiconEntry - Loads lexicon data for word definitions (required)
+ * @param {Function} onChange - Callback fired when alignments change
+ * @param {Function} setTrainingStateChangeHandler - Sets the training state handler reference
+ * @param {string} showDialog - true if dialog is to be shown
+ * @param {string} sourceLanguageId - Identifier for source language (Hebrew/Greek) (required)
+ * @param {string} sourceLanguageFont - Font family for source language text display
+ * @param {number} sourceFontSizePercent - Font size percentage for source language
+ * @param {Function} suggester - Function that provides alignment suggestions based on ML training
+ * @param {Object} targetLanguage - Target language configuration object (required)
+ * @param {string} targetLanguageFont - Font family for target language text display
+ * @param {number} targetFontSizePercent - Font size percentage for target language
+ * @param {Array} targetWords - Array of target language words to be aligned
+ * @param {string} title - Title displayed in the alignment dialog header
+ * @param {Function} translate - Translation function for UI text localization (required)
+ * @param {Array} verseAlignments - Current alignment data for the verse
+ *
+ * Requirements:
+ * - enhanced-word-aligner-rcl package for core alignment functionality
+ * - react-icons/rx for status indicator icons
+ * - deep-equal for state comparison optimization
+ * - lodash.clonedeep for deep object cloning
+ * - react-bootstrap for Label component
+ * - PopoverComponent for lexicon definition display
+ *
+ * Technical Dependencies:
+ * - AlignmentHelpers from enhanced-word-aligner-rcl for alignment validation
+ * - EnhancedWordAligner from enhanced-word-aligner-rcl for the main alignment interface with alignment suggestions
+ * - Requires proper integration with parent WordAlignerDialog component
+ * - Depends on lexicon data infrastructure for word definitions
+ */
+
+import React, {useEffect, useMemo, useState} from 'react'
 import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
-import { AlignmentHelpers, WordAligner } from 'word-aligner-rcl'
+import {
+  AlignmentHelpers,
+  EnhancedWordAligner,
+  TrainingState,
+} from 'enhanced-word-aligner-rcl'
+import { Label } from 'react-bootstrap';
 import isEqual from 'deep-equal';
 import cloneDeep from 'lodash.clonedeep';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import { DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import PopoverComponent from './PopoverComponent'
+import PromptDialog from "@components/PromptDialog";
 
 const alignmentIconStyle = { marginLeft:'50px' }
 
 // popup dialog for user to align verse
 function WordAlignerArea({
-  aligned,
   alignmentActions,
+  alignmentSuggestionsManage,
   contextId,
   errorMessage,
+  handleDoTrainingClick,
   lexiconCache,
   loadLexiconEntry,
   onChange,
-  sourceLanguage,
+  showDialog,
+  sourceLanguageId,
   sourceLanguageFont,
   sourceFontSizePercent,
-  style,
+  suggester: suggester_,
   targetLanguage,
   targetLanguageFont,
   targetFontSizePercent,
+  targetWords,
   title,
   translate,
-  targetWords,
+  translationMemory,
   verseAlignments,
+  wordAlignmentMaxHeight,
 }) {
-  const [aligned_, setAligned] = useState(aligned)
-  const [alignmentChange, setAlignmentChange] = useState(null)
-  const [initialAlignment, setInitialAlignment] = useState(null)
-  const [lexiconData, setLexiconData] = useState(null)
-  const [showResetWarning, setShowResetWarning] = useState(false)
+  const [state, setState] = useState({
+    aligned_: false,
+    alignmentChange: null,
+    initialAlignment: null,
+    lexiconData: null,
+    showPrompt: null,
+    suggester: suggester_,
+    trainingButtonHintStr: '',
+  });
+
+  const {
+    aligned_,
+    alignmentChange,
+    initialAlignment,
+    lexiconData,
+    showPrompt,
+    suggester,
+  } = state;
+
+  const {
+    state: {
+      training,
+      trained,
+      trainingError,
+      trainingStatusStr,
+      trainingButtonStr,
+      trainingButtonHintStr,
+    }
+  } = TrainingState.useTrainingStateContext()
+
+  useEffect(() => {
+    const key = 'WordAlignerArea';
+    console.log('WordAlignerArea initialized/mounted')
+    return () => {
+      console.log('WordAlignerArea unmounted')
+    };
+  },[]);
+
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
 
   useEffect(() => {
@@ -48,70 +149,158 @@ function WordAlignerArea({
     const changedVA = !isEqual(verseAlignments, verseAlignments_);
 
     if (changedTW || changedVA) {
-      console.log('WordAlignerArea: alignment data changed')
+      console.log(`WordAlignerArea: alignment data changed - changedTW ${changedTW}, changedVA ${changedVA}, TW ${!!targetWords_}, VA ${!!verseAlignments_}`)
       const newAlignment = {
         verseAlignments,
         targetWords,
       }
-      setInitialAlignment(cloneDeep(newAlignment))
+
+      const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(targetWords, verseAlignments);
+
+      setState(prevState => ({
+        ...prevState,
+        initialAlignment: cloneDeep(newAlignment),
+        aligned_: alignmentComplete
+      }));
     }
   }, [targetWords, verseAlignments])
 
-  useEffect(() => {
-    if (aligned !== aligned_) {
-      console.log('WordAlignerArea: set alignment to', aligned)
-      setAligned(aligned)
-    }
-  }, [aligned])
-
   function onAlignmentChange(results) {
     const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(results.targetWords, results.verseAlignments);
-    setAlignmentChange(results) // save the most recent change
-    setAligned(alignmentComplete) // update alignment complete status
+
+    setState(prevState => ({
+      ...prevState,
+      alignmentChange: results,
+      aligned_: alignmentComplete
+    }));
+    onChange?.(results); // forward on changes
   }
 
   function cancelAlignment() {
-    console.log('WordAlignerDialog: cancelAlignment')
+    console.log('WordAlignerArea: cancelAlignment')
     const cancelAlignment = alignmentActions?.cancelAlignment
     cancelAlignment?.()
-    setAlignmentChange(null)
+    setState(prevState => ({ ...prevState, alignmentChange: null }));
   }
 
   function saveAlignment() {
-    console.log('WordAlignerDialog: saveAlignment')
+    if (haveSuggestions(alignmentChange?.verseAlignments)) {
+      const _showSuggestionWarning = {
+        content: translate('alignments.use_suggestions'),
+        noText: translate('no'),
+        onClose: onClosePrompt,
+        onNo: onClosePrompt,
+        onYes: _saveAlignment,
+        title: translate('warning'),
+        yesText: translate('yes'),
+      }
+      setState(prevState => ({...prevState, showPrompt: _showSuggestionWarning}));
+    } else {
+      _saveAlignment()
+    }
+  }
+
+  function _saveAlignment() {
+    console.log('WordAlignerArea: saveAlignment')
     const saveAlignment = alignmentActions?.saveAlignment
     saveAlignment?.(alignmentChange)
-    setAlignmentChange(null)
+    setState(prevState => ({ ...prevState, alignmentChange: null }));
+  }
+
+  function handleInfoClick(info) {
+    console.log("handleInfoClick");
+    const message = (info && info.message) || JSON.stringify(info, null, 2)
+    window.prompt(`Training Information:\n\n${message}`)
+  }
+
+  /**
+   * Determines if there are any suggestions in the provided verse alignments.
+   *
+   * @param {Array<Object>} verseAlignments - An array of alignment objects where each object may include an `isSuggestion` property.
+   * @return {boolean} Returns true if any alignment object has the `isSuggestion` property set to true; otherwise, returns false.
+   */
+  function haveSuggestions(verseAlignments) {
+    const _verseAlignments = verseAlignments || [];
+    for (let i = 0; i < _verseAlignments.length; i++) {
+      if (_verseAlignments[i]?.isSuggestion) {
+        return true;
+      }
+    }
+    return false
   }
 
   /**
    * reset all the alignments
    */
   function doReset() {
-    console.log('WordAlignerDialog: doReset')
+    console.log('WordAlignerArea: doReset')
     const alignmentData_ = AlignmentHelpers.resetAlignments(initialAlignment?.verseAlignments, initialAlignment?.targetWords)
-    setInitialAlignment(cloneDeep(alignmentData_))
+
     const alignmentChange_ = {
       ...alignmentChange,
       targetWords: alignmentData_?.targetWords,
       verseAlignments: alignmentData_?.verseAlignments,
     }
-    setAlignmentChange(cloneDeep(alignmentChange_))
-    setShowResetWarning(false)
+
+    const _alignmentChange = cloneDeep(alignmentChange_);
+    setState(prevState => ({
+      ...prevState,
+      initialAlignment: cloneDeep(alignmentData_),
+      alignmentChange: _alignmentChange,
+      showPrompt: null,
+      aligned: false,
+    }));
+    onAlignmentChange(_alignmentChange)
   }
 
   function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
     console.log(`showPopover`, rawData)
-    setLexiconData({
-      PopoverTitle,
-      wordDetails,
-      positionCoord,
-      rawData,
-    })
+    setState(prevState => ({
+      ...prevState,
+      lexiconData: {
+        PopoverTitle,
+        wordDetails,
+        positionCoord,
+        rawData,
+      }
+    }));
   }
 
+  const enablePrompt = (currentShowDialog && showPrompt);
+  const wordSuggesterConfig = {
+    doAutoTraining: true, // set true to enable auto training of alignment suggestions
+    trainOnlyOnCurrentBook: false, // if true, then training is sped up for small books by just training on alignment memory data for current book
+    minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
+    keepAllAlignmentMemory: true, // EXPERIMENTAL FEATURE - if true, then alignment data not used for training will be added back into wordMap after training.  This should improve alignment vocabulary, but may negatively impact accuracy in the case of fully aligned books.
+    keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
+  }
 
-  const enableResetWarning = (currentShowDialog && showResetWarning);
+  // calculate maximum height
+  const absoluteMaxHeight = 1000;
+  const _height = Math.round(wordAlignmentMaxHeight || 640); // sanity check and round
+  const maxHeight = _height > absoluteMaxHeight ? absoluteMaxHeight : _height; // limit to max height
+
+  const alignerAreaStyle = useMemo(() => ({
+    maxHeight: `${maxHeight}px`,
+    overflowY: 'auto'
+  }), [maxHeight]);
+
+  function showResetWarning() {
+    const _showResetWarning = {
+      content: translate('alignments.reset_confirm'),
+      noText: translate('no'),
+      onClose: onClosePrompt,
+      onNo: onClosePrompt,
+      onYes: doReset,
+      title: translate('warning'),
+      yesText: translate('yes'),
+    }
+    setState(prevState => ({...prevState, showPrompt: _showResetWarning}));
+  }
+
+  function onClosePrompt() {
+    setState(prevState => ({...prevState, showPrompt: null}));
+  }
 
   return (
     <>
@@ -126,87 +315,123 @@ function WordAlignerArea({
         </span>
       </DialogTitle>
       <div style={{width: `95%`, margin: '10px'}}>
-        <WordAligner
-          style={style}
-          verseAlignments={initialAlignment?.verseAlignments || []}
-          targetWords={initialAlignment?.targetWords ||[]}
-          translate={translate}
+        <EnhancedWordAligner
+          addTranslationMemory={translationMemory}
+          alignmentSuggestionsManage={alignmentSuggestionsManage}
+          config={wordSuggesterConfig}
           contextId={contextId}
-          targetLanguage={targetLanguage}
-          targetLanguageFont={targetLanguageFont}
-          sourceLanguage={sourceLanguage}
-          showPopover={showPopover}
           lexiconCache={lexiconCache}
           loadLexiconEntry={loadLexiconEntry}
           onChange={onAlignmentChange}
+          showDialog={showDialog}
+          showPopover={showPopover}
+          sourceLanguageId={sourceLanguageId}
+          sourceLanguageFont={sourceLanguageFont}
+          sourceFontSizePercent={sourceFontSizePercent}
+          styles={alignerAreaStyle}
+          suggestionsOnly={true}
+          targetLanguageFont={targetLanguageFont}
+          targetLanguage={targetLanguage}
+          targetFontSizePercent={targetFontSizePercent}
+          targetWords={initialAlignment?.targetWords || []}
+          translate={translate}
+          verseAlignments={initialAlignment?.verseAlignments || []}
         />
       </div>
-      <span style={{width: `95%`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-        <Button variant="outlined" style={{margin: '10px 100px'}} onClick={cancelAlignment}>
-            Cancel
+      <div style={{width: `auto`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+        <Button
+          variant="outlined"
+          style={{margin: '10px 30px'}}
+          onClick={cancelAlignment}
+          title={translate('alignments.cancel_hint')}
+        >
+          {translate('alignments.cancel')}
         </Button>
-        {!errorMessage && // only show these buttons if there is no error
-          <>
-            <Button variant="outlined" style={{margin: '10px 100px'}} onClick={() => setShowResetWarning(true)}>
-              Reset
+        {!errorMessage && // only show if there is no error
+            <Button
+              variant="outlined"
+              style={{margin: '10px 30px'}}
+              onClick={showResetWarning}
+              title={translate('alignments.reset_hint')}
+            >
+              {translate('alignments.reset')}
             </Button>
-            <Button variant="outlined" style={{margin: '10px 100px'}} onClick={saveAlignment}>
-              Accept
-            </Button>
-          </>
         }
-      </span>
+        {!errorMessage && // only show if there is no error
+            <Button
+              variant="outlined"
+              style={{margin: '10px 30px'}}
+              onClick={saveAlignment}
+              title={translate('alignments.accept_hint')}
+            >
+              {translate('alignments.accept')}
+            </Button>
+        }
+        { !errorMessage && trainingButtonStr && !training &&
+          <Button
+            variant="outlined"
+            style={{margin: '10px 30px'}}
+            onClick={handleDoTrainingClick}
+            title={trainingButtonHintStr}
+          >
+            {trainingButtonStr}
+          </Button>
+        }
+        {!errorMessage && // only show if there is no error
+          <Label style={{margin: '10px 30px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            {trainingStatusStr || ''}
+          </Label>
+        }
+      </div>
       {/** Lexicon Popup dialog */}
       <PopoverComponent
-        popoverVisibility={lexiconData}
+        popoverVisibility={!!lexiconData}
         title={lexiconData?.PopoverTitle || ''}
         bodyText={lexiconData?.wordDetails || ''}
         positionCoord={lexiconData?.positionCoord}
-        onClosePopover={() => setLexiconData(null)}
+        onClosePopover={() => setState(prevState => ({ ...prevState, lexiconData: null }))}
       />
 
-      <Dialog open={enableResetWarning} onClose={() => setShowResetWarning(false)} aria-labelledby="reset-warn-dialog">
-        <DialogTitle id="form-dialog-title">{'Warning'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {'Are you sure you want to clear all alignments?'}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowResetWarning(false)} color="primary">
-            No
-          </Button>
-          <Button onClick={doReset} color="secondary">
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <PromptDialog
+        open={!!enablePrompt}
+        content={showPrompt?.content}
+        noText={showPrompt?.noText}
+        onNo={showPrompt?.onNo}
+        onYes={showPrompt?.onYes}
+        title={showPrompt?.title}
+        yesText={showPrompt?.yesText}
+      />
     </>
   )
 }
 
 WordAlignerArea.propTypes = {
-  aligned: PropTypes.bool,
   alignmentActions: PropTypes.shape({
     cancelAlignment: PropTypes.func,
     saveAlignment: PropTypes.func,
   }),
-  contextId: PropTypes.object.isRequired,
+  alignmentSuggestionsManage: PropTypes.object.isRequired,
+  alignmentTrainingRef: PropTypes.object,
+  contextId: PropTypes.object,
   errorMessage: PropTypes.string,
+  handleDoTrainingClick: PropTypes.func,
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
   onChange: PropTypes.func,
-  sourceLanguage: PropTypes.string.isRequired,
+  showDialog: PropTypes.bool,
+  sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
   sourceFontSizePercent: PropTypes.number,
-  style: PropTypes.object,
+  suggester: PropTypes.func,
   targetLanguage: PropTypes.object.isRequired,
   targetLanguageFont: PropTypes.string,
   targetFontSizePercent: PropTypes.number,
-  translate: PropTypes.func.isRequired,
+  targetWords: PropTypes.array,
   title: PropTypes.string,
-  verseAlignments: PropTypes.array.isRequired,
-  targetWords: PropTypes.array.isRequired,
+  translate: PropTypes.func.isRequired,
+  translationMemory: PropTypes.object,
+  verseAlignments: PropTypes.array,
+  wordAlignmentMaxHeight: PropTypes.number,
 };
 
-export default React.memo(WordAlignerArea)
+export default WordAlignerArea

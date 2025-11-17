@@ -1,15 +1,42 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Note: we provide webpack above so you should not `require` it
-    // Perform customizations to webpack config
     config.plugins.push(
       new webpack.IgnorePlugin({
         resourceRegExp: /canvas/,
       })
-    )
+    );
 
-    // Important: return the modified config
-    return config
+    if (!isServer) {
+      // Use worker-loader for .worker.js files - only for client-side bundle
+      config.module.rules.push({
+        test: /\.worker\.(js|ts)$/,
+        use: {
+          loader: 'worker-loader',
+          options: {
+            filename: 'static/chunks/[name].[contenthash].worker.js',
+            publicPath: '/_next/',
+            esModule: false,
+            inline: 'no-fallback'
+          }
+        }
+      });
+    }
+
+    // Fallbacks for Node.js modules
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+    };
+
+    return config;
   },
-}
+  experimental: {
+    esmExternals: 'loose',
+  }
+};

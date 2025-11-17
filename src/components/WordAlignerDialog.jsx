@@ -1,4 +1,32 @@
+/**
+ * WordAlignerDialog Component
+ *
+ * ## Synopsis
+ * A modal dialog component that provides an interactive interface for aligning words between source and target Bible texts.
+ * The dialog is draggable and integrates with machine learning-based alignment suggestions to assist users in creating
+ * accurate word alignments for translation work.
+ *
+ * ## Description
+ * The WordAlignerArea serves as a specialized tool for Bible translation teams to create and manage word alignments
+ *   between original language texts (Hebrew/Greek) and target language translations. It features:
+ *   It uses WordAlignerArea Component to render dialog content and uses useAlignmentSuggestions for alignment suggestions
+ *
+ * - **Draggable Interface**: Users can reposition the dialog within the workspace bounds
+ * - **AI-Powered Suggestions**: Integrates with enhanced-word-aligner-rcl for intelligent alignment recommendations
+ * - **Training System**: Supports both cached and on-demand training of alignment models using translation memory
+ * - **Real-time Updates**: Monitors alignment status changes and updates the interface accordingly
+ * - **Error Handling**: Displays error messages and handles training failures gracefully
+ *
+ * ## Properties
+ * @param {Object} alignerStatus - Status object containing alignment data, reference information, and control actions
+ * @param {number} height - Maximum height constraint for the dialog content area (required)
+ * @param {Function} translate - Translation function for UI text localization (required)
+ * @param {Function} getLexiconData - Function to fetch lexicon data for words (required)
+ * @param {string} owner - Repository owner identifier for the target Bible
+ */
+
 import React, {
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -10,22 +38,59 @@ import Dialog from '@mui/material/Dialog'
 import Paper from '@mui/material/Paper'
 import Draggable from 'react-draggable'
 import { useBoundsUpdater } from 'translation-helps-rcl'
+import usfm from 'usfm-js';
+import isEqual from 'deep-equal'
+import {AlignmentTrainerUtils, useAlignmentSuggestions, TrainingState} from 'enhanced-word-aligner-rcl'
 import { StoreContext } from '@context/StoreContext'
+import { createAlignmentTrainingWorker } from '../workers/startAlignmentTrainer'
 import WordAlignerArea from './WordAlignerArea';
+
+function getBookData(alignerStatus) {
+  return alignerStatus?.state?.reference || {};
+}
+
+const wordSuggesterConfig= {
+  doAutoTraining: true, // set true to enable auto training of alignment suggestions
+  trainOnlyOnCurrentBook: false, // if true, then training is sped up for small books by just training on alignment memory data for current book
+  minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
+  keepAllAlignmentMemory: true, // EXPERIMENTAL FEATURE - if true, then alignment data not used for training will be added back into wordMap after training.  This should improve alignment vocabulary, but may negatively impact accuracy in the case of fully aligned books.
+  keepAllAlignmentMinThreshold: 90, // EXPERIMENTAL FEATURE - if threshold percentage is set (such as value 60), then alignment data not used for training will be added back into wordMap after training, but only if the percentage of book alignment is less than this threshold.  This should improve alignment vocabulary for books not completely aligned
+}
 
 // popup dialog for user to align verse
 function WordAlignerDialog({
   alignerStatus,
-  height,
-  translate,
   getLexiconData,
+  translate,
+  owner,
+  wordAlignerMaxHeight
 }) {
-  const [aligned, setAligned] = useState(false)
-  const [showDialog, setShowDialog] = useState({})
-  const dialogRef = useRef(null) // for keeping track of  aligner dialog position
+  const [state, setState] = useState({
+    contextId: null,
+    errorMessage: '',
+    originalBibleBookUsfm: '',
+    showDialog: false,
+    sourceLanguageId: '',
+    targetLanguage: {},
+    targetWords: [],
+    title: '',
+    verseAlignments: []
+  });
 
-  const alignerData_ = alignerStatus?.state?.alignerData || null
-  const shouldShowDialog = !!(alignerData_?.alignments && alignerData_?.wordBank)
+  const dialogRef = useRef(null); // for keeping track of aligner dialog position
+//  const oldDependencies = useRef({})
+
+  const {
+    contextId,
+    errorMessage,
+    originalBibleBookUsfm,
+    showDialog,
+    sourceLanguageId,
+    targetLanguage,
+    targetWords,
+    title,
+    verseAlignments
+  } = state;
 
   const {
     state: {
@@ -33,14 +98,32 @@ function WordAlignerDialog({
     },
   } = useContext(StoreContext)
 
-  const boundsParams = useMemo(() => ({ // keeps track of drag bounds
-    workspaceRef: mainScreenRef,
-    cardRef: dialogRef,
-    open: !!showDialog,
-    displayState: {
-      alignerData: showDialog
-    },
-  }), [mainScreenRef, dialogRef, showDialog]);
+  useEffect(() => {
+    console.log('WordAlignerDialog initialized/mounted')
+    // Cleanup function that runs on unmount
+    return () => {
+      console.log('WordAlignerDialog unmounted')
+    };
+  }, []);
+
+  const currentInstance = dialogRef?.current;
+  const alignerData_ = alignerStatus?.state?.alignerData;
+  const targetWords_ = alignerData_?.wordBank || null
+  const verseAlignments_ = alignerData_?.alignments || null
+  const shouldShowDialog_ = !!(targetWords_ && verseAlignments_)
+  const originalScriptureBookObjects = alignerData_?.originalScriptureBookObjects;
+  const boundsParams = useMemo(() => {
+    console.log(`WordAlignerDialog: shouldShowDialog_ changed to ${shouldShowDialog_}`)
+
+    return { // keeps track of drag bounds
+      workspaceRef: mainScreenRef,
+      cardRef: dialogRef,
+      open: !!shouldShowDialog_,
+      displayState: {
+        showDialog: shouldShowDialog_
+      },
+    }
+  }, [shouldShowDialog_]);
 
   const {
     state: { bounds },
@@ -48,27 +131,17 @@ function WordAlignerDialog({
   } = useBoundsUpdater(boundsParams)
 
   useEffect(() => {
-    console.log('WordAlignerDialog: initialized')
-  }, [])
-
-  useEffect(() => {
     console.log('WordAlignerDialog: boundsParams changed')
   }, [boundsParams])
 
-  useEffect(() => { // set initial aligned state
-   if (alignerData_) {
-      setAligned(!!alignerStatus?.state?.aligned)
+  useEffect(() => { // monitor changes in alignment dialog position and open state
+    if (alignerData_ &&
+      currentInstance?.clientWidth &&
+      currentInstance?.clientHeight) {
+      console.log('WordAlignerDialog: updating bounds')
+      doUpdateBounds()
     }
-  }, [alignerData_])
-
-  useEffect(() => {
-    console.log('WordAlignerDialog: aligner data changed')
-
-    if (showDialog !== shouldShowDialog) {
-      console.log('WordAlignerDialog: aligner visible state changed')
-      setShowDialog(shouldShowDialog)
-    }
-  }, [alignerData_])
+  }, [currentInstance, alignerData_])
 
   function PaperComponent(props) { // contains the word aligner dialog
     return (
@@ -85,28 +158,186 @@ function WordAlignerDialog({
     )
   }
 
-  const currentInstance = dialogRef?.current;
+  const bookId = contextId?.reference?.bookId || ''
 
-  useEffect(() => { // monitor changes in alignment dialog position and open state
-    if (alignerData_ &&
-      currentInstance?.clientWidth &&
-      currentInstance?.clientHeight) {
-      console.log('WordAlignerDialog: updating bounds')
-      doUpdateBounds()
+  const targetBibleBookUsfm = alignerData_?.bibleUsfm || ''
+  const translationMemory = useMemo(() => {
+    const originalBibleBookUsfm = originalScriptureBookObjects ? usfm.toUSFM(originalScriptureBookObjects, { forcedNewLines: true }) : ''
+    return AlignmentTrainerUtils.makeTranslationMemory(bookId, originalBibleBookUsfm, targetBibleBookUsfm)
+  }, [bookId, originalScriptureBookObjects, targetBibleBookUsfm]);
+
+  const getContextId = (alignerStatus) => {
+    const reference = alignerStatus?.state?.reference;
+
+    if (reference) {
+      const alignerData = alignerStatus?.state?.alignerData || null
+      const targetRef = alignerData?.resourceLink || ''
+      let [ owner_, repoLanguageId, repoBibleId ] = targetRef.split('/')
+      owner_ = owner_ || owner;
+      const bibleId = owner_ && repoLanguageId && repoBibleId ? `${owner}/${repoLanguageId}/${repoBibleId}` : '';
+
+      let newContextId = null;
+
+      if (targetRef && reference?.bookId) {
+        newContextId = {
+          reference: alignerStatus?.state?.reference,
+          bibleId,
+          tool: 'wordAlignment'
+        };
+      }
+      console.log('WordAlignerDialog: getContextId', newContextId)
+      return newContextId;
     }
-  }, [currentInstance, alignerData_])
+    return null;
+  }
 
-  const errorMessage = alignerStatus?.state?.errorMessage
+  const alignmentActions = alignerStatus?.actions;
+
+  const alignmentActions_ = useMemo(() => {
+    console.log('WordAlignerDialog: updated alignmentActions_');
+    return {
+      cancelAlignment: () => alignmentActions?.cancelAlignment(),
+      saveAlignment: (alignmentChange) => alignmentActions?.saveAlignment(alignmentChange)
+    }
+  }, [alignmentActions]);
+
+  useEffect(() => {
+    console.log('WordAlignerDialog: updated alignmentActions_');
+  }, [alignmentActions]);
+
+  function getTitle(alignerStatus) {
+    const {
+      bookId,
+      chapter,
+      verse,
+    } = getBookData(alignerStatus)
+
+    const title_ = `${bookId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
+    return title_;
+  }
+
+  /**
+   * A callback function that handles actions to be performed upon the completion of training.
+   *
+   * The function logs the completed training's related information to the console.
+   *
+   * This function is memoized using `useCallback` to ensure its identity remains stable
+   * and does not change across re-renders unless dependencies change.
+   *
+   * @constant
+   * @function
+   * @param {any} info - Information related to the completed training.
+   */
+  const handleTrainingCompleted = useCallback((info) => {
+    console.log('handleTrainingCompleted', info);
+  }, []);
 
   const {
-    projectId,
-    chapter,
-    verse,
-  } = alignerStatus?.state?.reference || {}
-  const title = `${projectId?.toUpperCase()} ${chapter}:${verse} in ${alignerStatus?.state?.title}`
+    actions: {
+      handleTrainingStateChange
+    },
+  } = TrainingState.useTrainingStateContext()
 
-  return (
-    <>
+  // this hook manages the word aligner suggestions including training of the Model
+  const alignmentSuggestionsManage = useAlignmentSuggestions({ // see TUseAlignmentSuggestionsProps
+    config: wordSuggesterConfig,
+    contextId,
+    createAlignmentTrainingWorker,
+    handleTrainingStateChange,
+    handleTrainingCompleted,
+    shown: showDialog,
+    sourceLanguageId: sourceLanguageId,
+    sourceUsfm: originalBibleBookUsfm,
+    targetLanguageId: targetLanguage?.languageId,
+    targetUsfm: targetBibleBookUsfm,
+    translationMemory: translationMemory,
+  });
+
+  const {
+    actions: {
+      getSuggester,
+      getTrainingContextId,
+      isTraining,
+      loadTranslationMemory,
+      startTraining,
+      stopTraining,
+      suggester,
+    }
+  } = alignmentSuggestionsManage; // type is TUseAlignmentSuggestionsReturn
+
+  useEffect(() => {
+    if (shouldShowDialog_ !== showDialog) {
+      console.log(`WordAlignerDialog: alignment data changed shouldShowDialog_ ${shouldShowDialog_}`)
+
+      const sourceLanguageId_ = alignerStatus?.state?.sourceLanguage || ''
+      const targetLanguage_ = alignerStatus?.state?.targetLanguage || null
+      const errorMessage_ = alignerStatus?.state?.errorMessage
+      const title_ = getTitle(alignerStatus);
+      const contextId_ = shouldShowDialog_ ? getContextId(alignerStatus) : null
+      const originalBibleBookUsfm = originalScriptureBookObjects ? usfm.toUSFM(originalScriptureBookObjects, { forcedNewLines: true }) : ''
+
+      setState(prevState => ({
+        ...prevState,
+        contextId: contextId_,
+        errorMessage: errorMessage_,
+        originalBibleBookUsfm,
+        showDialog: shouldShowDialog_,
+        sourceLanguageId: sourceLanguageId_,
+        targetLanguage: targetLanguage_,
+        title: title_,
+      }));
+    }
+
+    const changedTW = !isEqual(targetWords, targetWords_);
+    const changedVA = !isEqual(verseAlignments, verseAlignments_);
+
+    if (changedTW || changedVA) {
+      console.log(`WordAlignerDialog: alignment data changed - changedTW ${changedTW}, changedVA ${changedVA}`)
+      setState(prevState => ({
+        ...prevState,
+        targetWords: targetWords_,
+        verseAlignments: verseAlignments_
+      }));
+    } else {
+      console.log('WordAlignerDialog alignerStatus changed yet wordbank and alignments are not difference')
+    }
+  }, [targetWords_, verseAlignments_, alignerData_?.state?.reference, shouldShowDialog_]);
+
+  /**
+   * Initiates the training process using translation memory data if available.
+   * The method checks for cached training data within `targetUsfmsBooks` and,
+   * if present, loads the translation memory and starts the training process.
+   *
+   * @return {void} Does not return a value.
+   */
+  function startTraining_() {
+    const targetUsfmsBooks = translationMemory?.targetUsfms;
+    const haveCachedTrainingData = targetUsfmsBooks && Object.keys(targetUsfmsBooks).length > 0;
+
+    if (haveCachedTrainingData) {
+      console.log('WordAlignerArea: translation memory changed, loading translation memory')
+      loadTranslationMemory(translationMemory);
+      startTraining();
+    } else {
+      console.log('WordAlignerArea: translation memory not loaded')
+    }
+  }
+
+  function handleDoTrainingClick() {
+    const training = isTraining()
+    console.log(`WordAlignerDialog: handleDoTrainingClick, current training ${training}`);
+    if (!training) {
+      startTraining_();
+    } else {
+      console.log('WordAlignerDialog: handleDoTrainingClick - already training, cancelling')
+      stopTraining()
+    }
+  }
+
+  const wordAlignerDialogArea = useMemo(() => {
+    console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
+
+      return (
       <Dialog
         fullWidth={true}
         maxWidth={'lg'}
@@ -117,32 +348,106 @@ function WordAlignerDialog({
         aria-labelledby="draggable-aligner-dialog-title"
       >
         <WordAlignerArea
-          aligned={aligned}
-          alignmentActions={alignerStatus?.actions}
+          alignmentActions={alignmentActions_}
+          alignmentSuggestionsManage={alignmentSuggestionsManage}
+          contextId={contextId}
           errorMessage={errorMessage}
-          title={title || ''}
-          style={{ maxHeight: `${height}px`, overflowY: 'auto' }}
-          verseAlignments={alignerData_?.alignments || []}
-          targetWords={alignerData_?.wordBank || []}
-          translate={translate}
-          contextId={{ reference: alignerStatus?.state?.reference || {} }}
-          targetLanguage={alignerStatus?.state?.targetLanguage || ''}
-          targetLanguageFont={''}
-          sourceLanguage={alignerStatus?.state?.sourceLanguage || ''}
+          handleDoTrainingClick={handleDoTrainingClick}
           lexiconCache={{}}
           loadLexiconEntry={getLexiconData}
+          showDialog={!!showDialog}
+          sourceLanguageId={sourceLanguageId}
+          suggester={suggester}
+          targetLanguage={targetLanguage}
+          targetLanguageFont={''}
+          targetWords={targetWords}
+          title={title || ''}
+          translate={translate}
+          verseAlignments={verseAlignments}
+          wordAlignmentMaxHeight={wordAlignerMaxHeight}
         />
-
       </Dialog>
+    )
+  },
+  [
+    contextId,
+    errorMessage,
+    showDialog,
+    sourceLanguageId,
+    targetLanguage,
+    targetWords,
+    title,
+    verseAlignments
+  ]
+  );
+
+  return (
+    <>
+      {wordAlignerDialogArea}
     </>
   )
 }
 
 WordAlignerDialog.propTypes = {
-  alignerStatus: PropTypes.object.isRequired,
-  height: PropTypes.number.isRequired,
-  translate: PropTypes.func.isRequired,
+  alignerStatus: PropTypes.object,
   getLexiconData: PropTypes.func.isRequired,
+  owner: PropTypes.string,
+  translate: PropTypes.func.isRequired,
+  wordAlignerMaxHeight: PropTypes.number.isRequired,
 }
 
-export default React.memo(WordAlignerDialog)
+export default React.memo(WordAlignerDialog, (prevProps, nextProps) => {
+  // Custom comparison function to prevent unnecessary re-renders
+  const keysToCompare = [
+    'alignerStatus',
+    'height',
+    'owner'
+  ];
+
+  // Track what changed in memo comparison
+  const changedProps = {};
+
+  function getAlignmentData(alignerStatus) {
+    const alignerData_ = alignerStatus?.state?.alignerData;
+    const targetWords = alignerData_?.wordBank || null
+    const verseAlignments = alignerData_?.alignments || null
+    return {targetWords, verseAlignments};
+  }
+
+  const previousAlignmentData = getAlignmentData(prevProps.alignerStatus);
+  const nextAlignmentData = getAlignmentData(nextProps.alignerStatus);
+
+  if (!isEqual(previousAlignmentData, nextAlignmentData)) {
+    // console.log('WordAlignerDialog React.memo: prop changed alignerStatus', {previousAlignmentData, nextAlignmentData})
+    changedProps.alignerStatus = { from: previousAlignmentData, to: nextAlignmentData };
+  }
+
+  // Simple comparison for other props
+  for (let key of keysToCompare.slice(1)) {
+    if (prevProps[key] !== nextProps[key]) {
+      // console.log('WordAlignerDialog React.memo: prop changed', {key, from: prevProps[key], to: nextProps[key]})
+      changedProps[key] = { from: prevProps[key], to: nextProps[key] };
+    }
+  }
+
+  // Functions should be stable, but check reference equality
+  if (prevProps.translate !== nextProps.translate) {
+    // console.log('WordAlignerDialog React.memo: translate function changed');
+    changedProps.translate = 'function reference changed';
+  }
+
+  if (prevProps.getLexiconData !== nextProps.getLexiconData) {
+    // console.log('WordAlignerDialog React.memo: getLexiconData function changed');
+    changedProps.getLexiconData = 'function reference changed';
+  }
+
+  const hasChanges = Object.keys(changedProps).length > 0;
+
+  if (hasChanges) {
+    console.log('WordAlignerDialog React.memo: Changed props summary:', changedProps);
+    return false; // Props changed, re-render
+  }
+
+  // console.log('WordAlignerDialog React.memo: No props changed, skipping re-render');
+  return true; // Props are the same, skip re-render
+});
