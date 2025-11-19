@@ -338,7 +338,19 @@ function WordAlignerArea({
           verseAlignments={initialAlignment?.verseAlignments || []}
         />
       </div>
-      <div style={{width: `auto`, height: '60px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+          <div
+            style={{
+              width: '100%',
+              height: '40px',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              position: 'sticky',
+              bottom: 0,
+              backgroundColor: '#fff',
+              zIndex: 12,
+            }}
+          >
         <Button
           variant="outlined"
           style={{margin: '10px 30px'}}
