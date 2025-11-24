@@ -13769,10 +13769,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.2.11-beta.4:
-  version "1.2.11-beta.4"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.11-beta.4.tgz#4ed7ec0f2f7e5e4bd361bc441c54d0f282568201"
-  integrity sha512-4eyRFZGQMkchph5jy8WhexvVHwIYe2CmoVEGhfpI2S4DQJBq/ulbY46PGCI3DoxYq6XVBODuK2K93luS4vN8/A==
+word-aligner-rcl@1.2.11-beta.10:
+  version "1.2.11-beta.10"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.11-beta.10.tgz#c70f11cec1b7ea8dbdc2adb7e21745ddfd59fabb"
+  integrity sha512-bVliMF9vjcwsyqL3J7dAUFC+ek1LLIQ96sAnLemNY4T19Yka7Q+U6zXNbSwCxbEXHVVMgk8y4Dyte9HPF6Z+wg==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
@@ -13784,7 +13784,6 @@ word-aligner-rcl@1.2.11-beta.4:
     deep-equal "^2.0.5"
     file-loader "^6.2.0"
     lodash.clonedeep "^4.5.0"
-    memoize-one "^5.1.1"
     string-punctuation-tokenizer "2.2.0"
     usfm-js "3.4.3"
     word-aligner "1.0.2"
