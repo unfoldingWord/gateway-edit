@@ -13769,10 +13769,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.2.10:
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.10.tgz#fa11a12b1b802f121d319a654b9f1283c582f128"
-  integrity sha512-8Q9H6a2m8Mukd6ay31e7IjJp5HMKSIXCDQMP+b6YcOk6ssm7V5V6lvcqhInMrHigLLhW+YaIi+gwn1XLbALZiQ==
+word-aligner-rcl@1.2.11:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.11.tgz#cacf5bc3f788172286bbcda27d2b4cbd8fb5c079"
+  integrity sha512-0lUtLrlvKvyIWPL9gFmoPdegDzJbLemdEkemX2Wf5y0184eu/B+ChObEQlSsg/zSYxsSBytB3c0KEZaycWUong==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"

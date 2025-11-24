@@ -66,7 +66,7 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
-const wordAlignmentScreenRatio = 0.8
+const wordAlignmentScreenRatio = 0.9
 const wordAlignmentMaxHeightPx = 1000
 
 const buildId = getBuildId()
