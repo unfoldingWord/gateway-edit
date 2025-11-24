@@ -336,6 +336,7 @@ function WordAlignerDialog({
 
   const wordAlignerDialogArea = useMemo(() => {
     console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
+      const maxHeight = '${Math.round(wordAlignerMaxHeight)}px';
 
       return (
       <Dialog
@@ -346,6 +347,12 @@ function WordAlignerDialog({
         PaperComponent={PaperComponent}
         bounds={bounds}
         aria-labelledby="draggable-aligner-dialog-title"
+        PaperProps={{
+          sx: {
+            maxHeight: maxHeight,
+            overflow: 'hidden',
+          },
+        }}
       >
         <WordAlignerArea
           alignmentActions={alignmentActions_}
