@@ -17,11 +17,13 @@ cat > package.json <<'JSON'
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist:mac": "electron-builder --mac dmg"
+    "dist:mac": "electron-packager . \"$npm_package_build_productName\" --platform=darwin --arch=arm64 --overwrite --out=out --app-bundle-id=\"$npm_package_build_appId\" --name=\"$npm_package_build_productName\"",
+    "dmg:mac": "electron-builder --mac dmg"
   },
   "dependencies": {},
   "devDependencies": {
     "electron": "^30.0.0",
+    "electron-packager": "^17.1.2",
     "electron-builder": "^24.13.3"
   }
 }
@@ -88,10 +90,18 @@ pkg.build = {
 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
 NODE
 
-# Install & build
+# Install & package (creates a .app in ./out/)
 yarn install
-APP_NAME="$APP_NAME" APP_ID="$APP_ID" yarn dist:mac
+APP_NAME="$APP_NAME" APP_ID="$APP_ID" \
+  npm_package_build_productName="$APP_NAME" npm_package_build_appId="$APP_ID" \
+  yarn dist:mac
+
+# Create DMG from the pre-packaged app at ./out/GatewayEdit-darwin-arm64
+APP_NAME="$APP_NAME" APP_ID="$APP_ID" \
+  npm_package_build_productName="$APP_NAME" npm_package_build_appId="$APP_ID" \
+  yarn dmg:mac
 
 echo
 echo "Done."
-echo "Look in: $APP_DIR/dist/ (you should see a .dmg)"
+echo "App bundle: $APP_DIR/out/$APP_NAME-darwin-arm64/"
+echo "DMG:        $APP_DIR/out/ (look for a .dmg)"
