@@ -30,7 +30,11 @@
     "prereport:combined": "yarn combine:reports",
     "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
     "mac:build-gwe-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh\"",
-    "mac:build-gwe-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa\""
+    "mac:build-gwe-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa\"",
+    "mac:build-gwe-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh\"",
+    "mac:build-gwe-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa\"",
+    "mac:build-gwe-x64-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --x64\"",
+    "mac:build-gwe-x64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --x64\""
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
