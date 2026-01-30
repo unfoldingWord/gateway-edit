@@ -78,30 +78,36 @@ const fs = require('fs');
 const path = require('path');
 const { createCanvas } = require('canvas');
 
-const width = 540;
-const height = 380;
+function render(outFile, w, h, scale) {
+  const canvas = createCanvas(w, h);
+  const ctx = canvas.getContext('2d');
 
-const canvas = createCanvas(width, height);
-const ctx = canvas.getContext('2d');
+  // background
+  ctx.fillStyle = 'rgb(247, 247, 247)';
+  ctx.fillRect(0, 0, w, h);
 
-// background
-ctx.fillStyle = 'rgba(247, 247, 247, 1)'; // ~0.97 white
-ctx.fillRect(0, 0, width, height);
+  // text (bigger + darker so it's unmissable)
+  ctx.fillStyle = 'rgb(25, 25, 25)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
 
-// text
-ctx.fillStyle = 'rgba(38, 38, 38, 1)'; // ~0.15 white
-ctx.textAlign = 'center';
-ctx.textBaseline = 'top';
+  // scale font with the image size so @2x is truly retina
+  ctx.font = `700 ${Math.round(24 * scale)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`;
 
-// Use a mac-friendly system font stack; canvas will pick what exists.
-ctx.font = '600 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif';
+  const text = 'Drag GatewayEdit to Applications';
 
-const text = 'Drag GatewayEdit to Applications';
-ctx.fillText(text, Math.round(width / 2), height - 85);
+  // place text a bit higher to avoid Finder quirks near the bottom edge
+  const y = Math.round(h - (95 * scale));
+  ctx.fillText(text, Math.round(w / 2), y);
 
-const outPath = path.join('build', 'dmg-background.png');
-fs.writeFileSync(outPath, canvas.toBuffer('image/png'));
-console.log('Wrote', outPath);
+  const outPath = path.join('build', outFile);
+  fs.writeFileSync(outPath, canvas.toBuffer('image/png'));
+  console.log('Wrote', outPath, `${w}x${h}`);
+}
+
+// 1x + 2x (Retina) variants
+render('dmg-background.png', 540, 380, 1);
+render('dmg-background@2x.png', 1080, 760, 2);
 NODE
 
 # Add electron-builder config (product name, app id, dmg output)
@@ -121,7 +127,7 @@ pkg.build = {
   dmg: {
     title: productName,
 
-    // Background image includes: “Drag GatewayEdit to Applications”
+    // Finder will use @2x automatically if present alongside the 1x file
     background: "build/dmg-background.png",
 
     // Classic “drag app to Applications” layout
