@@ -2,6 +2,7 @@
 # before running do: chmod +x make-macos-installer.sh
 # add parameter `--qa` for develop mode
 set -euo pipefail
+set -x
 
 APP_DIR="gatewayedit-desktop"
 APP_NAME="GatewayEdit"
@@ -33,6 +34,7 @@ fi
 
 echo "Using target arch: $ARCH"
 echo "Command prefix: ${ARCH_CMD[*]}"
+"${ARCH_CMD[@]}" uname -m
 
 if [[ "$QA_MODE" == "true" ]]; then
   APP_NAME="${APP_NAME}Develop"
