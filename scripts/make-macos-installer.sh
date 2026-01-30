@@ -104,4 +104,4 @@ APP_NAME="$APP_NAME" APP_ID="$APP_ID" \
 echo
 echo "Done."
 echo "App bundle: $APP_DIR/out/$APP_NAME-darwin-arm64/"
-echo "DMG:        $APP_DIR/out/ (look for a .dmg)"
+echo "DMG:        $APP_DIR/dist/ (look for a .dmg)"
