@@ -34,7 +34,6 @@ yarn-error.log*
 .prettierignore
 
 # Integration testing
-
 cypress.env.json
 cypress/screenshots/
 cypress/videos/
