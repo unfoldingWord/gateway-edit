@@ -1,0 +1,31 @@
+{
+  "name": "gatewayedit-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electronite .",
+    "dist:mac": "electronite-packager . \"$npm_package_build_productName\" --platform=darwin --arch=arm64 --overwrite --out=out --app-bundle-id=\"$npm_package_build_appId\" --name=\"$npm_package_build_productName\"",
+    "dmg:mac": "electron-builder --mac dmg"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electronite": "25.3.2-graphite",
+    "electron": "25.3.2",
+    "electronite-packager": "17.1.1-graphite",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "productName": "GatewayEdit",
+    "appId": "com.example.gatewayedit",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg"
+      ]
+    },
+    "dmg": {
+      "title": "GatewayEdit"
+    }
+  }
+}
