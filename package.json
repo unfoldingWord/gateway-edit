@@ -29,10 +29,8 @@
     "combine:reports": "npx nyc merge reports && mv coverage.json .nyc_output/out.json",
     "prereport:combined": "yarn combine:reports",
     "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
-    "mac:build-gwe-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh\"",
-    "mac:build-gwe-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa\"",
-    "mac:build-gwe-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh\"",
-    "mac:build-gwe-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa\"",
+    "mac:build-gwe-arm64-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --arm64\"",
+    "mac:build-gwe-arm64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --arm64\"",
     "mac:build-gwe-x64-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --x64\"",
     "mac:build-gwe-x64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --x64\""
   },

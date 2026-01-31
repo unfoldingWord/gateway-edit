@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # before running do: chmod +x make-macos-installer.sh
-# add parameter `--qa` for develop mode
+# add parameter `--qa` for develop mode, or for architecture `--arm64` or `--x64`
 set -euo pipefail
 set -x
 
@@ -33,8 +33,6 @@ else
 fi
 
 echo "Using target arch: $ARCH"
-echo "Command prefix: ${ARCH_CMD[*]}"
-"${ARCH_CMD[@]}" uname -m
 
 if [[ "$QA_MODE" == "true" ]]; then
   APP_NAME="${APP_NAME}Develop"
@@ -51,7 +49,7 @@ cd "$APP_DIR"
 
 # If --qa is passed, point the wrapper app at the QA URL
 if [[ "$QA_MODE" == "true" ]]; then
-  "${ARCH_CMD[@]}" node - <<'NODE'
+  node - <<'NODE'
   const fs = require('fs');
 
   const file = 'main.js';
@@ -79,7 +77,7 @@ NODE
 fi
 
 # Add electron-builder config (product name, app id, dmg output)
-"${ARCH_CMD[@]}" node - <<'NODE'
+node - <<'NODE'
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
@@ -101,25 +99,32 @@ fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
 NODE
 
 # Install & package (creates a .app in ./out/)
-"${ARCH_CMD[@]}" yarn install
+yarn install
 
-# Pass arch through to electron-builder (via yarn script args)
-# - yarn <script> -- <args> forwards args to the underlying command
-EB_ARCH_ARGS=()
+# get package script to use
+PACKAGE_SCRIPT=""
 if [[ "$ARCH" == "x64" ]]; then
-  EB_ARCH_ARGS+=(--x64)
+  PACKAGE_SCRIPT="dist:mac-x64"
 else
-  EB_ARCH_ARGS+=(--arm64)
+  PACKAGE_SCRIPT="dist:mac-arm64"
 fi
 
 APP_NAME="$APP_NAME" APP_ID="$APP_ID" \
   npm_package_build_productName="$APP_NAME" npm_package_build_appId="$APP_ID" \
-  "${ARCH_CMD[@]}" yarn dist:mac -- "${EB_ARCH_ARGS[@]}"
+  yarn ${PACKAGE_SCRIPT}
+
+# get installer script to use
+INSTALLER_SCRIPT=""
+if [[ "$ARCH" == "x64" ]]; then
+  INSTALLER_SCRIPT="dmg:mac-x64"
+else
+  INSTALLER_SCRIPT="dmg:mac-arm64"
+fi
 
 # Create DMG from the pre-packaged app at ./out/<name>-darwin-<arch>
 APP_NAME="$APP_NAME" APP_ID="$APP_ID" \
   npm_package_build_productName="$APP_NAME" npm_package_build_appId="$APP_ID" \
-  "${ARCH_CMD[@]}" yarn dmg:mac -- "${EB_ARCH_ARGS[@]}"
+  yarn ${INSTALLER_SCRIPT}
 
 # Ensure the DMG filename includes architecture (electron-builder often omits it for dmg)
 shopt -s nullglob

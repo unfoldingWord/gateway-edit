@@ -5,8 +5,10 @@
   "main": "main.js",
   "scripts": {
     "start": "electronite .",
-    "dist:mac": "electronite-packager . \"$npm_package_build_productName\" --platform=darwin --arch=arm64 --overwrite --out=out --app-bundle-id=\"$npm_package_build_appId\" --name=\"$npm_package_build_productName\"",
-    "dmg:mac": "electron-builder --mac dmg"
+    "dist:mac-arm64": "electronite-packager . \"$npm_package_build_productName\" --platform=darwin --arch=arm64 --overwrite --out=out --app-bundle-id=\"$npm_package_build_appId\" --name=\"$npm_package_build_productName\"",
+    "dist:mac-x64": "electronite-packager . \"$npm_package_build_productName\" --platform=darwin --arch=x64 --overwrite --out=out --app-bundle-id=\"$npm_package_build_appId\" --name=\"$npm_package_build_productName\"",
+    "dmg:mac-arm64": "electron-builder --arm64 --mac dmg",
+    "dmg:mac-x64": "electron-builder --x64 --mac dmg"
   },
   "dependencies": {},
   "devDependencies": {
