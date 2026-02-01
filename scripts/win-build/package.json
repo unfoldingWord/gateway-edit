@@ -6,9 +6,9 @@
   "scripts": {
     "start": "electronite .",
     "dist:win-x64": "electronite-packager . \"%npm_package_build_productName%\" --platform=win32 --arch=x64 --overwrite --out=out --app-bundle-id=\"%npm_package_build_appId%\" --name=\"%npm_package_build_productName%\"",
-    "nsis:win-x64": "electron-builder --x64 --win nsis",
+    "nsis:win-x64": "electron-builder --x64 --win nsis --prepackaged \"%electronite_app_dir%\"",
     "dist:win-arm64": "electronite-packager . \"%npm_package_build_productName%\" --platform=win32 --arch=arm64 --overwrite --out=out --app-bundle-id=\"%npm_package_build_appId%\" --name=\"%npm_package_build_productName%\"",
-    "nsis:win-arm64": "electron-builder --arm64 --win nsis"
+    "nsis:win-arm64": "electron-builder --arm64 --win nsis --prepackaged \"%electronite_app_dir%\""
   },
   "dependencies": {},
   "devDependencies": {

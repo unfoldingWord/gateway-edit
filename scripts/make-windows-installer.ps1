@@ -160,3 +160,5 @@ Write-Host "Target arch: $arch"
 Write-Host "Installer:   $APP_DIR/dist/ (look for a .exe)"
 Write-Host "Installer copied to: ../../dist/"
 Get-ChildItem ../../dist | Format-Table -AutoSize
+
+cd ..
