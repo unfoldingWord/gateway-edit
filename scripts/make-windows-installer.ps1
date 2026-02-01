@@ -32,7 +32,7 @@ Set-Location $APP_DIR
 
 # If --qa is passed, point the wrapper app at the QA URL
 if ($QA_MODE) {
-    node - <<'NODE'
+@'
     const fs = require('fs');
 
     const file = 'main.js';
@@ -56,11 +56,11 @@ if ($QA_MODE) {
 
     fs.writeFileSync(file, updated, 'utf8');
     console.log(`QA mode enabled: START_URL set to ${qaUrl}`);
-NODE
+'@ | node
 }
 
 # Add electron-builder config (product name, app id, nsis output)
-node - <<'NODE'
+@'
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
@@ -79,7 +79,7 @@ pkg.build = {
 };
 
 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-NODE
+'@ | node
 
 # Install & package (creates installer in ./dist/)
 yarn install
