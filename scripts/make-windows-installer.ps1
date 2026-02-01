@@ -150,6 +150,32 @@ $env:npm_package_build_appId = $APP_ID
 
 yarn $INSTALLER_SCRIPT
 
+    # Ensure the installer filename includes architecture (e.g., "-x64")
+    $installer_files = Get-ChildItem ./dist/*.exe -ErrorAction SilentlyContinue
+    if ($installer_files.Count -eq 0) {
+        Write-Error "No installer produced in ./dist"
+        exit 1
+    }
+
+    foreach ($installer in $installer_files) {
+        $base = $installer.Name
+        if ($base -like "*-$arch.exe") {
+            continue
+        }
+
+        # Insert "-<arch>" before ".exe"
+        $new_base = $base -replace '\.exe$', "-$arch.exe"
+        $new_path = Join-Path $installer.DirectoryName $new_base
+
+        # Avoid clobbering if it already exists
+        if (Test-Path $new_path) {
+            Write-Warning "$new_path already exists; leaving $base as-is"
+            continue
+        }
+
+        Move-Item -Force $installer.FullName $new_path
+    }
+
 # Copy installer files to ../../dist
 New-Item -ItemType Directory -Force ../../dist | Out-Null
 Copy-Item -Force ./dist/*.exe ../../dist/
