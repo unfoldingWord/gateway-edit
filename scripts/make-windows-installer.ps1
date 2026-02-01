@@ -9,6 +9,11 @@ $APP_DIR = "gatewayedit-desktop"
 $APP_NAME = "GatewayEdit"
 $APP_ID = "com.unfoldingWord.gatewayedit" # change to your reverse-DNS id
 
+Write-Host "APP_DIR: $APP_DIR"
+Write-Host "APP_NAME: $APP_NAME"
+Write-Host "APP_ID: $APP_ID"
+Write-Host "arch: $arch"
+
 $QA_MODE = $qa.IsPresent
 
 if ($arch -ne "x64" -and $arch -ne "arm64") {
@@ -96,33 +101,54 @@ $env:APP_NAME = $APP_NAME
 $env:APP_ID = $APP_ID
 $env:npm_package_build_productName = $APP_NAME
 $env:npm_package_build_appId = $APP_ID
+
 yarn $PACKAGE_SCRIPT
 
+$electronite_app_dir = "./out/$APP_NAME-win32-$arch"
+Write-Host "electronite_app_dir: $electronite_app_dir"
+ls $electronite_app_dir
+$env:electronite_app_dir = $electronite_app_dir
+
 # Ensure the installer filename includes architecture
-$installer_files = Get-ChildItem ./dist/*.exe
+$installer_files = Get-ChildItem  $electronite_app_dir/*.exe
 if ($installer_files.Count -eq 0) {
     Write-Error "No installer produced in ./dist"
     exit 1
 }
 
-foreach ($installer in $installer_files) {
-    $base = $installer.Name
-    if ($base -like "*$arch*") {
-        continue
-    }
+# foreach ($installer in $installer_files) {
+#     $base = $installer.Name
+#     if ($base -like "*$arch*") {
+#         continue
+#     }
+#
+#     # Insert "-<arch>" before ".exe"
+#     $new_base = $base -replace '\.exe$', "-$arch.exe"
+#     $new_path = Join-Path ./dist $new_base
+#
+#     # Avoid clobbering if it already exists
+#     if (Test-Path $new_path) {
+#         Write-Warning "$new_path already exists; leaving $installer as-is"
+#         continue
+#     }
+#
+#     Move-Item -Force $installer.FullName $new_path
+# }
 
-    # Insert "-<arch>" before ".exe"
-    $new_base = $base -replace '\.exe$', "-$arch.exe"
-    $new_path = Join-Path ./dist $new_base
-
-    # Avoid clobbering if it already exists
-    if (Test-Path $new_path) {
-        Write-Warning "$new_path already exists; leaving $installer as-is"
-        continue
-    }
-
-    Move-Item -Force $installer.FullName $new_path
+# get package script to use
+$INSTALLER_SCRIPT = ""
+if ($arch -eq "x64") {
+    $INSTALLER_SCRIPT = "nsis:win-x64"
+} else {
+    $INSTALLER_SCRIPT = "dist:win-arm64"
 }
+
+$env:APP_NAME = $APP_NAME
+$env:APP_ID = $APP_ID
+$env:npm_package_build_productName = $APP_NAME
+$env:npm_package_build_appId = $APP_ID
+
+yarn $INSTALLER_SCRIPT
 
 # Copy installer files to ../../dist
 New-Item -ItemType Directory -Force ../../dist | Out-Null
