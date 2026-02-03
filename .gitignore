@@ -34,7 +34,6 @@ yarn-error.log*
 .prettierignore
 
 # Integration testing
-
 cypress.env.json
 cypress/screenshots/
 cypress/videos/
@@ -42,3 +41,4 @@ cypress/videos/
 # Local Netlify folder
 .netlify
 /out/
+/scripts/gatewayedit-desktop/
