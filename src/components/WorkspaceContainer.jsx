@@ -751,6 +751,7 @@ function WorkspaceContainer() {
           bookId: scriptureBookId,
           languageId: originalLanguageId,
         }
+        console.log(`WorkspaceContainer - using original book objects for ${scriptureBookId}`, bookObjects?.chapters?.[1]?.[1])
       }
     } else { // if not same book
       if (bookObjects) {
