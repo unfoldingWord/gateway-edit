@@ -740,12 +740,21 @@ function WorkspaceContainer() {
 
   useEffect(() => {
     let originalScriptureBookObjects = null
+    const scriptureBookId = originalScriptureResults?.reference?.bookId
+    const sameBook = scriptureBookId === bookId
+    const bookObjects = originalScriptureResults?.bookObjects;
 
-    if (originalScriptureResults?.bookObjects) {
-      originalScriptureBookObjects = {
-        ...originalScriptureResults?.bookObjects,
-        bookId,
-        languageId: originalLanguageId,
+    if (sameBook) {
+      if (bookObjects) {
+        originalScriptureBookObjects = {
+          ...bookObjects,
+          bookId: scriptureBookId,
+          languageId: originalLanguageId,
+        }
+      }
+    } else { // if not same book
+      if (bookObjects) {
+        console.warn(`WorkspaceContainer - wrong book loaded ${scriptureBookId} ignoring`)
       }
     }
 
