@@ -53,6 +53,7 @@ import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
+import {startMinuteTracker} from "@utils/monitor";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -184,6 +185,13 @@ function WorkspaceContainer() {
     onResourceError,
     httpConfig: HTTP_CONFIG,
   })
+
+  useEffect(() => {
+    console.log('startMinuteTracker')
+    startMinuteTracker(() => {
+      console.warn('app unpaused')
+    })
+  }, [])
 
   const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
     bookId,
