@@ -32,7 +32,11 @@
     "mac:build-gwe-arm64-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --arm64\"",
     "mac:build-gwe-arm64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --arm64\"",
     "mac:build-gwe-x64-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --x64\"",
-    "mac:build-gwe-x64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --x64\""
+    "mac:build-gwe-x64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --x64\"",
+    "win:build-gwe-x64-install": "powershell -Command \"cd ./scripts; ./make-windows-installer.ps1 -arch x64\"",
+    "win:build-gwe-arm64-install": "powershell -Command \"cd ./scripts; ./make-windows-installer.ps1 -arch arm64\"",
+    "win:build-gwe-x64-debug-install": "powershell -Command \"cd ./scripts; ./make-windows-installer.ps1 -qa -arch x64\"",
+    "win:build-gwe-arm64-debug-install": "powershell -Command \"cd ./scripts; ./make-windows-installer.ps1 -qa -arch arm64\""
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
