@@ -755,7 +755,7 @@ function WorkspaceContainer() {
       }
     } else { // if not same book
       if (bookObjects) {
-        console.warn(`WorkspaceContainer - wrong book loaded ${scriptureBookId} ignoring`)
+        console.warn(`WorkspaceContainer - wrong book loaded ${scriptureBookId}, expected ${bookId} ignoring`)
       }
     }
 
