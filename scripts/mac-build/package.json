@@ -27,7 +27,8 @@
       ]
     },
     "dmg": {
-      "title": "GatewayEdit"
+      "title": "GatewayEdit",
+      "icon": "assets/icon.icns"
     }
   }
 }

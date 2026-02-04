@@ -5,9 +5,9 @@
   "main": "main.js",
   "scripts": {
     "start": "electronite .",
-    "dist:win-x64": "electronite-packager . \"%npm_package_build_productName%\" --platform=win32 --arch=x64 --overwrite --out=out --app-bundle-id=\"%npm_package_build_appId%\" --name=\"%npm_package_build_productName%\"",
+    "dist:win-x64": "electronite-packager . \"%npm_package_build_productName%\" --platform=win32 --arch=x64 --overwrite --out=out --app-bundle-id=\"%npm_package_build_appId%\" --name=\"%npm_package_build_productName%\" --icon=assets/icon.ico",
     "nsis:win-x64": "electron-builder --x64 --win nsis --prepackaged \"%electronite_app_dir%\"",
-    "dist:win-arm64": "electronite-packager . \"%npm_package_build_productName%\" --platform=win32 --arch=arm64 --overwrite --out=out --app-bundle-id=\"%npm_package_build_appId%\" --name=\"%npm_package_build_productName%\"",
+    "dist:win-arm64": "electronite-packager . \"%npm_package_build_productName%\" --platform=win32 --arch=arm64 --overwrite --out=out --app-bundle-id=\"%npm_package_build_appId%\" --name=\"%npm_package_build_productName%\" --icon=assets/icon.ico",
     "nsis:win-arm64": "electron-builder --arm64 --win nsis --prepackaged \"%electronite_app_dir%\""
   },
   "dependencies": {},
@@ -24,10 +24,23 @@
       "category": "public.app-category.productivity",
       "target": [
         "dmg"
-      ]
+      ],
+      "icon": "assets/icon.icns"
     },
     "dmg": {
       "title": "GatewayEdit"
+    },
+
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
     }
   }
 }
