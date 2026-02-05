@@ -1,8 +1,10 @@
-
-let minuteCounter = 0;
-let minuteTimer = null;
-let unPauseCallback = null;
+const overflowAmount = 1.1;
 const trackIntervalMinutes = 1;
+const minuteInMilliseconds = 60 * 1000;
+let minuteCounter = 0;
+let unPauseCallback = null;
+let minuteTimer = null;
+let timeSinceValidation = 0
 
 /**
  * Starts a minute counter for tracking training duration
@@ -12,25 +14,24 @@ const trackIntervalMinutes = 1;
  *
  * @returns {NodeJS.Timeout} Timer interval ID
  */
-
-
 export function startMinuteTracker(callback) {
   console.log('startMinuteTracker() -️ Timer started');
+
   unPauseCallback = callback;
 
   let startTime = Date.now(); // Capture start time
-
   minuteTimer = setInterval(() => {
     minuteCounter++;
     console.log(`startMinuteTracker() - ${minuteCounter} minute(s) elapsed`);
-    let stopTime = Date.now();
+    let stopTime = timeSinceValidation = Date.now();
     const elapsedMinutes = getElapsedMinutes(startTime, stopTime);
-    if (elapsedMinutes > trackIntervalMinutes * 1.1) {
+    if (elapsedMinutes > trackIntervalMinutes * overflowAmount) {
       console.log(`startMinuteTracker() - ${elapsedMinutes} actually elapsed during ${trackIntervalMinutes} time`);
-      unPauseCallback?.(elapsedMinutes, trackIntervalMinutes);
+      const minSinceValidation = getMinuteCounter(timeSinceValidation, stopTime);
+      unPauseCallback?.(elapsedMinutes, minSinceValidation);
     }
     startTime = Date.now();
-  }, trackIntervalMinutes * 60 * 1000); // 60,000 ms = 1 minute
+  }, trackIntervalMinutes * minuteInMilliseconds); // 60,000 ms = 1 minute
 
   return minuteTimer;
 }
@@ -54,8 +55,18 @@ export function stopMinuteTracker() {
  *
  * @returns {number} Minutes elapsed during training
  */
-function getMinuteCounter() {
+export function getMinuteCounter() {
   return minuteCounter;
+}
+
+/**
+ * Resets the minute counter to zero.
+ *
+ * @return {void} This method does not return a value.
+ */
+export function resetMinuteCounter() {
+  minuteCounter = 0;
+  timeSinceValidation = Date.now();
 }
 
 /**

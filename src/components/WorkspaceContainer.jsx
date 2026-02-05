@@ -33,6 +33,7 @@ import {
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
 import {
+  delay,
   getLatestBibleRepo,
   getResourceBibles,
 } from '@utils/resources'
@@ -53,7 +54,8 @@ import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
-import {startMinuteTracker} from "@utils/monitor";
+import { resetMinuteCounter, startMinuteTracker } from "@utils/monitor";
+import {AuthContext} from "@context/AuthContext";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -186,10 +188,23 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
   })
 
+  const minWaitMinites = 5;
+
+  const { actions: { verifyLogin } } = useContext(AuthContext)
+
   useEffect(() => {
-    console.log('startMinuteTracker')
-    startMinuteTracker(() => {
-      console.warn('app unpaused')
+    delay(1000).then(() => {
+      console.log('WorkspaceContainer - startMinuteTracker')
+      startMinuteTracker((elapsedMinutes, minSinceValidation) => {
+        console.log(`WorkspaceContainer - app unpaused ${elapsedMinutes} minutes, elapsedTimeSinceValidation is ${minSinceValidation}`);
+        if (minSinceValidation > minWaitMinites) {
+          console.log(`WorkspaceContainer - Login check ${minSinceValidation} minutes, exceeded ${minWaitMinites}`);
+          verifyLogin().then((verifyLogin) => {
+            console.log(`WorkspaceContainer - verifyLogin=${verifyLogin}`);
+            resetMinuteCounter();
+          })
+        }
+      })
     })
   }, [])
 

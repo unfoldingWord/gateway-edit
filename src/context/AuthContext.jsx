@@ -39,6 +39,35 @@ export default function AuthContextProvider(props) {
     name: 'my-auth-store',
   })
 
+  async function verifyLogin() {
+    let auth = authentication // get if previously authenticated
+    if (auth) { // if previously authenticated, verify still authenticated
+      try {
+        const response = await doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME);
+        const httpCode = response?.status || 0;
+        auth = (httpCode === 200)
+      } catch (e) {
+        if (e.toString().includes('401')) { // check if 401 code in exception
+          // console.error(`getAuth() - user token expired`)
+          auth = false;
+        } else {
+          // console.warn(`getAuth() - hard error fetching user info, error=`, e)
+          auth = false;
+        }
+      }
+    }
+    return auth
+  }
+
+  /**
+   * Retrieves authentication from local storage and verifies its validity
+   *
+   * Fetches the stored authentication object and validates it by making a request
+   * to the server. If the authentication is invalid or expired, triggers logout.
+   * Handles network errors and authentication failures appropriately.
+   *
+   * @return {Promise<Object|null>} The authentication object if found, null otherwise
+   */
   const getAuth = async () => {
     const auth = await myAuthStore.getItem('authentication')
 
@@ -110,6 +139,7 @@ export default function AuthContextProvider(props) {
       logout,
       setNetworkError,
       setServer,
+      verifyLogin,
     },
   }
 
