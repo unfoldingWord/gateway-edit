@@ -54,7 +54,7 @@ import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
-import { resetMinuteCounter, startMinuteTracker } from "@utils/monitor";
+import {getMonitor} from "@utils/monitor";
 import {AuthContext} from "@context/AuthContext";
 
 const useStyles = makeStyles(() => ({
@@ -191,22 +191,6 @@ function WorkspaceContainer() {
   const minWaitMinites = 5;
 
   const { actions: { verifyLogin } } = useContext(AuthContext)
-
-  useEffect(() => {
-    delay(1000).then(() => {
-      console.log('WorkspaceContainer - startMinuteTracker')
-      startMinuteTracker((elapsedMinutes, minSinceValidation) => {
-        console.log(`WorkspaceContainer - app unpaused ${elapsedMinutes} minutes, elapsedTimeSinceValidation is ${minSinceValidation}`);
-        if (minSinceValidation > minWaitMinites) {
-          console.log(`WorkspaceContainer - Login check ${minSinceValidation} minutes, exceeded ${minWaitMinites}`);
-          verifyLogin().then((verifyLogin) => {
-            console.log(`WorkspaceContainer - verifyLogin=${verifyLogin}`);
-            resetMinuteCounter();
-          })
-        }
-      })
-    })
-  }, [])
 
   const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
     bookId,
@@ -761,6 +745,36 @@ function WorkspaceContainer() {
     wholeBook: true,
   })
 
+  /**
+   * Handles timeout callback logic for managing app inactivity and login validation.
+   *
+   * @param {number} actualTimerElapsedMin - The number of minutes the application has been unpaused.
+   * @param {number} minSinceMonitorStart - The number of minutes since the last login validation occurred.
+   * @return {void} This method does not return any value.
+   */
+  function timeoutCallback(actualTimerElapsedMin, minSinceMonitorStart) {
+    console.log(`timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
+    const monitor = getMonitor();
+    verifyLogin().then((verifyLogin) => {
+      console.log(`timeoutCallback - verifyLogin=${verifyLogin}`);
+      monitor.reset();
+    })
+  }
+
+  /**
+   * Effect hook that loads and caches original scripture book data.
+   *
+   * When original scripture data is fetched, this effect:
+   * - Validates that the loaded book matches the currently selected book
+   * - Updates the component state with the original scripture book objects
+   * - Initializes the Monitor singleton for tracking user activity and session validation
+   *
+   * The Monitor is started once when book data is first available and handles:
+   * - Detecting when the app resumes from sleep/pause
+   * - Triggering login verification after inactivity periods
+   *
+   * @dependency originalScriptureResults?.bookObjects - Triggers when original scripture data changes
+   */
   useEffect(() => {
     let originalScriptureBookObjects = null
     const scriptureBookId = originalScriptureResults?.reference?.bookId
@@ -783,8 +797,33 @@ function WorkspaceContainer() {
     }
 
     setState( { originalScriptureBookObjects })
+
+    if(bookObjects) {
+      const monitor = getMonitor()
+      if (!monitor.initialized()) {
+        console.log(`WorkspaceContainer - initializing Monitor`)
+        const maximumWaitTime = 10;
+        monitor.start(timeoutCallback, maximumWaitTime)
+      }
+    }
   }, [originalScriptureResults?.bookObjects])
 
+
+  /**
+   * Effect hook that pre-caches lexicon glosses for the current verse reference.
+   *
+   * When the scripture reference changes, this effect:
+   * - Retrieves all verse objects for the current reference from the original scripture book
+   * - Iterates through each verse's verseObjects sequentially
+   * - Fetches and caches glosses/lexicon data for each word in the original language
+   *
+   * This pre-caching improves performance by loading lexicon data ahead of time,
+   * so it's available immediately when users interact with original language words.
+   *
+   * @dependency scriptureReference - Triggers when user navigates to a different verse
+   * @dependency originalScriptureBookObjects - Triggers when original scripture data loads
+   * @dependency originalLanguageId - Triggers when switching between Hebrew/Greek contexts
+   */
   useEffect(() => { // pre-cache glosses on verse change
     const fetchGlossDataForVerse = async () => {
       const verses = getVersesForRef(scriptureReference, originalScriptureBookObjects, originalLanguageId)

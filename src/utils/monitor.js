@@ -1,83 +1,139 @@
-const overflowAmount = 1.1;
-const trackIntervalMinutes = 1;
-const minuteInMilliseconds = 60 * 1000;
-let minuteCounter = 0;
-let unPauseCallback = null;
-let minuteTimer = null;
-let timeSinceValidation = 0
+const OverflowAmount = 1.25;
+const MinuteInMilliseconds = 60 * 1000; // 60,000 ms = 1 minute
+const TrackIntervalMinutes = 1;
+const MaximumTimeoutMinutes = 10;
 
 /**
- * Starts a minute counter for tracking training duration
- *
- * Initializes a counter that increments every minute to track
- * training duration, even if the system clock jumps (e.g., during sleep).
- *
- * @returns {NodeJS.Timeout} Timer interval ID
+ * The Monitor class is responsible for monitoring for two events:
+ *  - wake up from sleep - the minute timer taking significantly long than minute (sign browser tab was sleeping)
+ *  - watchdog time - too long between changing verse
  */
-export function startMinuteTracker(callback) {
-  console.log('startMinuteTracker() -️ Timer started');
+class Monitor {
+  constructor() {
+    this.minuteCounter = 0; // increments elapsed seconds from last monitor reset
+    this.timeoutCallback = null; // callback for timeout
+    this.minuteTimer = null;
+    this.monitorStartTime = 0;
+    this.maximumWaitTime = MaximumTimeoutMinutes;
+  }
 
-  unPauseCallback = callback;
+  /**
+   * Starts a minute counter for tracking training duration
+   *
+   * Initializes a counter that increments every minute to track
+   * training duration, even if the system clock jumps (e.g., during sleep).
+   *
+   * @param {Function} callback - Callback function to invoke when time overflow is detected
+   * @param {number} _maximumWaitTime - Maximum wait time in minutes before triggering timeout
+   * @returns {NodeJS.Timeout} Timer interval ID
+   */
+  start(callback, _maximumWaitTime=MaximumTimeoutMinutes) {
+    console.log('Monitor.start() - Timer started');
 
-  let startTime = Date.now(); // Capture start time
-  minuteTimer = setInterval(() => {
-    minuteCounter++;
-    console.log(`startMinuteTracker() - ${minuteCounter} minute(s) elapsed`);
-    let stopTime = timeSinceValidation = Date.now();
-    const elapsedMinutes = getElapsedMinutes(startTime, stopTime);
-    if (elapsedMinutes > trackIntervalMinutes * overflowAmount) {
-      console.log(`startMinuteTracker() - ${elapsedMinutes} actually elapsed during ${trackIntervalMinutes} time`);
-      const minSinceValidation = getMinuteCounter(timeSinceValidation, stopTime);
-      unPauseCallback?.(elapsedMinutes, minSinceValidation);
+    this.timeoutCallback = callback;
+    this.maximumWaitTime = _maximumWaitTime;
+
+    let startTime = Date.now(); // Capture start time
+    this.monitorStartTime = startTime;
+
+    this.minuteTimer = setInterval(() => {
+      this.minuteCounter++;
+      console.log(`MinuteTracker.start() - ${this.minuteCounter} minute(s) elapsed`);
+      let stopTime = Date.now();
+
+      const actualTimerElapsedMin = this.getElapsedMinutes(startTime, stopTime); // time since last timer event
+      const minSinceMonitorStart = this.getElapsedMinutes(this.monitorStartTime, stopTime);
+
+      if (actualTimerElapsedMin > TrackIntervalMinutes * OverflowAmount) { // if discrepancy in timer delay, probably woke up from sleep
+        console.log(`MinuteTracker.start() - ${actualTimerElapsedMin} actually elapsed during ${TrackIntervalMinutes} time`);
+        this.timeoutCallback?.(actualTimerElapsedMin, minSinceMonitorStart);
+      } else if (minSinceMonitorStart > this.maximumWaitTime) {
+        console.log(`MinuteTracker.start() - ${minSinceMonitorStart} exceeded ${TrackIntervalMinutes} time`);
+        this.timeoutCallback?.(actualTimerElapsedMin, minSinceMonitorStart);
+      }
+
+      startTime = Date.now();
+    }, TrackIntervalMinutes * MinuteInMilliseconds);
+  }
+
+  /**
+   * Checks if the minute tracker is initialized and running
+   *
+   * @returns {boolean} True if initialized and running, false otherwise
+   */
+  initialized() {
+   return this.timeoutCallback && this.minuteTimer;
+  }
+
+  /**
+   * Stops the minute tracker
+   *
+   * Cleans up the timer that tracks training duration.
+   */
+  stop() {
+    this.timeoutCallback = null;
+    console.log(`MinuteTracker.stop() - stopped`);
+    if (this.minuteTimer) {
+      clearInterval(this.minuteTimer);
+      this.minuteTimer = null;
     }
-    startTime = Date.now();
-  }, trackIntervalMinutes * minuteInMilliseconds); // 60,000 ms = 1 minute
+  }
 
-  return minuteTimer;
-}
+  /**
+   * Gets the current minute counter value
+   *
+   * @returns {number} Minutes elapsed during training
+   */
+  getMinuteCounter() {
+    return this.minuteCounter;
+  }
 
-/**
- * Stops the minute tracker
- *
- * Cleans up the timer that tracks training duration.
- */
-export function stopMinuteTracker() {
-  unPauseCallback = null;
-  console.log(`stopMinuteTracker() - stopped`);
-  if (minuteTimer) {
-    clearInterval(minuteTimer);
-    minuteTimer = null;
+  /**
+   * Gets the current minute counter value
+   *
+   * @returns {number} Minutes elapsed during training
+   */
+  getMaximumWaitTime() {
+    return this.maximumWaitTime;
+  }
+
+  /**
+   * Resets the minute counter to zero.
+   *
+   * @return {void} This method does not return a value.
+   */
+  reset() {
+    this.minuteCounter = 0;
+    this.monitorStartTime = Date.now();
+  }
+
+  /**
+   * Calculates elapsed minutes between times
+   *
+   * @param {number} startTime - The time at start
+   * @param {number} endTime - The time at end
+   * @returns {number} Elapsed time in minutes
+   */
+  getElapsedMinutes(startTime, endTime) {
+    const elapsed = endTime - startTime;
+    return elapsed / (1000 * 60);
   }
 }
 
-/**
- * Gets the current minute counter value
- *
- * @returns {number} Minutes elapsed during training
- */
-export function getMinuteCounter() {
-  return minuteCounter;
-}
+// Export a singleton instance for backward compatibility
+const minuteTrackerInstance = new Monitor();
 
 /**
- * Resets the minute counter to zero.
+ * Gets the singleton Monitor instance
  *
- * @return {void} This method does not return a value.
+ * Returns the shared Monitor instance used for tracking time and detecting
+ * system clock changes during training sessions.
+ *
+ * @return {Monitor} The singleton Monitor instance
  */
-export function resetMinuteCounter() {
-  minuteCounter = 0;
-  timeSinceValidation = Date.now();
+export function getMonitor() {
+  return minuteTrackerInstance;
 }
 
-/**
- * Calculates elapsed minutes between times
- *
- * @param {number} startTime - The time at start
- * @param {number} endTime - The time at end
- * @returns {number} Elapsed time in minutes
- */
-export function getElapsedMinutes(startTime, endTime) {
-  const elapsed = endTime - startTime;
-  return elapsed / (1000 * 60);
-}
-
+// Also export the class itself for direct instantiation if needed
+export { Monitor };
