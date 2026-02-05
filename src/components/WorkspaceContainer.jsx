@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
-const wordAlignmentScreenRatio = 0.8
+const wordAlignmentScreenRatio = 0.9
 const wordAlignmentMaxHeightPx = 1000
 
 const buildId = getBuildId()
@@ -748,12 +748,22 @@ function WorkspaceContainer() {
 
   useEffect(() => {
     let originalScriptureBookObjects = null
+    const scriptureBookId = originalScriptureResults?.reference?.bookId
+    const sameBook = scriptureBookId === bookId
+    const bookObjects = originalScriptureResults?.bookObjects;
 
-    if (originalScriptureResults?.bookObjects) {
-      originalScriptureBookObjects = {
-        ...originalScriptureResults?.bookObjects,
-        bookId,
-        languageId: originalLanguageId,
+    if (sameBook) {
+      if (bookObjects) {
+        originalScriptureBookObjects = {
+          ...bookObjects,
+          bookId: scriptureBookId,
+          languageId: originalLanguageId,
+        }
+        console.log(`WorkspaceContainer - using original book objects for ${scriptureBookId}`, bookObjects?.chapters?.[1]?.[1])
+      }
+    } else { // if not same book
+      if (bookObjects) {
+        console.warn(`WorkspaceContainer - wrong book loaded ${scriptureBookId}, expected ${bookId} ignoring`)
       }
     }
 
