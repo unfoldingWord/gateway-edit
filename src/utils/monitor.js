@@ -28,7 +28,7 @@ class Monitor {
    * @returns {NodeJS.Timeout} Timer interval ID
    */
   start(callback, _maximumWaitTime=MaximumTimeoutMinutes) {
-    console.log('Monitor.start() - Timer started');
+    console.log(`Monitor.start() - Timer started, _maximumWaitTime=${_maximumWaitTime}`);
 
     this.timeoutCallback = callback;
     this.maximumWaitTime = _maximumWaitTime;

@@ -285,20 +285,21 @@ function WorkspaceContainer() {
    */
   function showNetworkError() {
     if (authError) {
-      <ErrorPopup
-        title={translate('authentication_error_title')}
-        message={translate('authentication_error_message')}
-        dimBackground={true}
-        hideClose={true}
-        onClose={() => {
-          setAuthError(false)
-        }}
-        actionButtonStr={translate('login')}
-        onActionButton={() => {
-          logout();
-          setAuthError(false);
-        }}
-      />
+      return(
+        <ErrorPopup
+          title={translate('authentication_error_title')}
+          message={translate('authentication_error_message')}
+          dimBackground={true}
+          hideClose={true}
+          onClose={() => {
+            setAuthError(false)
+          }}
+          actionButtonStr={translate('login')}
+          onActionButton={() => {
+            logout();
+            setAuthError(false);
+          }}
+        />)
     } else
     if (tokenNetworkError) { // if we had a token error (authentication) on startup
       if (!tokenNetworkError.router) { // needed for reload of page
@@ -788,6 +789,8 @@ function WorkspaceContainer() {
         setAuthError(true);
       } else {
         console.log(`WorkspaceContainer.timeoutCallback - valid login, check for merge conflicts`);
+        const mergeCheck_ = mergeCheck + 1;
+        setState( { mergeCheck: mergeCheck_ })
       }
       monitor.reset();
     })

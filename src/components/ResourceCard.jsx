@@ -53,12 +53,13 @@ export default function ResourceCard({
   classes,
   disableFilters,
   disableNavigation,
-  errorMessage,
+  errorMessage = null,
   filePath,
   hideMarkdownToggle,
   id,
   languageId,
   loggedInUser,
+  mergeCheck,
   onMinimize,
   onResourceError,
   owner,
@@ -69,7 +70,7 @@ export default function ResourceCard({
   server,
   setCurrentCheck,
   setSavedChanges,
-  title,
+  title = '',
   updateTaDetails,
   useUserLocalStorage,
   verse,
@@ -232,7 +233,16 @@ export default function ResourceCard({
       mergeStatus: mergeToMaster,
       updateStatus: mergeFromMaster,
     },
+    actions: {
+      checkMergeStatus
+    }
   } = _useBranchMerger;
+
+  useEffect(() => {
+    if (mergeCheck > 0) {
+      checkMergeStatus && checkMergeStatus() // every time mergeCheck changes, check merge status again
+    }
+  }, [mergeCheck])
 
   const updateButtonProps = useContentUpdateProps({
     isSaving,
@@ -618,47 +628,43 @@ export default function ResourceCard({
   )
 }
 
-ResourceCard.defaultProps = {
-  errorMessage: null,
-  title: '',
-}
-
 ResourceCard.propTypes = {
-  id: PropTypes.string,
-  viewMode: PropTypes.string,
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  /** default ref for app (e.g. master) */
+  appRef: PropTypes.string,
+  /** user authentication object */
+  authentication: PropTypes.object,
   chapter: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  server: PropTypes.string.isRequired,
-  owner: PropTypes.string.isRequired,
-  languageId: PropTypes.string.isRequired,
-  resourceId: PropTypes.string.isRequired,
-  projectId: PropTypes.string.isRequired,
-  updateTaDetails: PropTypes.func,
-  setCurrentCheck: PropTypes.func,
-  filePath: PropTypes.string,
+  classes: PropTypes.object,
   disableFilters: PropTypes.bool,
   disableNavigation: PropTypes.bool,
-  hideMarkdownToggle: PropTypes.bool,
-  classes: PropTypes.object,
-  selectedQuote: PropTypes.object,
   errorMessage: PropTypes.string,
-  useUserLocalStorage: PropTypes.func,
+  filePath: PropTypes.string,
+  hideMarkdownToggle: PropTypes.bool,
+  id: PropTypes.string,
+  languageId: PropTypes.string.isRequired,
+  mergeCheck: PropTypes.number, // if this changes, need to recheck merge status
+  /** username of the logged in user */
+  loggedInUser: PropTypes.string,
+  /** function to minimize the card (optional) */
+  onMinimize: PropTypes.func,
   /** optional callback if error loading resource, parameter returned are:
    *    ({string} errorMessage, {boolean} isAccessError, {object} resourceStatus)
    *    isAccessError - is true if this was an error trying to access file and could likely be due to network connection problem
    *    resourceStatus - is object containing details about problems fetching resource */
   onResourceError: PropTypes.func,
-  /** default ref for app (e.g. master) */
-  appRef: PropTypes.string,
-  /** username of the logged in user */
-  loggedInUser: PropTypes.string,
-  /** user authentication object */
-  authentication: PropTypes.object,
+  owner: PropTypes.string.isRequired,
+  projectId: PropTypes.string.isRequired,
+  resourceId: PropTypes.string.isRequired,
+  selectedQuote: PropTypes.object,
+  setCurrentCheck: PropTypes.func,
   /** Set whether changes are saved or not so that the saved changes prompts opens when necessary. */
   setSavedChanges: PropTypes.func,
+  server: PropTypes.string.isRequired,
   /** Shows a unsaved changes prompt if there's any. */
   showSaveChangesPrompt: PropTypes.func,
-  /** function to minimize the card (optional) */
-  onMinimize: PropTypes.func,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  updateTaDetails: PropTypes.func,
+  useUserLocalStorage: PropTypes.func,
+  verse: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  viewMode: PropTypes.string,
 }
