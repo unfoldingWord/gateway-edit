@@ -38,17 +38,17 @@ class Monitor {
 
     this.minuteTimer = setInterval(() => {
       this.minuteCounter++;
-      console.log(`MinuteTracker.start() - ${this.minuteCounter} minute(s) elapsed`);
+      // console.log(`Monitor.start() - timer event ${this.minuteCounter} minute(s) elapsed`);
       let stopTime = Date.now();
 
       const actualTimerElapsedMin = this.getElapsedMinutes(startTime, stopTime); // time since last timer event
       const minSinceMonitorStart = this.getElapsedMinutes(this.monitorStartTime, stopTime);
 
       if (actualTimerElapsedMin > TrackIntervalMinutes * OverflowAmount) { // if discrepancy in timer delay, probably woke up from sleep
-        console.log(`MinuteTracker.start() - ${actualTimerElapsedMin} actually elapsed during ${TrackIntervalMinutes} time`);
+        console.log(`Monitor.start() - ${actualTimerElapsedMin} actually elapsed during ${TrackIntervalMinutes} time`);
         this.timeoutCallback?.(actualTimerElapsedMin, minSinceMonitorStart);
       } else if (minSinceMonitorStart > this.maximumWaitTime) {
-        console.log(`MinuteTracker.start() - ${minSinceMonitorStart} exceeded ${TrackIntervalMinutes} time`);
+        console.log(`Monitor.start() - ${minSinceMonitorStart} exceeded ${TrackIntervalMinutes} time`);
         this.timeoutCallback?.(actualTimerElapsedMin, minSinceMonitorStart);
       }
 
@@ -72,7 +72,7 @@ class Monitor {
    */
   stop() {
     this.timeoutCallback = null;
-    console.log(`MinuteTracker.stop() - stopped`);
+    console.log(`Monitor.stop() - stopped`);
     if (this.minuteTimer) {
       clearInterval(this.minuteTimer);
       this.minuteTimer = null;
@@ -105,6 +105,7 @@ class Monitor {
   reset() {
     this.minuteCounter = 0;
     this.monitorStartTime = Date.now();
+    console.log(`Monitor.reset() - reset`);
   }
 
   /**

@@ -211,7 +211,10 @@
   "alignments.reset_confirm"       : "Are you sure you want to clear all alignments?",
   "alignments.cancel"              : "Cancel",
   "alignments.cancel_hint"         : "Cancel any alignments changes and close the dialog",
+  "authentication_error_title"     : "Authentication Error",
+  "authentication_error_message"   : "You are not logged in and cannot save changes.  Do you want to login now?",
   "no": "No",
   "yes": "Yes",
-  "warning": "Warning"
+  "warning": "Warning",
+  "login": "Login"
 }

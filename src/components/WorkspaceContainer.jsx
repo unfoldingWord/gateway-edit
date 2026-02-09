@@ -56,6 +56,7 @@ import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
 import {getMonitor} from "@utils/monitor";
 import {AuthContext} from "@context/AuthContext";
+import ErrorPopup from "@components/ErrorPopUp";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -97,8 +98,10 @@ function WorkspaceContainer() {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const [state, _setState] = useState({
+    authError: false,
     currentVerseReference: null,
     originalScriptureBookObjects: null,
+    mergeCheck: 0,
     networkError: null,
     scriptureReference: {},
     wordAlignerStatus: null,
@@ -106,7 +109,9 @@ function WorkspaceContainer() {
   })
 
   const {
+    authError,
     currentVerseReference,
+    mergeCheck,
     networkError,
     originalScriptureBookObjects,
     scriptureReference,
@@ -266,16 +271,36 @@ function WorkspaceContainer() {
     processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
   }
 
-  const setNetworkError = useCallback(( error ) => {
+  function setNetworkError( error ) {
     setState( { networkError: error })
-  }, [])
+  }
+
+  function setAuthError(authError) {
+    setState( { authError })
+  }
 
   /**
    * show either tokenNetworkError or NetworkError for workspace
    * @return {JSX.Element|null}
    */
   function showNetworkError() {
-    if (tokenNetworkError) { // if we had a token network error on startup
+    if (authError) {
+      <ErrorPopup
+        title={translate('authentication_error_title')}
+        message={translate('authentication_error_message')}
+        dimBackground={true}
+        hideClose={true}
+        onClose={() => {
+          setAuthError(false)
+        }}
+        actionButtonStr={translate('login')}
+        onActionButton={() => {
+          logout();
+          setAuthError(false);
+        }}
+      />
+    } else
+    if (tokenNetworkError) { // if we had a token error (authentication) on startup
       if (!tokenNetworkError.router) { // needed for reload of page
         setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
       }
@@ -420,6 +445,7 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
     isNT,
     loggedInUser,
+    mergeCheck,
     onResourceError,
     originalLanguageOwner: scriptureOwner,
     originalScriptureBookObjects,
@@ -443,6 +469,7 @@ function WorkspaceContainer() {
     chapter,
     languageId,
     loggedInUser,
+    mergeCheck,
     onResourceError,
     owner,
     server,
@@ -753,10 +780,15 @@ function WorkspaceContainer() {
    * @return {void} This method does not return any value.
    */
   function timeoutCallback(actualTimerElapsedMin, minSinceMonitorStart) {
-    console.log(`timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
+    console.log(`WorkspaceContainer.timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
     const monitor = getMonitor();
     verifyLogin().then((verifyLogin) => {
-      console.log(`timeoutCallback - verifyLogin=${verifyLogin}`);
+      if (!verifyLogin) {
+        console.log(`WorkspaceContainer.timeoutCallback - failed verifyLogin=${verifyLogin}`);
+        setAuthError(true);
+      } else {
+        console.log(`WorkspaceContainer.timeoutCallback - valid login, check for merge conflicts`);
+      }
       monitor.reset();
     })
   }
@@ -915,7 +947,7 @@ function WorkspaceContainer() {
           />
         </TrainingState.TrainingStateProvider>
 
-        {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
+        {(authError || tokenNetworkError || networkError) &&
           <>
             {showNetworkError()}
           </>
