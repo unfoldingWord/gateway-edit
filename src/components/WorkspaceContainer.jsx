@@ -828,7 +828,7 @@ function WorkspaceContainer() {
       const monitor = getMonitor()
       if (!monitor.initialized()) {
         console.log(`WorkspaceContainer - initializing Monitor`)
-        const maximumWaitTime = 10;
+        const maximumWaitTime = 2;
         monitor.start(timeoutCallback, maximumWaitTime)
       }
     }

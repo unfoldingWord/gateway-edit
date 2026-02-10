@@ -21,6 +21,7 @@ import useUpdateCardsProps from '../hooks/useUpdateCardsProps'
 import { UpdateBranchButton, ErrorDialog } from 'translation-helps-rcl'
 import ErrorPopup from "@components/ErrorPopUp";
 import {translate} from "@utils/lexiconHelpers";
+import isEqual from "deep-equal";
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -50,12 +51,13 @@ export default function Header({
   setFeedback,
   mergeStatusForCards,
 }) {
-  const oldCardMergeGroupings = useRef(null)
+  const oldCardMergeState = useRef(null)
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
   const [cardWithConflicts, setCardWithConflicts] = useState(false)
   const [cardWithError, setCardWithError] = useState(false)
+  const [cardToMerge, setCardToMerge] = useState(false)
   const { actions: { logout } } = useContext(AuthContext)
   const {
     state: {
@@ -75,33 +77,50 @@ export default function Header({
     dialogTitle,
     isErrorDialogOpen,
     onCloseErrorDialog,
+    onClick: onClickUpdateCards,
   } = updateButtonProps;
 
   const cardWithConflicts_ = cardMergeGroupings?.cardsWithConflicts?.length > 0
   const cardWithError_ = cardMergeGroupings?.cardsWithError?.length > 0
+  const cardToMerge_ = cardMergeGroupings?.cardsToMerge?.length > 0
+
+  const newCardMergeState = {
+    cardWithConflicts_,
+    cardWithError_,
+    cardToMerge_,
+  }
+
+  const mergeStateChanged = !isEqual(oldCardMergeState.current, newCardMergeState)
 
   useEffect(() => {
     if (mergeCheck > 0) {
       if (cardWithConflicts_) {
-        const previousCardWithConflicts = oldCardMergeGroupings.current?.cardsWithConflicts?.length > 0
+        const previousCardWithConflicts = oldCardMergeState.current?.cardWithConflicts_
         if (!previousCardWithConflicts  && !cardWithConflicts) {
           setCardWithConflicts(true)
-          oldCardMergeGroupings.current = cardMergeGroupings
         }
       }
       if (cardWithError_) {
-        const previousCardWithErrors = oldCardMergeGroupings.current?.cardsWithError?.length > 0
+        const previousCardWithErrors = oldCardMergeState.current?.cardWithError_
         if (!previousCardWithErrors && !cardWithError) {
           setCardWithError(true)
-          oldCardMergeGroupings.current = cardMergeGroupings
         }
       }
+      if (cardToMerge_) {
+        const previousCardToMerge = oldCardMergeState.current?.cardToMerge_
+        if (!previousCardToMerge && !cardToMerge) {
+          setCardToMerge(true)
+        }
+      }
+      oldCardMergeState.current = newCardMergeState
     }
-  }, [cardWithConflicts_, cardWithError_])
+  }, [mergeStateChanged])
 
   useEffect(() => {
-    oldCardMergeGroupings.current = cardMergeGroupings
-  }, [mergeCheck, cardWithConflicts_])
+    if (mergeCheck === 0) {
+      oldCardMergeState.current = newCardMergeState
+    }
+  }, [mergeCheck])
 
   /**
    * render an error dialog
@@ -110,19 +129,19 @@ export default function Header({
    * @return {React.JSX.Element}
    * @private
    */
-  function showWarningDialog_(title, message) {
-    return (
+  function showWarningDialog_(title, message, onClose) {
+  return (
       <ErrorPopup
         title={translate(title)}
         message={translate(message)}
         dimBackground={true}
-        hideClose={true}
         onClose={() => {
-          setAuthError(false)
+          onClose(false)
         }}
-        actionButtonStr={translate('ok')}
+        actionButtonStr={translate('resolve')}
         onActionButton={() => {
-          cardWithError ? setCardWithError(false) : setCardWithConflicts(false);
+          onClickUpdateCards && onClickUpdateCards()
+          onClose(false)
         }}
       />
     );
@@ -134,9 +153,11 @@ export default function Header({
    */
   function showWarningDialog() {
     if (cardWithError) {
-      return showWarningDialog_('merge_error_title', 'merge_error_message')
-    } else {
-      return showWarningDialog_('merge_conflict_title', 'merge_conflict_message')
+      return showWarningDialog_('merge_error_title', 'merge_error_message', setCardWithError)
+    } else if (cardWithConflicts) {
+      return showWarningDialog_('merge_conflict_title', 'merge_conflict_message', setCardWithConflicts)
+    } else { // cardToMerge
+      return showWarningDialog_('merge_new_title', 'merge_new_message', setCardToMerge)
     }
   }
 
@@ -229,7 +250,7 @@ export default function Header({
         :
         null
       }
-      { (cardWithError || cardWithConflicts_) && showWarningDialog() }
+      { (cardWithError || cardWithConflicts || cardToMerge) && showWarningDialog() }
     </header>
   )
 }
