@@ -213,8 +213,13 @@
   "alignments.cancel_hint"         : "Cancel any alignments changes and close the dialog",
   "authentication_error_title"     : "Authentication Error",
   "authentication_error_message"   : "You are not logged in and cannot save changes.  Do you want to login now?",
+  "merge_error_title"              : "Card Merge Error",
+  "merge_error_message"            : "There is a new merge error.",
+  "merge_conflict_title"           : "Card Merge Conflict",
+  "merge_conflict_message"         : "There is a new merge conflict.  You will have to contact your administrator.",
   "no": "No",
   "yes": "Yes",
   "warning": "Warning",
-  "login": "Login"
+  "login": "Login",
+  "ok": "OK"
 }

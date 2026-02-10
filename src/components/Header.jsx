@@ -1,4 +1,9 @@
-import { useState, useContext } from 'react'
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useRef
+} from 'react'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
@@ -14,6 +19,8 @@ import { StoreContext } from '@context/StoreContext'
 import FeedbackPopup from '@components/FeedbackPopup'
 import useUpdateCardsProps from '../hooks/useUpdateCardsProps'
 import { UpdateBranchButton, ErrorDialog } from 'translation-helps-rcl'
+import ErrorPopup from "@components/ErrorPopUp";
+import {translate} from "@utils/lexiconHelpers";
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -43,14 +50,18 @@ export default function Header({
   setFeedback,
   mergeStatusForCards,
 }) {
+  const oldCardMergeGroupings = useRef(null)
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
+  const [cardWithConflicts, setCardWithConflicts] = useState(false)
+  const [cardWithError, setCardWithError] = useState(false)
   const { actions: { logout } } = useContext(AuthContext)
   const {
     state: {
       cardsSaving,
-      cardsLoadingUpdate
+      cardsLoadingUpdate,
+      mergeCheck
     },
     actions: {
       checkUnsavedChanges,
@@ -59,11 +70,75 @@ export default function Header({
 
   const updateButtonProps = useUpdateCardsProps({ mergeStatusForCards });
   const {
-    isErrorDialogOpen,
-    onCloseErrorDialog,
+    cardMergeGroupings,
     dialogMessage,
     dialogTitle,
+    isErrorDialogOpen,
+    onCloseErrorDialog,
   } = updateButtonProps;
+
+  const cardWithConflicts_ = cardMergeGroupings?.cardsWithConflicts?.length > 0
+  const cardWithError_ = cardMergeGroupings?.cardsWithError?.length > 0
+
+  useEffect(() => {
+    if (mergeCheck > 0) {
+      if (cardWithConflicts_) {
+        const previousCardWithConflicts = oldCardMergeGroupings.current?.cardsWithConflicts?.length > 0
+        if (!previousCardWithConflicts  && !cardWithConflicts) {
+          setCardWithConflicts(true)
+          oldCardMergeGroupings.current = cardMergeGroupings
+        }
+      }
+      if (cardWithError_) {
+        const previousCardWithErrors = oldCardMergeGroupings.current?.cardsWithError?.length > 0
+        if (!previousCardWithErrors && !cardWithError) {
+          setCardWithError(true)
+          oldCardMergeGroupings.current = cardMergeGroupings
+        }
+      }
+    }
+  }, [cardWithConflicts_, cardWithError_])
+
+  useEffect(() => {
+    oldCardMergeGroupings.current = cardMergeGroupings
+  }, [mergeCheck, cardWithConflicts_])
+
+  /**
+   * render an error dialog
+   * @param title
+   * @param message
+   * @return {React.JSX.Element}
+   * @private
+   */
+  function showWarningDialog_(title, message) {
+    return (
+      <ErrorPopup
+        title={translate(title)}
+        message={translate(message)}
+        dimBackground={true}
+        hideClose={true}
+        onClose={() => {
+          setAuthError(false)
+        }}
+        actionButtonStr={translate('ok')}
+        onActionButton={() => {
+          cardWithError ? setCardWithError(false) : setCardWithConflicts(false);
+        }}
+      />
+    );
+  }
+
+  /**
+   * show either merge error or merge conflict dialog
+   * @return {React.JSX.Element}
+   */
+  function showWarningDialog() {
+    if (cardWithError) {
+      return showWarningDialog_('merge_error_title', 'merge_error_message')
+    } else {
+      return showWarningDialog_('merge_conflict_title', 'merge_conflict_message')
+    }
+  }
 
   const handleDrawerOpen = () => {
     if (!drawerOpen) {
@@ -154,6 +229,7 @@ export default function Header({
         :
         null
       }
+      { (cardWithError || cardWithConflicts_) && showWarningDialog() }
     </header>
   )
 }

@@ -1,9 +1,9 @@
 import React, {
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
-  useCallback,
 } from 'react'
 import isEqual from 'deep-equal'
 import _ from 'lodash'
@@ -32,13 +32,9 @@ import {
 } from 'single-scripture-rcl'
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
-import {
-  delay,
-  getLatestBibleRepo,
-  getResourceBibles,
-} from '@utils/resources'
+import { getLatestBibleRepo, getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
-import { isNT, BIBLES_ABBRV_INDEX } from '@common/BooksOfTheBible'
+import { BIBLES_ABBRV_INDEX, isNT } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
@@ -98,10 +94,8 @@ function WorkspaceContainer() {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const [state, _setState] = useState({
-    authError: false,
     currentVerseReference: null,
     originalScriptureBookObjects: null,
-    mergeCheck: 0,
     networkError: null,
     scriptureReference: {},
     wordAlignerStatus: null,
@@ -109,9 +103,7 @@ function WorkspaceContainer() {
   })
 
   const {
-    authError,
     currentVerseReference,
-    mergeCheck,
     networkError,
     originalScriptureBookObjects,
     scriptureReference,
@@ -137,44 +129,48 @@ function WorkspaceContainer() {
 
   const {
     state: {
-      owner,
-      server,
       appRef,
-      taArticle,
-      languageId,
-      selectedQuote,
-      scriptureOwner,
+      authError,
+      authentication,
       bibleReference: {
         bookId, chapter, verse,
       },
-      supportedBibles,
       currentLayout,
-      useUserLocalStorage,
-      loggedInUser,
-      authentication,
-      tokenNetworkError,
+      enableObsSupport,
       greekRepoUrl,
       hebrewRepoUrl,
+      languageId,
+      loggedInUser,
       mainScreenRef,
-      enableObsSupport,
+      mergeCheck,
+      owner,
+      scriptureOwner,
+      selectedQuote,
+      server,
+      supportedBibles,
+      taArticle,
+      tokenNetworkError,
+      useUserLocalStorage,
     },
     actions: {
       logout,
-      setQuote: _setQuote,
-      setSupportedBibles,
-      setCurrentLayout,
-      setTokenNetworkError,
-      setLastError,
-      showSaveChangesPrompt,
+      setAuthError,
       setCardsLoadingUpdate,
       setCardsLoadingMerge,
       setCardsSaving,
+      setCurrentLayout,
       setGreekRepoUrl,
       setHebrewRepoUrl,
+      setLastError,
+      setMergeCheck,
+      setObsSupport,
+      setQuote: _setQuote,
       setSavedChanges,
+      setSupportedBibles,
+      setTokenNetworkError,
+      showSaveChangesPrompt,
       updateMergeState,
       updateTaDetails,
-      setObsSupport,
     },
   } = useContext(StoreContext)
 
@@ -273,10 +269,6 @@ function WorkspaceContainer() {
 
   function setNetworkError( error ) {
     setState( { networkError: error })
-  }
-
-  function setAuthError(authError) {
-    setState( { authError })
   }
 
   /**
@@ -789,8 +781,7 @@ function WorkspaceContainer() {
         setAuthError(true);
       } else {
         console.log(`WorkspaceContainer.timeoutCallback - valid login, check for merge conflicts`);
-        const mergeCheck_ = mergeCheck + 1;
-        setState( { mergeCheck: mergeCheck_ })
+        setMergeCheck( mergeCheck + 1 )
       }
       monitor.reset();
     })
