@@ -122,15 +122,7 @@ export default function Header({
     }
   }, [mergeCheck])
 
-  useEffect(() => {
-    if (typeof translate === 'function') {
-      console.log(`translate changed: ${translate('resolve')}`)
-    } else {
-      console.log(`translate changed:`, translate)
-    }
-  }, [translate])
-
-  /**
+ /**
    * render an error dialog
    * @param title
    * @param message

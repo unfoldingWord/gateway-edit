@@ -2,6 +2,7 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
@@ -101,7 +102,18 @@ export default function StoreContextProvider(props) {
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
   const [mergeCheck, setMergeCheck] = useState(false)
   const [authError, setAuthError] = useState(0)
-  const [translate, setTranslate] = useState((key) => key)
+  const transtateRef = useRef(null)
+
+  function translate(key, options) {
+    if (transtateRef.current) {
+      return transtateRef.current(key, options)
+    }
+    return `translate not set, key: ${key}`
+  }
+
+  function setTranslate(translateFunc) {
+    transtateRef.current = translateFunc
+  }
 
   const {
     savedChanges,
