@@ -162,7 +162,6 @@ function WorkspaceContainer() {
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setLastError,
-      setMergeCheck,
       setObsSupport,
       setQuote: _setQuote,
       setSavedChanges,
@@ -170,6 +169,7 @@ function WorkspaceContainer() {
       setTranslate,
       setTokenNetworkError,
       showSaveChangesPrompt,
+      updateMergeCheck,
       updateMergeState,
       updateTaDetails,
     },
@@ -783,8 +783,8 @@ function WorkspaceContainer() {
         console.log(`WorkspaceContainer.timeoutCallback - failed verifyLogin=${verifyLogin}`);
         setAuthError(true);
       } else {
-        console.log(`WorkspaceContainer.timeoutCallback - valid login, check for merge conflicts`);
-        setMergeCheck( mergeCheck + 1 )
+        console.log(`WorkspaceContainer.timeoutCallback - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
+        updateMergeCheck( )
       }
       monitor.reset();
     })

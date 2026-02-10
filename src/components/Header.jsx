@@ -58,6 +58,8 @@ export default function Header({
   const [cardWithConflicts, setCardWithConflicts] = useState(false)
   const [cardWithError, setCardWithError] = useState(false)
   const [cardToMerge, setCardToMerge] = useState(false)
+  const [mergeStateChanged, setMergeStateChanged] = useState(false)
+
   const { actions: { logout } } = useContext(AuthContext)
   const {
     state: {
@@ -90,25 +92,37 @@ export default function Header({
     cardToMerge_,
   }
 
-  const mergeStateChanged = !isEqual(oldCardMergeState.current, newCardMergeState)
+  const mergeStateChanged_ = !isEqual(oldCardMergeState.current, newCardMergeState)
+  if (mergeStateChanged_) {
+    console.log(`Header - merge state changed`, {
+      newCardMergeState,
+      oldCardMergeState: oldCardMergeState.current,
+      mergeCheck
+    })
+    oldCardMergeState.current = newCardMergeState
+  }
+  if (mergeStateChanged !== mergeStateChanged_) {
+    console.log(`Header - merge state changed to ${mergeStateChanged_}`)
+    setMergeStateChanged(mergeStateChanged_)
+  }
 
   useEffect(() => {
     if (mergeCheck > 0) {
       if (cardWithConflicts_) {
         const previousCardWithConflicts = oldCardMergeState.current?.cardWithConflicts_
-        if (!previousCardWithConflicts  && !cardWithConflicts) {
+        if (!previousCardWithConflicts  && !cardWithConflicts_) {
           setCardWithConflicts(true)
         }
       }
       if (cardWithError_) {
         const previousCardWithErrors = oldCardMergeState.current?.cardWithError_
-        if (!previousCardWithErrors && !cardWithError) {
+        if (!previousCardWithErrors && !cardWithError_) {
           setCardWithError(true)
         }
       }
       if (cardToMerge_) {
         const previousCardToMerge = oldCardMergeState.current?.cardToMerge_
-        if (!previousCardToMerge && !cardToMerge) {
+        if (!previousCardToMerge && !cardToMerge_) {
           setCardToMerge(true)
         }
       }
@@ -120,6 +134,11 @@ export default function Header({
     if (mergeCheck === 0) {
       oldCardMergeState.current = newCardMergeState
     }
+    console.log(`Header - mergeCheck changed`, {
+      newCardMergeState,
+      oldCardMergeState: oldCardMergeState.current,
+      mergeCheck
+    })
   }, [mergeCheck])
 
  /**

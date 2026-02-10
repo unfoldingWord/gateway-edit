@@ -100,7 +100,8 @@ export default function StoreContextProvider(props) {
   const [cardsSaving, setCardsSaving] = useState([])
   const [cardsLoadingUpdate, setCardsLoadingUpdate] = useState([])
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
-  const [mergeCheck, setMergeCheck] = useState(false)
+  const mergeCheckRef = useRef(0)
+  const [mergeCheck, setMergeCheck] = useState(0)
   const [authError, setAuthError] = useState(0)
   const transtateRef = useRef(null)
 
@@ -113,6 +114,11 @@ export default function StoreContextProvider(props) {
 
   function setTranslate(translateFunc) {
     transtateRef.current = translateFunc
+  }
+
+  function updateMergeCheck() {
+    mergeCheckRef.current += 1
+    setMergeCheck(mergeCheckRef.current)
   }
 
   const {
@@ -199,7 +205,6 @@ export default function StoreContextProvider(props) {
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setMainScreenRef,
-      setMergeCheck,
       setShowAccountSetup,
       setScriptureOwner,
       setLanguageId,
@@ -213,6 +218,7 @@ export default function StoreContextProvider(props) {
       setSupportedBibles,
       setTokenNetworkError,
       setTranslate,
+      updateMergeCheck,
       updateTaDetails,
       updateMergeState,
     },
