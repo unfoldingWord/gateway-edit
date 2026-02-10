@@ -101,6 +101,7 @@ export default function StoreContextProvider(props) {
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
   const [mergeCheck, setMergeCheck] = useState(false)
   const [authError, setAuthError] = useState(0)
+  const [translate, setTranslate] = useState((key) => key)
 
   const {
     savedChanges,
@@ -170,6 +171,7 @@ export default function StoreContextProvider(props) {
       supportedBibles,
       taArticle,
       tokenNetworkError,
+      translate,
       useUserLocalStorage,
     },
     actions: {
@@ -198,6 +200,7 @@ export default function StoreContextProvider(props) {
       setServer,
       setSupportedBibles,
       setTokenNetworkError,
+      setTranslate,
       updateTaDetails,
       updateMergeState,
     },

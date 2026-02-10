@@ -20,7 +20,6 @@ import FeedbackPopup from '@components/FeedbackPopup'
 import useUpdateCardsProps from '../hooks/useUpdateCardsProps'
 import { UpdateBranchButton, ErrorDialog } from 'translation-helps-rcl'
 import ErrorPopup from "@components/ErrorPopUp";
-import {translate} from "@utils/lexiconHelpers";
 import isEqual from "deep-equal";
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
@@ -44,12 +43,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function Header({
-  title,
-  resetResourceLayout,
-  authentication: { user },
-  feedback,
-  setFeedback,
-  mergeStatusForCards,
+ authentication: { user },
+ feedback,
+ mergeStatusForCards,
+ resetResourceLayout,
+ setFeedback,
+ translate,
+ title,
 }) {
   const oldCardMergeState = useRef(null)
   const classes = useStyles()
@@ -121,6 +121,14 @@ export default function Header({
       oldCardMergeState.current = newCardMergeState
     }
   }, [mergeCheck])
+
+  useEffect(() => {
+    if (typeof translate === 'function') {
+      console.log(`translate changed: ${translate('resolve')}`)
+    } else {
+      console.log(`translate changed:`, translate)
+    }
+  }, [translate])
 
   /**
    * render an error dialog

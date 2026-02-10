@@ -49,6 +49,7 @@ export default function Layout({
       setShowAccountSetup,
       setServer,
       setMainScreenRef,
+      translate,
     },
   } = storeContext
 
@@ -66,7 +67,7 @@ export default function Layout({
         server_ = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
         serverID_ = (server_ === QA_BASE_URL) ? QA : PROD
       }
-      
+
       if (server !== server_) {
         console.log(`_app.js - On init switching server to: ${serverID_}, url server param '${params.server}', old server ${server}, reloading page`)
         setServer(server_) // persist server selection in localstorage
@@ -84,12 +85,13 @@ export default function Layout({
       ref={mainScreenRef}
     >
       <Header
-        title={title}
         authentication={authentication || {}}
-        resetResourceLayout={() => setCurrentLayout(null)}
         feedback={feedback}
-        setFeedback={setFeedback}
         mergeStatusForCards={mergeStatusForCards}
+        resetResourceLayout={() => setCurrentLayout(null)}
+        setFeedback={setFeedback}
+        title={title}
+        translate={translate}
       />
       <main className='flex flex-1 flex-col w-auto m-0 bg-gray-200'>
         {showChildren || (authentication && !showAccountSetup) ? (

@@ -167,6 +167,7 @@ function WorkspaceContainer() {
       setQuote: _setQuote,
       setSavedChanges,
       setSupportedBibles,
+      setTranslate,
       setTokenNetworkError,
       showSaveChangesPrompt,
       updateMergeState,
@@ -542,7 +543,9 @@ function WorkspaceContainer() {
     }// eslint-disable-next-line
   }, [owner, languageId, appRef, server, loggedInUser])
 
-  useEffect(() => {
+  useEffect(() => { // run once at initialization
+    setTranslate(translate)
+
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
 
     if (missingOrignalBibles) { // if we don't have a path
