@@ -848,7 +848,7 @@ function WorkspaceContainer() {
       const monitor = getMonitor()
       if (!monitor.initialized()) {
         console.log(`WorkspaceContainer - initializing Monitor`)
-        const maximumWaitTime = 2;
+        const maximumWaitTime = 15; // time to wait before checking for merge status changes.  Resets on navigation
         monitor.start(timeoutCallback, maximumWaitTime)
       }
     }
