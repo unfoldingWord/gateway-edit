@@ -6,21 +6,21 @@ import { CANCEL } from '@common/constants'
 
 export default function ErrorPopup(
   {
+    actionButtonStr = '',
+    actionButtonDefault,
+    actionButton2Str = '',
+    actionButton2Default,
+    actionStartIcon = null,
+    closeButtonDefault = true,
+    closeButtonStr = CANCEL,
+    dimBackground = true,
+    hideClose = false,
+    id = `error_popup`,
+    message,
+    onActionButton,
+    onActionButton2,
     onClose,
     title,
-    message,
-    id,
-    actionButtonStr,
-    onActionButton,
-    actionStartIcon,
-    actionButtonDefault,
-    actionButton2Str,
-    onActionButton2,
-    actionButton2Default,
-    closeButtonStr,
-    closeButtonDefault,
-    hideClose,
-    dimBackground,
   }) {
   function getActionButtons() {
     return <>
@@ -89,17 +89,6 @@ export default function ErrorPopup(
       onClose={onClose}
     />
   )
-}
-
-ErrorPopup.defaultProps = {
-  id: `error_popup`,
-  actionButtonStr: '',
-  startIcon: null,
-  actionButton2Str: '',
-  closeButtonStr: CANCEL,
-  closeButtonDefault: true,
-  hideClose: false,
-  dimBackground: true,
 }
 
 ErrorPopup.propTypes = {

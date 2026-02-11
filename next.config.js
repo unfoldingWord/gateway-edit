@@ -37,6 +37,7 @@ module.exports = {
     return config;
   },
   experimental: {
+    // added to support workers
     esmExternals: 'loose',
   }
 };

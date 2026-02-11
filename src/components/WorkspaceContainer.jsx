@@ -1,9 +1,9 @@
 import React, {
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
-  useCallback,
 } from 'react'
 import isEqual from 'deep-equal'
 import _ from 'lodash'
@@ -32,12 +32,9 @@ import {
 } from 'single-scripture-rcl'
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
-import {
-  getLatestBibleRepo,
-  getResourceBibles,
-} from '@utils/resources'
+import { getLatestBibleRepo, getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
-import { isNT, BIBLES_ABBRV_INDEX } from '@common/BooksOfTheBible'
+import { BIBLES_ABBRV_INDEX, isNT } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
@@ -53,6 +50,9 @@ import useLexicon from '@hooks/useLexicon'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
+import {getMonitor} from "@utils/monitor";
+import {AuthContext} from "@context/AuthContext";
+import ErrorPopup from "@components/ErrorPopUp";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -129,44 +129,49 @@ function WorkspaceContainer() {
 
   const {
     state: {
-      owner,
-      server,
       appRef,
-      taArticle,
-      languageId,
-      selectedQuote,
-      scriptureOwner,
+      authError,
+      authentication,
       bibleReference: {
         bookId, chapter, verse,
       },
-      supportedBibles,
       currentLayout,
-      useUserLocalStorage,
-      loggedInUser,
-      authentication,
-      tokenNetworkError,
+      enableObsSupport,
       greekRepoUrl,
       hebrewRepoUrl,
+      languageId,
+      loggedInUser,
       mainScreenRef,
-      enableObsSupport,
+      mergeCheck,
+      owner,
+      scriptureOwner,
+      selectedQuote,
+      server,
+      supportedBibles,
+      taArticle,
+      tokenNetworkError,
+      useUserLocalStorage,
     },
     actions: {
       logout,
-      setQuote: _setQuote,
-      setSupportedBibles,
-      setCurrentLayout,
-      setTokenNetworkError,
-      setLastError,
-      showSaveChangesPrompt,
+      setAuthError,
       setCardsLoadingUpdate,
       setCardsLoadingMerge,
       setCardsSaving,
+      setCurrentLayout,
       setGreekRepoUrl,
       setHebrewRepoUrl,
+      setLastError,
+      setObsSupport,
+      setQuote: _setQuote,
       setSavedChanges,
+      setSupportedBibles,
+      setTranslate,
+      setTokenNetworkError,
+      showSaveChangesPrompt,
+      updateMergeCheck,
       updateMergeState,
       updateTaDetails,
-      setObsSupport,
     },
   } = useContext(StoreContext)
 
@@ -184,6 +189,10 @@ function WorkspaceContainer() {
     onResourceError,
     httpConfig: HTTP_CONFIG,
   })
+
+  const minWaitMinites = 5;
+
+  const { actions: { verifyLogin } } = useContext(AuthContext)
 
   const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
     bookId,
@@ -247,7 +256,12 @@ function WorkspaceContainer() {
 
     if (!isEqual(reference, scriptureReference)){
       setState({ scriptureReference: reference })
-    }
+
+          // only do check if not first verse navigation
+          if (scriptureReference && Object.keys(scriptureReference).length) {
+            mergeValidationCheck()
+          }
+        }
   },[chapter, verse, bookId, currentVerseReference])
 
   /**
@@ -259,16 +273,33 @@ function WorkspaceContainer() {
     processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
   }
 
-  const setNetworkError = useCallback(( error ) => {
+  function setNetworkError( error ) {
     setState( { networkError: error })
-  }, [])
+  }
 
   /**
    * show either tokenNetworkError or NetworkError for workspace
    * @return {JSX.Element|null}
    */
   function showNetworkError() {
-    if (tokenNetworkError) { // if we had a token network error on startup
+    if (authError) {
+      return(
+        <ErrorPopup
+          title={translate('authentication_error_title')}
+          message={translate('authentication_error_message')}
+          dimBackground={true}
+          hideClose={true}
+          onClose={() => {
+            setAuthError(false)
+          }}
+          actionButtonStr={translate('login')}
+          onActionButton={() => {
+            logout();
+            setAuthError(false);
+          }}
+        />)
+    } else
+    if (tokenNetworkError) { // if we had a token error (authentication) on startup
       if (!tokenNetworkError.router) { // needed for reload of page
         setTokenNetworkError({ ...tokenNetworkError, router }) // make sure router is set
       }
@@ -413,6 +444,7 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
     isNT,
     loggedInUser,
+    mergeCheck,
     onResourceError,
     originalLanguageOwner: scriptureOwner,
     originalScriptureBookObjects,
@@ -436,6 +468,7 @@ function WorkspaceContainer() {
     chapter,
     languageId,
     loggedInUser,
+    mergeCheck,
     onResourceError,
     owner,
     server,
@@ -515,7 +548,9 @@ function WorkspaceContainer() {
     }// eslint-disable-next-line
   }, [owner, languageId, appRef, server, loggedInUser])
 
-  useEffect(() => {
+  useEffect(() => { // run once at initialization
+    setTranslate(translate)
+
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
 
     if (missingOrignalBibles) { // if we don't have a path
@@ -738,6 +773,54 @@ function WorkspaceContainer() {
     wholeBook: true,
   })
 
+  /**
+   * Handles the validation checks for login and potential merge conflicts.
+   * This method verifies the user's login status and updates the merge check status.
+   * If login verification fails, it sets an authentication error.
+   * The monitor is reset regardless of the verification outcome.
+   *
+   * @return {void} This method does not return a value.
+   */
+  function mergeValidationCheck() {
+    const monitor = getMonitor();
+    monitor.reset();
+    verifyLogin().then((verifyLogin) => {
+      if (!verifyLogin) {
+        console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
+        setAuthError(true);
+      } else {
+        console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
+        updateMergeCheck();
+      }
+    })
+  }
+
+  /**
+   * Handles timeout callback logic for managing app inactivity and login validation.
+   *
+   * @param {number} actualTimerElapsedMin - The number of minutes the application has been unpaused.
+   * @param {number} minSinceMonitorStart - The number of minutes since the last login validation occurred.
+   * @return {void} This method does not return any value.
+   */
+  function timeoutCallback(actualTimerElapsedMin, minSinceMonitorStart) {
+    console.log(`WorkspaceContainer.timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
+    mergeValidationCheck();
+  }
+
+  /**
+   * Effect hook that loads and caches original scripture book data.
+   *
+   * When original scripture data is fetched, this effect:
+   * - Validates that the loaded book matches the currently selected book
+   * - Updates the component state with the original scripture book objects
+   * - Initializes the Monitor singleton for tracking user activity and session validation
+   *
+   * The Monitor is started once when book data is first available and handles:
+   * - Detecting when the app resumes from sleep/pause
+   * - Triggering login verification after inactivity periods
+   *
+   * @dependency originalScriptureResults?.bookObjects - Triggers when original scripture data changes
+   */
   useEffect(() => {
     let originalScriptureBookObjects = null
     const scriptureBookId = originalScriptureResults?.reference?.bookId
@@ -760,8 +843,33 @@ function WorkspaceContainer() {
     }
 
     setState( { originalScriptureBookObjects })
+
+    if(bookObjects) {
+      const monitor = getMonitor()
+      if (!monitor.initialized()) {
+        console.log(`WorkspaceContainer - initializing Monitor`)
+        const maximumWaitTime = 2;
+        monitor.start(timeoutCallback, maximumWaitTime)
+      }
+    }
   }, [originalScriptureResults?.bookObjects])
 
+
+  /**
+   * Effect hook that pre-caches lexicon glosses for the current verse reference.
+   *
+   * When the scripture reference changes, this effect:
+   * - Retrieves all verse objects for the current reference from the original scripture book
+   * - Iterates through each verse's verseObjects sequentially
+   * - Fetches and caches glosses/lexicon data for each word in the original language
+   *
+   * This pre-caching improves performance by loading lexicon data ahead of time,
+   * so it's available immediately when users interact with original language words.
+   *
+   * @dependency scriptureReference - Triggers when user navigates to a different verse
+   * @dependency originalScriptureBookObjects - Triggers when original scripture data loads
+   * @dependency originalLanguageId - Triggers when switching between Hebrew/Greek contexts
+   */
   useEffect(() => { // pre-cache glosses on verse change
     const fetchGlossDataForVerse = async () => {
       const verses = getVersesForRef(scriptureReference, originalScriptureBookObjects, originalLanguageId)
@@ -853,7 +961,7 @@ function WorkspaceContainer() {
           />
         </TrainingState.TrainingStateProvider>
 
-        {(tokenNetworkError || networkError) && // Do not render workspace until user logged in and we have user settings
+        {(authError || tokenNetworkError || networkError) &&
           <>
             {showNetworkError()}
           </>

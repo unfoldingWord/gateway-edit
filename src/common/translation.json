@@ -211,7 +211,18 @@
   "alignments.reset_confirm"       : "Are you sure you want to clear all alignments?",
   "alignments.cancel"              : "Cancel",
   "alignments.cancel_hint"         : "Cancel any alignments changes and close the dialog",
+  "authentication_error_title"     : "Authentication Error",
+  "authentication_error_message"   : "You are not logged in and cannot save changes.  Do you want to login now?",
+  "merge_error_title"              : "Card with Merge Error",
+  "merge_error_message"            : "There is a new merge error.  Do you want to try to resolve?  If it doesn't resolve, you will have to contact your administrator.",
+  "merge_conflict_title"           : "Card Merge Conflict",
+  "merge_conflict_message"         : "There is a card with a new merge conflict.  Do you want to try to resolve?  If it doesn't resolve, you will have to contact your administrator.",
+  "merge_new_title"                : "Card To Merge",
+  "merge_new_message"              : "There is a card that needs to be updated from master.  Do you want to try to resolve?",
   "no": "No",
   "yes": "Yes",
-  "warning": "Warning"
+  "warning": "Warning",
+  "login": "Login",
+  "ok": "OK",
+  "resolve": "Resolve"
 }
