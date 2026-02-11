@@ -82,32 +82,42 @@ export default function Header({
     onClick: onClickUpdateCards,
   } = updateButtonProps;
 
-  const cardWithConflicts_ = cardMergeGroupings?.cardsWithConflicts?.length > 0
-  const cardWithError_ = cardMergeGroupings?.cardsWithError?.length > 0
-  const cardToMerge_ = cardMergeGroupings?.cardsToMerge?.length > 0
-
-  const newCardMergeState = {
-    cardWithConflicts_,
-    cardWithError_,
-    cardToMerge_,
-  }
-
-  const mergeStateChanged_ = !isEqual(oldCardMergeState.current, newCardMergeState)
-  if (mergeStateChanged_) {
-    console.log(`Header - merge state changed`, {
-      newCardMergeState,
+  useEffect(() => {
+    console.log(`Header - mergeCheck changed`, {
       oldCardMergeState: oldCardMergeState.current,
       mergeCheck
     })
-    oldCardMergeState.current = newCardMergeState
-  }
-  if (mergeStateChanged !== mergeStateChanged_) {
-    console.log(`Header - merge state changed to ${mergeStateChanged_}`)
-    setMergeStateChanged(mergeStateChanged_)
-  }
+  }, [mergeCheck])
 
-  useEffect(() => {
-    if (mergeCheck > 0) {
+  useEffect(() => { // if mergeStatusForCards changed, check for new merge warnings
+    let mergeStateToggled = false;
+
+    const cardWithConflicts_ = cardMergeGroupings?.cardsWithConflicts?.length > 0
+    const cardWithError_ = cardMergeGroupings?.cardsWithError?.length > 0
+    const cardToMerge_ = cardMergeGroupings?.cardsToMerge?.length > 0
+
+    const newCardMergeState = {
+      cardWithConflicts_,
+      cardWithError_,
+      cardToMerge_,
+    }
+
+    const oldCardMergeState_ = oldCardMergeState?.current;
+    const mergeStateChanged_ = !isEqual(oldCardMergeState_, newCardMergeState)
+    if (mergeStateChanged_) {
+      console.log(`Header - merge state changed`, {
+        newCardMergeState,
+        oldCardMergeState_,
+        mergeCheck
+      })
+    }
+    if (mergeStateChanged !== mergeStateChanged_) {
+      console.log(`Header - merge state changed to ${mergeStateChanged_}`)
+      setMergeStateChanged(mergeStateChanged_)
+      mergeStateToggled = true
+    }
+
+    if (mergeStateToggled && (mergeCheck > 0)) {
       if (cardWithConflicts_) {
         const previousCardWithConflicts = oldCardMergeState.current?.cardWithConflicts_
         if (!previousCardWithConflicts  && !cardWithConflicts_) {
@@ -126,20 +136,9 @@ export default function Header({
           setCardToMerge(true)
         }
       }
-      oldCardMergeState.current = newCardMergeState
     }
-  }, [mergeStateChanged])
-
-  useEffect(() => {
-    if (mergeCheck === 0) {
-      oldCardMergeState.current = newCardMergeState
-    }
-    console.log(`Header - mergeCheck changed`, {
-      newCardMergeState,
-      oldCardMergeState: oldCardMergeState.current,
-      mergeCheck
-    })
-  }, [mergeCheck])
+    oldCardMergeState.current = newCardMergeState
+  }, [mergeStatusForCards])
 
  /**
    * render an error dialog

@@ -256,7 +256,12 @@ function WorkspaceContainer() {
 
     if (!isEqual(reference, scriptureReference)){
       setState({ scriptureReference: reference })
-    }
+
+          // only do check if not first verse navigation
+          if (scriptureReference && Object.keys(scriptureReference).length) {
+            mergeValidationCheck()
+          }
+        }
   },[chapter, verse, bookId, currentVerseReference])
 
   /**
@@ -769,6 +774,28 @@ function WorkspaceContainer() {
   })
 
   /**
+   * Handles the validation checks for login and potential merge conflicts.
+   * This method verifies the user's login status and updates the merge check status.
+   * If login verification fails, it sets an authentication error.
+   * The monitor is reset regardless of the verification outcome.
+   *
+   * @return {void} This method does not return a value.
+   */
+  function mergeValidationCheck() {
+    const monitor = getMonitor();
+    monitor.reset();
+    verifyLogin().then((verifyLogin) => {
+      if (!verifyLogin) {
+        console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
+        setAuthError(true);
+      } else {
+        console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
+        updateMergeCheck();
+      }
+    })
+  }
+
+  /**
    * Handles timeout callback logic for managing app inactivity and login validation.
    *
    * @param {number} actualTimerElapsedMin - The number of minutes the application has been unpaused.
@@ -777,17 +804,7 @@ function WorkspaceContainer() {
    */
   function timeoutCallback(actualTimerElapsedMin, minSinceMonitorStart) {
     console.log(`WorkspaceContainer.timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
-    const monitor = getMonitor();
-    verifyLogin().then((verifyLogin) => {
-      if (!verifyLogin) {
-        console.log(`WorkspaceContainer.timeoutCallback - failed verifyLogin=${verifyLogin}`);
-        setAuthError(true);
-      } else {
-        console.log(`WorkspaceContainer.timeoutCallback - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
-        updateMergeCheck( )
-      }
-      monitor.reset();
-    })
+    mergeValidationCheck();
   }
 
   /**
