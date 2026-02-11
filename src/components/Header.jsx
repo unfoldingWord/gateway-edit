@@ -2,7 +2,7 @@ import React, {
   useState,
   useContext,
   useEffect,
-  useRef
+  useMemo,
 } from 'react'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
@@ -51,14 +51,12 @@ export default function Header({
  translate,
  title,
 }) {
-  const oldCardMergeState = useRef(null)
   const classes = useStyles()
   const router = useRouter()
   const [drawerOpen, setOpen] = useState(false)
-  const [cardWithConflicts, setCardWithConflicts] = useState(false)
-  const [cardWithError, setCardWithError] = useState(false)
-  const [cardToMerge, setCardToMerge] = useState(false)
-  const [mergeStateChanged, setMergeStateChanged] = useState(false)
+  const [cardWithConflicts, setCardWithConflicts] = useState({})
+  const [cardWithError, setCardWithError] = useState({})
+  const [cardToMerge, setCardToMerge] = useState({})
 
   const { actions: { logout } } = useContext(AuthContext)
   const {
@@ -82,84 +80,105 @@ export default function Header({
     onClick: onClickUpdateCards,
   } = updateButtonProps;
 
+  /**
+   *
+   * @param {boolean} show
+   * @param {number} lastCheckLevel
+   * @return {{show: boolean, lastCheckLevel: number}}
+   */
+  function makeState(show, lastCheckLevel) {
+    return {
+      show,
+      lastCheckLevel,
+    }
+  }
+
+  /**
+   * change show while keeping lastCheckLevel
+   * @param {boolean} show
+   * @param {{show: boolean, lastCheckLevel: number}} previousMergeState
+   * @return {{show: boolean, lastCheckLevel: number}}
+   */
+  function updateShowState(show, previousMergeState) {
+    const retVal = {
+      show,
+      lastCheckLevel: previousMergeState?.lastCheckLevel || 0,
+    };
+    return retVal;
+  }
+
+  /**
+   * set show flag only if mergeCheck is newer than lastCheckLevel
+   * @param {{show: boolean, lastCheckLevel: number}} previousMergeState
+   * @return {{show: boolean, lastCheckLevel: number}}
+   */
+  function showIfNewer(previousMergeState) {
+    const update = (mergeCheck > (previousMergeState?.lastCheckLevel || 0))
+    if (update) {
+      const retVal = {
+        show: true,
+        lastCheckLevel: mergeCheck
+      };
+      return retVal
+    }
+    return previousMergeState;
+  }
+
+  const newCardMergeState = useMemo(() => {
+    const cardWithConflicts = cardMergeGroupings?.cardsWithConflicts?.length > 0
+    const cardWithError = cardMergeGroupings?.cardsWithError?.length > 0
+    const cardToMerge = cardMergeGroupings?.cardsToMerge?.length > 0
+
+    return {
+      cardWithConflicts,
+      cardWithError,
+      cardToMerge,
+    }
+  }, [cardMergeGroupings])
+
   useEffect(() => {
     console.log(`Header - mergeCheck changed`, {
-      oldCardMergeState: oldCardMergeState.current,
-      mergeCheck
+      mergeCheck,
     })
   }, [mergeCheck])
 
   useEffect(() => { // if mergeStatusForCards changed, check for new merge warnings
-    let mergeStateToggled = false;
-
-    const cardWithConflicts_ = cardMergeGroupings?.cardsWithConflicts?.length > 0
-    const cardWithError_ = cardMergeGroupings?.cardsWithError?.length > 0
-    const cardToMerge_ = cardMergeGroupings?.cardsToMerge?.length > 0
-
-    const newCardMergeState = {
-      cardWithConflicts_,
-      cardWithError_,
-      cardToMerge_,
-    }
-
-    const oldCardMergeState_ = oldCardMergeState?.current;
-    const mergeStateChanged_ = !isEqual(oldCardMergeState_, newCardMergeState)
-    if (mergeStateChanged_) {
-      console.log(`Header - merge state changed`, {
-        newCardMergeState,
-        oldCardMergeState_,
-        mergeCheck
-      })
-    }
-    if (mergeStateChanged !== mergeStateChanged_) {
-      console.log(`Header - merge state changed to ${mergeStateChanged_}`)
-      setMergeStateChanged(mergeStateChanged_)
-      mergeStateToggled = true
-    }
-
-    if (mergeStateToggled && (mergeCheck > 0)) {
-      if (cardWithConflicts_) {
-        const previousCardWithConflicts = oldCardMergeState.current?.cardWithConflicts_
-        if (!previousCardWithConflicts  && !cardWithConflicts_) {
-          setCardWithConflicts(true)
-        }
+    if (mergeCheck > 0) {
+      const state = newCardMergeState
+      if (state.cardWithConflicts && !cardWithConflicts?.show) {
+        setCardWithConflicts(showIfNewer(cardWithConflicts))
       }
-      if (cardWithError_) {
-        const previousCardWithErrors = oldCardMergeState.current?.cardWithError_
-        if (!previousCardWithErrors && !cardWithError_) {
-          setCardWithError(true)
-        }
+      if (state.cardWithError && !cardWithError?.show) {
+        setCardWithError(showIfNewer(cardWithError))
       }
-      if (cardToMerge_) {
-        const previousCardToMerge = oldCardMergeState.current?.cardToMerge_
-        if (!previousCardToMerge && !cardToMerge_) {
-          setCardToMerge(true)
-        }
+      if (state.cardToMerge && !cardToMerge?.show) {
+        setCardToMerge(showIfNewer(cardToMerge))
       }
     }
-    oldCardMergeState.current = newCardMergeState
   }, [mergeStatusForCards])
 
  /**
-   * render an error dialog
-   * @param title
-   * @param message
-   * @return {React.JSX.Element}
-   * @private
-   */
-  function showWarningDialog_(title, message, onClose) {
+  * render an error dialog
+  * @param {string} title
+  * @param {string} message
+  * @param {function} onClose
+  * @param {{show: boolean, lastCheckLevel: number}} currentState
+  * @return {React.JSX.Element}
+  * @private
+  */
+  function showWarningDialog_(title, message, onClose, currentState) {
   return (
       <ErrorPopup
         title={translate(title)}
         message={translate(message)}
         dimBackground={true}
         onClose={() => {
-          onClose(false)
+          onClose(updateShowState(false, currentState))
         }}
         actionButtonStr={translate('resolve')}
         onActionButton={() => {
           onClickUpdateCards && onClickUpdateCards()
-          onClose(false)
+          onClose(updateShowState(false, currentState))
         }}
       />
     );
@@ -170,13 +189,14 @@ export default function Header({
    * @return {React.JSX.Element}
    */
   function showWarningDialog() {
-    if (cardWithError) {
-      return showWarningDialog_('merge_error_title', 'merge_error_message', setCardWithError)
-    } else if (cardWithConflicts) {
-      return showWarningDialog_('merge_conflict_title', 'merge_conflict_message', setCardWithConflicts)
-    } else { // cardToMerge
-      return showWarningDialog_('merge_new_title', 'merge_new_message', setCardToMerge)
+    if (cardWithError?.show) {
+      return showWarningDialog_('merge_error_title', 'merge_error_message', setCardWithError, cardWithError)
+    } else if (cardWithConflicts?.show) {
+      return showWarningDialog_('merge_conflict_title', 'merge_conflict_message', setCardWithConflicts, cardWithConflicts)
+    } else if (cardToMerge?.show) { // cardToMerge
+      return showWarningDialog_('merge_new_title', 'merge_new_message', setCardToMerge, cardToMerge)
     }
+    return null;
   }
 
   const handleDrawerOpen = () => {
@@ -200,6 +220,8 @@ export default function Header({
   }
 
   const loadingProps = { color: "secondary" };
+
+  const showWarning = cardWithError?.show || cardWithConflicts?.show || cardToMerge?.show;
 
   return (
     <header>
@@ -268,7 +290,7 @@ export default function Header({
         :
         null
       }
-      { (cardWithError || cardWithConflicts || cardToMerge) && showWarningDialog() }
+      { showWarning && showWarningDialog() }
     </header>
   )
 }
