@@ -718,8 +718,6 @@ function WorkspaceContainer() {
       resourceId: 'tq',
       projectId: bookId,
       filePath: null,
-      viewMode: 'question',
-      disableFilters: true,
       loggedInUser: loggedInUser,
       authentication: authentication,
       setSavedChanges: setSavedChanges,
