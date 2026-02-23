@@ -57,6 +57,7 @@ export default function ResourceCard({
   filePath,
   hideMarkdownToggle,
   id,
+  initialFilters = null,
   languageId,
   loggedInUser,
   mergeCheck,
@@ -312,15 +313,16 @@ export default function ResourceCard({
       setFilters, setFontSize, setItemIndex, setItemIndexPure,
     },
   } = useCardState({
-    id,
-    items,
-    verse,
     chapter,
-    setCurrentCheck,
+    id,
+    initialFilters,
+    items,
     projectId,
-    selectedQuote,
-    useUserLocalStorage,
     resourceId: cardResourceId,
+    selectedQuote,
+    setCurrentCheck,
+    useUserLocalStorage,
+    verse,
   })
 
   const sha = getSha({
