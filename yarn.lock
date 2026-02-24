@@ -11731,10 +11731,9 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@5.5.15:
-  version "5.5.15"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-5.5.15.tgz#63591bc7b94627fb77e2a31e5a4fbbe897d865a3"
-  integrity sha512-/qPcIqAwBn3nQPVjGS/VJRaPEjvue8dm5Jp4hNf9sqhvlhTCCP2lNqmCbameo1QuBcpmnhiS3YokYNkrVBlEig==
+"scripture-resources-rcl@file:../scripture-resources-rcl/scripture-resources-rcl-v5.5.16-beta.2.tgz":
+  version "5.5.16-beta.2"
+  resolved "file:../scripture-resources-rcl/scripture-resources-rcl-v5.5.16-beta.2.tgz#4ea4b24af22cd41e5936280bd47726b6f77fd442"
   dependencies:
     bible-reference-range "^1.1.0"
     deep-freeze "^0.0.1"

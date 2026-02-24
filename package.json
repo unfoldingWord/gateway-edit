@@ -65,7 +65,7 @@
     "react-json-view": "^1.21.3",
     "regenerator-runtime": "^0.13.7",
     "resource-workspace-rcl": "2.1.4",
-    "scripture-resources-rcl": "5.5.15",
+    "scripture-resources-rcl": "/Users/blm0/Development/RCL/scripture-resources-rcl/scripture-resources-rcl-v5.5.16-beta.2.tgz",
     "scripture-tsv": "1.2.0",
     "single-scripture-rcl": "3.4.35",
     "tailwindcss": "^2.0.4",
