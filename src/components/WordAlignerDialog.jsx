@@ -50,7 +50,7 @@ function getBookData(alignerStatus) {
 }
 
 const wordSuggesterConfig= {
-  doAutoLoadCachedTraining: true,
+  doAutoLoadCachedTraining: true, // set true to enable auto loading of cached training data (uses previous training data)
   doAutoTraining: false, // set true to enable auto training of alignment suggestions
   trainOnlyOnCurrentBook: false, // if true, then training is sped up for small books by just training on alignment memory data for current book
   minTrainingVerseRatio: 1.2, // if trainOnlyOnCurrentBook, then this is protection for the case that the book is not completely aligned.  If a ratio such as 1.0 is set, then training will use the minimum number of verses for training.  This minimum is calculated by multiplying the number of verses in the book by this ratio
