@@ -164,6 +164,7 @@
   "alignments.clear_alignments"    : "Clear all alignments.",
   "alignments.clear"               : "Clear",
   "suggestions.title"              : "Suggestions:",
+  "suggestions.status_loading_training" : "Loading Training ...",
   "suggestions.train_button"       : "Train",
   "suggestions.train_button_hint"  : "Click to improve the quality of alignment suggestions based on currently loaded alignments",
   "suggestions.stop_training_button" : "Stop Train",

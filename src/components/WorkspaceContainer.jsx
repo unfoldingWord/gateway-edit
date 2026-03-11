@@ -823,8 +823,10 @@ function WorkspaceContainer() {
   useEffect(() => {
     let originalScriptureBookObjects = null
     const scriptureBookId = originalScriptureResults?.reference?.bookId
-    const sameBook = scriptureBookId === bookId
+    const fetchedBook = originalScriptureResults?.fetchedBook
+    const sameBook = fetchedBook === bookId
     const bookObjects = originalScriptureResults?.bookObjects;
+    let updateObjects = true;
 
     if (sameBook) {
       if (bookObjects) {
@@ -833,15 +835,19 @@ function WorkspaceContainer() {
           bookId: scriptureBookId,
           languageId: originalLanguageId,
         }
-        console.log(`WorkspaceContainer - using original book objects for ${scriptureBookId}`, bookObjects?.chapters?.[1]?.[1])
+        console.log(`WorkspaceContainer - using original book objects for ${scriptureBookId}`)
+        updateObjects = true;
       }
     } else { // if not same book
       if (bookObjects) {
-        console.warn(`WorkspaceContainer - wrong book loaded ${scriptureBookId}, expected ${bookId} ignoring`)
+        console.warn(`WorkspaceContainer - wrong book loaded: scriptureBookId=${scriptureBookId} & fetchedBook=${fetchedBook}, expected ${bookId} ignoring`)
+        updateObjects = false;
       }
     }
 
-    setState( { originalScriptureBookObjects })
+    if (updateObjects) {
+      setState({originalScriptureBookObjects})
+    }
 
     if(bookObjects) {
       const monitor = getMonitor()
