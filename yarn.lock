@@ -5549,10 +5549,10 @@ enhanced-resolve@^5.0.0:
     graceful-fs "^4.2.4"
     tapable "^2.3.0"
 
-enhanced-word-aligner-rcl@1.4.4-beta.14:
-  version "1.4.4-beta.14"
-  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.4.4-beta.14.tgz#65d02acc2c05dd67e8de61739721aa0e0f2d54d0"
-  integrity sha512-jUT2EMDKYCqQofO6sWtvXx03YGpUz3rdk/GmGIlx+BCKLTZx6aU1v6BFxEhlJFzjd3YlJG/R494aWTUeSWRdcQ==
+enhanced-word-aligner-rcl@1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.4.4.tgz#1b5d1535f1585acd88ebf84bbd6d3316f9422729"
+  integrity sha512-2dY3TQR3Loc4upCYVYAW5WPqt/v5LbCioFUUR/8CX+iErsrfF3vB0XWYSDb3k8Xx/vQZYZ8Y6R/oM6pLRKY+QA==
   dependencies:
     "@mui/icons-material" "6.5.0"
     "@mui/material" "6.5.0"
@@ -11946,10 +11946,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.5.1.tgz#df2c3e6532dbd19be5d547034efd24619e280679"
-  integrity sha512-qOVdca7XUINFo54hrDxgFgBjOhU6l0DkGoqLjJTY79ww6kTMZsJveHQZTliqk/R3hzc0JSDFzs7doOQy4Phe7A==
+single-scripture-rcl@3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.5.2.tgz#2ff7e82112d8fcb015ae4e932e69b20ddfe52fe5"
+  integrity sha512-xDY1IkBQc4m/IB3xqRnzbVJ8DcReV/gvBZhkkVYVsDmVgTpRqoHVWVLAhkXn65ceSC5IS+6GcsYua8Zt+q3uTw==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
