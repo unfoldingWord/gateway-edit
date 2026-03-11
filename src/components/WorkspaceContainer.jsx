@@ -821,7 +821,7 @@ function WorkspaceContainer() {
    * @dependency originalScriptureResults?.bookObjects - Triggers when original scripture data changes
    */
   useEffect(() => {
-    let originalScriptureBookObjects = null
+    let _originalScriptureBookObjects = null
     const scriptureBookId = originalScriptureResults?.reference?.bookId
     const fetchedBook = originalScriptureResults?.fetchedBook
     const sameBook = fetchedBook === bookId
@@ -830,9 +830,10 @@ function WorkspaceContainer() {
 
     if (sameBook) {
       if (bookObjects) {
-        originalScriptureBookObjects = {
+        _originalScriptureBookObjects = {
           ...bookObjects,
           bookId: scriptureBookId,
+          fetchedBook,
           languageId: originalLanguageId,
         }
         console.log(`WorkspaceContainer - using original book objects for ${scriptureBookId}`)
@@ -842,11 +843,16 @@ function WorkspaceContainer() {
       if (bookObjects) {
         console.warn(`WorkspaceContainer - wrong book loaded: scriptureBookId=${scriptureBookId} & fetchedBook=${fetchedBook}, expected ${bookId} ignoring`)
         updateObjects = false;
+        if (_originalScriptureBookObjects?.fetchedBook !== bookId) {
+          // if we haven't yet got the original language for book, intitiate a fetch
+          console.warn(`WorkspaceContainer - re fetching ${bookId}`)
+          originalScriptureResults?.reloadResource()
+        }
       }
     }
 
     if (updateObjects) {
-      setState({originalScriptureBookObjects})
+      setState({originalScriptureBookObjects: _originalScriptureBookObjects})
     }
 
     if(bookObjects) {
