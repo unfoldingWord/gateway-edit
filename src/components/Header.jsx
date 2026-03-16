@@ -167,12 +167,12 @@ export default function Header({
   * @return {React.JSX.Element}
   * @private
   */
-  function showWarningDialog_(title, message, onClose, currentState, messageText) {
+  function showWarningDialog_(title, messageID, onClose, currentState, messageText) {
    let _message = ''
-   if (message) {
-     _message = translate(message)
+   if (messageID) {
+     _message = translate(messageID)
      if (messageText) { // add any additional text
-       _message += '<br>' + messageText
+       _message += ' \n ' + messageText
      }
    } else if (messageText) {
      _message = messageText
