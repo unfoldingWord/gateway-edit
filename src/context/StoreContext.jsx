@@ -10,12 +10,9 @@ import useLocalStorage from '@hooks/useLocalStorage'
 import * as useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
+import { testForMergeError } from "@utils/merge";
 
 export const StoreContext = createContext({})
-
-function testForMergeError(mergeStatus) {
-  return mergeStatus.error && !/branch .* does not exist/.test(mergeStatus.message);
-}
 
 export default function StoreContextProvider(props) {
   /*
