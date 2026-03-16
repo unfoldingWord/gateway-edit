@@ -13,6 +13,10 @@ import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
 
 export const StoreContext = createContext({})
 
+function testForMergeError(mergeStatus) {
+  return mergeStatus.error && !/branch .* does not exist/.test(mergeStatus.message);
+}
+
 export default function StoreContextProvider(props) {
   /*
     The mergeStatusForCards state contains the merge status to and from the main branch
@@ -32,6 +36,12 @@ export default function StoreContextProvider(props) {
     mergeToMasterFromUserBranch
   ) {
     console.log('updateMergeState', { cardId, mergeFromMaster, mergeToMaster })
+    const mergeFromMasterError = testForMergeError(mergeFromMaster)
+    const mergeToMasterError = testForMergeError(mergeToMaster)
+    const mergeError = mergeToMasterError || mergeFromMasterError;
+    if (mergeError) {
+      console.error('updateMergeState - merge error', {mergeFromMaster, mergeToMaster})
+    }
     setMergeStatusForCards(oldMergeStatusForCards => ({
       ...oldMergeStatusForCards,
       [cardId]: {
