@@ -2,6 +2,7 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
@@ -9,6 +10,7 @@ import useLocalStorage from '@hooks/useLocalStorage'
 import * as useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
+import { testForMergeError } from "@utils/merge";
 
 export const StoreContext = createContext({})
 
@@ -31,6 +33,12 @@ export default function StoreContextProvider(props) {
     mergeToMasterFromUserBranch
   ) {
     console.log('updateMergeState', { cardId, mergeFromMaster, mergeToMaster })
+    const mergeFromMasterError = testForMergeError(mergeFromMaster)
+    const mergeToMasterError = testForMergeError(mergeToMaster)
+    const mergeError = mergeToMasterError || mergeFromMasterError;
+    if (mergeError) {
+      console.error('updateMergeState - merge error', {mergeFromMaster, mergeToMaster})
+    }
     setMergeStatusForCards(oldMergeStatusForCards => ({
       ...oldMergeStatusForCards,
       [cardId]: {
@@ -99,6 +107,26 @@ export default function StoreContextProvider(props) {
   const [cardsSaving, setCardsSaving] = useState([])
   const [cardsLoadingUpdate, setCardsLoadingUpdate] = useState([])
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
+  const mergeCheckRef = useRef(0)
+  const [mergeCheck, setMergeCheck] = useState(0)
+  const [authError, setAuthError] = useState(0)
+  const transtateRef = useRef(null)
+
+  function translate(key, options) {
+    if (transtateRef.current) {
+      return transtateRef.current(key, options)
+    }
+    return `translate not set, key: ${key}`
+  }
+
+  function setTranslate(translateFunc) {
+    transtateRef.current = translateFunc
+  }
+
+  function updateMergeCheck() {
+    mergeCheckRef.current += 1
+    setMergeCheck(mergeCheckRef.current)
+  }
 
   const {
     savedChanges,
@@ -141,59 +169,65 @@ export default function StoreContextProvider(props) {
 
   const value = {
     state: {
-      showAccountSetup,
-      scriptureOwner,
-      bibleReference,
-      selectedQuote,
-      languageId,
-      taArticle,
-      server,
       appRef,
-      owner,
-      supportedBibles,
-      currentLayout,
-      useUserLocalStorage,
-      loggedInUser: username,
+      authError,
       authentication,
-      lastError,
-      tokenNetworkError,
-      greekRepoUrl,
-      hebrewRepoUrl,
-      mainScreenRef,
-      savedChanges,
-      cardsSaving,
+      bibleReference,
       cardsLoadingUpdate,
       cardsLoadingMerge,
+      cardsSaving,
+      currentLayout,
+      enableObsSupport,
+      greekRepoUrl,
+      hebrewRepoUrl,
+      languageId,
+      lastError,
+      loggedInUser: username,
+      mainScreenRef,
+      mergeCheck,
       mergeStatusForCards,
       obsSupport,
-      enableObsSupport,
+      owner,
+      savedChanges,
+      scriptureOwner,
+      selectedQuote,
+      server,
+      showAccountSetup,
+      supportedBibles,
+      taArticle,
+      tokenNetworkError,
+      translate,
+      useUserLocalStorage,
     },
     actions: {
+      checkUnsavedChanges,
       logout,
       onReferenceChange,
-      setShowAccountSetup,
-      setScriptureOwner,
-      setLanguageId,
       setAppRef,
-      setServer,
-      setQuote,
-      setOwner,
-      setSupportedBibles,
+      setAuthError,
+      setCardsLoadingMerge,
+      setCardsLoadingUpdate,
+      setCardsSaving,
       setCurrentLayout,
-      setLastError,
-      setTokenNetworkError,
-      updateTaDetails,
       setGreekRepoUrl,
       setHebrewRepoUrl,
       setMainScreenRef,
-      setSavedChanges,
-      setCardsSaving,
-      setCardsLoadingUpdate,
-      setCardsLoadingMerge,
-      checkUnsavedChanges,
-      showSaveChangesPrompt,
-      updateMergeState,
+      setShowAccountSetup,
+      setScriptureOwner,
+      setLanguageId,
+      setLastError,
       setObsSupport,
+      setOwner,
+      setQuote,
+      setSavedChanges,
+      showSaveChangesPrompt,
+      setServer,
+      setSupportedBibles,
+      setTokenNetworkError,
+      setTranslate,
+      updateMergeCheck,
+      updateTaDetails,
+      updateMergeState,
     },
   }
 
