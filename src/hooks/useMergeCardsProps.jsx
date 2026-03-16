@@ -69,11 +69,52 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
   const pending = cardsToMerge?.length
   const blocked = !cardsToMerge?.length && !cardsWithNoMergeNeeded?.length
 
-  const getCardNameFromId = cardId => {
-    return mergeStatusForCards[cardId].title
+  const getCardStatusFromId = cardId => {
+    return mergeStatusForCards[cardId]
   }
 
-  const renderCardNamesFromIds = cardIds => {
+  const getCardNameFromId = cardId => {
+    return getCardStatusFromId(cardId)?.title
+  }
+
+  /**
+   * Renders error card messages from an array of card IDs.
+   *
+   * Combines the titles and messages of error cards associated with the provided IDs into
+   * a single string. If there are no card IDs, it returns "None". The messages are concatenated
+   * in a list format, separated by commas.
+   *
+   * @param {Array} cardIds - Array of card IDs to get the error card details for.
+   * @returns {string} A combined string of error card titles and messages.
+   */
+  const renderErrorCardsFromIds = (cardIds) => {
+    const renderAsList = (prevListString, cardStatus) => {
+      const title = cardStatus?.title
+      let cardMessage = title
+      if (cardStatus?.message) {
+        cardMessage += ` - ${cardStatus.message}`
+      }
+
+      if (prevListString?.length) return `${prevListString}, ${cardMessage}`
+      return cardMessage
+    }
+
+    if (cardIds?.length === 0) return "None"
+    return cardIds?.map(getCardStatusFromId).reduce(renderAsList, "")
+  }
+
+
+  /**
+   * Renders card names from an array of card IDs.
+   *
+   * Combines the titles of cards associated with the provided IDs into a single string.
+   * If there are no card IDs, it returns "None". The names are concatenated in a list
+   * format, separated by commas.
+   *
+   * @param {Array} cardIds - Array of card IDs to get the card names for.
+   * @returns {string} A combined string of card names.
+   */
+  const renderCardNamesFromIds = (cardIds) => {
     const renderAsList = (prevListString, cardName) => {
       if (prevListString?.length) return `${prevListString}, ${cardName}`
       return cardName
@@ -90,7 +131,7 @@ export default function useMergeCardsProps({ mergeStatusForCards = {}, isMerging
     <>
       <p><strong>{updateStatusMessage} Further status displayed below...</strong></p>
       <p><strong>Cards With Conflicts:</strong> {renderCardNamesFromIds(cardsWithConflicts)}</p>
-      <p><strong>Cards With Errors:</strong> {renderCardNamesFromIds(cardsWithError)}</p>
+      <p><strong>Cards With Errors:</strong> {renderErrorCardsFromIds(cardsWithError)}</p>
       <p>
         <strong>Cards With No Changes To Save: </strong>
         {renderCardNamesFromIds([...cardsWithNoUserBranch, ...cardsWithNoMergeNeeded])}
