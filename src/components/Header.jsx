@@ -160,17 +160,27 @@ export default function Header({
  /**
   * render an error dialog
   * @param {string} title
-  * @param {string} message
+  * @param {string} messageID - contains key to lookup localized message
+  * @param {string} messageText - additional text to display
   * @param {function} onClose
   * @param {{show: boolean, lastCheckLevel: number}} currentState
   * @return {React.JSX.Element}
   * @private
   */
-  function showWarningDialog_(title, message, onClose, currentState) {
-  return (
+  function showWarningDialog_(title, messageID, onClose, currentState, messageText) {
+   let _message = ''
+   if (messageID) {
+     _message = translate(messageID)
+     if (messageText) { // add any additional text
+       _message += ' \n ' + messageText
+     }
+   } else if (messageText) {
+     _message = messageText
+   }
+   return (
       <ErrorPopup
         title={translate(title)}
-        message={translate(message)}
+        message={_message}
         dimBackground={true}
         onClose={() => {
           onClose(updateShowState(false, currentState))
@@ -190,7 +200,7 @@ export default function Header({
    */
   function showWarningDialog() {
     if (cardWithError?.show) {
-      return showWarningDialog_('merge_error_title', 'merge_error_message', setCardWithError, cardWithError)
+      return showWarningDialog_('merge_error_title', 'merge_error_message', setCardWithError, cardWithError, cardWithError.message)
     } else if (cardWithConflicts?.show) {
       return showWarningDialog_('merge_conflict_title', 'merge_conflict_message', setCardWithConflicts, cardWithConflicts)
     } else if (cardToMerge?.show) { // cardToMerge

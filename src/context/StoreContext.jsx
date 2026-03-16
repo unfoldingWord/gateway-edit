@@ -10,6 +10,7 @@ import useLocalStorage from '@hooks/useLocalStorage'
 import * as useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
+import { testForMergeError } from "@utils/merge";
 
 export const StoreContext = createContext({})
 
@@ -32,6 +33,12 @@ export default function StoreContextProvider(props) {
     mergeToMasterFromUserBranch
   ) {
     console.log('updateMergeState', { cardId, mergeFromMaster, mergeToMaster })
+    const mergeFromMasterError = testForMergeError(mergeFromMaster)
+    const mergeToMasterError = testForMergeError(mergeToMaster)
+    const mergeError = mergeToMasterError || mergeFromMasterError;
+    if (mergeError) {
+      console.error('updateMergeState - merge error', {mergeFromMaster, mergeToMaster})
+    }
     setMergeStatusForCards(oldMergeStatusForCards => ({
       ...oldMergeStatusForCards,
       [cardId]: {
