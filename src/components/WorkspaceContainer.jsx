@@ -39,7 +39,7 @@ import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
   addNetworkDisconnectError,
-  checkIfServerOnline,
+  checkIfNetworkAvailable,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -786,7 +786,7 @@ function WorkspaceContainer() {
     monitor.reset();
     //TODO: disable for now
 
-    // checkIfServerOnline().then((status) => {
+    // checkIfNetworkAvailable().then((status) => {
     //   if (status.online) {
     //     verifyLogin().then((verifyLogin) => {
     //       if (!verifyLogin) {

@@ -57,7 +57,7 @@ export async function getServerFault() {
  *    checks if server is responding.
  * @return {Promise<object>} status object with online, networkDisconnected, serverUnreachable flags and errorStr if applicable
  */
-export async function checkIfServerOnline() {
+export async function checkIfNetworkAvailable() {
   const status = {}
   try {
     const timeout = HTTP_GET_MAX_WAIT_TIME
