@@ -39,6 +39,7 @@ import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
   addNetworkDisconnectError,
+  checkIfServerOnline,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -783,15 +784,21 @@ function WorkspaceContainer() {
   function mergeValidationCheck() {
     const monitor = getMonitor();
     monitor.reset();
-    verifyLogin().then((verifyLogin) => {
-      if (!verifyLogin) {
-        console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
-        setAuthError(true);
-      } else {
-        console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
-        updateMergeCheck();
-      }
-    })
+    //TODO: disable for now
+
+    // checkIfServerOnline().then((status) => {
+    //   if (status.online) {
+    //     verifyLogin().then((verifyLogin) => {
+    //       if (!verifyLogin) {
+    //         console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
+    //         setAuthError(true);
+    //       } else {
+    //         console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
+    //         updateMergeCheck();
+    //       }
+    //     })
+    //   }
+    // })
   }
 
   /**
