@@ -53,6 +53,32 @@ export async function getServerFault() {
 }
 
 /**
+ * checks to see if there is a fault with the server - first checks the networking connection and then
+ *    checks if server is responding.
+ * @return {Promise<object>} status object with online, networkDisconnected, serverUnreachable flags and errorStr if applicable
+ */
+export async function checkIfServerOnline() {
+  const status = {}
+  try {
+    const timeout = HTTP_GET_MAX_WAIT_TIME
+    await checkIfServerOnline(getLocalStorageItem(SERVER_KEY), { timeout }) // throws exception if server disconnected
+    status.online = true
+  } catch (e) {
+    console.warn(`checkIfServerOnline() - received error`, e)
+    let errorMessage = e?.message
+    status.errorStr = errorMessage
+
+    if (errorMessage === ERROR_NETWORK_DISCONNECTED) {
+      status.networkDisconnected = true
+    } else {
+      status.serverUnreachable = true
+    }
+  }
+  return status;
+}
+
+
+/**
  * check if error message is that network is disconnected (from checkIfServerOnline())
  * @param {Error} error
  * @return {boolean} true if network disconnected
