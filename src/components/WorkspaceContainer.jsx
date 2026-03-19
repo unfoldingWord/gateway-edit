@@ -298,7 +298,7 @@ function WorkspaceContainer() {
             logout();
             setAuthError(false);
           }}
-          actionButtonStr2={translate('retry')}
+          actionButton2Str={translate('retry')}
           onActionButton2={() => {
             setAuthError(false);
             mergeValidationCheck();
