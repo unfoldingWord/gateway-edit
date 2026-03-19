@@ -193,7 +193,7 @@ function WorkspaceContainer() {
 
   const minWaitMinites = 5;
 
-  const { actions: { verifyLogin } } = useContext(AuthContext)
+  const { actions: { checkUserAuthentication } } = useContext(AuthContext)
 
   const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
     bookId,
@@ -791,12 +791,16 @@ function WorkspaceContainer() {
     monitor.reset();
     checkIfNetworkAvailable().then((status) => {
       if (status.online) {
-        verifyLogin().then((verifyLogin) => {
-          if (!verifyLogin) {
-            console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
+        checkUserAuthentication().then((results) => {
+          if (results.otherError) {
+            console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
+            return;
+          }
+          if (!results.authenticated || results.authenticationError) {
+            console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
             setAuthError(true);
           } else {
-            console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
+            console.log(`WorkspaceContainer.mergeValidationCheck - valid login auth, check for merge conflicts mergeCheck = ${mergeCheck}`);
             updateMergeCheck();
           }
         })

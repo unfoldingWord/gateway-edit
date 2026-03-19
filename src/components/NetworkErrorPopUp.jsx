@@ -16,7 +16,7 @@ export default function NetworkErrorPopup(
     hideClose,
     dimBackground,
   }) {
-  const retryButtonStr = onRetry ? RETRY : ''
+  const retryButtonStr = onRetry ? RELOAD : ''
   const retryDefault = !!onRetry // if retry button enabled, make it default button
   const closeButtonDefault = !retryDefault // otherwise close button is default
 

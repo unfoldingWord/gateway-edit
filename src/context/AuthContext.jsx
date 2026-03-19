@@ -39,24 +39,45 @@ export default function AuthContextProvider(props) {
     name: 'my-auth-store',
   })
 
-  async function verifyLogin() {
+  /**
+   * check if user is authenticated.  Returns the various verification final results
+   * @returns {Promise<{authenticated: boolean, authenticationError: boolean, otherError: boolean}>} - authentication status
+   */
+  async function checkUserAuthentication() {
     let auth = authentication // get if previously authenticated
+    const results = {
+      authenticated: false,
+      authenticationError: false,
+      otherError: false,
+    }
+
     if (auth) { // if previously authenticated, verify still authenticated
       try {
         const response = await doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME);
         const httpCode = response?.status || 0;
         auth = (httpCode === 200)
+        results.authenticated = auth
       } catch (e) {
         if (e.toString().includes('401')) { // check if 401 code in exception
           // console.error(`getAuth() - user token expired`)
-          auth = false;
+          results.authenticationError = e.toString();
         } else {
           // console.warn(`getAuth() - hard error fetching user info, error=`, e)
-          auth = false;
+          results.authenticationError = e.toString();
         }
       }
     }
-    return auth
+    return results;
+  }
+
+  /**
+   * Verifies if the user is currently authenticated.  This will return false if there are any network errors.
+   *
+   * @return {Promise<boolean>} True if the user is authenticated, false otherwise
+   */
+  async function verifyLogin() {
+    let results = await checkUserAuthentication();
+    return results.authenticated
   }
 
   /**
@@ -136,6 +157,7 @@ export default function AuthContextProvider(props) {
       server,
     },
     actions: {
+      checkUserAuthentication,
       logout,
       setNetworkError,
       setServer,
