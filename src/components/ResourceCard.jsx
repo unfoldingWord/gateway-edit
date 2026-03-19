@@ -350,13 +350,13 @@ export default function ResourceCard({
       ...authentication?.config,
       token: authentication?.token,
       timeout: SERVER_MAX_WAIT_TIME_RETRY,
+      dontCreateBranch: true,
     },
     author: loggedInUser,
     token: authentication?.token,
     branch: workingResourceBranch,
     filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
-    dontCreateBranch: true,
   })
 
   useEffect(() => { // when we get a save saveError
@@ -443,7 +443,7 @@ export default function ResourceCard({
       const branch = await startEdit()
 
       if (branch) {
-        saveEdit(branch, newContent)
+        await saveEdit(branch, newContent)
       } else { // if error on branch creation
         console.warn(`ResourceCard() handleSaveEdit() error creating edit branch`, { sha, resource })
         onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
