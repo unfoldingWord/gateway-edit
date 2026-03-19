@@ -289,7 +289,7 @@ function WorkspaceContainer() {
           title={translate('authentication_error_title')}
           message={translate('authentication_error_message')}
           dimBackground={true}
-          hideClose={true}
+          hideClose={false}
           onClose={() => {
             setAuthError(false)
           }}
@@ -297,6 +297,11 @@ function WorkspaceContainer() {
           onActionButton={() => {
             logout();
             setAuthError(false);
+          }}
+          actionButtonStr2={translate('retry')}
+          onActionButton2={() => {
+            setAuthError(false);
+            mergeValidationCheck();
           }}
         />)
     } else
