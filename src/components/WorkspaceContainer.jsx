@@ -784,21 +784,21 @@ function WorkspaceContainer() {
   function mergeValidationCheck() {
     const monitor = getMonitor();
     monitor.reset();
-    //TODO: disable for now
-
-    // checkIfNetworkAvailable().then((status) => {
-    //   if (status.online) {
-    //     verifyLogin().then((verifyLogin) => {
-    //       if (!verifyLogin) {
-    //         console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
-    //         setAuthError(true);
-    //       } else {
-    //         console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
-    //         updateMergeCheck();
-    //       }
-    //     })
-    //   }
-    // })
+    checkIfNetworkAvailable().then((status) => {
+      if (status.online) {
+        verifyLogin().then((verifyLogin) => {
+          if (!verifyLogin) {
+            console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
+            setAuthError(true);
+          } else {
+            console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
+            updateMergeCheck();
+          }
+        })
+      } else {
+        console.warn(`WorkspaceContainer.mergeValidationCheck - network unavailable, skipping login validation`);
+      }
+    })
   }
 
   /**
