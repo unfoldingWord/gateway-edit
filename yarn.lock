@@ -519,6 +519,11 @@
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.28.6.tgz#d267a43cb1836dc4d182cce93ae75ba954ef6d2b"
   integrity sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==
 
+"@babel/runtime@^7.6.3":
+  version "7.29.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.29.2.tgz#9a6e2d05f4b6692e1801cd4fb176ad823930ed5e"
+  integrity sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g==
+
 "@babel/template@^7.20.7", "@babel/template@^7.3.3", "@babel/template@^7.4.0":
   version "7.20.7"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.20.7.tgz#a15090c2839a83b02aa996c0b4994005841fd5a8"
@@ -3070,6 +3075,13 @@
     "@types/prop-types" "*"
     "@types/scheduler" "*"
     csstype "^3.0.2"
+
+"@types/react@>=16.9.11":
+  version "19.2.14"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-19.2.14.tgz#39604929b5e3957e3a6fa0001dafb17c7af70bad"
+  integrity sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==
+  dependencies:
+    csstype "^3.2.2"
 
 "@types/react@^17":
   version "17.0.53"
@@ -6985,29 +6997,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gitea-react-toolkit@2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.2.1.tgz#e13191ae6e3089d12d0f2eeaa69ce49c740651a2"
-  integrity sha512-9VPuWOHQv+z+H2j+GRhShVPKRC1O+qVNWcoashjpXhd1IS4lF820YIl/YDacFa7SvgOpm/sOZ3MPVnxcGIG4aA==
-  dependencies:
-    awesome-debounce-promise "2.1.0"
-    axios "0.19.0"
-    axios-cache-adapter "2.4.1"
-    base-64 "0.1.0"
-    deep-equal "^2.0.5"
-    js-base64 "^3.7.2"
-    jszip "^3.5.0"
-    localforage "1.7.3"
-    markdown-translatable "1.3.1-rc.1"
-    prop-types "15.7.2"
-    use-deep-compare "^1.1.0"
-    use-deep-compare-effect "^1.3.1"
-    utf8 "3.0.0"
-
-gitea-react-toolkit@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.4.0.tgz#0d34e23785d9a5b7d97562938abec2c14f26fd41"
-  integrity sha512-WYhTxhL0AOKKqYZtVkGJLvLn74LnqIkAtPJ4Wn2Gp3M8T4oVNR2ippIq952wl2/jvUdTP0mavNhtoGFvczgr3g==
+gitea-react-toolkit@2.4.1, gitea-react-toolkit@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.4.1.tgz#7d9d0a27f84515f2bcaf819ad1ee3466718d0b33"
+  integrity sha512-ZLX4WkHfpiK8IVZMT8yGTDnKR2Sb4mFtxhgqDU6+2fBLocHIa7ebC4Qa3ItlOAJYAZ+qBp/9HQwUQCrmS3WY4A==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -9406,6 +9399,11 @@ lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
+lodash@^4.17.5:
+  version "4.17.23"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.23.tgz#f113b0378386103be4f6893388c73d0bde7f2c5a"
+  integrity sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==
+
 log-symbols@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-4.1.0.tgz#3fbdbb95b4683ac9fc785111e792e558d4abd503"
@@ -10955,6 +10953,24 @@ react-bootstrap@0.32.4, react-bootstrap@^0.32.1:
     uncontrollable "^5.0.0"
     warning "^3.0.0"
 
+react-bootstrap@^0.33.1:
+  version "0.33.1"
+  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-0.33.1.tgz#e072592aa143b9792526281272eca754bc9a4940"
+  integrity sha512-qWTRravSds87P8WC82tETy2yIso8qDqlIm0czsrduCaYAFtHuyLu0XDbUlfLXeRzqgwm5sRk2wRaTNoiVkk/YQ==
+  dependencies:
+    "@babel/runtime-corejs2" "^7.0.0"
+    classnames "^2.2.5"
+    dom-helpers "^3.2.0"
+    invariant "^2.2.4"
+    keycode "^2.2.0"
+    prop-types "^15.6.1"
+    prop-types-extra "^1.0.1"
+    react-overlays "^0.9.0"
+    react-prop-types "^0.4.0"
+    react-transition-group "^2.0.0"
+    uncontrollable "^7.0.2"
+    warning "^3.0.0"
+
 react-container-dimensions@^1.3.3:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/react-container-dimensions/-/react-container-dimensions-1.4.1.tgz#73a8b497f09c6b55a18a79b18a57a8327138f343"
@@ -11086,6 +11102,18 @@ react-overlays@^0.8.0:
     react-transition-group "^2.2.0"
     warning "^3.0.0"
 
+react-overlays@^0.9.0:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/react-overlays/-/react-overlays-0.9.3.tgz#5bac8c1e9e7e057a125181dee2d784864dd62902"
+  integrity sha512-u2T7nOLnK+Hrntho4p0Nxh+BsJl0bl4Xuwj/Y0a56xywLMetgAfyjnDVrudLXsNcKGaspoC+t3C1V80W9QQTdQ==
+  dependencies:
+    classnames "^2.2.5"
+    dom-helpers "^3.2.1"
+    prop-types "^15.5.10"
+    prop-types-extra "^1.0.1"
+    react-transition-group "^2.2.1"
+    warning "^3.0.0"
+
 react-prop-types@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/react-prop-types/-/react-prop-types-0.4.0.tgz#f99b0bfb4006929c9af2051e7c1414a5c75b93d0"
@@ -11129,7 +11157,7 @@ react-tooltip@^3.11.6:
   dependencies:
     prop-types "^15.6.0"
 
-react-transition-group@^2.0.0, react-transition-group@^2.2.0:
+react-transition-group@^2.0.0, react-transition-group@^2.2.0, react-transition-group@^2.2.1:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"
   integrity sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==
@@ -11730,14 +11758,14 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@6.6.1:
-  version "6.6.1"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-6.6.1.tgz#13a0745753fd6fc474d3ae1c070f4a2d91efd9b2"
-  integrity sha512-njUmx1/0NLwOIc5pQ/QXSeohE2NLuY4AWoQjHuO8ZUhpllOLDuuGC+TZFQ22+LvupzRCSEcLgopRYK7gtoCwcw==
+scripture-resources-rcl@6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-6.6.2.tgz#125d81279b14deac17ab8ccca85af16be2c29a46"
+  integrity sha512-1v8kaPaQaasVx7bX8mn6Qi3CpBXgcd+nRkqtBWJfdN1K1g4YZGKRs8jqyCKhXLgPuR94EAZ+cRngoDG2FomVkA==
   dependencies:
     bible-reference-range "^1.1.0"
     deep-freeze "^0.0.1"
-    gitea-react-toolkit "2.2.1"
+    gitea-react-toolkit "^2.4.1"
     js-yaml-parser "^1.0.0"
     lodash "^4.17.21"
     markdown-translatable "2.1.1"
@@ -11946,10 +11974,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.5.2.tgz#2ff7e82112d8fcb015ae4e932e69b20ddfe52fe5"
-  integrity sha512-xDY1IkBQc4m/IB3xqRnzbVJ8DcReV/gvBZhkkVYVsDmVgTpRqoHVWVLAhkXn65ceSC5IS+6GcsYua8Zt+q3uTw==
+single-scripture-rcl@3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.5.3.tgz#04689898321c23e87661436220ec9fd3b1118cce"
+  integrity sha512-KaQht/kMZ1E+1LvOnTci/GO74beSu3mwAY8ZkvvmIu0sbp3a212c19q6t03uw+cKgVUaSJl4F+BkT5tPn3cgqw==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
@@ -12708,6 +12736,16 @@ tar-stream@^3.1.5:
     fast-fifo "^1.2.0"
     streamx "^2.15.0"
 
+tc-strings@^0.1.6:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/tc-strings/-/tc-strings-0.1.7.tgz#b4a4ceab3b1bd1ea6fc26878b73e3e122928645b"
+  integrity sha512-K4oc8bCLjSVz5I0eXoovy1wkZpIj/pRh43W9KszWyBW7X/5xI3vShAhetO9JiS2hepFzA+KRgmxPG9sf5OeZMQ==
+  dependencies:
+    babel-runtime "^6.26.0"
+    lodash "^4.17.5"
+    rimraf "^2.6.2"
+    transform-runtime "0.0.0"
+
 tc-ui-toolkit@5.3.3, tc-ui-toolkit@^5.3.3:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/tc-ui-toolkit/-/tc-ui-toolkit-5.3.3.tgz#67d5fd6cb6b165a124c0f1490fad7c963fcaf043"
@@ -13185,6 +13223,16 @@ uncontrollable@^5.0.0:
   integrity sha512-5FXYaFANKaafg4IVZXUNtGyzsnYEvqlr9wQ3WpZxFpEUxl29A3H6Q4G1Dnnorvq9TGOGATBApWR4YpLAh+F5hw==
   dependencies:
     invariant "^2.2.4"
+
+uncontrollable@^7.0.2:
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/uncontrollable/-/uncontrollable-7.2.1.tgz#1fa70ba0c57a14d5f78905d533cf63916dc75738"
+  integrity sha512-svtcfoTADIB0nT9nltgjujTi7BzVmwjZClOmskKu/E8FW9BXzg9os8OLr4f8Dlnk0rYWJIWr4wv9eKUXiQvQwQ==
+  dependencies:
+    "@babel/runtime" "^7.6.3"
+    "@types/react" ">=16.9.11"
+    invariant "^2.2.4"
+    react-lifecycles-compat "^3.0.4"
 
 uncrypto@^0.1.3:
   version "0.1.3"
@@ -13781,10 +13829,24 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-word-aligner-rcl@1.2.11:
-  version "1.2.11"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.2.11.tgz#cacf5bc3f788172286bbcda27d2b4cbd8fb5c079"
-  integrity sha512-0lUtLrlvKvyIWPL9gFmoPdegDzJbLemdEkemX2Wf5y0184eu/B+ChObEQlSsg/zSYxsSBytB3c0KEZaycWUong==
+word-aligner-lib@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/word-aligner-lib/-/word-aligner-lib-1.0.1.tgz#6992ac993d336ea5915e1b0cedb362a235c85cfc"
+  integrity sha512-3wOdnkESmVuZ/G51WiRvjM3xj6aGk/ebKdKDWhH/H7HF23gy3RTQbrOgvr1/fLLiHEqgG54AzCihdAaWpEfYBw==
+  dependencies:
+    deep-equal "^2.0.5"
+    file-loader "^6.2.0"
+    lodash.clonedeep "^4.5.0"
+    string-punctuation-tokenizer "2.2.0"
+    tc-strings "^0.1.6"
+    usfm-js "3.4.3"
+    word-aligner "1.0.3"
+    wordmap-lexer "^0.3.6"
+
+word-aligner-rcl@1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.3.6.tgz#6506cd188b75bb1daf8d2ee0b127616a10d31c30"
+  integrity sha512-bjWED5l6bSEkutV2HzZ4alcC6Rn8Piz4dLW9ktGS2K4Q4u8jc+Ol3AZGMo/SlNFooR22gKPfwBgl8ZCgZ7bJng==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
@@ -13796,9 +13858,14 @@ word-aligner-rcl@1.2.11:
     deep-equal "^2.0.5"
     file-loader "^6.2.0"
     lodash.clonedeep "^4.5.0"
+    memoize-one "^5.1.1"
+    react-bootstrap "^0.33.1"
+    react-draggable "^3.3.2"
     string-punctuation-tokenizer "2.2.0"
     usfm-js "3.4.3"
+    uw-tsv-parser "1.0.3"
     word-aligner "1.0.2"
+    word-aligner-lib "1.0.1"
     wordmap "^0.6.0"
     wordmap-lexer "^0.3.6"
 
@@ -13813,6 +13880,16 @@ word-aligner@1.0.2, word-aligner@^1.0.0:
     path "0.12.7"
     path-extra "^4.2.1"
     rimraf "^2.6.2"
+    string-punctuation-tokenizer "2.0.0"
+    transform-runtime "0.0.0"
+
+word-aligner@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/word-aligner/-/word-aligner-1.0.3.tgz#fc99c795263aca39cd05e6499a74a3d3a926aaf4"
+  integrity sha512-Nzg/iBZWmOMGsdnptWelPZ/EnTuFnbkb/61x8dUKM6+T9PmUt0078Ui6WO0SKkUPtNDTRYcRXVgM2opYmTi+Fw==
+  dependencies:
+    babel-runtime "^6.26.0"
+    lodash "^4.17.11"
     string-punctuation-tokenizer "2.0.0"
     transform-runtime "0.0.0"
 

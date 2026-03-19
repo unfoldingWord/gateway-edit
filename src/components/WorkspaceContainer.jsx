@@ -39,7 +39,7 @@ import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
   addNetworkDisconnectError,
-  checkIfServerOnline,
+  checkIfNetworkAvailable,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -289,7 +289,7 @@ function WorkspaceContainer() {
           title={translate('authentication_error_title')}
           message={translate('authentication_error_message')}
           dimBackground={true}
-          hideClose={true}
+          hideClose={false}
           onClose={() => {
             setAuthError(false)
           }}
@@ -297,6 +297,11 @@ function WorkspaceContainer() {
           onActionButton={() => {
             logout();
             setAuthError(false);
+          }}
+          actionButtonStr2={translate('retry')}
+          onActionButton2={() => {
+            setAuthError(false);
+            mergeValidationCheck();
           }}
         />)
     } else
@@ -784,21 +789,21 @@ function WorkspaceContainer() {
   function mergeValidationCheck() {
     const monitor = getMonitor();
     monitor.reset();
-    //TODO: disable for now
-
-    // checkIfServerOnline().then((status) => {
-    //   if (status.online) {
-    //     verifyLogin().then((verifyLogin) => {
-    //       if (!verifyLogin) {
-    //         console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
-    //         setAuthError(true);
-    //       } else {
-    //         console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
-    //         updateMergeCheck();
-    //       }
-    //     })
-    //   }
-    // })
+    checkIfNetworkAvailable().then((status) => {
+      if (status.online) {
+        verifyLogin().then((verifyLogin) => {
+          if (!verifyLogin) {
+            console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
+            setAuthError(true);
+          } else {
+            console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
+            updateMergeCheck();
+          }
+        })
+      } else {
+        console.warn(`WorkspaceContainer.mergeValidationCheck - network unavailable, skipping login validation`);
+      }
+    })
   }
 
   /**
