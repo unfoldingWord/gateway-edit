@@ -789,6 +789,7 @@ function WorkspaceContainer() {
   function mergeValidationCheck() {
     const monitor = getMonitor();
     monitor.reset();
+    // this queries that DCS API version to see if connected to internet (does not need to be logged in)
     checkIfNetworkAvailable().then((status) => {
       if (status.online) {
         checkUserAuthentication().then((results) => {
