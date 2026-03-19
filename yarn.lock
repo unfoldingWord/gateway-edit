@@ -11758,10 +11758,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-scripture-resources-rcl@6.6.2-beta:
-  version "6.6.2-beta"
-  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-6.6.2-beta.tgz#1f441ec4ae42c00689fa64600cf0cd9183027124"
-  integrity sha512-iGQeRfhQ+azScbCUTcRu+bAsiRD5Caok6GBevrDS10XEICqSRuA2nihWIVdDyphiJrxwPAHXrByALXoy2AtRnQ==
+scripture-resources-rcl@6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/scripture-resources-rcl/-/scripture-resources-rcl-6.6.2.tgz#125d81279b14deac17ab8ccca85af16be2c29a46"
+  integrity sha512-1v8kaPaQaasVx7bX8mn6Qi3CpBXgcd+nRkqtBWJfdN1K1g4YZGKRs8jqyCKhXLgPuR94EAZ+cRngoDG2FomVkA==
   dependencies:
     bible-reference-range "^1.1.0"
     deep-freeze "^0.0.1"
@@ -11974,9 +11974,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-"single-scripture-rcl@file:../single-scripture-rcl/single-scripture-rcl-v3.5.3-beta.2.tgz":
-  version "3.5.3-beta.2"
-  resolved "file:../single-scripture-rcl/single-scripture-rcl-v3.5.3-beta.2.tgz#1df8a135070de45e8a7b2ddcb3a1ff046078da86"
+single-scripture-rcl@3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.5.3.tgz#04689898321c23e87661436220ec9fd3b1118cce"
+  integrity sha512-KaQht/kMZ1E+1LvOnTci/GO74beSu3mwAY8ZkvvmIu0sbp3a212c19q6t03uw+cKgVUaSJl4F+BkT5tPn3cgqw==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"
@@ -13842,10 +13843,10 @@ word-aligner-lib@1.0.1:
     word-aligner "1.0.3"
     wordmap-lexer "^0.3.6"
 
-word-aligner-rcl@1.3.6-beta:
-  version "1.3.6-beta"
-  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.3.6-beta.tgz#874996b632df525faedefa18fc2e2dbc4b881c50"
-  integrity sha512-rROwTV1TFCxFXluMAiUJBp7CQk/NfuQrumpwllzFN9gtTiY+xXd0VWW7eiSYJGM2LtJvxeDJeNvyz8GL85ClQg==
+word-aligner-rcl@1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/word-aligner-rcl/-/word-aligner-rcl-1.3.6.tgz#6506cd188b75bb1daf8d2ee0b127616a10d31c30"
+  integrity sha512-bjWED5l6bSEkutV2HzZ4alcC6Rn8Piz4dLW9ktGS2K4Q4u8jc+Ol3AZGMo/SlNFooR22gKPfwBgl8ZCgZ7bJng==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
