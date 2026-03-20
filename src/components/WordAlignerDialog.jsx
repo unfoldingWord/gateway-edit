@@ -266,6 +266,17 @@ function WordAlignerDialog({
     }
   } = alignmentSuggestionsManage; // type is TUseAlignmentSuggestionsReturn
 
+  useEffect(() => { // close dialog on Escape key
+    if (!showDialog) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        alignmentActions_?.cancelAlignment();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showDialog, alignmentActions_]);
+
   useEffect(() => {
     if (shouldShowDialog_ !== showDialog) {
       console.log(`WordAlignerDialog: alignment data changed shouldShowDialog_ ${shouldShowDialog_}`)
@@ -343,7 +354,7 @@ function WordAlignerDialog({
       <Dialog
         fullWidth={true}
         maxWidth={'lg'}
-        onClose={() => {}}
+        onClose={() => alignmentActions_?.cancelAlignment()}
         open={!!showDialog}
         PaperComponent={PaperComponent}
         bounds={bounds}
@@ -378,6 +389,7 @@ function WordAlignerDialog({
     )
   },
   [
+    alignmentActions_,
     contextId,
     errorMessage,
     showDialog,
