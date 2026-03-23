@@ -79,7 +79,7 @@ function WordAlignerDialog({
   });
 
   const dialogRef = useRef(null); // for keeping track of aligner dialog position
-//  const oldDependencies = useRef({})
+  const escapeCallbackRef = useRef(null); // callback for handling escape key press
 
   const {
     contextId,
@@ -335,58 +335,72 @@ function WordAlignerDialog({
     }
   }
 
+  function handleEscapeKeyPressed() {
+    console.log('WordAlignerDialog escape key pressed, closing wordAligner')
+    escapeCallbackRef.current?.() // callback if defined
+  }
+
+  function setEscapeKeyCallback(cb) {
+    escapeCallbackRef.current = cb;
+  }
+
   const wordAlignerDialogArea = useMemo(() => {
     console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
       const maxHeight = '${Math.round(wordAlignerMaxHeight)}px';
 
       return (
-      <Dialog
-        fullWidth={true}
-        maxWidth={'lg'}
-        onClose={() => {}}
-        open={!!showDialog}
-        PaperComponent={PaperComponent}
-        bounds={bounds}
-        aria-labelledby="draggable-aligner-dialog-title"
-        PaperProps={{
-          sx: {
-            maxHeight: maxHeight,
-            overflow: 'hidden',
-          },
-        }}
-      >
-        <WordAlignerArea
-          alignmentActions={alignmentActions_}
-          alignmentSuggestionsManage={alignmentSuggestionsManage}
-          contextId={contextId}
-          errorMessage={errorMessage}
-          handleDoTrainingClick={handleDoTrainingClick}
-          lexiconCache={{}}
-          loadLexiconEntry={getLexiconData}
-          showDialog={!!showDialog}
-          sourceLanguageId={sourceLanguageId}
-          suggester={suggester}
-          targetLanguage={targetLanguage}
-          targetLanguageFont={''}
-          targetWords={targetWords}
-          title={title || ''}
-          translate={translate}
-          verseAlignments={verseAlignments}
-          wordAlignmentMaxHeight={wordAlignerMaxHeight}
-        />
-      </Dialog>
-    )
-  },
-  [
-    contextId,
-    errorMessage,
-    showDialog,
-    sourceLanguageId,
-    targetLanguage,
-    targetWords,
-    title,
-    verseAlignments
-  ]
+        <Dialog
+          fullWidth={true}
+          maxWidth={'lg'}
+          onClose={(_event, reason) => {
+            if (reason === 'escapeKeyDown') {
+              handleEscapeKeyPressed()
+            }
+          }}
+          open={!!showDialog}
+          PaperComponent={PaperComponent}
+          bounds={bounds}
+          aria-labelledby="draggable-aligner-dialog-title"
+          PaperProps={{
+            sx: {
+              maxHeight: maxHeight,
+              overflow: 'hidden',
+            },
+          }}
+        >
+          <WordAlignerArea
+            alignmentActions={alignmentActions_}
+            alignmentSuggestionsManage={alignmentSuggestionsManage}
+            contextId={contextId}
+            errorMessage={errorMessage}
+            handleDoTrainingClick={handleDoTrainingClick}
+            lexiconCache={{}}
+            loadLexiconEntry={getLexiconData}
+            setEscapeKeyCallback={setEscapeKeyCallback}
+            showDialog={!!showDialog}
+            sourceLanguageId={sourceLanguageId}
+            suggester={suggester}
+            targetLanguage={targetLanguage}
+            targetLanguageFont={''}
+            targetWords={targetWords}
+            title={title || ''}
+            translate={translate}
+            verseAlignments={verseAlignments}
+            wordAlignmentMaxHeight={wordAlignerMaxHeight}
+          />
+        </Dialog>
+      )
+    },
+    [
+      contextId,
+      errorMessage,
+      showDialog,
+      sourceLanguageId,
+      targetLanguage,
+      targetWords,
+      title,
+      verseAlignments
+    ]
   );
 
   return (
