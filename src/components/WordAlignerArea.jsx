@@ -139,6 +139,22 @@ function WordAlignerArea({
     };
   },[]);
 
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        if (!alignmentChange) {
+          console.log('WordAlignerArea escape key pressed, closing wordAligner')
+          cancelAlignment()
+        } else {
+          console.log('WordAlignerArea escape key pressed, but unsaved changes')
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
 
   useEffect(() => {
