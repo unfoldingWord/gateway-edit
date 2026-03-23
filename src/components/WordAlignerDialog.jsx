@@ -79,7 +79,7 @@ function WordAlignerDialog({
   });
 
   const dialogRef = useRef(null); // for keeping track of aligner dialog position
-//  const oldDependencies = useRef({})
+  const escapeCallbackRef = useRef(null); // callback for handling escape key press
 
   const {
     contextId,
@@ -335,16 +335,26 @@ function WordAlignerDialog({
     }
   }
 
+  function handleEscapeKeyPressed() {
+    console.log('WordAlignerDialog escape key pressed, closing wordAligner')
+    escapeCallbackRef.current?.() // callback if defined
+  }
+
+  function setEscapeKeyCallback(cb) {
+    escapeCallbackRef.current = cb;
+  }
+
   const wordAlignerDialogArea = useMemo(() => {
     console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
       const maxHeight = '${Math.round(wordAlignerMaxHeight)}px';
+
       return (
         <Dialog
           fullWidth={true}
           maxWidth={'lg'}
           onClose={(_event, reason) => {
             if (reason === 'escapeKeyDown') {
-              alignmentActions_?.cancelAlignment?.();
+              handleEscapeKeyPressed()
             }
           }}
           open={!!showDialog}
@@ -366,6 +376,7 @@ function WordAlignerDialog({
             handleDoTrainingClick={handleDoTrainingClick}
             lexiconCache={{}}
             loadLexiconEntry={getLexiconData}
+            setEscapeKeyCallback={setEscapeKeyCallback}
             showDialog={!!showDialog}
             sourceLanguageId={sourceLanguageId}
             suggester={suggester}

@@ -58,7 +58,12 @@
  * - Depends on lexicon data infrastructure for word definitions
  */
 
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import PropTypes from 'prop-types'
 import DialogTitle from '@mui/material/DialogTitle'
 import { RxLink2, RxLinkBreak2 } from 'react-icons/rx'
@@ -86,6 +91,7 @@ function WordAlignerArea({
   lexiconCache,
   loadLexiconEntry,
   onChange,
+  setEscapeKeyCallback,
   showDialog,
   sourceLanguageId,
   sourceLanguageFont,
@@ -120,6 +126,8 @@ function WordAlignerArea({
     suggester,
   } = state;
 
+  const contentModified = useRef(false); // flag for alignment changes
+
   const {
     state: {
       training,
@@ -134,26 +142,12 @@ function WordAlignerArea({
   useEffect(() => {
     const key = 'WordAlignerArea';
     console.log('WordAlignerArea initialized/mounted')
+    setEscapeKeyCallback(handleEscapeKeyCallback) // register handler
     return () => {
       console.log('WordAlignerArea unmounted')
+      setEscapeKeyCallback(null) // unregister handler
     };
   },[]);
-
-  useEffect(() => {
-    function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        if (!alignmentChange) {
-          console.log('WordAlignerArea escape key pressed, closing wordAligner')
-          cancelAlignment()
-        } else {
-          console.log('WordAlignerArea escape key pressed, but unsaved changes')
-        }
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
 
   const currentShowDialog = !!(targetWords?.length && verseAlignments?.length)
 
@@ -184,6 +178,7 @@ function WordAlignerArea({
   function onAlignmentChange(results) {
     const alignmentComplete = AlignmentHelpers.areAlgnmentsComplete(results.targetWords, results.verseAlignments);
 
+    contentModified.current = true;
     setState(prevState => ({
       ...prevState,
       alignmentChange: results,
@@ -192,11 +187,28 @@ function WordAlignerArea({
     onChange?.(results); // forward on changes
   }
 
+  /**
+   * Handles the Escape key press event within the word aligner area.
+   * If there are no unsaved alignment changes, it cancels the alignment process.
+   * Otherwise, it logs that there are unsaved changes.
+   *
+   * @return {void} This method does not return any value.
+   */
+  function handleEscapeKeyCallback() {
+    if (!contentModified.current) {
+      console.log('WordAlignerArea.handleEscapeKeyCallback escape key pressed, closing wordAligner')
+      cancelAlignment()
+    } else {
+      console.log('WordAlignerArea.handleEscapeKeyCallback escape key pressed, but unsaved changes')
+    }
+  }
+
   function cancelAlignment() {
     console.log('WordAlignerArea: cancelAlignment')
     const cancelAlignment = alignmentActions?.cancelAlignment
     cancelAlignment?.()
     setState(prevState => ({ ...prevState, alignmentChange: null }));
+    contentModified.current = false;
   }
 
   function saveAlignment() {
@@ -220,6 +232,7 @@ function WordAlignerArea({
     console.log('WordAlignerArea: saveAlignment')
     const saveAlignment = alignmentActions?.saveAlignment
     saveAlignment?.(alignmentChange)
+    contentModified.current = false;
     setState(prevState => ({ ...prevState, alignmentChange: null }));
   }
 
@@ -267,6 +280,7 @@ function WordAlignerArea({
       aligned: false,
     }));
     onAlignmentChange(_alignmentChange)
+    contentModified.current = true;
   }
 
   function showPopover(PopoverTitle, wordDetails, positionCoord, rawData) {
@@ -446,6 +460,7 @@ WordAlignerArea.propTypes = {
   lexiconCache: PropTypes.object,
   loadLexiconEntry: PropTypes.func.isRequired,
   onChange: PropTypes.func,
+  setEscapeKeyCallback: PropTypes.func,
   showDialog: PropTypes.bool,
   sourceLanguageId: PropTypes.string.isRequired,
   sourceLanguageFont: PropTypes.string,
