@@ -338,55 +338,58 @@ function WordAlignerDialog({
   const wordAlignerDialogArea = useMemo(() => {
     console.log('WordAlignerDialog: wordAlignerDialogArea regenerated')
       const maxHeight = '${Math.round(wordAlignerMaxHeight)}px';
-
       return (
-      <Dialog
-        fullWidth={true}
-        maxWidth={'lg'}
-        onClose={() => {}}
-        open={!!showDialog}
-        PaperComponent={PaperComponent}
-        bounds={bounds}
-        aria-labelledby="draggable-aligner-dialog-title"
-        PaperProps={{
-          sx: {
-            maxHeight: maxHeight,
-            overflow: 'hidden',
-          },
-        }}
-      >
-        <WordAlignerArea
-          alignmentActions={alignmentActions_}
-          alignmentSuggestionsManage={alignmentSuggestionsManage}
-          contextId={contextId}
-          errorMessage={errorMessage}
-          handleDoTrainingClick={handleDoTrainingClick}
-          lexiconCache={{}}
-          loadLexiconEntry={getLexiconData}
-          showDialog={!!showDialog}
-          sourceLanguageId={sourceLanguageId}
-          suggester={suggester}
-          targetLanguage={targetLanguage}
-          targetLanguageFont={''}
-          targetWords={targetWords}
-          title={title || ''}
-          translate={translate}
-          verseAlignments={verseAlignments}
-          wordAlignmentMaxHeight={wordAlignerMaxHeight}
-        />
-      </Dialog>
-    )
-  },
-  [
-    contextId,
-    errorMessage,
-    showDialog,
-    sourceLanguageId,
-    targetLanguage,
-    targetWords,
-    title,
-    verseAlignments
-  ]
+        <Dialog
+          fullWidth={true}
+          maxWidth={'lg'}
+          onClose={(_event, reason) => {
+            if (reason === 'escapeKeyDown') {
+              alignmentActions_?.cancelAlignment?.();
+            }
+          }}
+          open={!!showDialog}
+          PaperComponent={PaperComponent}
+          bounds={bounds}
+          aria-labelledby="draggable-aligner-dialog-title"
+          PaperProps={{
+            sx: {
+              maxHeight: maxHeight,
+              overflow: 'hidden',
+            },
+          }}
+        >
+          <WordAlignerArea
+            alignmentActions={alignmentActions_}
+            alignmentSuggestionsManage={alignmentSuggestionsManage}
+            contextId={contextId}
+            errorMessage={errorMessage}
+            handleDoTrainingClick={handleDoTrainingClick}
+            lexiconCache={{}}
+            loadLexiconEntry={getLexiconData}
+            showDialog={!!showDialog}
+            sourceLanguageId={sourceLanguageId}
+            suggester={suggester}
+            targetLanguage={targetLanguage}
+            targetLanguageFont={''}
+            targetWords={targetWords}
+            title={title || ''}
+            translate={translate}
+            verseAlignments={verseAlignments}
+            wordAlignmentMaxHeight={wordAlignerMaxHeight}
+          />
+        </Dialog>
+      )
+    },
+    [
+      contextId,
+      errorMessage,
+      showDialog,
+      sourceLanguageId,
+      targetLanguage,
+      targetWords,
+      title,
+      verseAlignments
+    ]
   );
 
   return (
