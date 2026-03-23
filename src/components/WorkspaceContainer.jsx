@@ -48,6 +48,7 @@ import { HTTP_CONFIG } from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
+import useLogosSync from '@hooks/useLogosSync'
 import useWindowDimensions from '@hooks/useWindowDimensions'
 import { translate } from '@utils/lexiconHelpers'
 import { getBuildId } from '@utils/build'
@@ -142,6 +143,7 @@ function WorkspaceContainer() {
       hebrewRepoUrl,
       languageId,
       loggedInUser,
+      logosSync,
       mainScreenRef,
       mergeCheck,
       owner,
@@ -175,6 +177,8 @@ function WorkspaceContainer() {
       updateTaDetails,
     },
   } = useContext(StoreContext)
+
+  useLogosSync({ bookId, chapter, verse, enabled: logosSync })
 
   const [
     {
