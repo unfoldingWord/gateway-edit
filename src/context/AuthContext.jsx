@@ -55,8 +55,13 @@ export default function AuthContextProvider(props) {
       try {
         const response = await doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME);
         const httpCode = response?.status || 0;
-        auth = (httpCode === 200)
-        results.authenticated = auth
+        if (httpCode === 200) {
+          results.authenticated = true
+        } else if (unAuthenticated(httpCode)) {
+          results.authenticationError = `Server returned ${httpCode}`
+        } else {
+          results.otherError = `Server returned ${httpCode}`
+        }
       } catch (e) {
         if (e.toString().includes('401')) { // check if 401 code in exception
           results.authenticationError = e.toString();
