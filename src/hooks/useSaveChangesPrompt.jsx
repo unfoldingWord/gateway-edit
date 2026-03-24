@@ -75,16 +75,8 @@ export default function useSaveChangesPrompt() {
   useEffect(() => {
     const handleBeforeunload = (event) => {
       event.preventDefault()
-
-      // Chrome requires `returnValue` to be set.
-      if (event.defaultPrevented) {
-        event.returnValue = ''
-      }
-
-      if (typeof returnValue === 'string') {
-        event.returnValue = promptText
-        return promptText
-      }
+      event.returnValue = promptText
+      return promptText
     }
 
     if (!savedChanges) {

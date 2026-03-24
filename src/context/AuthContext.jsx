@@ -31,7 +31,7 @@ export default function AuthContextProvider(props) {
    * @param {number} httpCode - http code returned
    */
   function processError(error, httpCode=0) {
-    processNetworkError(error, httpCode, null, null, setNetworkError, null, null )
+    processNetworkError(error, httpCode, logout, null, setNetworkError, null, null )
   }
 
   const myAuthStore = localforage.createInstance({
@@ -59,11 +59,9 @@ export default function AuthContextProvider(props) {
         results.authenticated = auth
       } catch (e) {
         if (e.toString().includes('401')) { // check if 401 code in exception
-          // console.error(`getAuth() - user token expired`)
           results.authenticationError = e.toString();
         } else {
-          // console.warn(`getAuth() - hard error fetching user info, error=`, e)
-          results.authenticationError = e.toString();
+          results.otherError = e.toString();
         }
       }
     }
@@ -93,29 +91,31 @@ export default function AuthContextProvider(props) {
     const auth = await myAuthStore.getItem('authentication')
 
     if (auth) { // verify that auth is still valid
-      doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME)
-        .then(response => {
-          const httpCode = response?.status || 0
+      try {
+        const response = await doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME)
+        const httpCode = response?.status || 0
 
-          if (httpCode !== 200) {
-            console.log(`getAuth() - error fetching user info, status code ${httpCode}`)
+        if (httpCode !== 200) {
+          console.log(`getAuth() - error fetching user info, status code ${httpCode}`)
 
-            if (unAuthenticated(httpCode)) {
-              console.error(`getAuth() - user not authenticated, going to login`)
-              logout()
-            } else {
-              processError(null, httpCode)
-            }
-          }
-        }).catch(e => {
-          if (e.toString().includes('401')) { // check if 401 code in exception
-            console.error(`getAuth() - user token expired`)
-            logout()
+          if (unAuthenticated(httpCode)) {
+            console.error(`getAuth() - user not authenticated, going to login`)
+            await logout()
+            return null
           } else {
-            console.warn(`getAuth() - hard error fetching user info, error=`, e)
-            processError(e)
+            processError(null, httpCode)
           }
-        })
+        }
+      } catch (e) {
+        if (e.toString().includes('401')) { // check if 401 code in exception
+          console.error(`getAuth() - user token expired`)
+          await logout()
+          return null
+        } else {
+          // Network error — don't logout, just warn. Token may still be valid.
+          console.warn(`getAuth() - hard error fetching user info, error=`, e)
+        }
+      }
     }
     return auth
   }

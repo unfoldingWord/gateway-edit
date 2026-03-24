@@ -411,7 +411,7 @@ export default function ResourceCard({
 
   async function handleSaveEdit(newContent = '') {
     // Save edit, if successful trigger resource reload and set saved to true.
-    setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
+    setIsSaving(true); setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch, newContent) => {
       console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
       const success = await onSaveEdit(branch, newContent)
@@ -434,7 +434,7 @@ export default function ResourceCard({
         onResourceError &&
           onResourceError(message, isAccessError, resourceStatus)
       }
-      setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
+      setIsSaving(false); setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
     }
 
     // If not using user branch create it then save the edit.
