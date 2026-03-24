@@ -42,3 +42,6 @@ cypress/videos/
 .netlify
 /out/
 /scripts/gatewayedit-desktop/
+
+# Claude Code
+CLAUDE.md
