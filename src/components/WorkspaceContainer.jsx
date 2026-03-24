@@ -136,6 +136,7 @@ function WorkspaceContainer() {
       bibleReference: {
         bookId, chapter, verse,
       },
+      bibleRelations,
       currentLayout,
       enableObsSupport,
       greekRepoUrl,
@@ -620,6 +621,7 @@ function WorkspaceContainer() {
         resourceId: TARGET_LITERAL,
         originalLanguageOwner: scriptureOwner,
       },
+      bibleRelations,
       ...commonScriptureCardConfigs,
     }
 
@@ -649,6 +651,7 @@ function WorkspaceContainer() {
         resourceId: TARGET_SIMPLIFIED,
         originalLanguageOwner: scriptureOwner,
       },
+      bibleRelations,
       ...commonScriptureCardConfigs,
     },
     {

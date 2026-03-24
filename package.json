@@ -67,7 +67,7 @@
     "resource-workspace-rcl": "2.1.4",
     "scripture-resources-rcl": "6.6.2",
     "scripture-tsv": "1.2.0",
-    "single-scripture-rcl": "3.5.3",
+    "single-scripture-rcl": "/Users/blm0/Development/RCL/single-scripture-rcl/single-scripture-rcl-v3.5.4-beta.2.tgz",
     "tailwindcss": "^2.0.4",
     "tc-ui-toolkit": "5.3.3",
     "translation-helps-rcl": "3.6.8",
