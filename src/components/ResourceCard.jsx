@@ -225,7 +225,7 @@ export default function ResourceCard({
               }
             }
             if (validBibles.length >= 2) {
-              console.log('ResourceCard() resource manifest relations', relations)
+              console.log('ResourceCard() resource manifest relations', validBibles)
               if (!isEqual(validBibles, bibleRelations)) { // only update if different
                 setBibleRelations(validBibles)
                 return

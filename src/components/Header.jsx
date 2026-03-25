@@ -148,9 +148,10 @@ export default function Header({
       if (state.cardWithConflicts && !cardWithConflicts?.show) {
         setCardWithConflicts(showIfNewer(cardWithConflicts))
       }
-      if (state.cardWithError && !cardWithError?.show) {
-        setCardWithError(showIfNewer(cardWithError))
-      }
+      // disable all the error
+      // if (state.cardWithError && !cardWithError?.show) {
+      //   // setCardWithError(showIfNewer(cardWithError))
+      // }
       if (state.cardToMerge && !cardToMerge?.show) {
         setCardToMerge(showIfNewer(cardToMerge))
       }
