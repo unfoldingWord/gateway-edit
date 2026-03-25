@@ -240,8 +240,17 @@ export default function ResourceCard({
   } = _useBranchMerger;
 
   useEffect(() => {
-    if (mergeCheck > 0) {
-      checkMergeStatus && checkMergeStatus() // every time mergeCheck changes, check merge status again
+    if (mergeCheck > 0 && checkMergeStatus) {
+      // Wrap in try/catch — dcs-branch-merger can throw on 404/409 from /pulls endpoints
+      // when no PR exists for a resource's user branch. This is normal and should not crash the app.
+      try {
+        const result = checkMergeStatus()
+        if (result && typeof result.catch === 'function') {
+          result.catch(err => console.warn(`ResourceCard(${cardResourceId}) merge check failed:`, err?.message || err))
+        }
+      } catch (err) {
+        console.warn(`ResourceCard(${cardResourceId}) merge check threw:`, err?.message || err)
+      }
     }
   }, [mergeCheck])
 
