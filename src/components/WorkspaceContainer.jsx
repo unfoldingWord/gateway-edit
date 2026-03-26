@@ -789,6 +789,14 @@ function WorkspaceContainer() {
   function mergeValidationCheck() {
     const monitor = getMonitor();
     monitor.reset();
+    const navigatorDefined = navigator !== undefined;
+    if (!navigatorDefined) {
+      console.log(`WorkspaceContainer.mergeValidationCheck - navigator not Defined`);
+    } else if (!navigator.onLine) {
+      console.log(`WorkspaceContainer.mergeValidationCheck - navigator not online`);
+      return;
+    }
+
     checkUserAuthentication().then((results) => {
       if (results.otherError) {
         console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
