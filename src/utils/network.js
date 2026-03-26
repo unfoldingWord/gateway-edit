@@ -269,7 +269,7 @@ export function onNetworkActionButton(networkError) {
  */
 export function doFetch(url, authentication={}, timeout=HTTP_GET_MAX_WAIT_TIME, noCache=true) {
   const authConfig = authentication?.config || {}
-  return get({
+  const fetchConfig = {
     url: url,
     config: {
       ...authConfig,
@@ -279,5 +279,6 @@ export function doFetch(url, authentication={}, timeout=HTTP_GET_MAX_WAIT_TIME, 
     },
     noCache: noCache,
     fullResponse: true,
-  })
+  };
+  return get(fetchConfig)
 }
