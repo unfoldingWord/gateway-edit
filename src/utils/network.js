@@ -269,14 +269,16 @@ export function onNetworkActionButton(networkError) {
  */
 export function doFetch(url, authentication={}, timeout=HTTP_GET_MAX_WAIT_TIME, noCache=true) {
   const authConfig = authentication?.config || {}
-  return get({
+  const fetchConfig = {
     url: url,
     config: {
       ...authConfig,
+      skipNetworkCheck: true,
       timeout: timeout,
       server: BASE_URL,
     },
     noCache: noCache,
     fullResponse: true,
-  })
+  };
+  return get(fetchConfig)
 }
