@@ -61,7 +61,7 @@ export default function AuthContextProvider(props) {
           results.authenticated = true
         } else
         if (unAuthenticated(httpCode)) {
-          results.authenticated = true
+          results.authenticated = false
           results.loginExpired = true
         } else {
           results.authenticationErrorMessage = `unexpected error response=${httpCode}`
