@@ -214,6 +214,15 @@ export function unAuthenticated(httpCode) {
 }
 
 /**
+ * Determines if an HTTP status code indicates successful authentication
+ * @param {number} httpCode - The HTTP status code to check
+ * @return {boolean} True if the HTTP code is 200 or 204, false otherwise
+ */
+export function authenticated(httpCode) {
+  return (httpCode === 200) || (httpCode === 204);
+}
+
+/**
  * refresh app
  * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
  */

@@ -792,14 +792,13 @@ function WorkspaceContainer() {
     checkUserAuthentication().then((results) => {
       if (results.otherError) {
         console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
-        return;
-      }
-      if (!results.authenticated || results.authenticationError) {
-        console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
-        setAuthError(true);
-      } else {
+      } else
+      if (results.authenticated) {
         console.log(`WorkspaceContainer.mergeValidationCheck - valid login auth, check for merge conflicts mergeCheck = ${mergeCheck}`);
         updateMergeCheck();
+      } else { // response not authenticated
+        console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
+        setAuthError(true);
       }
     })
   }
