@@ -39,7 +39,6 @@ import { getLanguage } from '@common/languages'
 import CircularProgress from '@components/CircularProgress'
 import {
   addNetworkDisconnectError,
-  checkIfNetworkAvailable,
   onNetworkActionButton,
   processNetworkError,
   reloadApp,
@@ -86,10 +85,6 @@ const handleError = (event) => {
   })
 }
 
-const handleOnline = () => {
-  console.warn('[WorkspaceContainer] Online')
-}
-
 function WorkspaceContainer() {
   const router = useRouter()
   const classes = useStyles()
@@ -101,6 +96,7 @@ function WorkspaceContainer() {
     scriptureReference: {},
     wordAlignerStatus: null,
     workspaceReady: false,
+    isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
   })
   const [checkMergeState, setCheckMergeState] = useState(false)
 
@@ -111,6 +107,7 @@ function WorkspaceContainer() {
     scriptureReference,
     wordAlignerStatus,
     workspaceReady,
+    isOnline,
   } = state
 
   function setState(newState) {
@@ -339,6 +336,7 @@ function WorkspaceContainer() {
   // Use useCallback for the offline handler since it needs access to component state
   const handleOffline = useCallback(() => {
     console.warn('[WorkspaceContainer] Offline');
+    setState({ isOnline: false });
 
     // Clear any existing timer first
     if (offlineTimer) {
@@ -361,9 +359,14 @@ function WorkspaceContainer() {
     setOfflineTimer(timer);
   }, [offlineTimer, logout, router, setNetworkError, setLastError]);
 
+  const handleOnline = () => {
+    console.warn('[WorkspaceContainer] Online')
+  }
+
   // Update the online handler to use notistack
   const handleOnlineWithCleanup = useCallback(() => {
     handleOnline();
+    setState({ isOnline: true });
 
     if (offlineTimer) {
       clearTimeout(offlineTimer);
@@ -512,7 +515,7 @@ function WorkspaceContainer() {
         }
         setObsSupport(foundObs)
       }).catch((e) => {
-        console.log(`could not fetch OBS translation for  ${{languageId, owner, server}}`)
+        console.log(`could not fetch OBS translation for  ${{languageId, owner, server}}`, e)
         setObsSupport(false)
       })
     }
@@ -788,10 +791,16 @@ function WorkspaceContainer() {
   async function mergeValidationCheck() {
     const monitor = getMonitor();
     monitor.reset();
+
     const navigatorDefined = navigator !== undefined;
+    let offline_ = !isOnline
     if (!navigatorDefined) {
       console.log(`WorkspaceContainer.mergeValidationCheck - navigator not Defined`);
-    } else if (!navigator.onLine) {
+    } else { // navigator defined
+      offline_ = !navigator.onLine
+    }
+
+    if (offline_) {
       console.log(`WorkspaceContainer.mergeValidationCheck - navigator not online`);
       return;
     }
@@ -809,12 +818,24 @@ function WorkspaceContainer() {
     }
   }
 
-  useEffect(async () => {
-    if (checkMergeState) {
-      await mergeValidationCheck();
-      setCheckMergeState(false); // clear the state
+useEffect(() => {
+  if (!checkMergeState) return
+
+  let cancelled = false
+
+  const runCheck = async () => {
+    await mergeValidationCheck()
+    if (!cancelled) {
+      setCheckMergeState(false)
     }
-  }, [checkMergeState]);
+  }
+
+  runCheck()
+
+  return () => {
+    cancelled = true
+  }
+}, [checkMergeState, mergeValidationCheck])
 
   /**
    * Handles timeout callback logic for managing app inactivity and login validation.
