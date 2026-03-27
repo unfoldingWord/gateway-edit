@@ -45,7 +45,12 @@ export default function AuthContextProvider(props) {
    * @returns {Promise<{authenticated: boolean, authenticationError: boolean, otherError: boolean}>} - authentication status
    */
   async function checkUserAuthentication() {
-    let auth = authentication // get if previously authenticated
+    // Read auth from IndexedDB instead of React state.  This function may
+    // be called from a stale closure (e.g. the Monitor singleton's
+    // setInterval callback) that captured an old `authentication` value.
+    // IndexedDB always contains the latest saved token, so it is immune
+    // to the stale-closure problem.
+    let auth = await myAuthStore.getItem('authentication')
     const results = {
       authenticated: false,
       authenticationErrorMessage: false,
