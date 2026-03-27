@@ -102,6 +102,7 @@ function WorkspaceContainer() {
     wordAlignerStatus: null,
     workspaceReady: false,
   })
+  const [checkMergeState, setCheckMergeState] = useState(false)
 
   const {
     currentVerseReference,
@@ -191,8 +192,6 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
   })
 
-  const minWaitMinites = 5;
-
   const { actions: { checkUserAuthentication } } = useContext(AuthContext)
 
   const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
@@ -260,7 +259,7 @@ function WorkspaceContainer() {
 
           // only do check if not first verse navigation
           if (scriptureReference && Object.keys(scriptureReference).length) {
-            mergeValidationCheck()
+            setCheckMergeState(true)
           }
         }
   },[chapter, verse, bookId, currentVerseReference])
@@ -301,7 +300,7 @@ function WorkspaceContainer() {
           actionButton2Str={translate('retry')}
           onActionButton2={() => {
             setAuthError(false);
-            mergeValidationCheck();
+            setCheckMergeState(true);
           }}
         />)
     } else
@@ -786,7 +785,7 @@ function WorkspaceContainer() {
    *
    * @return {void} This method does not return a value.
    */
-  function mergeValidationCheck() {
+  async function mergeValidationCheck() {
     const monitor = getMonitor();
     monitor.reset();
     const navigatorDefined = navigator !== undefined;
@@ -797,19 +796,25 @@ function WorkspaceContainer() {
       return;
     }
 
-    checkUserAuthentication().then((results) => {
-      if (results.otherError) {
-        console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
-      } else
-      if (results.authenticated) {
-        console.log(`WorkspaceContainer.mergeValidationCheck - valid login auth, check for merge conflicts mergeCheck = ${mergeCheck}`);
-        updateMergeCheck();
-      } else { // response not authenticated
-        console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
-        setAuthError(true);
-      }
-    })
+    const results = await checkUserAuthentication()
+    if (results.otherError) {
+      console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
+    } else
+    if (results.authenticated) {
+      console.log(`WorkspaceContainer.mergeValidationCheck - valid login auth, check for merge conflicts mergeCheck = ${mergeCheck}`);
+      updateMergeCheck();
+    } else { // response not authenticated
+      console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
+      setAuthError(true);
+    }
   }
+
+  useEffect(async () => {
+    if (checkMergeState) {
+      await mergeValidationCheck();
+      setCheckMergeState(false); // clear the state
+    }
+  }, [checkMergeState]);
 
   /**
    * Handles timeout callback logic for managing app inactivity and login validation.
@@ -820,7 +825,7 @@ function WorkspaceContainer() {
    */
   function timeoutCallback(actualTimerElapsedMin, minSinceMonitorStart) {
     console.log(`WorkspaceContainer.timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
-    mergeValidationCheck();
+    setCheckMergeState(true);
   }
 
   /**
