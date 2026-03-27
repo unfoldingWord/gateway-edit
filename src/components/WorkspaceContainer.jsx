@@ -789,24 +789,16 @@ function WorkspaceContainer() {
   function mergeValidationCheck() {
     const monitor = getMonitor();
     monitor.reset();
-    // this queries that DCS API version to see if connected to internet (does not need to be logged in)
-    checkIfNetworkAvailable().then((status) => {
-      if (status.online) {
-        checkUserAuthentication().then((results) => {
-          if (results.otherError) {
-            console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
-            return;
-          }
-          if (!results.authenticated || results.authenticationError) {
-            console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
-            setAuthError(true);
-          } else {
-            console.log(`WorkspaceContainer.mergeValidationCheck - valid login auth, check for merge conflicts mergeCheck = ${mergeCheck}`);
-            updateMergeCheck();
-          }
-        })
-      } else {
-        console.warn(`WorkspaceContainer.mergeValidationCheck - network unavailable, skipping login validation`);
+    checkUserAuthentication().then((results) => {
+      if (results.otherError) {
+        console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
+      } else
+      if (results.authenticated) {
+        console.log(`WorkspaceContainer.mergeValidationCheck - valid login auth, check for merge conflicts mergeCheck = ${mergeCheck}`);
+        updateMergeCheck();
+      } else { // response not authenticated
+        console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
+        setAuthError(true);
       }
     })
   }

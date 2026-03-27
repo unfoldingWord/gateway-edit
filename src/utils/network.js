@@ -221,6 +221,15 @@ export function unAuthenticated(httpCode) {
 }
 
 /**
+ * Determines if an HTTP status code indicates successful authentication
+ * @param {number} httpCode - The HTTP status code to check
+ * @return {boolean} True if the HTTP code is 200 or 204, false otherwise
+ */
+export function authenticated(httpCode) {
+  return (httpCode === 200) || (httpCode === 204);
+}
+
+/**
  * refresh app
  * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
  */
@@ -276,14 +285,16 @@ export function onNetworkActionButton(networkError) {
  */
 export function doFetch(url, authentication={}, timeout=HTTP_GET_MAX_WAIT_TIME, noCache=true) {
   const authConfig = authentication?.config || {}
-  return get({
+  const fetchConfig = {
     url: url,
     config: {
       ...authConfig,
+      skipNetworkCheck: true,
       timeout: timeout,
       server: BASE_URL,
     },
     noCache: noCache,
     fullResponse: true,
-  })
+  };
+  return get(fetchConfig)
 }
