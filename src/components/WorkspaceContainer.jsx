@@ -835,7 +835,7 @@ useEffect(() => {
   return () => {
     cancelled = true
   }
-}, [checkMergeState, mergeValidationCheck])
+}, [checkMergeState])
 
   /**
    * Handles timeout callback logic for managing app inactivity and login validation.

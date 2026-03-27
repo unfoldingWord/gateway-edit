@@ -514,12 +514,7 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.28.6":
-  version "7.28.6"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.28.6.tgz#d267a43cb1836dc4d182cce93ae75ba954ef6d2b"
-  integrity sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==
-
-"@babel/runtime@^7.6.3":
+"@babel/runtime@^7.28.6", "@babel/runtime@^7.6.3":
   version "7.29.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.29.2.tgz#9a6e2d05f4b6692e1801cd4fb176ad823930ed5e"
   integrity sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g==
@@ -1956,9 +1951,9 @@
     prop-types "^15.8.1"
 
 "@mui/styled-engine@npm:@mui/styled-engine-sc@latest":
-  version "7.3.8"
-  resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-7.3.8.tgz#88f40045904d98c9aa16c836b27f6056b635dc59"
-  integrity sha512-/kSONgd01Km27bVqiqx/esp+F3znZCC1AYpJqsNzuYDnn8kLdX1Tv2mkwMLjcScC+Gy7oTIv6wB49JS1/QFwhw==
+  version "7.3.9"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine-sc/-/styled-engine-sc-7.3.9.tgz#98a3922038434678faf4f6ca320aa4b458d05349"
+  integrity sha512-O9JRFpOuqXy7+p9jPk6SHzbkWX/5PqO3j3VrNgGZDy4G/KvvSPbdsx/U+2VF7LHtbSAzQ03Sw6MJTW4bSKJEgA==
   dependencies:
     "@babel/runtime" "^7.28.6"
     "@types/hoist-non-react-statics" "^3.3.7"
@@ -5090,10 +5085,10 @@ dayjs@^1.10.4:
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
   integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
 
-dcs-branch-merger@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/dcs-branch-merger/-/dcs-branch-merger-1.4.1.tgz#57a2819c8189f8f23325eff8bebf4f7c698b2c49"
-  integrity sha512-IJbG5OpZQkxNDYao+T5MOrtVatvzDBGsuEwoZ7kq214OCTwlR+J96ApyamNeg+/i5ZQ8oKa3H4OMM6NFp6s7Zw==
+dcs-branch-merger@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/dcs-branch-merger/-/dcs-branch-merger-1.4.2.tgz#52071c052fa2859c1d335f1109e6324ab9b07b5d"
+  integrity sha512-wUaiAvYBsfQ53KmEt4UYKGnO+1uUM3CNRHezLGtYGfKgNKvDNqO4kVvb0zOk28PY07yLL7FNi0yfk9u4RwGWQA==
   dependencies:
     path "0.12.7"
 
@@ -12946,16 +12941,16 @@ transform-runtime@0.0.0:
   resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
   integrity sha512-PX3vXzO8lucrVm82vZb7BABBLHyMDPGzn9zElHr+DnvtS3JPXtqwB1iTRe+D6iFXYmjtAF3zH7O0Xc5XpLpMEg==
 
-translation-helps-rcl@3.6.9:
-  version "3.6.9"
-  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.6.9.tgz#90605f9e26b97f1f7bb2f6f5f52e29a52cf16bab"
-  integrity sha512-uvVLk7U4Y0r2rgUVfjAA8LFKaqdzeDEQndgdRNG1/bXyiUG4FcHWaHQIlWMcfhLf+SncmGUIfz5rs7JCuadoog==
+translation-helps-rcl@3.6.10:
+  version "3.6.10"
+  resolved "https://registry.yarnpkg.com/translation-helps-rcl/-/translation-helps-rcl-3.6.10.tgz#33fdebfda10862cbac3acf5699c14d60118d5d1e"
+  integrity sha512-7Bpm9SL4OSbe3/p7wQK7+B7G2qsv6neNQmAxyvG4k0aFXLuLiTwO0HqY7ggMFDTOnBOW8Cb2uETpnk84PcU6gA==
   dependencies:
     "@gwdevs/extensible-rcl" "^1.0.1"
     "@mui/styled-engine" "npm:@mui/styled-engine-sc@latest"
     axios "^0.27.2"
     bible-reference-range "^1.1.0"
-    dcs-branch-merger "1.4.1"
+    dcs-branch-merger "1.4.2"
     deep-equal "^2.0.5"
     react-draggable "^4.4.3"
     styled-components "^5.2.1"

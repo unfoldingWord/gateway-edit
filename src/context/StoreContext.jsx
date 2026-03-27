@@ -73,7 +73,8 @@ export default function StoreContextProvider(props) {
               newCardData
             })
           } else {
-            console.log(`updateMergeState() card ${cardId} something else changed`, {oldCardData, newCardData})
+            // it appears that just the functions change
+            // console.log(`updateMergeState() card ${cardId} something else changed`, {oldCardData, newCardData})
           }
         } catch (e) {
           console.log(`updateMergeState() card ${cardId} compare exception`, {oldCardData, newCardData}, e)
