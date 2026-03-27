@@ -113,6 +113,20 @@ export async function getNetworkError(error, httpCode ) {
     serverHttpCode,
   }
 
+  // If the server responded with 401/403, it IS reachable — this is an auth error,
+  // not a connectivity problem. Skip the server fault check entirely.
+  if (unAuthenticated(httpCode) || unAuthenticated(serverHttpCode)) {
+    errorMessage = AUTHENTICATION_ERROR
+    lastError.errorMessage = errorMessage
+    return {
+      errorMessage,
+      actionButtonText: LOGIN,
+      authenticationError: true,
+      lastError,
+      [NETWORK_DISCONNECT_ERROR]: false,
+    }
+  }
+
   let serverDisconnect = isServerDisconnected(error) // check if we already have a network disconnect error
   let serverDisconnectMessage
 
@@ -124,22 +138,15 @@ export async function getNetworkError(error, httpCode ) {
   }
 
   let actionButtonText = !serverDisconnect ? SEND_FEEDBACK : null
-  let authenticationError = false
 
   if (serverDisconnectMessage) {
     errorMessage = serverDisconnectMessage
-  } else {
-    if (unAuthenticated(httpCode)) {
-      errorMessage = AUTHENTICATION_ERROR
-      actionButtonText = LOGIN
-      authenticationError = true
-    }
   }
   lastError.errorMessage = errorMessage
   return {
     errorMessage,
     actionButtonText,
-    authenticationError,
+    authenticationError: false,
     lastError,
     [NETWORK_DISCONNECT_ERROR]: serverDisconnect,
   }
