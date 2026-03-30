@@ -10,8 +10,6 @@ export default function ErrorPage({ statusCode }) {
     return <Error statusCode={statusCode} />
   }
 
-  localStorage.clear()
-
   const handleClick = (e) => {
     e.preventDefault()
     router.reload()
@@ -41,7 +39,7 @@ export default function ErrorPage({ statusCode }) {
           <path fill='#D8DCE5' d="M259.17,317.968V216.821c0-3.696,2.69-7.548,7.21-9.96c-2.945-1.518-6.511-2.444-10.271-2.444c-10.494,0-17.544,6.414-17.544,12.404v101.147c0,7.163,7.214,12.166,17.544,12.166c3.934,0,7.449-0.752,10.299-2.069C261.906,325.954,259.17,322.372,259.17,317.968z"/>
         </svg>
         <h2 className='m-0 p-0'>
-          An unexpected error has occurred. The application cache has been cleared.
+          An unexpected error has occurred.
         </h2>
         <button
           onClick={handleClick}

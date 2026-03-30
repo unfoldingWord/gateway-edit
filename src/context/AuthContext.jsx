@@ -106,29 +106,31 @@ export default function AuthContextProvider(props) {
     const auth = await myAuthStore.getItem('authentication')
 
     if (auth) { // verify that auth is still valid
-      doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME)
-        .then(response => {
-          const httpCode = response?.status || 0
+      try {
+        const response = await doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME)
+        const httpCode = response?.status || 0
 
-          if (!authenticated(httpCode)) {
-            console.log(`getAuth() - error fetching user info, status code ${httpCode}`)
+        if (!authenticated(httpCode)) { // not http 200 nor 204
+          console.log(`getAuth() - error fetching user info, status code ${httpCode}`)
 
-            if (unAuthenticated(httpCode)) {
-              console.error(`getAuth() - user not authenticated, going to login`)
-              logout()
-            } else {
-              processError(null, httpCode)
-            }
+          if (unAuthenticated(httpCode)) { // http 401 or 403
+            console.error(`getAuth() - user not authenticated, going to login`)
+            await logout()
+            return null
+          } else { // other error
+            processError(null, httpCode)
           }
-        }).catch(e => {
-          if (e.toString().includes('401') || e.toString().includes('403')) {
-            console.error(`getAuth() - user token expired`)
-            logout()
-          } else {
-            console.warn(`getAuth() - hard error fetching user info, error=`, e)
-            processError(e)
-          }
-        })
+        }
+      } catch (e) {
+        if (e.toString().includes('401') || e.toString().includes('403')) {
+          console.error(`getAuth() - user token expired/invalid`)
+          await logout()
+          return null
+        } else {
+          console.warn(`getAuth() - hard error fetching user info, error=`, e)
+          processError(e)
+        }
+      }
     }
     return auth
   }
