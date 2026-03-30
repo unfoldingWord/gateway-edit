@@ -66,14 +66,15 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
+
 const wordAlignmentScreenRatio = 0.9
 const wordAlignmentMaxHeightPx = 1000
-
-const buildId = getBuildId()
-console.log(`Gateway Edit App Version`, buildId)
-
+const maximumWaitTime = 15; // time to wait before checking for merge status changes.  Resets on navigation
 const OFFLINE_TIMEOUT = 5000; // Move timeout constant outside component
 
+const buildId = getBuildId()
+
+console.log(`Gateway Edit App Version`, buildId)
 // Move these handlers outside the component
 const handleError = (event) => {
   console.warn(`[WorkspaceContainer] Error:`, {
@@ -902,7 +903,6 @@ useEffect(() => {
       const monitor = getMonitor()
       if (!monitor.initialized()) {
         console.log(`WorkspaceContainer - initializing Monitor`)
-        const maximumWaitTime = 15; // time to wait before checking for merge status changes.  Resets on navigation
         monitor.start(timeoutCallback, maximumWaitTime)
       }
     }
