@@ -122,15 +122,15 @@ export default function AuthContextProvider(props) {
           }
         }
       } catch (e) {
-          if (e.toString().includes('401')) { // check if 401 code in exception
-            console.error(`getAuth() - user token expired`)
-            await logout()
-            return null
-          } else {
-            console.warn(`getAuth() - hard error fetching user info, error=`, e)
-            processError(e)
-          }
+        if (e.toString().includes('401') || e.toString().includes('403')) {
+          console.error(`getAuth() - user token expired/invalid`)
+          await logout()
+          return null
+        } else {
+          console.warn(`getAuth() - hard error fetching user info, error=`, e)
+          processError(e)
         }
+      }
     }
     return auth
   }

@@ -288,10 +288,10 @@ export function doFetch(url, authentication={}, timeout=HTTP_GET_MAX_WAIT_TIME, 
   const fetchConfig = {
     url: url,
     config: {
-      server: BASE_URL,
       ...authConfig,
       skipNetworkCheck: true,
       timeout: timeout,
+      server: BASE_URL,
     },
     noCache: noCache,
     fullResponse: true,
