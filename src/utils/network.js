@@ -113,6 +113,20 @@ export async function getNetworkError(error, httpCode ) {
     serverHttpCode,
   }
 
+  // If the server responded with 401/403, it IS reachable — this is an auth error,
+  // not a connectivity problem. Skip the server fault check entirely.
+  if (unAuthenticated(httpCode) || unAuthenticated(serverHttpCode)) {
+    errorMessage = AUTHENTICATION_ERROR
+    lastError.errorMessage = errorMessage
+    return {
+      errorMessage,
+      actionButtonText: LOGIN,
+      authenticationError: true,
+      lastError,
+      [NETWORK_DISCONNECT_ERROR]: false,
+    }
+  }
+
   let serverDisconnect = isServerDisconnected(error) // check if we already have a network disconnect error
   let serverDisconnectMessage
 
@@ -124,22 +138,15 @@ export async function getNetworkError(error, httpCode ) {
   }
 
   let actionButtonText = !serverDisconnect ? SEND_FEEDBACK : null
-  let authenticationError = false
 
   if (serverDisconnectMessage) {
     errorMessage = serverDisconnectMessage
-  } else {
-    if (unAuthenticated(httpCode)) {
-      errorMessage = AUTHENTICATION_ERROR
-      actionButtonText = LOGIN
-      authenticationError = true
-    }
   }
   lastError.errorMessage = errorMessage
   return {
     errorMessage,
     actionButtonText,
-    authenticationError,
+    authenticationError: false,
     lastError,
     [NETWORK_DISCONNECT_ERROR]: serverDisconnect,
   }
@@ -214,6 +221,15 @@ export function unAuthenticated(httpCode) {
 }
 
 /**
+ * Determines if an HTTP status code indicates successful authentication
+ * @param {number} httpCode - The HTTP status code to check
+ * @return {boolean} True if the HTTP code is 200 or 204, false otherwise
+ */
+export function authenticated(httpCode) {
+  return (httpCode === 200) || (httpCode === 204);
+}
+
+/**
  * refresh app
  * @param {object} networkError - contains details about how to display and handle network error - created by processNetworkError
  */
@@ -269,14 +285,16 @@ export function onNetworkActionButton(networkError) {
  */
 export function doFetch(url, authentication={}, timeout=HTTP_GET_MAX_WAIT_TIME, noCache=true) {
   const authConfig = authentication?.config || {}
-  return get({
+  const fetchConfig = {
     url: url,
     config: {
       server: BASE_URL,
       ...authConfig,
+      skipNetworkCheck: true,
       timeout: timeout,
     },
     noCache: noCache,
     fullResponse: true,
-  })
+  };
+  return get(fetchConfig)
 }

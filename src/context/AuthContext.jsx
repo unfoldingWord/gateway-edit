@@ -10,6 +10,7 @@ import {
   TOKEN_ID,
 } from '@common/constants'
 import {
+  authenticated,
   doFetch,
   processNetworkError,
   unAuthenticated,
@@ -31,7 +32,7 @@ export default function AuthContextProvider(props) {
    * @param {number} httpCode - http code returned
    */
   function processError(error, httpCode=0) {
-    processNetworkError(error, httpCode, logout, null, setNetworkError, null, null )
+    processNetworkError(error, httpCode, null, null, setNetworkError, null, null )
   }
 
   const myAuthStore = localforage.createInstance({
@@ -47,26 +48,35 @@ export default function AuthContextProvider(props) {
     let auth = authentication // get if previously authenticated
     const results = {
       authenticated: false,
-      authenticationError: false,
+      authenticationErrorMessage: false,
       otherError: false,
+      loginExpired: false,
     }
 
     if (auth) { // if previously authenticated, verify still authenticated
       try {
         const response = await doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME);
         const httpCode = response?.status || 0;
-        if (httpCode === 200) {
+        if (authenticated(httpCode)) {
           results.authenticated = true
-        } else if (unAuthenticated(httpCode)) {
-          results.authenticationError = `Server returned ${httpCode}`
+        } else
+        if (unAuthenticated(httpCode)) {
+          results.authenticated = false
+          results.loginExpired = true
         } else {
-          results.otherError = `Server returned ${httpCode}`
+          results.authenticationErrorMessage = `unexpected error response=${httpCode}`
+          results.otherError = true;
         }
       } catch (e) {
-        if (e.toString().includes('401')) { // check if 401 code in exception
-          results.authenticationError = e.toString();
+        if (e.toString().includes('401') || e.toString().includes('403')) {
+          // console.error(`getAuth() - user token expired`)
+          results.authenticationErrorMessage = e.toString();
+          results.authenticated = false
+          results.loginExpired = true
         } else {
-          results.otherError = e.toString();
+          // console.warn(`getAuth() - hard error fetching user info, error=`, e)
+          results.authenticationErrorMessage = e.toString();
+          results.otherError = true;
         }
       }
     }
@@ -100,7 +110,7 @@ export default function AuthContextProvider(props) {
         const response = await doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME)
         const httpCode = response?.status || 0
 
-        if (httpCode !== 200) {
+        if (!authenticated(httpCode)) {
           console.log(`getAuth() - error fetching user info, status code ${httpCode}`)
 
           if (unAuthenticated(httpCode)) {
@@ -112,15 +122,15 @@ export default function AuthContextProvider(props) {
           }
         }
       } catch (e) {
-        if (e.toString().includes('401')) { // check if 401 code in exception
-          console.error(`getAuth() - user token expired`)
-          await logout()
-          return null
-        } else {
-          // Network error — don't logout, just warn. Token may still be valid.
-          console.warn(`getAuth() - hard error fetching user info, error=`, e)
+          if (e.toString().includes('401')) { // check if 401 code in exception
+            console.error(`getAuth() - user token expired`)
+            await logout()
+            return null
+          } else {
+            console.warn(`getAuth() - hard error fetching user info, error=`, e)
+            processError(e)
+          }
         }
-      }
     }
     return auth
   }

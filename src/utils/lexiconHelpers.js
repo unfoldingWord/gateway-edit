@@ -104,6 +104,7 @@ export async function getLexiconData(
     server,
     ...httpConfig,
     noCache: true,
+    skipNetworkCheck: true,
   }
   const origLangId = isNT ? 'el-x-koine' : 'hbo'
   const resourceId = core.getLexiconResourceID(isNT)

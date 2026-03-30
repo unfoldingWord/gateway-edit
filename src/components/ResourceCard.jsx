@@ -227,7 +227,7 @@ export default function ResourceCard({
   }, [fetchResponse, savedContent])
 
   const repo = `${languageId}_${cardResourceId}`
-  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: branchDetermined ? userEditBranchName : undefined, tokenid: authentication?.token?.sha1 });
+  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: branchDetermined ? userEditBranchName : undefined, tokenid: authentication?.token?.sha1, userId: authentication?.user?.login });
 
   const {
     state: {
