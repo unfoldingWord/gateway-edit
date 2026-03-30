@@ -110,14 +110,14 @@ export default function AuthContextProvider(props) {
         const response = await doFetch(`${server}/api/v1/user`, auth, HTTP_GET_MAX_WAIT_TIME)
         const httpCode = response?.status || 0
 
-        if (!authenticated(httpCode)) {
+        if (!authenticated(httpCode)) { // not http 200 nor 204
           console.log(`getAuth() - error fetching user info, status code ${httpCode}`)
 
-          if (unAuthenticated(httpCode)) {
+          if (unAuthenticated(httpCode)) { // http 401 or 403
             console.error(`getAuth() - user not authenticated, going to login`)
             await logout()
             return null
-          } else {
+          } else { // other error
             processError(null, httpCode)
           }
         }
