@@ -790,6 +790,7 @@ function WorkspaceContainer() {
    * @return {void} This method does not return a value.
    */
   async function mergeValidationCheck() {
+    console.log(`WorkspaceContainer.mergeValidationCheck - validation check started`);
     const monitor = getMonitor();
     monitor.reset();
 
