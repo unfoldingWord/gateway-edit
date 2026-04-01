@@ -790,9 +790,6 @@ function WorkspaceContainer() {
    * @return {void} This method does not return a value.
    */
   async function mergeValidationCheck() {
-    const monitor = getMonitor();
-    monitor.reset();
-
     const navigatorDefined = navigator !== undefined;
     let offline_ = !isOnline
     if (!navigatorDefined) {
@@ -807,6 +804,10 @@ function WorkspaceContainer() {
     }
 
     const results = await checkUserAuthentication()
+
+    const monitor = getMonitor();
+    monitor.reset();
+
     if (results.otherError) {
       console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
     } else
@@ -849,6 +850,12 @@ useEffect(() => {
     console.log(`WorkspaceContainer.timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
     setCheckMergeState(true);
   }
+
+  useEffect(() => {
+    return () => {
+      getMonitor().stop()
+    }
+  }, [])
 
   /**
    * Effect hook that loads and caches original scripture book data.
