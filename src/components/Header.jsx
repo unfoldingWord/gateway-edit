@@ -156,7 +156,7 @@ export default function Header({
         setCardToMerge(showIfNewer(cardToMerge))
       }
     }
-  }, [mergeStatusForCards])
+  }, [mergeStatusForCards, mergeCheck])
 
  /**
   * render an error dialog

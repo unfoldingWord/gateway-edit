@@ -789,7 +789,7 @@ function WorkspaceContainer() {
    *
    * @return {void} This method does not return a value.
    */
-  async function mergeValidationCheck() {
+  const mergeValidationCheck = useCallback(async () => {
     const monitor = getMonitor();
     monitor.reset();
 
@@ -817,26 +817,41 @@ function WorkspaceContainer() {
       console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
       setAuthError(true);
     }
-  }
+  }, [isOnline, checkUserAuthentication, mergeCheck, updateMergeCheck, setAuthError])
 
-useEffect(() => {
-  if (!checkMergeState) return
+  const mergeValidationRunningRef = useRef(false)
 
-  let cancelled = false
+  useEffect(() => {
+    if (!checkMergeState) return
 
-  const runCheck = async () => {
-    await mergeValidationCheck()
-    if (!cancelled) {
-      setCheckMergeState(false)
+    let cancelled = false
+
+      const runCheck = async () => {
+        if (mergeValidationRunningRef.current) {
+          console.log(`WorkspaceContainer - mergeValidationCheck already running, skipping`)
+          if (!cancelled) {
+            setCheckMergeState(false)
+          }
+          return
+        }
+
+        mergeValidationRunningRef.current = true
+        try {
+          await mergeValidationCheck()
+        } finally {
+          mergeValidationRunningRef.current = false
+          if (!cancelled) {
+            setCheckMergeState(false)
+          }
+        }
+      }
+
+    runCheck()
+
+    return () => {
+      cancelled = true
     }
-  }
-
-  runCheck()
-
-  return () => {
-    cancelled = true
-  }
-}, [checkMergeState])
+  }, [checkMergeState, mergeValidationCheck])
 
   /**
    * Handles timeout callback logic for managing app inactivity and login validation.
@@ -907,7 +922,6 @@ useEffect(() => {
       }
     }
   }, [originalScriptureResults?.bookObjects])
-
 
   /**
    * Effect hook that pre-caches lexicon glosses for the current verse reference.

@@ -22,6 +22,14 @@ export const AuthContext = createContext({})
 
 export default function AuthContextProvider(props) {
   const [authentication, setAuthentication] = useState(null)
+  const authenticationRef = useRef(authentication)
+
+  // Keep ref in sync with state
+  const handleSetAuthentication = (auth) => {
+    authenticationRef.current = auth
+    setAuthentication(auth)
+  }
+
   const [networkError, setNetworkError] = useState(null)
   const defaultServer = (process.env.NEXT_PUBLIC_BUILD_CONTEXT === 'production') ? BASE_URL : QA_BASE_URL
   const [server, setServer] = useLocalStorage(SERVER_KEY, defaultServer)
@@ -45,7 +53,7 @@ export default function AuthContextProvider(props) {
    * @returns {Promise<{authenticated: boolean, authenticationError: boolean, otherError: boolean}>} - authentication status
    */
   async function checkUserAuthentication() {
-    let auth = authentication // get if previously authenticated
+    let auth = authenticationRef.current // always read latest value via ref
     const results = {
       authenticated: false,
       authenticationErrorMessage: false,
@@ -162,7 +170,7 @@ export default function AuthContextProvider(props) {
 
   async function logout() {
     await myAuthStore.removeItem('authentication')
-    setAuthentication(null)
+    handleSetAuthentication(null)
   }
 
   const value = {
@@ -189,7 +197,7 @@ export default function AuthContextProvider(props) {
           timeout: HTTP_GET_MAX_WAIT_TIME,
         }}
         authentication={authentication}
-        onAuthentication={setAuthentication}
+        onAuthentication={handleSetAuthentication}
         loadAuthentication={getAuth}
         saveAuthentication={saveAuth}
         onError={onError}
