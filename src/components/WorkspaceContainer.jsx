@@ -851,6 +851,9 @@ useEffect(() => {
     setCheckMergeState(true);
   }
 
+  /**
+   * Effect hook that manages cleanup when component unmounts.
+   */
   useEffect(() => {
     return () => {
       getMonitor().stop()
