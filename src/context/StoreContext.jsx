@@ -145,7 +145,6 @@ export default function StoreContextProvider(props) {
   const [cardsSaving, setCardsSaving] = useState([])
   const [cardsLoadingUpdate, setCardsLoadingUpdate] = useState([])
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
-  const mergeCheckRef = useRef(0)
   const [mergeCheck, setMergeCheck] = useState(0)
   const [authError, setAuthError] = useState(0)
   const transtateRef = useRef(null)
@@ -162,8 +161,7 @@ export default function StoreContextProvider(props) {
   }
 
   function updateMergeCheck() {
-    mergeCheckRef.current += 1
-    setMergeCheck(mergeCheckRef.current)
+    setMergeCheck(prev => prev + 1)
   }
 
   const {
