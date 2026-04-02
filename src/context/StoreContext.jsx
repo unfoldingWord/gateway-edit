@@ -150,6 +150,7 @@ export default function StoreContextProvider(props) {
   const [authError, setAuthError] = useState(0)
   const transtateRef = useRef(null)
   const layoutSaveTimerRef = useRef(null)
+  const userSavedSettingsRef = useRef(null)
 
   function translate(key, options) {
     if (transtateRef.current) {
@@ -184,14 +185,15 @@ export default function StoreContextProvider(props) {
   // On login, load layout from server so it survives incognito sessions and cache clears.
   // localStorage remains the instant fallback; server value wins when available.
   useEffect(() => {
-    if (authentication) {
-      getServerLayout(server, authentication).then(serverLayout => {
-        if (serverLayout) {
-          setCurrentLayout(serverLayout)
+    if (authentication?.user?.username && authentication?.token?.sha1) {
+      getServerLayout(server, authentication).then(settings => {
+        userSavedSettingsRef.current = settings;
+        if (settings?.layout) {
+          setCurrentLayout(settings?.layout)
         }
       })
     }
-  }, [authentication?.user?.username])
+  }, [authentication?.user?.username, authentication?.token?.sha1])
 
   // Debounced save: persist layout to server ~1.5s after the last drag/resize,
   // avoiding excessive API calls during continuous layout changes.
@@ -202,7 +204,7 @@ export default function StoreContextProvider(props) {
       saveServerLayout(server, authentication, currentLayout)
     }, 1500)
     return () => clearTimeout(layoutSaveTimerRef.current)
-  }, [currentLayout])
+  }, [server, authentication, currentLayout])
 
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)

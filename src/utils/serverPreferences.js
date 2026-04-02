@@ -23,15 +23,14 @@ function getAuthHeader(authentication) {
 
 /**
  * Retrieve the saved resource layout from the user's server account.
- * Returns null if no layout is stored, if the user is not authenticated,
- * or if the server request fails.
+ * Returns the layout and whether any server settings exist.
  * @param {string} server - base URL, e.g. 'https://git.door43.org'
  * @param {object} authentication
- * @return {Promise<object|null>}
+ * @return {Promise<{layout: object|null, hasSettings: boolean}>}
  */
 export async function getServerLayout(server, authentication) {
   const authHeader = getAuthHeader(authentication)
-  if (!authHeader) return null
+  if (!authHeader) return { layout: null, hasSettings: false }
 
   try {
     const response = await fetch(`${server}/api/v1/user/settings`, {
@@ -41,9 +40,11 @@ export async function getServerLayout(server, authentication) {
       },
     })
 
-    if (!response.ok) return null
+    if (!response.ok) return { layout: null, hasSettings: false }
 
     const settings = await response.json()
+    const hasSettings = Array.isArray(settings) && settings.length > 0
+
     // Gitea returns an array of {key, value} objects
     const entry = Array.isArray(settings)
       ? settings.find(s => s.key === LAYOUT_KEY)
@@ -51,10 +52,13 @@ export async function getServerLayout(server, authentication) {
 
     if (!entry?.value) return null
 
-    return JSON.parse(entry.value)
+    return {
+      layout: JSON.parse(entry.value),
+      hasSettings,
+    }
   } catch (e) {
     console.warn('getServerLayout() - failed to load layout from server:', e)
-    return null
+    return { layout: null, hasSettings: false }
   }
 }
 
