@@ -48,7 +48,7 @@ export default function AuthContextProvider(props) {
     let auth = authentication // get if previously authenticated
     const results = {
       authenticated: false,
-      authenticationErrorMessage: false,
+      authenticationErrorMessage: null,
       otherError: false,
       loginExpired: false,
     }

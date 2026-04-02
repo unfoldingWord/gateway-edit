@@ -32,7 +32,7 @@ import {
 } from 'single-scripture-rcl'
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
-import { getLatestBibleRepo, getResourceBibles } from '@utils/resources'
+import { delay, getLatestBibleRepo, getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { BIBLES_ABBRV_INDEX, isNT } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
@@ -43,7 +43,12 @@ import {
   processNetworkError,
   reloadApp,
 } from '@utils/network'
-import { HTTP_CONFIG } from '@common/constants'
+import {
+  HTTP_CONFIG,
+  LOCAL_NETWORK_DISCONNECTED_ERROR,
+  NETWORK_ERROR,
+  RETRY
+} from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
@@ -149,7 +154,7 @@ function WorkspaceContainer() {
       server,
       supportedBibles,
       taArticle,
-      tokenNetworkError,
+      tokenNetworkError, // authentication error
       useUserLocalStorage,
     },
     actions: {
@@ -271,8 +276,67 @@ function WorkspaceContainer() {
     processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
   }
 
+  /**
+   * Updates the state to include the provided network error message or object.
+   *
+   * @param {string|Object} error - The network error to be set, can be an error message or an error object.
+   * @return {void} This method does not return a value.
+   */
   function setNetworkError( error ) {
     setState( { networkError: error })
+  }
+
+  /**
+   * Attempts to recheck the network connectivity and updates the network or merge state accordingly.
+   *
+   * @param {Error} networkDisconnectError - The error object representing the network disconnection error.
+   * @return {void} This function does not return any value.
+   */
+  async function retryNetworkCheck(networkDisconnectError) {
+    setNetworkError(null)
+    await delay(1000);
+    const networkDisconnectError_ = { ...networkDisconnectError }
+
+    const currentOnline =
+      typeof navigator !== 'undefined'
+        ? navigator.onLine
+        : isOnline
+
+    if (!currentOnline) {
+      await delay(1000);
+      setNetworkError(networkDisconnectError_)
+      return
+    }
+
+    setCheckMergeState(true)
+  }
+
+  /**
+   * Displays a network disconnect error popup with retry functionality.
+   *
+   * Creates a modal error dialog when the application detects a network disconnection.
+   * The dialog provides options to close the error or retry the network connection check.
+   *
+   * @returns {JSX.Element} An ErrorPopup component configured for network disconnect errors
+   */
+  function showNetworkDisconnectError() {
+    const retryButtonStr = RETRY
+    const retryDefault = true // if retry button enabled, make it default button
+    const closeButtonDefault = !retryDefault // otherwise close button is default
+    const networkDisconnectError = {...networkError}
+
+    return (
+      <ErrorPopup
+        title={NETWORK_ERROR}
+        message={networkError.errorMessage}
+        closeButtonDefault={closeButtonDefault}
+        hideClose={false}
+        onClose={() => { setNetworkError(null) }}
+        actionButtonStr={retryButtonStr}
+        actionButtonDefault={true}
+        onActionButton={() => retryNetworkCheck(networkDisconnectError)}
+      />
+    )
   }
 
   /**
@@ -318,16 +382,22 @@ function WorkspaceContainer() {
         />
       )
     } else if (networkError) { // for all other workspace network errors
-      return (
-        <NetworkErrorPopup
-          networkError={networkError}
-          setNetworkError={setNetworkError}
-          onActionButton={onNetworkActionButton}
-          hideClose={false}
-          /* show reload if send feedback not enabled */
-          onRetry={!networkError.actionButtonText ? reloadApp : null}
-        />
-      )
+      const offlineError = (networkError.errorMessage === LOCAL_NETWORK_DISCONNECTED_ERROR)
+      if (offlineError) {
+        console.log(`showNetworkError() - offline: ${offlineError}`)
+        return showNetworkDisconnectError()
+      } else {
+        return (
+          <NetworkErrorPopup
+            networkError={networkError}
+            setNetworkError={setNetworkError}
+            onActionButton={onNetworkActionButton}
+            hideClose={false}
+            /* show reload if send feedback not enabled */
+            onRetry={!networkError.actionButtonText ? reloadApp : null}
+          />
+        )
+      }
     }
     return null
   }
@@ -790,9 +860,6 @@ function WorkspaceContainer() {
    * @return {void} This method does not return a value.
    */
   async function mergeValidationCheck() {
-    const monitor = getMonitor();
-    monitor.reset();
-
     const navigatorDefined = navigator !== undefined;
     let offline_ = !isOnline
     if (!navigatorDefined) {
@@ -807,6 +874,10 @@ function WorkspaceContainer() {
     }
 
     const results = await checkUserAuthentication()
+
+    const monitor = getMonitor();
+    monitor.reset();
+
     if (results.otherError) {
       console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
     } else
@@ -849,6 +920,15 @@ useEffect(() => {
     console.log(`WorkspaceContainer.timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
     setCheckMergeState(true);
   }
+
+  /**
+   * Effect hook that manages cleanup when component unmounts.
+   */
+  useEffect(() => {
+    return () => {
+      getMonitor().stop()
+    }
+  }, [])
 
   /**
    * Effect hook that loads and caches original scripture book data.
