@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { NETWORK_ERROR, RETRY } from '@common/constants'
+import { NETWORK_ERROR, RELOAD } from '@common/constants'
 import ErrorPopup from '@components/ErrorPopUp'
 import SaveIcon from '@material-ui/icons/Save'
 
@@ -10,11 +10,11 @@ export default function NetworkErrorPopup(
     setNetworkError,
     onActionButton,
     onRetry,
-    title,
+    title = NETWORK_ERROR,
     closeButtonStr,
     onClose,
-    hideClose,
-    dimBackground,
+    hideClose = false,
+    dimBackground = true,
   }) {
   const retryButtonStr = onRetry ? RELOAD : ''
   const retryDefault = !!onRetry // if retry button enabled, make it default button
@@ -40,12 +40,6 @@ export default function NetworkErrorPopup(
       onActionButton2={() => onRetry && onRetry(networkError)}
     />
   )
-}
-
-NetworkErrorPopup.defaultProps = {
-  title: NETWORK_ERROR,
-  hideClose: false,
-  dimBackground: true,
 }
 
 NetworkErrorPopup.propTypes = {
