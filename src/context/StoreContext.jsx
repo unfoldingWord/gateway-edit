@@ -137,6 +137,7 @@ export default function StoreContextProvider(props) {
     chapter: '1',
     verse: '1',
   })
+  const [logosSync, setLogosSync] = useUserLocalStorage('logosSync', false)
 
   const [greekRepoUrl, setGreekRepoUrl] = useLocalStorage('greekRepoUrl', null)
   const [hebrewRepoUrl, setHebrewRepoUrl] = useLocalStorage('hebrewRepoUrl', null)
@@ -219,6 +220,7 @@ export default function StoreContextProvider(props) {
       languageId,
       lastError,
       loggedInUser: username,
+      logosSync,
       mainScreenRef,
       mergeCheck,
       mergeStatusForCards,
@@ -252,6 +254,7 @@ export default function StoreContextProvider(props) {
       setScriptureOwner,
       setLanguageId,
       setLastError,
+      setLogosSync,
       setObsSupport,
       setOwner,
       setQuote,
