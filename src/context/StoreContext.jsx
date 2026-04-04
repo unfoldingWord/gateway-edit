@@ -147,6 +147,7 @@ export default function StoreContextProvider(props) {
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
   const [mergeCheck, setMergeCheck] = useState(0)
   const [authError, setAuthError] = useState(0)
+  const [bibleRelations, setBibleRelations] = useState([])
   const transtateRef = useRef(null)
 
   function translate(key, options) {
@@ -209,6 +210,7 @@ export default function StoreContextProvider(props) {
       authError,
       authentication,
       bibleReference,
+      bibleRelations,
       cardsLoadingUpdate,
       cardsLoadingMerge,
       cardsSaving,
@@ -241,6 +243,7 @@ export default function StoreContextProvider(props) {
       onReferenceChange,
       setAppRef,
       setAuthError,
+      setBibleRelations,
       setCardsLoadingMerge,
       setCardsLoadingUpdate,
       setCardsSaving,

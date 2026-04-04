@@ -188,6 +188,21 @@ export async function getLatestBibleRepo(server, org, lang, bible, processError)
   return repo
 }
 
+/**
+ * Parses a repository name in the format "languageId/resourceId" into its components.
+ * @param {string} repoName - The repository name to parse (e.g., "en/ult")
+ * @return {{languageId: string, resourceId: string}} An object containing the languageId and resourceId
+ */
+export function parseRepoName(repoName) {
+  const [languageId, resourceId] = repoName.trim().split('/')
+  return {languageId, resourceId}
+}
+
+/**
+ * Creates a promise that resolves after a specified delay
+ * @param {number} ms - The delay in milliseconds
+ * @return {Promise<void>} A promise that resolves after the specified delay
+ */
 export function delay(ms) {
   return new Promise((resolve) =>
     setTimeout(resolve, ms),

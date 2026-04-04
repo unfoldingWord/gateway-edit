@@ -34,7 +34,7 @@ const { tsvsObjectToFileString } = tsvDataActions
 import { useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import isEqual from 'deep-equal'
-import { getResourceMessage } from '@utils/resources'
+import { getResourceMessage, parseRepoName } from '@utils/resources'
 import {
   HTTP_CONFIG,
   RESOURCE_HTTP_CONFIG,
@@ -204,6 +204,43 @@ export default function ResourceCard({
     verse: _reference?.verse,
     viewMode,
   })
+
+  const excludeResourceIds = ['ta', 'tn', 'tq', 'twl', 'tw']
+  const excludeLanguageIds = ['hbo', 'el-x-koine']
+
+  useEffect(() => {
+    if (resource?.manifest) {
+      if (resourceId === 'tn') { // tN manifest is the index to the resources used for this org
+        const relations = resource?.manifest?.dublin_core?.relation;
+        if (relations) {
+          if (relations.length >= 2) {
+            // get valid bible list
+            const validBibles = [];
+            for (const relation of relations) {
+              const {languageId, resourceId} = parseRepoName(relation)
+              if (languageId && resourceId) {
+                if (!excludeResourceIds.includes(resourceId) && !excludeLanguageIds.includes(languageId)) {
+                  validBibles.push({languageId, resourceId})
+                }
+              }
+            }
+            if (validBibles.length >= 2) {
+              console.log('ResourceCard() resource manifest relations', validBibles)
+              if (!isEqual(validBibles, bibleRelations)) { // only update if different
+                setBibleRelations(validBibles)
+                return
+              }
+            }
+          }
+
+          console.log('ResourceCard() resource manifest should have at least 2 relations', relations)
+        } else {
+          console.log('ResourceCard() resource NO manifest relations')
+        }
+      }
+    }
+
+  }, [resource?.manifest])
 
   useEffect(() => {
     if (!savedContent && fetchResponse) {
@@ -381,12 +418,14 @@ export default function ResourceCard({
       bibleReference: {
         bookId,
       },
+      bibleRelations,
     },
     actions: {
-      updateMergeState,
+      setBibleRelations,
       setCardsSaving,
       setCardsLoadingUpdate,
       setCardsLoadingMerge,
+      updateMergeState,
     }
   } = useContext(StoreContext)
 
