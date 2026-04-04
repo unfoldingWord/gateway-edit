@@ -12,7 +12,7 @@ import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
 import { testForMergeError } from "@utils/merge";
 import isEqual from "deep-equal";
-import { getServerLayout, saveServerLayout } from '@utils/serverPreferences'
+import { getLayoutFromServer, saveLayoutToServer } from '@utils/serverPreferences'
 
 export const StoreContext = createContext({})
 
@@ -148,6 +148,7 @@ export default function StoreContextProvider(props) {
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
   const [mergeCheck, setMergeCheck] = useState(0)
   const [authError, setAuthError] = useState(0)
+  const [layoutLoaded, setLayoutLoaded] = useState(false)
   const transtateRef = useRef(null)
   const layoutSaveTimerRef = useRef(null)
   const userSavedSettingsRef = useRef(null)
@@ -185,26 +186,33 @@ export default function StoreContextProvider(props) {
   // On login, load layout from server so it survives incognito sessions and cache clears.
   // localStorage remains the instant fallback; server value wins when available.
   useEffect(() => {
-    if (authentication?.user?.username && authentication?.token?.sha1) {
-      getServerLayout(server, authentication).then(settings => {
+    if (authentication?.user?.username && authentication?.token?.sha1 && !layoutLoaded) {
+      getLayoutFromServer(server, authentication).then(settings => {
         userSavedSettingsRef.current = settings;
         if (settings?.layout) {
           setCurrentLayout(settings?.layout)
+        } else {
+          console.log(`StoreContext - layout missing & hasSettings=${settings?.hasSettings}`)
         }
+        setLayoutLoaded(true) // at least attempted
       })
     }
-  }, [authentication?.user?.username, authentication?.token?.sha1])
+  }, [server, authentication])
 
   // Debounced save: persist layout to server ~1.5s after the last drag/resize,
   // avoiding excessive API calls during continuous layout changes.
   useEffect(() => {
-    if (!authentication || !currentLayout) return
+    if (!(authentication?.user?.username && authentication?.token?.sha1) || !currentLayout) return
+    if (!layoutLoaded) return
     clearTimeout(layoutSaveTimerRef.current)
-    layoutSaveTimerRef.current = setTimeout(() => {
-      saveServerLayout(server, authentication, currentLayout)
+    layoutSaveTimerRef.current = setTimeout(async () => {
+      const success = await saveLayoutToServer(server, authentication, currentLayout)
+      if (!success) {
+        console.warn('StoreContext - error saving layout')
+      }
     }, 1500)
     return () => clearTimeout(layoutSaveTimerRef.current)
-  }, [server, authentication, currentLayout])
+  }, [server, authentication, currentLayout, layoutLoaded])
 
   function onReferenceChange(bookId, chapter, verse) {
     setQuote(null)

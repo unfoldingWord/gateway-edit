@@ -28,7 +28,7 @@ function getAuthHeader(authentication) {
  * @param {object} authentication
  * @return {Promise<{layout: object|null, hasSettings: boolean}>}
  */
-export async function getServerLayout(server, authentication) {
+export async function getLayoutFromServer(server, authentication) {
   const authHeader = getAuthHeader(authentication)
   if (!authHeader) return { layout: null, hasSettings: false }
 
@@ -40,24 +40,27 @@ export async function getServerLayout(server, authentication) {
       },
     })
 
-    if (!response.ok) return { layout: null, hasSettings: false }
+    if (!response.ok) {
+      console.log('getLayoutFromServer() - response not ok')
+      return {layout: null, hasSettings: false}
+    }
 
     const settings = await response.json()
-    const hasSettings = Array.isArray(settings) && settings.length > 0
+    const hasSettings = settings && Object.keys(settings).length > 0
 
-    // Gitea returns an array of {key, value} objects
-    const entry = Array.isArray(settings)
-      ? settings.find(s => s.key === LAYOUT_KEY)
-      : null
+    const layoutValue = settings?.[LAYOUT_KEY]
 
-    if (!entry?.value) return null
+    if (!layoutValue) {
+      console.log(`getServerLayout() - settings missing ${LAYOUT_KEY}`)
+      return { layout: null, hasSettings }
+    }
 
     return {
-      layout: JSON.parse(entry.value),
+      layout: JSON.parse(layoutValue),
       hasSettings,
     }
   } catch (e) {
-    console.warn('getServerLayout() - failed to load layout from server:', e)
+    console.warn('getLayoutFromServer() - failed to load layout from server:', e)
     return { layout: null, hasSettings: false }
   }
 }
@@ -70,22 +73,53 @@ export async function getServerLayout(server, authentication) {
  * @param {object} layout - the layout object to persist
  * @return {Promise<void>}
  */
-export async function saveServerLayout(server, authentication, layout) {
+export async function saveLayoutToServer(server, authentication, layout) {
   const authHeader = getAuthHeader(authentication)
-  if (!authHeader || !layout) return
+  if (!authHeader || !layout) return false
 
   try {
-    await fetch(`${server}/api/v1/user/settings`, {
-      method: 'PATCH',
+    // GET existing settings
+    const response = await fetch(`${server}/api/v1/user/settings`, {
       headers: {
         Authorization: authHeader,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        settings: { [LAYOUT_KEY]: JSON.stringify(layout) },
-      }),
     })
+
+    if (!response.ok) {
+      console.log('saveLayoutToServer() - response getting settings not ok')
+      return false
+    }
+
+    const settings = await response.json()
+    const hasSettings = settings && Object.keys(settings).length > 0
+
+    if (!hasSettings) {
+      console.warn('saveLayoutToServer() - failed to read settings from server')
+      return false
+    }
+
+    // Merge in the new layout
+    settings[LAYOUT_KEY] = JSON.stringify(layout)
+
+    // POST merged settings
+    const saveResponse = await fetch(`${server}/api/v1/user/settings`, {
+      method: 'POST',
+      headers: {
+        Authorization: authHeader,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ settings }),
+    })
+
+    if (!saveResponse.ok) {
+      console.warn('saveLayoutToServer() - failed to save settings to server, status:', saveResponse.status)
+      return false
+    }
+
+    return true
   } catch (e) {
-    console.warn('saveServerLayout() - failed to save layout to server:', e)
+    console.warn('saveLayoutToServer() - failed to save layout to server:', e)
+    return false
   }
 }
