@@ -186,11 +186,6 @@ export default function Header({
         onClose={() => {
           onClose(updateShowState(false, currentState))
         }}
-        actionButtonStr={translate('resolve')}
-        onActionButton={() => {
-          onClickUpdateCards && onClickUpdateCards()
-          onClose(updateShowState(false, currentState))
-        }}
       />
     );
   }
