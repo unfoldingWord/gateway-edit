@@ -11,6 +11,7 @@ import * as useULS from '@hooks/useUserLocalStorage'
 import { AuthContext } from '@context/AuthContext'
 import useSaveChangesPrompt from '@hooks/useSaveChangesPrompt'
 import { testForMergeError } from "@utils/merge";
+import isEqual from "deep-equal";
 
 export const StoreContext = createContext({})
 
@@ -32,23 +33,60 @@ export default function StoreContextProvider(props) {
     mergeFromMasterIntoUserBranch,
     mergeToMasterFromUserBranch
   ) {
-    console.log('updateMergeState', { cardId, mergeFromMaster, mergeToMaster })
     const mergeFromMasterError = testForMergeError(mergeFromMaster)
     const mergeToMasterError = testForMergeError(mergeToMaster)
     const mergeError = mergeToMasterError || mergeFromMasterError;
     if (mergeError) {
       console.error('updateMergeState - merge error', {mergeFromMaster, mergeToMaster})
     }
-    setMergeStatusForCards(oldMergeStatusForCards => ({
-      ...oldMergeStatusForCards,
-      [cardId]: {
+    setMergeStatusForCards(oldMergeStatusForCards => {
+      const currentCardState = oldMergeStatusForCards[cardId]
+      const newCardState = {
         title,
         mergeFromMaster,
         mergeToMaster,
         mergeFromMasterIntoUserBranch,
         mergeToMasterFromUserBranch,
-      },
-    }))
+      }
+
+      // Check if state has actually changed
+      if (currentCardState && isEqual(currentCardState, newCardState)) {
+        // No change, return the same state
+        return oldMergeStatusForCards
+      }
+
+      const oldCardData = {
+        mergeFromMaster: currentCardState?.mergeFromMaster,
+        mergeToMaster: currentCardState?.mergeToMaster
+      }
+      const newCardData = {mergeFromMaster, mergeToMaster}
+
+      if (title !== currentCardState?.title) {
+        console.log(`updateMergeState() card ${cardId} title changed to ${title}`, {oldCardData, newCardData})
+      } else {
+        try {
+          const fromDataChanged = !isEqual(oldCardData.mergeFromMaster, mergeFromMaster);
+          const toDataChanged = !isEqual(oldCardData.mergeToMaster, mergeToMaster);
+          if (fromDataChanged || toDataChanged) {
+            console.log(`updateMergeState() card ${cardId} fromDataChanged=${fromDataChanged}, toDataChanged=${toDataChanged}`, {
+              oldCardData,
+              newCardData
+            })
+          } else {
+            // it appears that just the functions change
+            // console.log(`updateMergeState() card ${cardId} something else changed`, {oldCardData, newCardData})
+          }
+        } catch (e) {
+          console.log(`updateMergeState() card ${cardId} compare exception`, {oldCardData, newCardData}, e)
+        }
+      }
+
+      // State has changed, update it
+      return {
+        ...oldMergeStatusForCards,
+        [cardId]: newCardState,
+      }
+    })
   }
 
   const {
@@ -107,7 +145,6 @@ export default function StoreContextProvider(props) {
   const [cardsSaving, setCardsSaving] = useState([])
   const [cardsLoadingUpdate, setCardsLoadingUpdate] = useState([])
   const [cardsLoadingMerge, setCardsLoadingMerge] = useState([])
-  const mergeCheckRef = useRef(0)
   const [mergeCheck, setMergeCheck] = useState(0)
   const [authError, setAuthError] = useState(0)
   const transtateRef = useRef(null)
@@ -124,8 +161,7 @@ export default function StoreContextProvider(props) {
   }
 
   function updateMergeCheck() {
-    mergeCheckRef.current += 1
-    setMergeCheck(mergeCheckRef.current)
+    setMergeCheck(prev => prev + 1)
   }
 
   const {

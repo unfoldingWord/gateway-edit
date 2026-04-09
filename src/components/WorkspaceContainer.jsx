@@ -32,7 +32,7 @@ import {
 } from 'single-scripture-rcl'
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
-import { getLatestBibleRepo, getResourceBibles } from '@utils/resources'
+import { delay, getLatestBibleRepo, getResourceBibles } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { BIBLES_ABBRV_INDEX, isNT } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
@@ -43,7 +43,12 @@ import {
   processNetworkError,
   reloadApp,
 } from '@utils/network'
-import { HTTP_CONFIG } from '@common/constants'
+import {
+  HTTP_CONFIG,
+  LOCAL_NETWORK_DISCONNECTED_ERROR,
+  NETWORK_ERROR,
+  RETRY
+} from '@common/constants'
 import NetworkErrorPopup from '@components/NetworkErrorPopUp'
 import WordAlignerDialog from '@components/WordAlignerDialog'
 import useLexicon from '@hooks/useLexicon'
@@ -66,14 +71,15 @@ const useStyles = makeStyles(() => ({
   },
   dragIndicator: {},
 }))
+
 const wordAlignmentScreenRatio = 0.9
 const wordAlignmentMaxHeightPx = 1000
-
-const buildId = getBuildId()
-console.log(`Gateway Edit App Version`, buildId)
-
+const maximumWaitTime = 15; // time to wait before checking for merge status changes.  Resets on navigation
 const OFFLINE_TIMEOUT = 5000; // Move timeout constant outside component
 
+const buildId = getBuildId()
+
+console.log(`Gateway Edit App Version`, buildId)
 // Move these handlers outside the component
 const handleError = (event) => {
   console.warn(`[WorkspaceContainer] Error:`, {
@@ -83,10 +89,6 @@ const handleError = (event) => {
     colno: event.colno,
     error: event.error?.stack,
   })
-}
-
-const handleOnline = () => {
-  console.warn('[WorkspaceContainer] Online')
 }
 
 function WorkspaceContainer() {
@@ -100,7 +102,9 @@ function WorkspaceContainer() {
     scriptureReference: {},
     wordAlignerStatus: null,
     workspaceReady: false,
+    isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
   })
+  const [checkMergeState, setCheckMergeState] = useState(false)
 
   const {
     currentVerseReference,
@@ -109,6 +113,7 @@ function WorkspaceContainer() {
     scriptureReference,
     wordAlignerStatus,
     workspaceReady,
+    isOnline,
   } = state
 
   function setState(newState) {
@@ -149,7 +154,7 @@ function WorkspaceContainer() {
       server,
       supportedBibles,
       taArticle,
-      tokenNetworkError,
+      tokenNetworkError, // authentication error
       useUserLocalStorage,
     },
     actions: {
@@ -190,9 +195,7 @@ function WorkspaceContainer() {
     httpConfig: HTTP_CONFIG,
   })
 
-  const minWaitMinites = 5;
-
-  const { actions: { verifyLogin } } = useContext(AuthContext)
+  const { actions: { checkUserAuthentication } } = useContext(AuthContext)
 
   const { actions: { fetchGlossesForVerse, getLexiconData } } = useLexicon({
     bookId,
@@ -259,7 +262,7 @@ function WorkspaceContainer() {
 
           // only do check if not first verse navigation
           if (scriptureReference && Object.keys(scriptureReference).length) {
-            mergeValidationCheck()
+            setCheckMergeState(true)
           }
         }
   },[chapter, verse, bookId, currentVerseReference])
@@ -273,8 +276,67 @@ function WorkspaceContainer() {
     processNetworkError(errorMessage, httpCode, logout, router, setNetworkError, setLastError )
   }
 
+  /**
+   * Updates the state to include the provided network error message or object.
+   *
+   * @param {string|Object} error - The network error to be set, can be an error message or an error object.
+   * @return {void} This method does not return a value.
+   */
   function setNetworkError( error ) {
     setState( { networkError: error })
+  }
+
+  /**
+   * Attempts to recheck the network connectivity and updates the network or merge state accordingly.
+   *
+   * @param {Error} networkDisconnectError - The error object representing the network disconnection error.
+   * @return {void} This function does not return any value.
+   */
+  async function retryNetworkCheck(networkDisconnectError) {
+    setNetworkError(null)
+    await delay(1000);
+    const networkDisconnectError_ = { ...networkDisconnectError }
+
+    const currentOnline =
+      typeof navigator !== 'undefined'
+        ? navigator.onLine
+        : isOnline
+
+    if (!currentOnline) {
+      await delay(1000);
+      setNetworkError(networkDisconnectError_)
+      return
+    }
+
+    setCheckMergeState(true)
+  }
+
+  /**
+   * Displays a network disconnect error popup with retry functionality.
+   *
+   * Creates a modal error dialog when the application detects a network disconnection.
+   * The dialog provides options to close the error or retry the network connection check.
+   *
+   * @returns {JSX.Element} An ErrorPopup component configured for network disconnect errors
+   */
+  function showNetworkDisconnectError() {
+    const retryButtonStr = RETRY
+    const retryDefault = true // if retry button enabled, make it default button
+    const closeButtonDefault = !retryDefault // otherwise close button is default
+    const networkDisconnectError = {...networkError}
+
+    return (
+      <ErrorPopup
+        title={NETWORK_ERROR}
+        message={networkError.errorMessage}
+        closeButtonDefault={closeButtonDefault}
+        hideClose={false}
+        onClose={() => { setNetworkError(null) }}
+        actionButtonStr={retryButtonStr}
+        actionButtonDefault={true}
+        onActionButton={() => retryNetworkCheck(networkDisconnectError)}
+      />
+    )
   }
 
   /**
@@ -288,7 +350,7 @@ function WorkspaceContainer() {
           title={translate('authentication_error_title')}
           message={translate('authentication_error_message')}
           dimBackground={true}
-          hideClose={true}
+          hideClose={false}
           onClose={() => {
             setAuthError(false)
           }}
@@ -296,6 +358,11 @@ function WorkspaceContainer() {
           onActionButton={() => {
             logout();
             setAuthError(false);
+          }}
+          actionButton2Str={translate('retry')}
+          onActionButton2={() => {
+            setAuthError(false);
+            setCheckMergeState(true);
           }}
         />)
     } else
@@ -315,16 +382,22 @@ function WorkspaceContainer() {
         />
       )
     } else if (networkError) { // for all other workspace network errors
-      return (
-        <NetworkErrorPopup
-          networkError={networkError}
-          setNetworkError={setNetworkError}
-          onActionButton={onNetworkActionButton}
-          hideClose={false}
-          /* show reload if send feedback not enabled */
-          onRetry={!networkError.actionButtonText ? reloadApp : null}
-        />
-      )
+      const offlineError = (networkError.errorMessage === LOCAL_NETWORK_DISCONNECTED_ERROR)
+      if (offlineError) {
+        console.log(`showNetworkError() - offline: ${offlineError}`)
+        return showNetworkDisconnectError()
+      } else {
+        return (
+          <NetworkErrorPopup
+            networkError={networkError}
+            setNetworkError={setNetworkError}
+            onActionButton={onNetworkActionButton}
+            hideClose={false}
+            /* show reload if send feedback not enabled */
+            onRetry={!networkError.actionButtonText ? reloadApp : null}
+          />
+        )
+      }
     }
     return null
   }
@@ -334,6 +407,7 @@ function WorkspaceContainer() {
   // Use useCallback for the offline handler since it needs access to component state
   const handleOffline = useCallback(() => {
     console.warn('[WorkspaceContainer] Offline');
+    setState({ isOnline: false });
 
     // Clear any existing timer first
     if (offlineTimer) {
@@ -356,9 +430,14 @@ function WorkspaceContainer() {
     setOfflineTimer(timer);
   }, [offlineTimer, logout, router, setNetworkError, setLastError]);
 
+  const handleOnline = () => {
+    console.warn('[WorkspaceContainer] Online')
+  }
+
   // Update the online handler to use notistack
   const handleOnlineWithCleanup = useCallback(() => {
     handleOnline();
+    setState({ isOnline: true });
 
     if (offlineTimer) {
       clearTimeout(offlineTimer);
@@ -507,7 +586,7 @@ function WorkspaceContainer() {
         }
         setObsSupport(foundObs)
       }).catch((e) => {
-        console.log(`could not fetch OBS translation for  ${{languageId, owner, server}}`)
+        console.log(`could not fetch OBS translation for  ${{languageId, owner, server}}`, e)
         setObsSupport(false)
       })
     }
@@ -780,19 +859,55 @@ function WorkspaceContainer() {
    *
    * @return {void} This method does not return a value.
    */
-  function mergeValidationCheck() {
+  async function mergeValidationCheck() {
+    const navigatorDefined = navigator !== undefined;
+    let offline_ = !isOnline
+    if (!navigatorDefined) {
+      console.log(`WorkspaceContainer.mergeValidationCheck - navigator not Defined`);
+    } else { // navigator defined
+      offline_ = !navigator.onLine
+    }
+
+    if (offline_) {
+      console.log(`WorkspaceContainer.mergeValidationCheck - navigator not online`);
+      return;
+    }
+
+    const results = await checkUserAuthentication()
+
     const monitor = getMonitor();
     monitor.reset();
-    verifyLogin().then((verifyLogin) => {
-      if (!verifyLogin) {
-        console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=${verifyLogin}`);
-        setAuthError(true);
-      } else {
-        console.log(`WorkspaceContainer.mergeValidationCheck - valid login, check for merge conflicts mergeCheck = ${mergeCheck}`);
-        updateMergeCheck();
-      }
-    })
+
+    if (results.otherError) {
+      console.log(`WorkspaceContainer.mergeValidationCheck - networking problem, could not validate login`);
+    } else
+    if (results.authenticated) {
+      console.log(`WorkspaceContainer.mergeValidationCheck - valid login auth, check for merge conflicts mergeCheck = ${mergeCheck}`);
+      updateMergeCheck();
+    } else { // response not authenticated
+      console.log(`WorkspaceContainer.mergeValidationCheck - failed verifyLogin=`, results);
+      setAuthError(true);
+    }
   }
+
+useEffect(() => {
+  if (!checkMergeState) return
+
+  let cancelled = false
+
+  const runCheck = async () => {
+    await mergeValidationCheck()
+    if (!cancelled) {
+      setCheckMergeState(false)
+    }
+  }
+
+  runCheck()
+
+  return () => {
+    cancelled = true
+  }
+}, [checkMergeState])
 
   /**
    * Handles timeout callback logic for managing app inactivity and login validation.
@@ -803,8 +918,17 @@ function WorkspaceContainer() {
    */
   function timeoutCallback(actualTimerElapsedMin, minSinceMonitorStart) {
     console.log(`WorkspaceContainer.timeoutCallback - app unpaused ${actualTimerElapsedMin} minutes, elapsedTimeSinceValidation is ${minSinceMonitorStart}`);
-    mergeValidationCheck();
+    setCheckMergeState(true);
   }
+
+  /**
+   * Effect hook that manages cleanup when component unmounts.
+   */
+  useEffect(() => {
+    return () => {
+      getMonitor().stop()
+    }
+  }, [])
 
   /**
    * Effect hook that loads and caches original scripture book data.
@@ -859,7 +983,6 @@ function WorkspaceContainer() {
       const monitor = getMonitor()
       if (!monitor.initialized()) {
         console.log(`WorkspaceContainer - initializing Monitor`)
-        const maximumWaitTime = 15; // time to wait before checking for merge status changes.  Resets on navigation
         monitor.start(timeoutCallback, maximumWaitTime)
       }
     }
