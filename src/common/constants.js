@@ -39,6 +39,7 @@ export const NETWORK_ERROR = `Network Error`
 export const SEND_FEEDBACK = 'Send Feedback'
 export const LOGIN = 'Login'
 export const RETRY = 'Retry'
+export const RELOAD = 'Reload'
 export const CANCEL = 'Cancel'
 export const CLOSE = 'Close'
 export const LOADING = 'Loading...'

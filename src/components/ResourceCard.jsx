@@ -227,7 +227,14 @@ export default function ResourceCard({
   }, [fetchResponse, savedContent])
 
   const repo = `${languageId}_${cardResourceId}`
-  const _useBranchMerger = useBranchMerger({ server, owner, repo, userBranch: branchDetermined ? userEditBranchName : undefined, tokenid: authentication?.token?.sha1 });
+  const _useBranchMerger = useBranchMerger({
+    server,
+    owner,
+    repo,
+    userBranch: branchDetermined ? userEditBranchName : undefined,
+    tokenid: authentication?.token?.sha1,
+    userId: authentication?.user?.login
+  });
 
   const {
     state: {
@@ -240,8 +247,17 @@ export default function ResourceCard({
   } = _useBranchMerger;
 
   useEffect(() => {
-    if (mergeCheck > 0) {
-      checkMergeStatus && checkMergeStatus() // every time mergeCheck changes, check merge status again
+    if (mergeCheck > 0 && checkMergeStatus) {
+      // Wrap in try/catch — dcs-branch-merger can throw on 404/409 from /pulls endpoints
+      // when no PR exists for a resource's user branch. This is normal and should not crash the app.
+      try {
+        const result = checkMergeStatus()
+        if (result && typeof result.catch === 'function') {
+          result.catch(err => console.warn(`ResourceCard(${cardResourceId}) merge check failed:`, err?.message || err))
+        }
+      } catch (err) {
+        console.warn(`ResourceCard(${cardResourceId}) merge check threw:`, err?.message || err)
+      }
     }
   }, [mergeCheck])
 
@@ -350,13 +366,13 @@ export default function ResourceCard({
       ...authentication?.config,
       token: authentication?.token,
       timeout: SERVER_MAX_WAIT_TIME_RETRY,
+      dontCreateBranch: true,
     },
     author: loggedInUser,
     token: authentication?.token,
     branch: workingResourceBranch,
     filepath: editFilePath,
     repo: `${languageId}_${cardResourceId}`,
-    dontCreateBranch: true,
   })
 
   useEffect(() => { // when we get a save saveError
@@ -411,7 +427,8 @@ export default function ResourceCard({
 
   async function handleSaveEdit(newContent = '') {
     // Save edit, if successful trigger resource reload and set saved to true.
-    setIsSaving(true) && setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
+    setIsSaving(true)
+    setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch, newContent) => {
       console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
       const success = await onSaveEdit(branch, newContent)
@@ -434,7 +451,8 @@ export default function ResourceCard({
         onResourceError &&
           onResourceError(message, isAccessError, resourceStatus)
       }
-      setIsSaving(false) && setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
+      setIsSaving(false)
+      setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
     }
 
     // If not using user branch create it then save the edit.
@@ -443,7 +461,7 @@ export default function ResourceCard({
       const branch = await startEdit()
 
       if (branch) {
-        saveEdit(branch, newContent)
+        await saveEdit(branch, newContent)
       } else { // if error on branch creation
         console.warn(`ResourceCard() handleSaveEdit() error creating edit branch`, { sha, resource })
         onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)

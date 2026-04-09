@@ -21,6 +21,7 @@ import useUpdateCardsProps from '../hooks/useUpdateCardsProps'
 import { UpdateBranchButton, ErrorDialog } from 'translation-helps-rcl'
 import ErrorPopup from "@components/ErrorPopUp";
 import isEqual from "deep-equal";
+import { CLOSE } from "@common/constants";
 // TODO: Enable buttons once ready to fully implement functionality
 // import LinkIcon from '@material-ui/icons/Link'
 // import Button from '@material-ui/core/Button'
@@ -148,9 +149,10 @@ export default function Header({
       if (state.cardWithConflicts && !cardWithConflicts?.show) {
         setCardWithConflicts(showIfNewer(cardWithConflicts))
       }
-      if (state.cardWithError && !cardWithError?.show) {
-        setCardWithError(showIfNewer(cardWithError))
-      }
+      // disable all the error
+      // if (state.cardWithError && !cardWithError?.show) {
+      //   // setCardWithError(showIfNewer(cardWithError))
+      // }
       if (state.cardToMerge && !cardToMerge?.show) {
         setCardToMerge(showIfNewer(cardToMerge))
       }
@@ -182,12 +184,8 @@ export default function Header({
         title={translate(title)}
         message={_message}
         dimBackground={true}
+        closeButtonStr={CLOSE}
         onClose={() => {
-          onClose(updateShowState(false, currentState))
-        }}
-        actionButtonStr={translate('resolve')}
-        onActionButton={() => {
-          onClickUpdateCards && onClickUpdateCards()
           onClose(updateShowState(false, currentState))
         }}
       />
