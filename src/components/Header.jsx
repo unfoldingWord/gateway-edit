@@ -58,6 +58,7 @@ export default function Header({
   const [cardWithConflicts, setCardWithConflicts] = useState({})
   const [cardWithError, setCardWithError] = useState({})
   const [cardToMerge, setCardToMerge] = useState({})
+  const [hideFutureMergeWarnings, setHideFutureMergeWarnings] = useState(false)
 
   const { actions: { logout } } = useContext(AuthContext)
   const {
@@ -126,9 +127,9 @@ export default function Header({
   }
 
   const newCardMergeState = useMemo(() => {
-    const cardWithConflicts = cardMergeGroupings?.cardsWithConflicts?.length > 0
+    const cardWithConflicts = !hideFutureMergeWarnings && cardMergeGroupings?.cardsWithConflicts?.length > 0
     const cardWithError = cardMergeGroupings?.cardsWithError?.length > 0
-    const cardToMerge = cardMergeGroupings?.cardsToMerge?.length > 0
+    const cardToMerge = !hideFutureMergeWarnings && cardMergeGroupings?.cardsToMerge?.length > 0
 
     return {
       cardWithConflicts,
@@ -159,16 +160,16 @@ export default function Header({
     }
   }, [mergeStatusForCards])
 
- /**
-  * render an error dialog
-  * @param {string} title
-  * @param {string} messageID - contains key to lookup localized message
-  * @param {string} messageText - additional text to display
-  * @param {function} onClose
-  * @param {{show: boolean, lastCheckLevel: number}} currentState
-  * @return {React.JSX.Element}
-  * @private
-  */
+  /**
+   * render an error dialog
+   * @param {string} title
+   * @param {string} messageID - contains key to lookup localized message
+   * @param {string} messageText - additional text to display
+   * @param {function} onClose
+   * @param {{show: boolean, lastCheckLevel: number}} currentState
+   * @return {React.JSX.Element}
+   * @private
+   */
   function showWarningDialog_(title, messageID, onClose, currentState, messageText) {
    let _message = ''
    if (messageID) {
@@ -185,6 +186,8 @@ export default function Header({
         message={_message}
         dimBackground={true}
         closeButtonStr={CLOSE}
+        showHideFutureWarnings={true}
+        onHideFutureWarningsChange={setHideFutureMergeWarnings}
         onClose={() => {
           onClose(updateShowState(false, currentState))
         }}
@@ -199,8 +202,10 @@ export default function Header({
   function showWarningDialog() {
     if (cardWithError?.show) {
       return showWarningDialog_('merge_error_title', 'merge_error_message', setCardWithError, cardWithError, cardWithError.message)
+
     } else if (cardWithConflicts?.show) {
       return showWarningDialog_('merge_conflict_title', 'merge_conflict_message', setCardWithConflicts, cardWithConflicts)
+
     } else if (cardToMerge?.show) { // cardToMerge
       return showWarningDialog_('merge_new_title', 'merge_new_message', setCardToMerge, cardToMerge)
     }

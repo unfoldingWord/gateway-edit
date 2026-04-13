@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { DraggableCard } from 'translation-helps-rcl'
 import { CANCEL } from '@common/constants'
 
@@ -15,6 +17,8 @@ export default function ErrorPopup(
     closeButtonStr = CANCEL,
     dimBackground = true,
     hideClose = false,
+    showHideFutureWarnings = false,
+    onHideFutureWarningsChange,
     id = `error_popup`,
     message,
     onActionButton,
@@ -22,6 +26,8 @@ export default function ErrorPopup(
     onClose,
     title,
   }) {
+  const [hideFutureWarningsChecked, setHideFutureWarningsChecked] = React.useState(false)
+
   function getActionButtons() {
     return <>
       {actionButtonStr &&
@@ -62,6 +68,25 @@ export default function ErrorPopup(
   const content =
     <div className='flex-col'>
       <div className='h2 flex text-lg my-3 wrap-anywhere'> {message} </div>
+
+      {showHideFutureWarnings &&
+        <div className='my-3'>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={hideFutureWarningsChecked}
+                onChange={(_event, checked) => {
+                  setHideFutureWarningsChecked(checked)
+                  onHideFutureWarningsChange && onHideFutureWarningsChange(checked)
+                }}
+                color='primary'
+              />
+            }
+            label='Hide future merge warnings'
+          />
+        </div>
+      }
+
       <div className='flex justify-end space-x-4'>
         { !hideClose &&
         <Button
@@ -122,4 +147,8 @@ ErrorPopup.propTypes = {
   hideClose: PropTypes.bool,
   /** turn off or on background dimming, default is on */
   dimBackground: PropTypes.bool,
+  /** hide the future warnings checkbox entirely */
+  showHideFutureWarnings: PropTypes.bool,
+  /** callback for checkbox state changes */
+  onHideFutureWarningsChange: PropTypes.func,
 }
