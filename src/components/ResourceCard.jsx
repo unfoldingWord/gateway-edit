@@ -44,6 +44,7 @@ import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { StoreContext } from '@context/StoreContext'
 import { delay } from '../utils/resources'
+import { getPatch } from "gitea-react-toolkit/dist/components/file/helpers";
 
 
 export default function ResourceCard({
@@ -84,6 +85,7 @@ export default function ResourceCard({
   }
   const [content, setContent] = useState('')
   const [savedContent, setSavedContent] = useState('');
+  const [contextLines, setContextLines] = useState(3);
   const [saved, setSaved] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isTsvDeleteDialogOpen, setIsTsvDeleteDialogOpen] = useState(false)
@@ -103,6 +105,7 @@ export default function ResourceCard({
   const cardResourceId = (resourceId === 'twl') && (viewMode === 'markdown') ? 'tw' : resourceId
   const isResourceTsv = ['tn', 'tq', 'twl'].includes(cardResourceId)
   const isObs = projectId === 'obs'
+  const smallFileSize = 1000;
 
   function updateTempContent(c) {
     setContent(c)
@@ -357,6 +360,7 @@ export default function ResourceCard({
     isError: isSaveError,
     isEditing,
     onSaveEdit,
+    onSaveEditPatch,
   } = useEdit({
     sha,
     owner,
@@ -431,19 +435,40 @@ export default function ResourceCard({
     setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch, newContent) => {
       console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
-      const success = await onSaveEdit(branch, newContent)
+      let success = false
+      const _content = newContent || content
+      let doDiffPatch = _content.length > smallFileSize
+      let diffPatch = ''
+
+      if (doDiffPatch) {
+        console.log(`handleSaveEdit() calculating diff`)
+        diffPatch = getPatch(editFilePath, savedContent, _content, false, contextLines)
+        if (diffPatch && (diffPatch.length > _content.length * 3/4)) { // if patch is too large
+          console.log(`handleSaveEdit() diff too large ${diffPatch.length}, original ${_content.length}`)
+          doDiffPatch = false
+        }
+      }
+
+      if (doDiffPatch) { // if short content, save directly
+        console.log(`handleSaveEdit() sending patch ${diffPatch.length}`)
+        success = await onSaveEditPatch(branch, diffPatch)
+      } else { // if long content, send patch
+        console.log(`handleSaveEdit() sending full file ${_content.length}`)
+        success = await onSaveEdit(branch, _content)
+      }
 
       if (success) {
         setSaved(true)
         setSavedChanges(cardResourceId, true)
-        console.log('setting saved content', content);
-        setSavedContent(content);
+        console.log('setting saved content', _content);
+        setSavedContent(_content);
         delay(500).then(() => {
           console.info('handleSaveEdit() Reloading resource')
           reloadResource()
         })
       } else {
         console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
+        setContextLines(contextLines + 1)
         const message =
           getResourceErrorMessage(resourceStatus) +
           ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
@@ -467,6 +492,7 @@ export default function ResourceCard({
         onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
       }
     } else {// Else just save the edit.
+      console.log(`handleSaveEdit() using edit branch`, { sha, resource })
       await saveEdit(null, newContent)
     }
   }
