@@ -1,6 +1,7 @@
 import React, {
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
@@ -87,7 +88,7 @@ export default function ResourceCard({
   const [savedContent, setSavedContent] = useState('');
   const [contextLines, setContextLines] = useState(3);
   const [saved, setSaved] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
+  const isSaving =- useRef(false)
   const [isTsvDeleteDialogOpen, setIsTsvDeleteDialogOpen] = useState(false)
   const [fetchConfig, setFetchConfig] = useState({
     basicReference,
@@ -431,7 +432,6 @@ export default function ResourceCard({
 
   async function handleSaveEdit(newContent = '') {
     // Save edit, if successful trigger resource reload and set saved to true.
-    setIsSaving(true)
     setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch, newContent) => {
       console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
@@ -476,24 +476,30 @@ export default function ResourceCard({
         onResourceError &&
           onResourceError(message, isAccessError, resourceStatus)
       }
-      setIsSaving(false)
       setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
     }
 
-    // If not using user branch create it then save the edit.
-    if (!usingUserBranch) {
-      console.log(`handleSaveEdit() creating edit branch`, { sha, resource })
-      const branch = await startEdit()
+    if (!isSaving.current) {
+      isSaving.current = true
 
-      if (branch) {
-        await saveEdit(branch, newContent)
-      } else { // if error on branch creation
-        console.warn(`ResourceCard() handleSaveEdit() error creating edit branch`, { sha, resource })
-        onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
+      // If not using user branch create it then save the edit.
+      if (!usingUserBranch) {
+        console.log(`handleSaveEdit() creating edit branch`, {sha, resource})
+        const branch = await startEdit()
+
+        if (branch) {
+          await saveEdit(branch, newContent)
+        } else { // if error on branch creation
+          console.warn(`ResourceCard() handleSaveEdit() error creating edit branch`, {sha, resource})
+          onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
+        }
+      } else {// Else just save the edit.
+        console.log(`handleSaveEdit() using edit branch`, {sha, resource})
+        await saveEdit(null, newContent)
       }
-    } else {// Else just save the edit.
-      console.log(`handleSaveEdit() using edit branch`, { sha, resource })
-      await saveEdit(null, newContent)
+      isSaving.current = false
+    } else {
+      console.log(`handleSaveEdit() already saving`, {sha, resource})
     }
   }
 
