@@ -6997,10 +6997,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gitea-react-toolkit@2.4.2-beta.5:
-  version "2.4.2-beta.5"
-  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.4.2-beta.5.tgz#be86068d3c18e27ea3b8d5509f383cf5b913d8a7"
-  integrity sha512-PaQWoHqUAmcfT4wy1vERH+DGhbrI4PsMB70qK7qtAwdwnXwj/nnYdHLYruIHMzCQCsJW6925rrQHfNyrOLNbKQ==
+gitea-react-toolkit@2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/gitea-react-toolkit/-/gitea-react-toolkit-2.4.2.tgz#4c939b94f5317a77aefc8f333b03d5851f0eebf6"
+  integrity sha512-eFuf2sdM0kAbrYqrgCFdJEfOpf6kbqC7E79kBbo23eDyzpsPVze8kXADtPouqQgpTnwP5Ami4A7SEMMFGtI0aw==
   dependencies:
     awesome-debounce-promise "2.1.0"
     axios "0.19.0"
@@ -11994,10 +11994,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-single-scripture-rcl@3.5.6-beta.8:
-  version "3.5.6-beta.8"
-  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.5.6-beta.8.tgz#5f081c0e79b309998cd315bd0df85d2284d47d30"
-  integrity sha512-enOxBClT5FZG8dOv63iJKtnVRj+E8dTdOkhYuzVwk+oYL47RXO6K5yALTGG2Rn+TddYeng0k1WZETSgQG9TndQ==
+single-scripture-rcl@3.5.6-beta.9:
+  version "3.5.6-beta.9"
+  resolved "https://registry.yarnpkg.com/single-scripture-rcl/-/single-scripture-rcl-3.5.6-beta.9.tgz#22fb0f0f1e1ba35a4a8a3cfd13a74739d10b3f2a"
+  integrity sha512-0q0fLzktgPBZqXMt80z0U0RXxUpVzEmD0bW7iWy8kteKTKAb2uwOx8B7TdOWgX0w12C4pNhx9AC7FDp9UQv+7g==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.4"
     "@types/react" "^17.0.0"

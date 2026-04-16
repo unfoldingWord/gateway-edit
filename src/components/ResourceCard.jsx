@@ -45,7 +45,7 @@ import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { StoreContext } from '@context/StoreContext'
 import { delay } from '../utils/resources'
-import { getPatch } from "gitea-react-toolkit/dist/components/file/helpers";
+import { getPatch } from "gitea-react-toolkit"
 
 
 export default function ResourceCard({
@@ -478,7 +478,7 @@ export default function ResourceCard({
       let diffPatch = ''
 
       if (doDiffPatch) {
-        console.log(`handleSaveEdit() calculating diff`)
+        // console.log(`handleSaveEdit() calculating diff`)
         const same = (savedContent === contentToSave)
         if (same) {
           // console.log(`handleSaveEdit() content unchanged, skipping diff`)
@@ -503,7 +503,7 @@ export default function ResourceCard({
       if (success) {
         setSaved(true)
         setSavedChanges(cardResourceId, true)
-        // console.log('setting saved content', contentToSave?.substring(o, 100));
+        // console.log('setting saved content', contentToSave?.substring(0, 100));
         setSavedContent(contentToSave);
         delay(500).then(() => {
           console.info('handleSaveEdit() Reloading resource')
