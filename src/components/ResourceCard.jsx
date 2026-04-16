@@ -88,7 +88,8 @@ export default function ResourceCard({
   const [savedContent, setSavedContent] = useState('');
   const [contextLines, setContextLines] = useState(3);
   const [saved, setSaved] = useState(true)
-  const isSaving =- useRef(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const doingSaving = useRef(false)
   const [isTsvDeleteDialogOpen, setIsTsvDeleteDialogOpen] = useState(false)
   const [fetchConfig, setFetchConfig] = useState({
     basicReference,
@@ -211,20 +212,29 @@ export default function ResourceCard({
 
   useEffect(() => {
     if (!savedContent && fetchResponse) {
+      const responseUrl = fetchResponse?.config?.url;
       try {
         if (fetchResponse?.data?.errors) {
-          console.warn(`ResourceCard: Error return for fetch ${fetchResponse?.config?.url}`, fetchResponse)
+          console.warn(`ResourceCard: Error return for fetch ${responseUrl}`, fetchResponse)
         } else {
-          const base64Decoded = atob(fetchResponse?.data?.content)
-          const utf8DecodedArray = new Uint8Array(
-            base64Decoded.split('').map(char => char.charCodeAt(0))
-          )
-          const decoder = new TextDecoder()
-          const finalString = decoder.decode(utf8DecodedArray)
-          setSavedContent(finalString)
+          const repo = `/${languageId}_${cardResourceId}/`
+          const isCorrectResponse = responseUrl?.includes(repo);
+          if (isCorrectResponse) {
+            const base64Decoded = atob(fetchResponse?.data?.content)
+            const utf8DecodedArray = new Uint8Array(
+              base64Decoded.split('').map(char => char.charCodeAt(0))
+            )
+            const decoder = new TextDecoder()
+            const finalString = decoder.decode(utf8DecodedArray)
+            setSavedContent(finalString)
+            console.log(`ResourceCard: Response URL ${responseUrl} is for this repo`)
+          } else {
+            console.warn(`ResourceCard: Response URL ${responseUrl} is NOT for this repo`, { repo, filePath})
+            // construct from
+          }
         }
       } catch (error) {
-        const url =fetchResponse?.config?.url || ''
+        const url = responseUrl || ''
         console.error(`ResourceCard: Error decoding base64 content for ${url}`, error)
       }
     }
@@ -430,38 +440,71 @@ export default function ResourceCard({
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
+  /**
+   * Handles saving edits to a resource file.
+   *
+   * This function manages the process of saving content changes to a resource file,
+   * including creating user branches if needed, applying patches for large files,
+   * and handling save errors.
+   *
+   * @param {string} newContent - The new content to save. Defaults to empty string.
+   * @returns {Promise<void>}
+   *
+   * @async
+   *
+   * Process:
+   * 1. Sets saving state and updates card saving status
+   * 2. If no user branch exists, creates one via startEdit()
+   * 3. For large files (> smallFileSize), attempts to send a diff patch
+   * 4. Falls back to sending full file content if patch is too large
+   * 5. On success: updates saved state, reloads resource
+   * 6. On failure: handles errors and retries with larger context
+   *
+   * @see startEdit - Creates a new user branch for editing
+   * @see onSaveEditPatch - Saves changes using diff patch
+   * @see onSaveEdit - Saves full file content
+   * @see reloadResource - Reloads the resource after successful save
+   */
   async function handleSaveEdit(newContent = '') {
     // Save edit, if successful trigger resource reload and set saved to true.
     setCardsSaving(prevCardsSaving => [...prevCardsSaving, cardResourceId])
     const saveEdit = async (branch, newContent) => {
       console.log(`handleSaveEdit() saving edit branch`, { sha, resource })
+      setIsSaving(true)
+      const contentToSave = newContent || content;
+
       let success = false
-      const _content = newContent || content
-      let doDiffPatch = _content.length > smallFileSize
+      let doDiffPatch = isResourceTsv && contentToSave.length > smallFileSize
       let diffPatch = ''
 
       if (doDiffPatch) {
         console.log(`handleSaveEdit() calculating diff`)
-        diffPatch = getPatch(editFilePath, savedContent, _content, false, contextLines)
-        if (diffPatch && (diffPatch.length > _content.length * 3/4)) { // if patch is too large
-          console.log(`handleSaveEdit() diff too large ${diffPatch.length}, original ${_content.length}`)
+        const same = (savedContent === contentToSave)
+        if (same) {
+          // console.log(`handleSaveEdit() content unchanged, skipping diff`)
           doDiffPatch = false
+        } else { // content changed
+          diffPatch = getPatch(editFilePath, savedContent, contentToSave, false, contextLines)
+          if (diffPatch && (diffPatch.length > savedContent.length * 3 / 4)) { // if patch is too large
+            console.log(`handleSaveEdit() diff too large ${diffPatch.length}, original ${savedContent.length}`)
+            doDiffPatch = false
+          }
         }
       }
 
       if (doDiffPatch) { // if short content, save directly
-        console.log(`handleSaveEdit() sending patch ${diffPatch.length}`)
+        console.log(`handleSaveEdit() sending patch length ${diffPatch.length}, full file is ${contentToSave.length}`)
         success = await onSaveEditPatch(branch, diffPatch)
       } else { // if long content, send patch
-        console.log(`handleSaveEdit() sending full file ${_content.length}`)
-        success = await onSaveEdit(branch, _content)
+        console.log(`handleSaveEdit() sending full file ${content.length}`)
+        success = await onSaveEdit(branch, newContent)
       }
 
       if (success) {
         setSaved(true)
         setSavedChanges(cardResourceId, true)
-        console.log('setting saved content', _content);
-        setSavedContent(_content);
+        // console.log('setting saved content', contentToSave?.substring(o, 100));
+        setSavedContent(contentToSave);
         delay(500).then(() => {
           console.info('handleSaveEdit() Reloading resource')
           reloadResource()
@@ -476,28 +519,33 @@ export default function ResourceCard({
         onResourceError &&
           onResourceError(message, isAccessError, resourceStatus)
       }
+      setIsSaving(false)
       setCardsSaving(prevCardsSaving => prevCardsSaving.filter(cardId => cardId !== cardResourceId))
     }
 
-    if (!isSaving.current) {
-      isSaving.current = true
+    if (!doingSaving.current) {
+      doingSaving.current = true
 
-      // If not using user branch create it then save the edit.
-      if (!usingUserBranch) {
-        console.log(`handleSaveEdit() creating edit branch`, {sha, resource})
-        const branch = await startEdit()
+      try {
+        // If not using user branch create it then save the edit.
+        if (!usingUserBranch) {
+          console.log(`handleSaveEdit() creating edit branch`, {sha, resource})
+          const branch = await startEdit()
 
-        if (branch) {
-          await saveEdit(branch, newContent)
-        } else { // if error on branch creation
-          console.warn(`ResourceCard() handleSaveEdit() error creating edit branch`, {sha, resource})
-          onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
+          if (branch) {
+            await saveEdit(branch, newContent)
+          } else { // if error on branch creation
+            console.warn(`ResourceCard() handleSaveEdit() error creating edit branch`, {sha, resource})
+            onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
+          }
+        } else {// Else just save the edit.
+          console.log(`handleSaveEdit() using edit branch`, {sha, resource})
+          await saveEdit(null, newContent)
         }
-      } else {// Else just save the edit.
-        console.log(`handleSaveEdit() using edit branch`, {sha, resource})
-        await saveEdit(null, newContent)
+      } catch (error) {
+        console.log(`handleSaveEdit() exception saving`, {sha, resource}, error)
       }
-      isSaving.current = false
+      doingSaving.current = false
     } else {
       console.log(`handleSaveEdit() already saving`, {sha, resource})
     }
@@ -616,7 +664,6 @@ export default function ResourceCard({
       : isResourceTsv && cardResourceId !== 'twl' ? TsvAddAndDeleteButtons
       : (<></>)
     ]
-
 
   return (
     <Card
