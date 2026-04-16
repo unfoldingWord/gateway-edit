@@ -529,7 +529,7 @@ export default function ResourceCard({
       try {
         // If not using user branch create it then save the edit.
         if (!usingUserBranch) {
-          console.log(`handleSaveEdit() creating edit branch`, {sha, resource})
+          // console.log(`handleSaveEdit() creating edit branch`, {sha, resource})
           const branch = await startEdit()
 
           if (branch) {
@@ -539,7 +539,7 @@ export default function ResourceCard({
             onResourceError && onResourceError(null, false, null, `Error creating edit branch ${languageId}_${resourceId}`, true)
           }
         } else {// Else just save the edit.
-          console.log(`handleSaveEdit() using edit branch`, {sha, resource})
+          // console.log(`handleSaveEdit() using edit branch`, {sha, resource})
           await saveEdit(null, newContent)
         }
       } catch (error) {
