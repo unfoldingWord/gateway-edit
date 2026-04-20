@@ -1,6 +1,6 @@
 {
   "name": "gateway-edit",
-  "version": "2.4.11",
+  "version": "2.4.12",
   "engines": {
     "node": ">=18.18.0"
   },
@@ -50,7 +50,7 @@
     "core-js": "^3.8.3",
     "deep-equal": "^2.0.5",
     "enhanced-word-aligner-rcl": "1.4.5",
-    "gitea-react-toolkit": "2.4.1",
+    "gitea-react-toolkit": "2.4.2",
     "localforage": "^1.9.0",
     "lodash.clonedeep": "^4.5.0",
     "markdown-translatable": "2.0.3",
@@ -67,7 +67,7 @@
     "resource-workspace-rcl": "2.1.4",
     "scripture-resources-rcl": "6.6.2",
     "scripture-tsv": "1.2.0",
-    "single-scripture-rcl": "3.5.5",
+    "single-scripture-rcl": "3.5.6",
     "tailwindcss": "^2.0.4",
     "tc-ui-toolkit": "5.3.3",
     "translation-helps-rcl": "3.6.10",
