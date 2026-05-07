@@ -132,38 +132,38 @@ jobs:
           set_installer_output "gwe_qa_x64" "GatewayEditElectroniteQA*x64*.exe"
           set_installer_output "gwe_qa_arm64" "GatewayEditElectroniteQA*arm64*.exe"
 
-      - name: Upload GatewayEditElectronite x64 DMG
+      - name: Upload GatewayEditElectronite x64 EXE
 #        if: ${{ steps.find-dmgs.outputs.gwe_x64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.find-dmgs.outputs.gwe_x64_name }}
-          path: ${{ steps.find-dmgs.outputs.gwe_x64_path }}
+          name: ${{ steps.find-installs.outputs.gwe_x64_name }}
+          path: ${{ steps.find-installs.outputs.gwe_x64_path }}
           if-no-files-found: error
 
-      - name: Upload GatewayEditElectronite arm64 DMG
+      - name: Upload GatewayEditElectronite arm64 EXE
         if: ${{ false }}
 #        if: ${{ steps.find-dmgs.outputs.gwe_arm64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.find-dmgs.outputs.gwe_arm64_name }}
-          path: ${{ steps.find-dmgs.outputs.gwe_arm64_path }}
+          name: ${{ steps.find-installs.outputs.gwe_arm64_name }}
+          path: ${{ steps.find-installs.outputs.gwe_arm64_path }}
           if-no-files-found: error
 
-      - name: Upload GatewayEditElectroniteQA x64 DMG
+      - name: Upload GatewayEditElectroniteQA x64 EXE
 #        if: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.find-dmgs.outputs.gwe_qa_x64_name }}
-          path: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path }}
+          name: ${{ steps.find-installs.outputs.gwe_qa_x64_name }}
+          path: ${{ steps.find-installs.outputs.gwe_qa_x64_path }}
           if-no-files-found: error
 
-      - name: Upload GatewayEditElectroniteQA arm64 DMG
+      - name: Upload GatewayEditElectroniteQA arm64 EXE
         if: ${{ false }}
 #        if: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_name }}
-          path: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path }}
+          name: ${{ steps.find-installs.outputs.gwe_qa_arm64_name }}
+          path: ${{ steps.find-installs.outputs.gwe_qa_arm64_path }}
           if-no-files-found: error
 
 
