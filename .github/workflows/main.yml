@@ -100,9 +100,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Configure Yarn registry
+        # Hack to fix yarn timeout issue on Windows
         run: yarn config set registry https://registry.npmjs.org/
 
       - name: Install dependencies
+        # Hack to fix yarn timeout issue on Windows
         run: yarn install --frozen-lockfile --network-timeout 600000
 
       - name: Build Windows Electron Installs
