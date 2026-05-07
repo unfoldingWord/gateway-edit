@@ -6,8 +6,11 @@ param(
 )
 
 $APP_DIR = "gatewayedit-desktop"
-$APP_NAME = "GatewayEdit"
+$APP_NAME = "GatewayEditElectronite"
 $APP_ID = "com.unfoldingWord.gatewayedit" # change to your reverse-DNS id
+
+$env:APP_NAME = $APP_NAME
+$env:APP_ID = $APP_ID
 
 Write-Host "APP_DIR: $APP_DIR"
 Write-Host "APP_NAME: $APP_NAME"
@@ -24,7 +27,7 @@ if ($arch -ne "x64" -and $arch -ne "arm64") {
 Write-Host "Using target arch: $arch"
 
 if ($QA_MODE) {
-    $APP_NAME = "${APP_NAME}Develop"
+    $APP_NAME = "${APP_NAME}QA"
     Write-Host "Doing QA build to $APP_NAME"
     $env:APP_NAME = $APP_NAME
     $env:APP_ID = $APP_ID
@@ -32,6 +35,7 @@ if ($QA_MODE) {
 
 Remove-Item -Recurse -Force $APP_DIR -ErrorAction Ignore
 New-Item -ItemType Directory -Force $APP_DIR | Out-Null
+Copy-Item -Recurse ./shared-build/* $APP_DIR
 Copy-Item -Recurse ./win-build/* $APP_DIR
 Set-Location $APP_DIR
 
@@ -85,6 +89,9 @@ pkg.build = {
 
 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
 '@ | node
+
+# remove .\dist folder
+Remove-Item -Recurse -Force .\dist -ErrorAction Ignore
 
 # Install & package (creates installer in ./dist/)
 yarn install
@@ -159,12 +166,22 @@ yarn $INSTALLER_SCRIPT
 
     foreach ($installer in $installer_files) {
         $base = $installer.Name
-        if ($base -like "*-$arch.exe") {
+
+        # Ensure "Windows" appears before "Setup" only if it is not already there
+        $new_base = $base
+        if ($new_base -notmatch '\bWindows\s+Setup\b') {
+            $new_base = $new_base -replace '\bSetup\b', 'Windows Setup'
+        }
+
+    # Ensure "-<arch>" appears before ".exe"
+    if ($new_base -notlike "*-$arch.exe") {
+        $new_base = $new_base -replace '\.exe$', "-$arch.exe"
+    }
+
+    if ($new_base -eq $base) {
             continue
         }
 
-        # Insert "-<arch>" before ".exe"
-        $new_base = $base -replace '\.exe$', "-$arch.exe"
         $new_path = Join-Path $installer.DirectoryName $new_base
 
         # Avoid clobbering if it already exists
