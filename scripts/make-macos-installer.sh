@@ -38,7 +38,7 @@ fi
 echo "Using target arch: $ARCH"
 
 if [[ "$QA_MODE" == "true" ]]; then
-  APP_NAME="${APP_NAME}Develop"
+  APP_NAME="${APP_NAME}QA"
   echo "Doing QA build to $APP_NAME"
 
   export APP_NAME

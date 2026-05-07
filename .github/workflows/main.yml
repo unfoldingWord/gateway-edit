@@ -29,12 +29,61 @@ jobs:
       - name: Build macOS Electron app
         run: yarn run mac:build-all-gwe-electron
 
-      - name: Upload macOS Electron artifacts
+      - name: Find macOS Electron DMGs
+        id: find-dmgs
+        shell: bash
+        run: |
+          set -e
+
+          set_dmg_output() {
+            local output_prefix="$1"
+            local pattern="$2"
+            local file
+
+            file="$(find ./dist -maxdepth 1 -type f -name "$pattern" | head -n 1 || true)"
+
+            if [ -n "$file" ]; then
+              echo "${output_prefix}_path=$file" >> "$GITHUB_OUTPUT"
+              echo "${output_prefix}_name=$(basename "$file")" >> "$GITHUB_OUTPUT"
+            fi
+          }
+
+          set_dmg_output "gwe_x64" "GatewayEditElectronite-*x64*.dmg"
+          set_dmg_output "gwe_arm64" "GatewayEditElectronite-*arm64*.dmg"
+          set_dmg_output "gwe_qa_x64" "GatewayEditElectroniteQA-*x64*.dmg"
+          set_dmg_output "gwe_qa_arm64" "GatewayEditElectroniteQA-*arm64*.dmg"
+
+      - name: Upload GatewayEditElectronite x64 DMG
+#        if: ${{ steps.find-dmgs.outputs.gwe_x64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: mac-electron-dist
-          path: ./dist/
+          name: ${{ steps.find-dmgs.outputs.gwe_x64_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_x64_path }}
+          if-no-files-found: error
 
+      - name: Upload GatewayEditElectronite arm64 DMG
+#        if: ${{ steps.find-dmgs.outputs.gwe_arm64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_arm64_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_arm64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectroniteQA x64 DMG
+#        if: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_qa_x64_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectroniteQA arm64 DMG
+#        if: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path }}
+          if-no-files-found: error
 
   tests-run:
     # disable until we have a better way to test this
