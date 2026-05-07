@@ -138,6 +138,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload GatewayEditElectronite arm64 DMG
+        if: ${{ false }}
 #        if: ${{ steps.find-dmgs.outputs.gwe_arm64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
@@ -154,6 +155,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload GatewayEditElectroniteQA arm64 DMG
+        if: ${{ false }}
 #        if: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
