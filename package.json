@@ -32,7 +32,8 @@
     "mac:build-gwe-arm64-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --arm64\"",
     "mac:build-gwe-arm64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --arm64\"",
     "mac:build-gwe-x64-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --x64\"",
-    "mac:build-gwe-x64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --x64\""
+    "mac:build-gwe-x64-debug-install": "bash -c \"cd ./scripts && chmod +x make-macos-installer.sh && ./make-macos-installer.sh --qa --x64\"",
+    "mac:build-all-gwe-electron": "npm run mac:build-gwe-arm64-install && npm run mac:build-gwe-x64-install && npm run mac:build-gwe-arm64-debug-install && npm run mac:build-gwe-x64-debug-install"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",

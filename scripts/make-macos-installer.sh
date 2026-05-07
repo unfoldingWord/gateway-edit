@@ -5,8 +5,11 @@ set -euo pipefail
 set -x
 
 APP_DIR="gatewayedit-desktop"
-APP_NAME="GatewayEdit"
+APP_NAME="GatewayEditElectronite"
 APP_ID="com.unfoldingWord.gatewayedit" # change to your reverse-DNS id
+
+export APP_NAME
+export APP_ID
 
 QA_MODE=false
 ARCH="arm64" # default: Apple Silicon
@@ -81,7 +84,7 @@ node - <<'NODE'
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
-const productName = process.env.APP_NAME || "GatewayEdit";
+const productName = process.env.APP_NAME || "GatewayEditElectron";
 
 pkg.build = {
   productName,
@@ -91,7 +94,7 @@ pkg.build = {
     target: ["dmg"]
   },
   dmg: {
-    title: process.env.APP_NAME || "GatewayEdit"
+    title: process.env.APP_NAME || "GatewayEditElectron"
   }
 };
 
@@ -136,12 +139,21 @@ fi
 
 for dmg in "${dmg_files[@]}"; do
   base="$(basename "$dmg")"
-  if [[ "$base" == *"$ARCH"* ]]; then
+  echo "Base name is $base and dmg is $dmg"
+
+  if [[ "$base" == *"-darwin-$ARCH.dmg" ]]; then
+    echo "DMG already has target platform/arch suffix: $base"
     continue
+  elif [[ "$base" == *"-$ARCH.dmg" ]]; then
+    # Convert "...-<arch>.dmg" to "...-darwin-<arch>.dmg"
+    new_base="${base%-$ARCH.dmg}-darwin-$ARCH.dmg"
+    echo "Renaming DMG from $dmg to new_base"
+  else
+    # Insert "-darwin-<arch>" before ".dmg"
+    new_base="${base%.dmg}-darwin-$ARCH.dmg"
+    echo "Renaming DMG from $dmg to new_base"
   fi
 
-  # Insert "-<arch>" before ".dmg"
-  new_base="${base%.dmg}-$ARCH.dmg"
   new_path="./dist/$new_base"
 
   # Avoid clobbering if it already exists
@@ -161,7 +173,7 @@ cp -f ./dist/*.dmg ../../dist/
 echo
 echo "Done."
 echo "Target arch: $ARCH"
-echo "App bundle: $APP_DIR/out/$APP_NAME-darwin-$ARCH/"
+echo "App bundle: $APP_DIR/out/$new_path/"
 echo "DMG:        $APP_DIR/dist/ (look for a .dmg)"
 echo "DMG copied to: ../../dist/"
 ls -als ../../dist

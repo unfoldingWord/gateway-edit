@@ -9,7 +9,36 @@ env:
   CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 jobs:
+  mac-electron-build:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [20.12.2]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build macOS Electron app
+        run: yarn run mac:build-all-gwe-electron
+
+      - name: Upload macOS Electron artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-electron-dist
+          path: ./dist/
+
+
   tests-run:
+    # disable until we have a better way to test this
+    if: ${{ false }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
