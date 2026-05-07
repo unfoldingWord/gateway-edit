@@ -9,6 +9,9 @@ $APP_DIR = "gatewayedit-desktop"
 $APP_NAME = "GatewayEdit"
 $APP_ID = "com.unfoldingWord.gatewayedit" # change to your reverse-DNS id
 
+$env:APP_NAME = $APP_NAME
+$env:APP_ID = $APP_ID
+
 Write-Host "APP_DIR: $APP_DIR"
 Write-Host "APP_NAME: $APP_NAME"
 Write-Host "APP_ID: $APP_ID"
@@ -87,6 +90,9 @@ pkg.build = {
 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
 '@ | node
 
+# remove .\dist folder
+Remove-Item -Recurse -Force .\dist -ErrorAction Ignore
+
 # Install & package (creates installer in ./dist/)
 yarn install
 
@@ -160,12 +166,22 @@ yarn $INSTALLER_SCRIPT
 
     foreach ($installer in $installer_files) {
         $base = $installer.Name
-        if ($base -like "*-$arch.exe") {
+
+        # Ensure "Windows" appears before "Setup" only if it is not already there
+        $new_base = $base
+        if ($new_base -notmatch '\bWindows\s+Setup\b') {
+            $new_base = $new_base -replace '\bSetup\b', 'Windows Setup'
+        }
+
+    # Ensure "-<arch>" appears before ".exe"
+    if ($new_base -notlike "*-$arch.exe") {
+        $new_base = $new_base -replace '\.exe$', "-$arch.exe"
+    }
+
+    if ($new_base -eq $base) {
             continue
         }
 
-        # Insert "-<arch>" before ".exe"
-        $new_base = $base -replace '\.exe$', "-$arch.exe"
         $new_path = Join-Path $installer.DirectoryName $new_base
 
         # Avoid clobbering if it already exists
