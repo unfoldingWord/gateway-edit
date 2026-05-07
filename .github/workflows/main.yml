@@ -99,8 +99,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Configure Yarn registry
+        run: yarn config set registry https://registry.npmjs.org/
+
       - name: Install dependencies
-        run: yarn
+        run: yarn install --frozen-lockfile --network-timeout 600000
 
       - name: Build Windows Electron Installs
         run: yarn run win:build-all-gwe-electron
