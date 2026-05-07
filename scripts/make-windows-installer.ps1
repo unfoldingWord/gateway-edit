@@ -24,7 +24,7 @@ if ($arch -ne "x64" -and $arch -ne "arm64") {
 Write-Host "Using target arch: $arch"
 
 if ($QA_MODE) {
-    $APP_NAME = "${APP_NAME}Develop"
+    $APP_NAME = "${APP_NAME}QA"
     Write-Host "Doing QA build to $APP_NAME"
     $env:APP_NAME = $APP_NAME
     $env:APP_ID = $APP_ID
