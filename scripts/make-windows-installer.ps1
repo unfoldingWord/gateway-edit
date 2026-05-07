@@ -32,6 +32,7 @@ if ($QA_MODE) {
 
 Remove-Item -Recurse -Force $APP_DIR -ErrorAction Ignore
 New-Item -ItemType Directory -Force $APP_DIR | Out-Null
+Copy-Item -Recurse ./shared-build/* $APP_DIR
 Copy-Item -Recurse ./win-build/* $APP_DIR
 Set-Location $APP_DIR
 

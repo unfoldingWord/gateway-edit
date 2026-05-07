@@ -47,6 +47,7 @@ fi
 
 rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR"
+cp -R ./shared-build/* "$APP_DIR"
 cp -R ./mac-build/* "$APP_DIR"
 cd "$APP_DIR"
 
