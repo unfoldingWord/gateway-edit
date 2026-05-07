@@ -6,7 +6,7 @@ param(
 )
 
 $APP_DIR = "gatewayedit-desktop"
-$APP_NAME = "GatewayEdit"
+$APP_NAME = "GatewayEditElectronite"
 $APP_ID = "com.unfoldingWord.gatewayedit" # change to your reverse-DNS id
 
 $env:APP_NAME = $APP_NAME
