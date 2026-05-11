@@ -32,7 +32,7 @@ import {
 } from 'scripture-tsv'
 const { getChapterVerse } = tsvRowUtils
 const { tsvsObjectToFileString } = tsvDataActions
-import { useEdit } from 'gitea-react-toolkit'
+import { getPatch, useEdit } from 'gitea-react-toolkit'
 import { getResourceErrorMessage } from 'single-scripture-rcl'
 import isEqual from 'deep-equal'
 import { getResourceMessage } from '@utils/resources'
@@ -45,8 +45,6 @@ import generateEditFilePath from '@utils/generateEditFilePath'
 import getSha from '@utils/getSha'
 import { StoreContext } from '@context/StoreContext'
 import { delay } from '../utils/resources'
-import { getPatch } from "gitea-react-toolkit"
-
 
 export default function ResourceCard({
   appRef,
@@ -441,6 +439,26 @@ export default function ResourceCard({
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
   /**
+   * Handles successful save operations for resource content.
+   *
+   * Updates the saved state, notifies parent components of the save,
+   * stores the saved content for future patch operations, and triggers
+   * a resource reload after a short delay.
+   *
+   * @param {string} contentToSave - The content that was successfully saved
+   */
+  function handleSaveSuccess(contentToSave) {
+    setSaved(true)
+    setSavedChanges(cardResourceId, true)
+    // console.log('setting saved content', contentToSave?.substring(0, 100));
+    setSavedContent(contentToSave);
+    delay(500).then(() => {
+      console.info('handleSaveEdit() Reloading resource')
+      reloadResource()
+    })
+  }
+
+  /**
    * Handles saving edits to a resource file.
    *
    * This function manages the process of saving content changes to a resource file,
@@ -501,17 +519,32 @@ export default function ResourceCard({
       }
 
       if (success) {
-        setSaved(true)
-        setSavedChanges(cardResourceId, true)
-        // console.log('setting saved content', contentToSave?.substring(0, 100));
-        setSavedContent(contentToSave);
-        delay(500).then(() => {
-          console.info('handleSaveEdit() Reloading resource')
-          reloadResource()
-        })
+        handleSaveSuccess(contentToSave)
       } else {
-        console.warn(`handleSaveEdit() failed to save edit branch`, { sha, resource })
-        setContextLines(contextLines + 1)
+        console.warn(`handleSaveEdit() failed to save edit branch`, {sha, resource})
+
+        if (doDiffPatch) {
+          // increase contextLines and try again
+          let newContextLines = contextLines + 1
+          if (newContextLines > 10) {
+            newContextLines = 3
+          }
+          setContextLines(newContextLines)
+
+          // // TODO - patch retry - doesn't yet work, but maybe later come up with something quicker then uploadling whole file
+          // console.log(`handleSaveEdit() bump newContextLines and retry`)
+          // diffPatch = getPatch(editFilePath, savedContent, contentToSave, false, newContextLines)
+          // success = await onSaveEditPatch(branch, diffPatch)
+
+          // full save
+          console.log(`handleSaveEdit() fall back to sending full file ${content.length}`)
+          success = await onSaveEdit(branch, newContent)
+
+          if (success) {
+            handleSaveSuccess(contentToSave)
+          }
+        }
+
         const message =
           getResourceErrorMessage(resourceStatus) +
           ` ${owner}/${languageId}/${projectId}/${workingResourceBranch}`
