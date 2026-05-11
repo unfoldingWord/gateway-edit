@@ -20,7 +20,7 @@
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "productName": "GatewayEdit",
+    "productName": "GatewayEditElectronite",
     "appId": "com.example.gatewayedit",
     "mac": {
       "icon": "assets/icon.icns",
@@ -30,7 +30,7 @@
       ]
     },
     "dmg": {
-      "title": "GatewayEdit",
+      "title": "GatewayEditElectronite",
       "icon": "assets/icon.icns"
     }
   }
