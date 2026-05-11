@@ -7,8 +7,10 @@
     "start": "electronite .",
     "dist:mac-arm64": "electronite-packager . \"$npm_package_build_productName\" --platform=darwin --arch=arm64 --overwrite --out=out --app-bundle-id=\"$npm_package_build_appId\" --name=\"$npm_package_build_productName\" --icon=./assets/icon.icns",
     "dist:mac-x64": "electronite-packager . \"$npm_package_build_productName\" --platform=darwin --arch=x64 --overwrite --out=out --app-bundle-id=\"$npm_package_build_appId\" --name=\"$npm_package_build_productName\" --icon=./assets/icon.icns",
+    "dist:mac-universal": "electronite-packager . \"$npm_package_build_productName\" --platform=darwin --arch=universal --overwrite --out=out --app-bundle-id=\"$npm_package_build_appId\" --name=\"$npm_package_build_productName\" --icon=./assets/icon.icns",
     "dmg:mac-arm64": "electron-builder --arm64 --mac dmg --prepackaged out/$npm_package_build_productName-darwin-arm64",
-    "dmg:mac-x64": "electron-builder --x64 --mac dmg --prepackaged out/$npm_package_build_productName-darwin-x64"
+    "dmg:mac-x64": "electron-builder --x64 --mac dmg --prepackaged out/$npm_package_build_productName-darwin-x64",
+    "dmg:mac-universal": "electron-builder --universal --mac dmg --prepackaged out/$npm_package_build_productName-darwin-universal"
   },
   "dependencies": {},
   "devDependencies": {
@@ -18,7 +20,7 @@
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "productName": "GatewayEdit",
+    "productName": "GatewayEditElectronite",
     "appId": "com.example.gatewayedit",
     "mac": {
       "icon": "assets/icon.icns",
@@ -28,7 +30,7 @@
       ]
     },
     "dmg": {
-      "title": "GatewayEdit",
+      "title": "GatewayEditElectronite",
       "icon": "assets/icon.icns"
     }
   }
