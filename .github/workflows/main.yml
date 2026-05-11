@@ -50,11 +50,13 @@ jobs:
 
           set_dmg_output "gwe_x64" "GatewayEditElectronite-*x64*.dmg"
           set_dmg_output "gwe_arm64" "GatewayEditElectronite-*arm64*.dmg"
+          set_dmg_output "gwe_universal" "GatewayEditElectronite-*universal*.dmg"
           set_dmg_output "gwe_qa_x64" "GatewayEditElectroniteQA-*x64*.dmg"
           set_dmg_output "gwe_qa_arm64" "GatewayEditElectroniteQA-*arm64*.dmg"
+          set_dmg_output "gwe_qa_universal" "GatewayEditElectroniteQA-*universal*.dmg"
 
       - name: Upload GatewayEditElectronite x64 DMG
-#        if: ${{ steps.find-dmgs.outputs.gwe_x64_path != '' }}
+        if: ${{ steps.find-dmgs.outputs.gwe_x64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.find-dmgs.outputs.gwe_x64_name }}
@@ -62,15 +64,23 @@ jobs:
           if-no-files-found: error
 
       - name: Upload GatewayEditElectronite arm64 DMG
-#        if: ${{ steps.find-dmgs.outputs.gwe_arm64_path != '' }}
+        if: ${{ steps.find-dmgs.outputs.gwe_arm64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.find-dmgs.outputs.gwe_arm64_name }}
           path: ${{ steps.find-dmgs.outputs.gwe_arm64_path }}
           if-no-files-found: error
 
+      - name: Upload GatewayEditElectronite universal DMG
+#        if: ${{ steps.find-dmgs.outputs.gwe_universal_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_universal_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_universal_path }}
+          if-no-files-found: error
+
       - name: Upload GatewayEditElectroniteQA x64 DMG
-#        if: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path != '' }}
+        if: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.find-dmgs.outputs.gwe_qa_x64_name }}
@@ -78,11 +88,19 @@ jobs:
           if-no-files-found: error
 
       - name: Upload GatewayEditElectroniteQA arm64 DMG
-#        if: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path != '' }}
+        if: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_name }}
           path: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectroniteQA universal DMG
+#        if: ${{ steps.find-dmgs.outputs.gwe_qa_universal_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_qa_universal_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_qa_universal_path }}
           if-no-files-found: error
 
   win-electron-build:
