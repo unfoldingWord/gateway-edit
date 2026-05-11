@@ -438,6 +438,15 @@ export default function ResourceCard({
 
   const message = getResourceMessage(resourceStatus, owner, languageId, resourceId, server, workingResourceBranch)
 
+  /**
+   * Handles successful save operations for resource content.
+   *
+   * Updates the saved state, notifies parent components of the save,
+   * stores the saved content for future patch operations, and triggers
+   * a resource reload after a short delay.
+   *
+   * @param {string} contentToSave - The content that was successfully saved
+   */
   function handleSaveSuccess(contentToSave) {
     setSaved(true)
     setSavedChanges(cardResourceId, true)
@@ -522,13 +531,14 @@ export default function ResourceCard({
           }
           setContextLines(newContextLines)
 
-          console.log(`handleSaveEdit() bump newContextLines and retry`)
-          diffPatch = getPatch(editFilePath, savedContent, contentToSave, false, newContextLines)
-          success = await onSaveEditPatch(branch, diffPatch)
+          // // TODO - patch retry - doesn't yet work, but maybe later come up with something quicker then uploadling whole file
+          // console.log(`handleSaveEdit() bump newContextLines and retry`)
+          // diffPatch = getPatch(editFilePath, savedContent, contentToSave, false, newContextLines)
+          // success = await onSaveEditPatch(branch, diffPatch)
 
           // full save
-          // console.log(`handleSaveEdit() fall back to sending full file ${content.length}`)
-          // success = await onSaveEdit(branch, newContent)
+          console.log(`handleSaveEdit() fall back to sending full file ${content.length}`)
+          success = await onSaveEdit(branch, newContent)
 
           if (success) {
             handleSaveSuccess(contentToSave)
