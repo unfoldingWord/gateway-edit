@@ -630,6 +630,9 @@ function WorkspaceContainer() {
   useEffect(() => { // run once at initialization
     setTranslate(translate)
 
+    const runningInElectron = isRunningInElectron();
+    console.log(`WorkspaceContainer - running in Electron: ${runningInElectron}`);
+
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
 
     if (missingOrignalBibles) { // if we don't have a path
