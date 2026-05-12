@@ -206,12 +206,14 @@ export function isRunningInElectron() {
     const userAgent = window.navigator?.userAgent?.toLowerCase()
 
     if (userAgent.includes('electron')) {
+      console.log('isRunningInElectron() - detected Electron user agent')
       return true
     }
 
     const win = window
 
     if (win.process?.type === 'renderer' || win.process?.versions?.electron) {
+      console.log('isRunningInElectron() - detected win Electron process type or version')
       return true
     }
   }
@@ -220,6 +222,7 @@ export function isRunningInElectron() {
     typeof process !== 'undefined' &&
     process.versions?.electron
   ) {
+    console.log('isRunningInElectron() - detected Electron process version')
     return true
   }
 
