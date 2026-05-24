@@ -194,3 +194,37 @@ export function delay(ms) {
   )
 }
 
+/**
+ * Detects if the application is running within an Electron environment.
+ * Checks multiple indicators including user agent, window process properties,
+ * and Node.js process versions to determine if Electron is present.
+ *
+ * @return {boolean} true if running in Electron, false otherwise
+ */
+export function isRunningInElectron() {
+  if (typeof window !== 'undefined') {
+    const userAgent = window.navigator?.userAgent?.toLowerCase()
+
+    if (userAgent.includes('electron')) {
+      console.log('isRunningInElectron() - detected Electron user agent')
+      return true
+    }
+
+    const win = window
+
+    if (win.process?.type === 'renderer' || win.process?.versions?.electron) {
+      console.log('isRunningInElectron() - detected win Electron process type or version')
+      return true
+    }
+  }
+
+  if (
+    typeof process !== 'undefined' &&
+    process.versions?.electron
+  ) {
+    console.log('isRunningInElectron() - detected Electron process version')
+    return true
+  }
+
+  return false
+}

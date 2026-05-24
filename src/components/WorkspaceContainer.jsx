@@ -32,7 +32,12 @@ import {
 } from 'single-scripture-rcl'
 import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
-import { delay, getLatestBibleRepo, getResourceBibles } from '@utils/resources'
+import {
+  delay,
+  getLatestBibleRepo,
+  getResourceBibles,
+  isRunningInElectron
+} from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { BIBLES_ABBRV_INDEX, isNT } from '@common/BooksOfTheBible'
 import { getLanguage } from '@common/languages'
@@ -629,6 +634,9 @@ function WorkspaceContainer() {
 
   useEffect(() => { // run once at initialization
     setTranslate(translate)
+
+    const runningInElectron = isRunningInElectron();
+    console.log(`WorkspaceContainer - running in Electron: ${runningInElectron}`);
 
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
 
