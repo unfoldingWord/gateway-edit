@@ -12,6 +12,7 @@
     "build:vite": "vite build",
     "start": "bash -c \"source ./scripts/set-env.sh && next start\"",
     "start:vite": "vite preview",
+    "update-languages": "bash ./scripts/update-languages.sh",
     "export": "next export",
     "postinstall": "husky install",
     "increment-build": "bash scripts/increment-build.sh && git add -A",
