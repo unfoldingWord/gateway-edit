@@ -208,6 +208,8 @@ export function isRunningInElectron() {
     if (userAgent.includes('electron')) {
       const electronVersion = userAgent.match(/electron\/(\S+)/)?.[1]
       console.log(`isRunningInElectron() - detected Electron user agent: ${electronVersion}`)
+      console.log(`App Version:`, window.env.APP_VERSION);
+      console.log(`Electronite Version:`, window.env.ELECTRONITE_VERSION);
       return true
     }
 
