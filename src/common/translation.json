@@ -177,7 +177,7 @@
   "suggestions.retrain_button_hint": "Click to improve the quality of alignment suggestions based on current book alignments",
   "suggestions.no_data"            : "Model is not trained.\nPlease load translation memory by navigating to aligned books and launching alignment tool.\nThen navigate back to this book and do training.",
   "suggestions.auto_update_memory_label": "Auto Update Translation Memory",
-  "suggestions.auto_update_memory_hint" : "Automatically update translation memory in alignment model when content changes.  Note that suggestions will only work if you have previously clicked the train button for current book.",
+  "suggestions.auto_update_memory_hint" : "Automatically update translation memory in alignment model when content changes.  Warning - this can slow down your computer, so you probably don't want this on.  Note that suggestions will only work if you have previously clicked the train button for current book.",
   "training.model_info_title"      : "Alignment Model Information",
   "training.alignments_title"      : "Global Alignment Memory for Books:",
   "training.delete_book_hint"      : "Delete alignment data for {{bookId}}",
