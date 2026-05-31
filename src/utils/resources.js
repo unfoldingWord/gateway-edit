@@ -206,7 +206,8 @@ export function isRunningInElectron() {
     const userAgent = window.navigator?.userAgent?.toLowerCase()
 
     if (userAgent.includes('electron')) {
-      console.log('isRunningInElectron() - detected Electron user agent')
+      const electronVersion = userAgent.match(/electron\/(\S+)/)?.[1]
+      console.log(`isRunningInElectron() - detected Electron user agent: ${electronVersion}`)
       return true
     }
 
