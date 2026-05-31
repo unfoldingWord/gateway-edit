@@ -50,6 +50,7 @@ function getBookData(alignerStatus) {
 }
 
 const wordSuggesterConfig= {
+  doAutoUpdateTranslationMemory: false, // set true to enable auto updating of translation memory (uses previous training data)
   doAutoLoadCachedTraining: true, // set true to enable auto loading of cached training data (uses previous training data)
   doAutoTraining: false, // set true to enable auto training of alignment suggestions
   trainOnlyOnCurrentBook: false, // if true, then training is sped up for small books by just training on alignment memory data for current book

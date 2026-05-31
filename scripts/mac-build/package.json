@@ -14,8 +14,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "electronite": "25.3.2-graphite",
-    "electron": "25.3.2",
+    "electronite": "39.2.6-graphite",
+    "electron": "39.2.6",
     "electronite-packager": "17.1.1-graphite",
     "electron-builder": "^24.13.3"
   },

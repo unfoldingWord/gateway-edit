@@ -80,6 +80,10 @@ yarn dev
 yarn run cypress
 ```
 
+### Electronite Testing
+- in console run `window.location="http://localhost:3000/"`
+
+
 ### Running Cypress tests headless
 
 - in terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
@@ -92,6 +96,11 @@ yarn test:headless
 
 - "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
 
+### Storage
+#### Application General
+- stored in localStorage under username
+- allignment data is stored in indexedDB ('app-state', 'dataStore')
+- lexicon is cached in indexedDB gloss-store
 
 ## UI Design
 
