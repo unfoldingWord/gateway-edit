@@ -256,6 +256,7 @@ function WordAlignerDialog({
   });
 
   const {
+    state: { lowMemoryWarning },
     actions: {
       getSuggester,
       getTrainingContextId,
@@ -395,6 +396,7 @@ function WordAlignerDialog({
     [
       contextId,
       errorMessage,
+      lowMemoryWarning,
       showDialog,
       sourceLanguageId,
       targetLanguage,
