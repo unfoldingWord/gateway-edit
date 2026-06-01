@@ -34,9 +34,12 @@ import { DraggableCard, useResourceClickListener } from 'translation-helps-rcl'
 import ResourceCard from '@components/ResourceCard'
 import {
   delay,
+  getElectroniteVersion,
+  getElectronVersion,
+  getGatewayAppVersion,
   getLatestBibleRepo,
   getResourceBibles,
-  isRunningInElectron
+  isRunningInElectronOrElectronite
 } from '@utils/resources'
 import { StoreContext } from '@context/StoreContext'
 import { BIBLES_ABBRV_INDEX, isNT } from '@common/BooksOfTheBible'
@@ -635,8 +638,21 @@ function WorkspaceContainer() {
   useEffect(() => { // run once at initialization
     setTranslate(translate)
 
-    const runningInElectron = isRunningInElectron();
-    console.log(`WorkspaceContainer - running in Electron: ${runningInElectron}`);
+    const runningInElectron = isRunningInElectronOrElectronite();
+    console.log(`WorkspaceContainer - running in Electron/Electronite: ${runningInElectron}`);
+    if (runningInElectron) {
+      const electronVersion = getElectronVersion();
+      const electroniteVersion = getElectroniteVersion();
+      if (electroniteVersion) {
+        console.log(`WorkspaceContainer - Electronite version: ${electroniteVersion}`);
+        const gatewayAppVersion = getGatewayAppVersion();
+        if (gatewayAppVersion) {
+          console.log(`WorkspaceContainer - detected running Gateway App version: ${gatewayAppVersion}`);
+        }
+      } else {
+        console.log(`WorkspaceContainer - Electron version: ${electronVersion}`);
+      }
+    }
 
     const missingOrignalBibles = !hebrewRepoUrl || !greekRepoUrl
 
