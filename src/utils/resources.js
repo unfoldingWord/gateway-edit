@@ -195,26 +195,48 @@ export function delay(ms) {
 }
 
 /**
- * Detects if the application is running within an Electron environment.
+ * Detects and retrieves the Electron version from the user agent string.
+ * Checks if the application is running in a browser environment and searches
+ * for the Electron version in the user agent string.
+ *
+ * @return {string|null} The Electron version string if detected, null otherwise
+ */
+export function getElectronVersion() {
+  let electronVersion = null;
+  if (typeof window !== 'undefined') {
+    const userAgent = window?.navigator?.userAgent?.toLowerCase()
+
+    if (userAgent?.includes('electron')) {
+      electronVersion = userAgent.match(/electron\/(\S+)/)?.[1]
+      // console.log(`isRunningInElectron() - detected Electron user agent: ${electronVersion}`)
+    }
+  }
+
+  return electronVersion;
+}
+
+/**
+ * Detects if the application is running within an Electron/Electronite environment.
  * Checks multiple indicators including user agent, window process properties,
  * and Node.js process versions to determine if Electron is present.
  *
  * @return {boolean} true if running in Electron, false otherwise
  */
-export function isRunningInElectron() {
+export function isRunningInElectronOrElectronite() {
   if (typeof window !== 'undefined') {
-    const userAgent = window.navigator?.userAgent?.toLowerCase()
-
-    if (userAgent.includes('electron')) {
-      const electronVersion = userAgent.match(/electron\/(\S+)/)?.[1]
-      console.log(`isRunningInElectron() - detected Electron user agent: ${electronVersion}`)
-      return true
+    const electronVersion = getElectronVersion();
+    if (electronVersion) {
+      return true;
     }
 
     const win = window
+    if (win?.process?.type === 'renderer') {
+      console.log('isRunningInElectronOrElectronite() - detected win Electron renderer process type')
+      return true
+    }
 
-    if (win.process?.type === 'renderer' || win.process?.versions?.electron) {
-      console.log('isRunningInElectron() - detected win Electron process type or version')
+    if (win?.process?.versions?.electron) {
+      console.log('isRunningInElectronOrElectronite() - detected win Electron process version:', win.process.versions?.electron)
       return true
     }
   }
@@ -223,9 +245,49 @@ export function isRunningInElectron() {
     typeof process !== 'undefined' &&
     process.versions?.electron
   ) {
-    console.log('isRunningInElectron() - detected Electron process version')
+    console.log('isRunningInElectronOrElectronite() - detected Electron process version:', process.versions?.electron)
     return true
   }
 
   return false
+}
+
+/**
+ * Retrieves the Electronite version from the window environment.
+ * Checks if the application is running in Electron/Electronite and attempts
+ * to access the ELECTRONITE_VERSION from window.env.
+ *
+ * @return {string|null} The Electronite version string if available, null otherwise
+ */
+export function getElectroniteVersion() {
+  let electroniteVersion = null;
+  if (isRunningInElectronOrElectronite()) {
+    if (window.env) {
+      electroniteVersion = window.env.ELECTRONITE_VERSION;
+      // console.log(`getElectroniteVersion() - Electronite Version:`, electroniteVersion);
+    } else {
+      console.log('getElectroniteVersion() - Window environment not available');
+    }
+  }
+  return electroniteVersion
+}
+
+/**
+ * Retrieves the Gateway application version from the window environment.
+ * Checks if the application is running in Electron/Electronite and attempts
+ * to access the APP_VERSION from window.env.
+ *
+ * @return {string|null} The Gateway app version string if available, null otherwise
+ */
+export function getGatewayAppVersion() {
+  let gatewayAppVersion = null;
+  if (isRunningInElectronOrElectronite()) {
+    if (window.env) {
+      gatewayAppVersion = window.env.APP_VERSION;
+      // console.log(`getGatewayAppVersion() - Gateway App Version:`, gatewayAppVersion);
+    } else {
+      console.log('getGatewayAppVersion() - Window environment not available');
+    }
+  }
+  return gatewayAppVersion
 }

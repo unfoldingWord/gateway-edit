@@ -102,6 +102,12 @@ yarn test:headless
 - allignment data is stored in indexedDB ('app-state', 'dataStore')
 - lexicon is cached in indexedDB gloss-store
 
+### Building GateWay Edit Electronite App:
+- see scripts in package.json
+  - example mac build: `yarn run mac:build-gwe-universal-install`
+- Intermediate build folder: `./scripts/gatewayedit-desktop`
+- Final installs are in folder: `./dist`
+
 ## UI Design
 
 - Structure of the React components in this app
