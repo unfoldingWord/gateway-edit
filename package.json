@@ -58,7 +58,7 @@
     "bible-reference-rcl": "1.4.1",
     "core-js": "^3.8.3",
     "deep-equal": "^2.0.5",
-    "enhanced-word-aligner-rcl": "1.4.7",
+    "enhanced-word-aligner-rcl": "1.4.8",
     "gitea-react-toolkit": "2.4.2",
     "localforage": "^1.9.0",
     "lodash.clonedeep": "^4.5.0",

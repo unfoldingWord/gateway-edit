@@ -308,8 +308,10 @@ function WordAlignerArea({
   // calculate maximum height
   const absoluteMaxHeight = 1000;
   const _height = Math.round((wordAlignmentMaxHeight || 640)-100); // sanity check and round
-  const maxHeight = _height > absoluteMaxHeight ? absoluteMaxHeight : _height; // limit to max height
-
+  let maxHeight = _height > absoluteMaxHeight ? absoluteMaxHeight : _height; // limit to max height
+  if (alignmentSuggestionsManage?.state?.lowMemoryWarning) {
+    maxHeight -= 20; // make room for low memory warning
+  }
   const alignerAreaStyle = useMemo(() => ({
     maxHeight: `${maxHeight}px`,
     overflowY: 'auto'
