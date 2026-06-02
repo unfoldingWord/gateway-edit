@@ -5561,10 +5561,10 @@ enhanced-resolve@^5.0.0:
     graceful-fs "^4.2.4"
     tapable "^2.3.0"
 
-enhanced-word-aligner-rcl@1.4.8-beta.2:
-  version "1.4.8-beta.2"
-  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.4.8-beta.2.tgz#16a94ad10f71d1297468b6881e92d4e395080cd4"
-  integrity sha512-8vki8mBF4az0xxvf0rRQPujEg3lYooyT5VkkSXxbo9jwtVh1CmP1MMZeLmxvkEj51cXSwenmtmCtQOWdq91Qmg==
+enhanced-word-aligner-rcl@1.4.8:
+  version "1.4.8"
+  resolved "https://registry.yarnpkg.com/enhanced-word-aligner-rcl/-/enhanced-word-aligner-rcl-1.4.8.tgz#a4acbc138f81b984ee97f6f3599e73db71d0feab"
+  integrity sha512-S+ortmLcfPJPwkeYXMsM7rW2l++RctBg2NULL7lDdFqs7Ac2EDj5607WAfPmm3czZsoHjWoU5NjkBesZCeBRIQ==
   dependencies:
     "@mui/icons-material" "6.5.0"
     "@mui/material" "6.5.0"
