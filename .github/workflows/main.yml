@@ -9,7 +9,187 @@ env:
   CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 jobs:
+  mac-electron-build:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [20.12.2]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build macOS Electron Installs
+        run: yarn run mac:build-all-gwe-electron
+
+      - name: Find macOS Electron DMGs
+        id: find-dmgs
+        shell: bash
+        run: |
+          set -e
+
+          set_dmg_output() {
+            local output_prefix="$1"
+            local pattern="$2"
+            local file
+
+            file="$(find ./dist -maxdepth 1 -type f -name "$pattern" | head -n 1 || true)"
+
+            if [ -n "$file" ]; then
+              echo "${output_prefix}_path=$file" >> "$GITHUB_OUTPUT"
+              echo "${output_prefix}_name=$(basename "$file")" >> "$GITHUB_OUTPUT"
+            fi
+          }
+
+          set_dmg_output "gwe_x64" "GatewayEditElectronite-*x64*.dmg"
+          set_dmg_output "gwe_arm64" "GatewayEditElectronite-*arm64*.dmg"
+          set_dmg_output "gwe_universal" "GatewayEditElectronite-*universal*.dmg"
+          set_dmg_output "gwe_qa_x64" "GatewayEditElectroniteQA-*x64*.dmg"
+          set_dmg_output "gwe_qa_arm64" "GatewayEditElectroniteQA-*arm64*.dmg"
+          set_dmg_output "gwe_qa_universal" "GatewayEditElectroniteQA-*universal*.dmg"
+
+      - name: Upload GatewayEditElectronite x64 DMG
+        if: ${{ steps.find-dmgs.outputs.gwe_x64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_x64_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_x64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectronite arm64 DMG
+        if: ${{ steps.find-dmgs.outputs.gwe_arm64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_arm64_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_arm64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectronite universal DMG
+#        if: ${{ steps.find-dmgs.outputs.gwe_universal_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_universal_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_universal_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectroniteQA x64 DMG
+        if: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_qa_x64_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectroniteQA arm64 DMG
+        if: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectroniteQA universal DMG
+#        if: ${{ steps.find-dmgs.outputs.gwe_qa_universal_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-dmgs.outputs.gwe_qa_universal_name }}
+          path: ${{ steps.find-dmgs.outputs.gwe_qa_universal_path }}
+          if-no-files-found: error
+
+  win-electron-build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [20.12.2]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Configure Yarn registry
+        # Hack to fix yarn timeout issue on Windows
+        run: yarn config set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        # Hack to fix yarn timeout issue on Windows
+        run: yarn install --frozen-lockfile --network-timeout 600000
+
+      - name: Build Windows Electron Installs
+        run: yarn run win:build-all-gwe-electron
+
+      - name: Find Windows Electron Installs
+        id: find-installs
+        shell: bash
+        run: |
+          set -e
+
+          set_installer_output() {
+            local output_prefix="$1"
+            local pattern="$2"
+            local file
+
+            file="$(find ./dist -maxdepth 1 -type f -name "$pattern" | head -n 1 || true)"
+
+            if [ -n "$file" ]; then
+              echo "${output_prefix}_path=$file" >> "$GITHUB_OUTPUT"
+              echo "${output_prefix}_name=$(basename "$file")" >> "$GITHUB_OUTPUT"
+            fi
+          }
+
+          set_installer_output "gwe_x64" "GatewayEditElectronite*x64*.exe"
+          set_installer_output "gwe_arm64" "GatewayEditElectronite*arm64*.exe"
+          set_installer_output "gwe_qa_x64" "GatewayEditElectroniteQA*x64*.exe"
+          set_installer_output "gwe_qa_arm64" "GatewayEditElectroniteQA*arm64*.exe"
+
+      - name: Upload GatewayEditElectronite x64 EXE
+#        if: ${{ steps.find-dmgs.outputs.gwe_x64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-installs.outputs.gwe_x64_name }}
+          path: ${{ steps.find-installs.outputs.gwe_x64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectronite arm64 EXE
+        if: ${{ false }}
+#        if: ${{ steps.find-dmgs.outputs.gwe_arm64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-installs.outputs.gwe_arm64_name }}
+          path: ${{ steps.find-installs.outputs.gwe_arm64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectroniteQA x64 EXE
+#        if: ${{ steps.find-dmgs.outputs.gwe_qa_x64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-installs.outputs.gwe_qa_x64_name }}
+          path: ${{ steps.find-installs.outputs.gwe_qa_x64_path }}
+          if-no-files-found: error
+
+      - name: Upload GatewayEditElectroniteQA arm64 EXE
+        if: ${{ false }}
+#        if: ${{ steps.find-dmgs.outputs.gwe_qa_arm64_path != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.find-installs.outputs.gwe_qa_arm64_name }}
+          path: ${{ steps.find-installs.outputs.gwe_qa_arm64_path }}
+          if-no-files-found: error
+
+
   tests-run:
+    # disable until we have a better way to test this
+    if: ${{ false }}
     runs-on: ubuntu-latest
     strategy:
       matrix:

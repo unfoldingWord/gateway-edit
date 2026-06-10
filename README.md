@@ -80,6 +80,10 @@ yarn dev
 yarn run cypress
 ```
 
+### Electronite Testing
+- in console run `window.location="http://localhost:3000/"`
+
+
 ### Running Cypress tests headless
 
 - in terminal, start the app by (in Windows, run this in `git Bash` as it needs bash):
@@ -92,6 +96,24 @@ yarn test:headless
 
 - "report:combined": combines Cypress & Jest test coverage reports into one coverage report.
 
+### Storage
+#### Application General
+- stored in localStorage under username
+- allignment data is stored in indexedDB ('app-state', 'dataStore')
+- lexicon is cached in indexedDB gloss-store
+
+## GateWay Edit Electronite App:
+### Building:
+- see scripts in package.json
+  - example mac build: `yarn run mac:build-gwe-universal-install`
+- Intermediate build folder: `./scripts/gatewayedit-desktop`
+- Final installs are in folder: `./dist`
+
+### Upgrading Electronite:
+- update `electron` and `electronite` versions in `devDependencies` (note that electronite has `-graphite` extension):
+  - MacOs: `scripts/mac-build/package.json`
+  - Windows: `scripts/win-build/package.json`
+- also bump version number in the above files
 
 ## UI Design
 

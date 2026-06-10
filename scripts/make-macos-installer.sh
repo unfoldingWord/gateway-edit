@@ -1,41 +1,37 @@
 #!/usr/bin/env bash
 # before running do: chmod +x make-macos-installer.sh
-# add parameter `--qa` for develop mode, or for architecture `--arm64` or `--x64`
+# add parameter `--qa` for develop mode, or for architecture `--arm64`, `--x64`, or `--universal`
 set -euo pipefail
 set -x
 
 APP_DIR="gatewayedit-desktop"
-APP_NAME="GatewayEdit"
+APP_NAME="GatewayEditElectronite"
 APP_ID="com.unfoldingWord.gatewayedit" # change to your reverse-DNS id
 
+export APP_NAME
+export APP_ID
+
 QA_MODE=false
-ARCH="arm64" # default: Apple Silicon
+ARCH="universal" # default: universal macOS build
 for arg in "$@"; do
   case "$arg" in
     --qa) QA_MODE=true ;;
     --x64|--intel) ARCH="x64" ;;                    # Intel target
-    --arm64|--apple-silicon) ARCH="arm64" ;;        # Apple Silicon target (explicit)
-    --arch=*) ARCH="${arg#--arch=}" ;;              # --arch=x64|arm64
+    --arm64|--apple-silicon) ARCH="arm64" ;;        # Apple Silicon target
+    --universal) ARCH="universal" ;;                # Universal target
+    --arch=*) ARCH="${arg#--arch=}" ;;              # --arch=x64|arm64|universal
   esac
 done
 
-if [[ "$ARCH" != "arm64" && "$ARCH" != "x64" ]]; then
-  echo "ERROR: Unsupported arch '$ARCH'. Use --x64/--intel, --arm64/--apple-silicon, or --arch=x64|arm64"
+if [[ "$ARCH" != "arm64" && "$ARCH" != "x64" && "$ARCH" != "universal" ]]; then
+  echo "ERROR: Unsupported arch '$ARCH'. Use --x64/--intel, --arm64/--apple-silicon, --universal, or --arch=x64|arm64|universal"
   exit 1
-fi
-
-# Force the command architecture for install/build steps
-ARCH_CMD=()
-if [[ "$ARCH" == "x64" ]]; then
-  ARCH_CMD=(arch -x86_64)
-else
-  ARCH_CMD=(arch -arm64)
 fi
 
 echo "Using target arch: $ARCH"
 
 if [[ "$QA_MODE" == "true" ]]; then
-  APP_NAME="${APP_NAME}Develop"
+  APP_NAME="${APP_NAME}QA"
   echo "Doing QA build to $APP_NAME"
 
   export APP_NAME
@@ -44,6 +40,7 @@ fi
 
 rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR"
+cp -R ./shared-build/* "$APP_DIR"
 cp -R ./mac-build/* "$APP_DIR"
 cd "$APP_DIR"
 
@@ -81,17 +78,24 @@ node - <<'NODE'
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
-const productName = process.env.APP_NAME || "GatewayEdit";
+const productName = process.env.APP_NAME || "GatewayEditElectron";
 
 pkg.build = {
   productName,
   appId: process.env.APP_ID || "com.example.gatewayedit",
   mac: {
     category: "public.app-category.productivity",
-    target: ["dmg"]
+    target: [
+      {
+        target: "dmg",
+        arch: [
+          process.env.TARGET_ARCH || "universal"
+        ]
+      }
+    ]
   },
   dmg: {
-    title: process.env.APP_NAME || "GatewayEdit"
+    title: process.env.APP_NAME || "GatewayEditElectron"
   }
 };
 
@@ -101,15 +105,17 @@ NODE
 # Install & package (creates a .app in ./out/)
 yarn install
 
-# get package script to use
+# get package script to use (these are defined in scripts/mac-build/package.json)
 PACKAGE_SCRIPT=""
 if [[ "$ARCH" == "x64" ]]; then
   PACKAGE_SCRIPT="dist:mac-x64"
-else
+elif [[ "$ARCH" == "arm64" ]]; then
   PACKAGE_SCRIPT="dist:mac-arm64"
+else
+  PACKAGE_SCRIPT="dist:mac-universal"
 fi
 
-APP_NAME="$APP_NAME" APP_ID="$APP_ID" \
+APP_NAME="$APP_NAME" APP_ID="$APP_ID" TARGET_ARCH="$ARCH" \
   npm_package_build_productName="$APP_NAME" npm_package_build_appId="$APP_ID" \
   yarn ${PACKAGE_SCRIPT}
 
@@ -117,12 +123,14 @@ APP_NAME="$APP_NAME" APP_ID="$APP_ID" \
 INSTALLER_SCRIPT=""
 if [[ "$ARCH" == "x64" ]]; then
   INSTALLER_SCRIPT="dmg:mac-x64"
-else
+elif [[ "$ARCH" == "arm64" ]]; then
   INSTALLER_SCRIPT="dmg:mac-arm64"
+else
+  INSTALLER_SCRIPT="dmg:mac-universal"
 fi
 
 # Create DMG from the pre-packaged app at ./out/<name>-darwin-<arch>
-APP_NAME="$APP_NAME" APP_ID="$APP_ID" \
+APP_NAME="$APP_NAME" APP_ID="$APP_ID" TARGET_ARCH="$ARCH" \
   npm_package_build_productName="$APP_NAME" npm_package_build_appId="$APP_ID" \
   yarn ${INSTALLER_SCRIPT}
 
@@ -136,12 +144,21 @@ fi
 
 for dmg in "${dmg_files[@]}"; do
   base="$(basename "$dmg")"
-  if [[ "$base" == *"$ARCH"* ]]; then
+  echo "Base name is $base and dmg is $dmg"
+
+  if [[ "$base" == *"-darwin-$ARCH.dmg" ]]; then
+    echo "DMG already has target platform/arch suffix: $base"
     continue
+  elif [[ "$base" == *"-$ARCH.dmg" ]]; then
+    # Convert "...-<arch>.dmg" to "...-darwin-<arch>.dmg"
+    new_base="${base%-$ARCH.dmg}-darwin-$ARCH.dmg"
+    echo "Renaming DMG from $dmg to $new_base"
+  else
+    # Insert "-darwin-<arch>" before ".dmg"
+    new_base="${base%.dmg}-darwin-$ARCH.dmg"
+    echo "Renaming DMG from $dmg to $new_base"
   fi
 
-  # Insert "-<arch>" before ".dmg"
-  new_base="${base%.dmg}-$ARCH.dmg"
   new_path="./dist/$new_base"
 
   # Avoid clobbering if it already exists
@@ -161,7 +178,7 @@ cp -f ./dist/*.dmg ../../dist/
 echo
 echo "Done."
 echo "Target arch: $ARCH"
-echo "App bundle: $APP_DIR/out/$APP_NAME-darwin-$ARCH/"
+echo "App bundle output: $APP_DIR/out/"
 echo "DMG:        $APP_DIR/dist/ (look for a .dmg)"
 echo "DMG copied to: ../../dist/"
 ls -als ../../dist
