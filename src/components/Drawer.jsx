@@ -9,6 +9,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import SettingsIcon from '@material-ui/icons/Settings'
 import BugReportIcon from '@material-ui/icons/BugReport'
 import DoneAllIcon from '@material-ui/icons/DoneAll';
+import Switch from '@material-ui/core/Switch'
 import IconButton from '@material-ui/core/IconButton'
 import ListItem from '@material-ui/core/ListItem'
 import List from '@material-ui/core/List'
@@ -37,7 +38,8 @@ export default function Drawer({
   showFeedback,
 }) {
   const {
-    state: { mergeStatusForCards, cardsSaving, cardsLoadingMerge },
+    state: { mergeStatusForCards, cardsSaving, cardsLoadingMerge, logosSync },
+    actions: { setLogosSync },
   } = useContext(StoreContext)
 
   const { navigate } = useAppNavigation()
@@ -129,6 +131,28 @@ export default function Drawer({
             <DashboardOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary={'Reset Resource Layout'} />
+        </ListItem>
+        <ListItem
+          button
+          key={'Logos Sync'}
+          onClick={() => setLogosSync(prev => !prev)}
+          title='Sync current verse to Logos Bible Software via logosref: protocol'
+        >
+          <ListItemIcon>
+            <span style={{ fontWeight: 900, fontSize: 14, width: 24, textAlign: 'center', color: 'rgba(0,0,0,0.54)' }}>L</span>
+          </ListItemIcon>
+          <ListItemText
+            primary='Logos Sync'
+            secondary='Follow verse in Logos Bible Software'
+          />
+          <ListItemSecondaryAction>
+            <Switch
+              edge='end'
+              checked={!!logosSync}
+              onChange={e => setLogosSync(e.target.checked)}
+              inputProps={{ 'aria-label': 'Logos Sync' }}
+            />
+          </ListItemSecondaryAction>
         </ListItem>
       </List>
       <Divider />
